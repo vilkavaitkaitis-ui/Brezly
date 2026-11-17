@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Brėžly</title>
+<meta name="description" content="AutoCAD praktikos užduotys su brėžinio tikrinimu ir XP.">
+<meta name="theme-color" content="#0d1117">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --fonas:#0d1117; --panele:#141a22; --panele2:#10151c; --linija:#283241; --tekstas:#e6eaf0; --blankus:#93a0b2; --vidutinis:#c3ccd8;
+  --akcentas:#f28c28; --akc-tamsus:#1a0e02; --matmenu:#56c2e6; --priimta:#3fb950; --taisyti:#f47067;
+  --sans:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif; --kond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--fonas);color:var(--tekstas);font:15px/1.55 var(--sans);display:flex;flex-direction:column}
+button{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+a{color:var(--matmenu)}
+:focus-visible{outline:2px solid var(--akcentas);outline-offset:2px}
+
+.virsus{display:flex;align-items:center;gap:14px;padding:10px max(16px,env(safe-area-inset-left)) 10px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--linija);background:var(--panele2);
+  padding-top:max(10px,env(titlebar-area-height,0px));-webkit-app-region:drag;app-region:drag;min-height:52px}
+.virsus button,.virsus a{-webkit-app-region:no-drag;app-region:no-drag}
+.zenklas{display:flex;align-items:center;gap:10px}
+.zenklas b{font:600 17px var(--mono);letter-spacing:.18em}
+.zenklas span{font:500 11.5px var(--kond);letter-spacing:.12em;color:var(--blankus)}
+.tarpas{flex:1}
+.xp{display:flex;align-items:center;gap:10px;font:500 13px var(--mono);color:var(--vidutinis)}
+.xp .juosta{width:120px;height:6px;background:var(--linija);border-radius:3px;overflow:hidden}
+.xp .juosta i{display:block;height:100%;background:var(--akcentas);width:0}
+.mygt{border:0;border-radius:6px;padding:10px 16px;font-weight:600;cursor:pointer;background:var(--akcentas);color:var(--akc-tamsus);display:inline-flex;align-items:center;gap:8px;text-decoration:none;min-height:40px}
+.mygt:hover{filter:brightness(1.07)}
+.mygt.antr{background:#1a212b;color:var(--tekstas);border:1px solid var(--linija);font-weight:500}
+.mygt.antr:hover{border-color:#3a4558;filter:none}
+.mygt[hidden]{display:none}
+.mygt svg{width:17px;height:17px;flex-shrink:0}
+
+.darbas{flex:1;min-height:0;display:grid;grid-template-columns:290px minmax(0,1fr)}
+.sarasas{border-right:1px solid var(--linija);overflow:auto;padding:14px 10px;display:flex;flex-direction:column;gap:4px}
+.sarasas h2{font:600 11.5px var(--kond);letter-spacing:.12em;color:var(--blankus);padding:4px 8px 8px}
+.uzd{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;width:100%;padding:9px 10px;border-radius:6px;border:1px solid transparent;background:none;cursor:pointer}
+.uzd:hover{background:#151c26}
+.uzd[aria-current="true"]{background:var(--panele);border-color:var(--linija)}
+.uzd .nr{font:600 12.5px var(--mono);color:var(--blankus);width:28px;height:28px;border:1px solid var(--linija);border-radius:4px;display:grid;place-items:center}
+.uzd.atlikta .nr{background:#13261a;border-color:#2e6b40;color:#7ee39a}
+.uzd .pav{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.uzd .meta{font:12px var(--mono);color:var(--blankus)}
+
+.turinys{overflow:auto;padding:24px clamp(16px,3vw,36px) 40px}
+.kick{font:600 12px var(--kond);letter-spacing:.12em;color:var(--akcentas)}
+.turinys h1{font-size:30px;font-weight:600;letter-spacing:-.01em;margin-top:4px}
+.apras{color:var(--vidutinis);max-width:70ch;margin-top:8px;font-size:15.5px}
+.isd{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;margin-top:22px;align-items:start}
+.lapas{background:#fff;border-radius:4px;border:1px solid var(--linija);padding:6px;display:flex;justify-content:center}
+.lapas img{max-width:100%;max-height:72vh;height:auto;display:block}
+.lapo-nuor{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13.5px}
+.blokas{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:16px;display:flex;flex-direction:column;gap:12px}
+.blokas + .blokas{margin-top:14px}
+.blokas h3{font:600 12px var(--kond);letter-spacing:.12em;color:var(--blankus)}
+.kom{display:flex;flex-wrap:wrap;gap:6px}
+.kom span{font:500 13px var(--mono);padding:4px 9px;background:#0a0e14;border:1px solid var(--linija);border-radius:4px;color:var(--akcentas)}
+.zing{margin:0;padding:0;list-style:none;counter-reset:z;display:flex;flex-direction:column;gap:9px}
+.zing li{counter-increment:z;display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;color:var(--vidutinis);font-size:14.5px}
+.zing li::before{content:counter(z);font:600 12px var(--mono);color:var(--akcentas);border:1px solid var(--linija);border-radius:4px;height:22px;display:grid;place-items:center;margin-top:1px}
+.eiga{margin:0;padding-left:20px;color:var(--vidutinis);font-size:14px;display:flex;flex-direction:column;gap:4px}
+.eiga b{color:var(--tekstas)}
+.veiksmai{display:flex;flex-wrap:wrap;gap:8px}
+.failas{font:13px var(--mono);color:var(--blankus);overflow-wrap:anywhere}
+.turis{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.turis input{width:150px;background:#0a0e14;border:1px solid var(--linija);border-radius:5px;padding:9px 10px;color:var(--tekstas);font:500 14px var(--mono)}
+.mesti{border:1.5px dashed var(--linija);border-radius:6px;padding:14px;text-align:center;color:var(--blankus);font-size:13.5px}
+.mesti.virs{border-color:var(--akcentas);color:var(--tekstas);background:#1a140c}
+.rez{border-radius:6px;padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.rez[hidden]{display:none}
+.rez.gerai{background:#13261a;border:1px solid #2e6b40}
+.rez.blogai{background:#2a1517;border:1px solid #6e2f30}
+.rez.info{background:var(--panele2);border:1px solid var(--linija)}
+.rez .ant{font-weight:600}
+.rez ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.rez .gr li::marker{color:#7ee39a}
+.rez .kl li::marker{color:var(--taisyti)}
+.rez .mato{font:12px var(--mono);color:var(--blankus);border-top:1px solid #ffffff14;padding-top:6px}
+.idiegti{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--linija);border-radius:6px;background:var(--panele2);font-size:13.5px;color:var(--vidutinis);margin-top:18px;max-width:760px}
+.idiegti[hidden]{display:none}
+.idiegti svg{width:18px;height:18px;flex-shrink:0;color:var(--matmenu);margin-top:2px}
+.prane{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13261a;border:1px solid #2e6b40;color:#d6f5de;padding:10px 16px;border-radius:6px;font-weight:600;box-shadow:0 8px 30px #0008;opacity:0;pointer-events:none;transition:opacity .2s}
+.prane.rodo{opacity:1}
+@media (max-width:980px){.isd{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){
+  .darbas{display:flex;flex-direction:column;overflow:auto}
+  .sarasas{border-right:0;border-bottom:1px solid var(--linija);flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:10px;flex-shrink:0}
+  .sarasas h2{display:none}
+  .uzd{width:auto;flex-shrink:0;grid-template-columns:28px auto}
+  .uzd .meta{display:none}
+  .turinys{overflow:visible}
+  .xp .juosta{display:none}
+  .zenklas span{display:none}
+}
+@media (prefers-reduced-motion:reduce){.prane{transition:none}}
+</style>
+</head>
+<body>
+<header class="virsus">
+  <div class="zenklas">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 1v22M1 12h22"></path></svg>
+    <div><b>BRĖŽLY</b><br><span>AUTOCAD PRAKTIKA</span></div>
+  </div>
+  <div class="tarpas"></div>
+  <div class="xp" aria-live="polite"><span id="xpTekstas">0 XP</span><span class="juosta" aria-hidden="true"><i id="xpJuosta"></i></span></div>
+  <button class="mygt" id="idiegtiBtn" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+    Įdiegti programėlę
+  </button>
+</header>
+
+<div class="darbas">
+  <nav class="sarasas" aria-label="Užduotys">
+    <h2>PRAKTIKOS UŽDUOTYS</h2>
+    <div id="sarasas" style="display:contents"></div>
+  </nav>
+  <main class="turinys" id="turinys"></main>
+</div>
+<div class="prane" id="prane" role="status"></div>
+
+<script src="tikrinimas.js"></script>
+<script>
+const PRAKTIKA=[
+ {id:"U1_Tarpine",nr:1,pav:"Tarpinė",fmt:"A4",d:"2D",lyg:1,min:10,xp:30,uzd:"Nubraižyk tarpinę 120 × 80 su užapvalintais kampais R10, centrine skyle ø40 ir keturiomis skylėmis ø10.",
+  kom:["RECTANG","FILLET","CIRCLE","COPY","DIMLINEAR"],
+  z:["RECTANG → Fillet → R10, tada stačiakampis 120,80","CIRCLE centre → spindulys 20 (ø40)","Viena skylė: CIRCLE spindulys 5, tada COPY į kitus 3 kampus (atstumai 96 ir 56)","Ašys sluoksnyje ASYS, matmenys - DIMLINEAR"]},
+ {id:"U2_Flansas",nr:2,pav:"Flanšas",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Flanšas ø120 su anga ø50 ir 6 skylėmis ø12 ant ø90 apskritimo. Du vaizdai: iš viršaus ir iš priekio.",
+  kom:["CIRCLE","ARRAY (Polar)","LINE","NEMATOMOS","DIMDIAMETER"],
+  z:["Trys koncentriniai apskritimai: R60, R25 ir R45 (ašinis, sluoksnis ASYS)","Viena skylė R6 ant ašinio apskritimo viršaus","ARRAYPOLAR → 6 elementai, 360°","Vaizdas iš priekio: stačiakampis 120 × 15, skylės - brūkšninės (NEMATOMOS)"]},
+ {id:"U3_Laikiklis",nr:3,pav:"L laikiklis",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"L formos laikiklis 100 × 80 su vidiniu kampu R10, skyle ø12 ir ovalia anga 30 × 10.",
+  kom:["PLINE","FILLET","CIRCLE","OFFSET","TRIM"],
+  z:["PLINE kontūras pagal matmenis (100, 30, 70, 50, 30, 80)","FILLET R10 vidiniame kampe","Skylė: CIRCLE R6 per 15 nuo krašto ir 20 nuo viršaus","Ovalas: du apskritimai R5 per 20 vienas nuo kito + dvi liestinės LINE, TRIM vidurį"]},
+ {id:"U4_Velenas",nr:4,pav:"Velenas",fmt:"A4",d:"2D",lyg:2,min:15,xp:50,uzd:"Pakopinis velenas ø20 / ø30 / ø25 (ilgiai 30, 50, 40) su grioveliu 30 × 8 ir pjūviu A-A.",
+  kom:["LINE","OFFSET","CHAMFER","MIRROR","HATCH"],
+  z:["Nubraižyk tik viršutinę pusę nuo ašies, tada MIRROR per ašį","CHAMFER 1 × 45° galuose","Griovelis: stačiakampis su užapvalintais galais 30 × 8","Pjūvis A-A: apskritimas ø30 su įpjova, užpildyk HATCH (ANSI31)"]},
+ {id:"U5_Projekcijos",nr:5,pav:"3 projekcijos",fmt:"A4",d:"2D",lyg:3,min:20,xp:60,uzd:"L formos blokas 60 × 40 × 40 su laipteliu ir kiaurine skyle ø14. Trys vaizdai E metodu.",
+  kom:["LINE","XLINE","CIRCLE","NEMATOMOS","DIMLINEAR"],
+  z:["Pradėk nuo vaizdo iš priekio (60 × 40 su laipteliu 30 × 20)","XLINE pagalbinėmis linijomis perkelk aukščius į vaizdą iš kairės (dešinėje)","Vaizdas iš viršaus - apačioje: 60 × 40, skylė R7","Nematomos skylės briaunos - sluoksnis NEMATOMOS"]},
+ {id:"U7_Schema",nr:7,pav:"Elektrinė schema",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Schema: baterija G1, jungiklis S1, rezistorius R1 ir dvi lygiagrečios lemputės H1, H2 + aprašo lentelė.",
+  kom:["BLOCK","ATTDEF","INSERT","LINE","TABLE"],
+  z:["Nubraižyk ženklus (lemputė - apskritimas su X, rezistorius 15 × 5)","Kiekvieną paversk bloku: BLOCK, su atributu POZ (ATTDEF)","INSERT - sudėk blokus ir sujunk linijomis","Aprašo lentelė - TABLE arba linijos + tekstas"]},
+ {id:"U6_Izometrija",nr:6,pav:"Izometrija",fmt:"A3",d:"3D",lyg:3,min:20,xp:60,uzd:"5 užduoties detalę nubraižyk izometrijoje mastelių 2:1. Skylė - izometrinis apskritimas.",
+  kom:["ISODRAFT","F5","LINE","ELLIPSE → Isocircle","COPY"],
+  z:["Įjunk ISODRAFT (arba būsenos juostoje izometrinį tinklelį)","F5 keičia plokštumą: kairė / viršus / dešinė","Matmenys ×2: 120, 80, 80, laiptelis 40","Skylė: ELLIPSE → I (Isocircle), spindulys 14, viršutinėje plokštumoje"]},
+ {id:"U8_3D_detale",nr:8,pav:"3D detalė",fmt:"A3",d:"3D",lyg:3,min:25,xp:80,uzd:"Plokštė 80 × 50 × 10 su cilindru ø30 (aukštis iki 35), kiaurine skyle ø16 ir 4 skylėmis ø8.",
+  kom:["BOX","CYLINDER","UNION","SUBTRACT","ARRAY","VIEWBASE"],
+  z:["BOX nuo 0,0,0 → 80,50,10","CYLINDER centras 40,25,10, R15, aukštis 25 → UNION su plokšte","CYLINDER R8 kiaurai visą aukštį ir 4 × R4 (10 nuo kraštų) → SUBTRACT","Patikrink: MASSPROP → tūris ≈ 48 600 mm³"]},
+];
+PRAKTIKA.sort((a,b)=>a.nr-b.nr);
+
+const T = window.BrTikrinimas;
+const RAKTAS = "brezly-app-progresas";
+let busena = { atlikta:{}, dabartine:PRAKTIKA[0].id };
+try { Object.assign(busena, JSON.parse(localStorage.getItem(RAKTAS) || "{}")); } catch(e) {}
+const saugoti = () => { try { localStorage.setItem(RAKTAS, JSON.stringify(busena)); } catch(e) {} };
+const failai = {};      // id -> {rankena, failas, vardas}
+const bazines = {};     // id -> ruošinio analizė
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const xpViso = () => PRAKTIKA.reduce((s,u)=>s+(busena.atlikta[u.id]?u.xp:0),0);
+const xpGalimas = PRAKTIKA.reduce((s,u)=>s+u.xp,0);
+
+function rodytiXP(){
+  const x = xpViso();
+  $("#xpTekstas").textContent = `${x} XP · ${Object.keys(busena.atlikta).length}/${PRAKTIKA.length}`;
+  $("#xpJuosta").style.width = (100*x/xpGalimas)+"%";
+}
+
+function rodytiSarasa(){
+  $("#sarasas").innerHTML = PRAKTIKA.map(u => `
+    <button class="uzd${busena.atlikta[u.id]?" atlikta":""}" data-id="${u.id}" aria-current="${u.id===busena.dabartine}">
+      <span class="nr">${busena.atlikta[u.id]?"✓":String(u.nr).padStart(2,"0")}</span>
+      <span class="pav">${esc(u.pav)}</span>
+      <span class="meta">${u.fmt} · ${u.d}</span>
+    </button>`).join("");
+  $("#sarasas").querySelectorAll(".uzd").forEach(b => b.onclick = () => { busena.dabartine = b.dataset.id; saugoti(); rodyti(); });
+}
+
+function rodytiUzduoti(){
+  const u = PRAKTIKA.find(x => x.id === busena.dabartine) || PRAKTIKA[0];
+  const f = failai[u.id];
+  const yra3D = u.id === "U8_3D_detale";
+  $("#turinys").innerHTML = `
+    <p class="kick">UŽDUOTIS ${String(u.nr).padStart(2,"0")} · ${u.fmt} · ${u.d} · ~${u.min} MIN · ${u.xp} XP${busena.atlikta[u.id]?" · ATLIKTA":""}</p>
+    <h1>${esc(u.pav)}</h1>
+    <p class="apras">${esc(u.uzd)}</p>
+    <div class="idiegti" id="idiegtiPatarimas" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.01"></path></svg>
+      <span>Įsidiek Brėžly kaip programėlę: Edge arba Chrome adreso juostoje spausk <b>Įdiegti</b> piktogramą (arba meniu ⋯ → <b>Programos → Įdiegti šią svetainę kaip programą</b>). Atsiras piktograma darbalaukyje ir veiks be interneto.</span>
+    </div>
+    <div class="isd">
+      <div>
+        <div class="lapas"><img src="praktika/${u.id}.svg" alt="Užduoties brėžinys: ${esc(u.pav)}, ${u.fmt} lapas" loading="lazy"></div>
+        <div class="lapo-nuor"><a href="praktika/${u.id}.pdf" target="_blank" rel="noopener">Atidaryti PDF</a><span style="color:var(--blankus)">Brėžinį gali atsispausdinti</span></div>
+      </div>
+      <div>
+        <section class="blokas" aria-label="Darbas">
+          <h3>DARBAS</h3>
+          <ol class="eiga">
+            <li><b>Atsisiųsk ruošinį</b> - DXF su ${u.fmt} rėmeliu ir spaudu.</li>
+            <li>Atidaryk jį AutoCAD'e ir braižyk rėmelio viduje.</li>
+            <li>Išsaugok <b>Ctrl+S</b> (failas lieka DXF).</li>
+            <li>Čia spausk <b>Pasirinkti brėžinį</b>, vėliau - <b>Patikrinti</b>.</li>
+          </ol>
+          <div class="veiksmai">
+            <a class="mygt antr" href="praktika/${u.id}_ruosinys.dxf" download="${u.id}.dxf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+              Atsisiųsti ruošinį</a>
+            <button class="mygt antr" id="pasirinkti">Pasirinkti brėžinį (.dxf)</button>
+          </div>
+          <div class="mesti" id="mesti">arba nutempk .dxf failą čia</div>
+          <p class="failas" id="failoVardas">${f ? "Brėžinys: "+esc(f.vardas) : "Brėžinys dar nepasirinktas"}</p>
+          ${yra3D ? `<div class="turis"><label for="turis">Tūris iš MASSPROP (mm³):</label><input id="turis" inputmode="decimal" placeholder="pvz. 48623" value="${esc(busena.turis||"")}"></div>` : ""}
+          <div class="veiksmai"><button class="mygt" id="tikrinti">Patikrinti</button></div>
+          <div class="rez" id="rez" hidden aria-live="polite"></div>
+        </section>
+        <section class="blokas" aria-label="Komandos">
+          <h3>KOMANDOS</h3>
+          <div class="kom">${u.kom.map(k=>`<span>${esc(k)}</span>`).join("")}</div>
+        </section>
+        <section class="blokas" aria-label="Žingsniai">
+          <h3>ŽINGSNIAI</h3>
+          <ol class="zing">${u.z.map(z=>`<li><span>${esc(z)}</span></li>`).join("")}</ol>
+        </section>
+      </div>
+    </div>`;
+  $("#idiegtiPatarimas").hidden = arIdiegta() || !!idiegimas;
+  $("#pasirinkti").onclick = () => pasirinkti(u);
+  $("#tikrinti").onclick = () => tikrinti(u);
+  const m = $("#mesti");
+  m.ondragover = e => { e.preventDefault(); m.classList.add("virs"); };
+  m.ondragleave = () => m.classList.remove("virs");
+  m.ondrop = async e => {
+    e.preventDefault(); m.classList.remove("virs");
+    const it = [...e.dataTransfer.items].find(i => i.kind === "file");
+    if (!it) return;
+    let rankena = null;
+    try { if (it.getAsFileSystemHandle) rankena = await it.getAsFileSystemHandle(); } catch(err) {}
+    const failas = it.getAsFile();
+    failai[u.id] = { rankena, failas, vardas: failas.name };
+    $("#failoVardas").textContent = "Brėžinys: " + failas.name;
+    tikrinti(u);
+  };
+  const ti = $("#turis");
+  if (ti) ti.oninput = () => { busena.turis = ti.value; saugoti(); };
+}
+
+function rodyti(){ rodytiXP(); rodytiSarasa(); rodytiUzduoti(); }
+
+async function pasirinkti(u){
+  try {
+    if (window.showOpenFilePicker) {
+      const [h] = await showOpenFilePicker({ types:[{description:"AutoCAD DXF", accept:{"application/dxf":[".dxf"]}}], multiple:false });
+      failai[u.id] = { rankena:h, vardas:h.name };
+    } else {
+      const f = await new Promise(res => { const i = document.createElement("input"); i.type="file"; i.accept=".dxf"; i.onchange=()=>res(i.files[0]); i.click(); });
+      if (!f) return;
+      failai[u.id] = { failas:f, vardas:f.name };
+    }
+    $("#failoVardas").textContent = "Brėžinys: " + failai[u.id].vardas;
+    tikrinti(u);
+  } catch(e) { if (e.name !== "AbortError") rodytiRez("blogai", "Nepavyko atidaryti failo", [e.message]); }
+}
+
+async function bazine(u){
+  if (bazines[u.id]) return bazines[u.id];
+  try {
+    const r = await fetch(`praktika/${u.id}_ruosinys.dxf`);
+    bazines[u.id] = T.analizuoti(T.skaityti(await r.text()));
+  } catch(e) { bazines[u.id] = null; }
+  return bazines[u.id];
+}
+
+function rodytiRez(klase, antraste, klaidos=[], geri=[], mato="", pastabos=[]){
+  const r = $("#rez"); r.hidden = false; r.className = "rez " + klase;
+  r.innerHTML = `<p class="ant">${esc(antraste)}</p>`
+    + (klaidos.length ? `<ul class="kl">${klaidos.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (pastabos.length ? `<ul>${pastabos.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (geri.length ? `<ul class="gr">${geri.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (mato ? `<p class="mato">Ką mato tikrinimas: ${esc(mato)}</p>` : "");
+}
+
+async function tikrinti(u){
+  const f = failai[u.id];
+  if (!f) { rodytiRez("info", "Pirma pasirink savo brėžinį (.dxf)", ["Atsisiųsk ruošinį, nubraižyk AutoCAD'e, išsaugok ir spausk „Pasirinkti brėžinį“."]); return; }
+  let tekstas;
+  try {
+    let failas = f.failas;
+    if (f.rankena && f.rankena.getFile) {
+      if (f.rankena.queryPermission && (await f.rankena.queryPermission({mode:"read"})) !== "granted") await f.rankena.requestPermission({mode:"read"});
+      failas = await f.rankena.getFile();        // kas kartą skaito naujausią išsaugotą versiją
+    }
+    tekstas = await failas.text();
+  } catch(e) { rodytiRez("blogai", "Nepavyko perskaityti failo", ["Pasirink failą dar kartą."]); return; }
+  let a;
+  try { a = T.analizuoti(T.skaityti(tekstas)); }
+  catch(e) { rodytiRez("blogai", "Šio failo patikrinti negaliu", [e.message, "AutoCAD'e: SAVEAS → failo tipas AutoCAD DXF (*.dxf)."]); return; }
+  const ti = $("#turis");
+  const turis = ti && ti.value.trim() ? parseFloat(ti.value.replace(/\s/g,"").replace(",", ".")) : null;
+  const r = T.tikrinti(u.id, a, await bazine(u), turis);
+  if (r.priimta) {
+    const naujas = !busena.atlikta[u.id];
+    busena.atlikta[u.id] = Date.now(); saugoti();
+    rodytiRez("gerai", naujas ? `Priimta! +${u.xp} XP` : "Priimta (jau buvo atlikta)", [], r.geri, T.aprasas(a), r.pastabos);
+    if (naujas) { pranesti(`+${u.xp} XP`); rodytiXP(); rodytiSarasa(); }
+  } else {
+    rodytiRez("blogai", "Reikia pataisyti", r.klaidos, r.geri, T.aprasas(a), r.pastabos);
+  }
+}
+
+function pranesti(t){ const p=$("#prane"); p.textContent=t; p.classList.add("rodo"); setTimeout(()=>p.classList.remove("rodo"),2200); }
+
+/* ---- įdiegimas ---- */
+let idiegimas = null;
+const arIdiegta = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: window-controls-overlay)").matches;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); idiegimas = e; $("#idiegtiBtn").hidden = false; const p=$("#idiegtiPatarimas"); if(p) p.hidden = true; });
+$("#idiegtiBtn").onclick = async () => { if (!idiegimas) return; idiegimas.prompt(); await idiegimas.userChoice; idiegimas = null; $("#idiegtiBtn").hidden = true; };
+addEventListener("appinstalled", () => { $("#idiegtiBtn").hidden = true; pranesti("Brėžly įdiegta"); });
+
+/* ---- DXF atidarymas per „Atidaryti su → Brėžly“ ---- */
+if ("launchQueue" in window) {
+  launchQueue.setConsumer(async p => {
+    if (!p.files || !p.files.length) return;
+    const h = p.files[0];
+    const u = PRAKTIKA.find(x => h.name.toUpperCase().startsWith(x.id.split("_")[0] + "_")) || PRAKTIKA.find(x => x.id === busena.dabartine);
+    busena.dabartine = u.id; saugoti(); rodyti();
+    failai[u.id] = { rankena:h, vardas:h.name };
+    $("#failoVardas").textContent = "Brėžinys: " + h.name;
+    tikrinti(u);
+  });
+}
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+rodyti();
+</script>
+</body>
+</html>
