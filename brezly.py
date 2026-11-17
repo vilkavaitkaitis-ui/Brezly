@@ -30,7 +30,7 @@ import zipfile
 PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 os.chdir(PROGRAMOS_APLANKAS)
 
-import programa as P            # noqa: E402  (serveris, langas, ryšys su AutoCAD)
+import serveris as P            # noqa: E402  (serveris, langas, ryšys su AutoCAD)
 import pamokos                  # noqa: E402
 import praktika                 # noqa: E402
 
