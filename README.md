@@ -4,6 +4,8 @@
 
 ## ⬇ Atsisiųsti
 
+**[Brėžly programėlė – atidaryk ir spausk „Įdiegti“](https://vilkavaitkaitis-ui.github.io/Brezly/)** (veikia ir kai Windows blokuoja .exe)
+
 **[Brezly_Setup.exe – naujausia versija](../../releases/latest/download/Brezly_Setup.exe)**
 
 1. Atsisiųsk ir paleisk `Brezly_Setup.exe` (administratoriaus teisių nereikia).
