@@ -1,11 +1,11 @@
 """
 Brėžly: failai, kurie kuriami iš vieno šaltinio (pamokos.json ir praktika/uzduotys.json).
 
-  python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą
-                                              ir sukuria programėlę aplanke isvestis/programele
+  python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą ir sukuria svetainę
+                                              isvestis/svetaine: atsisiuntimo puslapis + programele/
   python irankiai/generuoti.py --tikrinti   - tik patikrina, ar lisp/Brezly.lsp atnaujintas (GitHub Actions)
 
-Programėlę išbandyti: python -m http.server -d isvestis/programele 8000  ->  http://localhost:8000
+Išbandyti: python -m http.server -d isvestis/svetaine 8000  ->  http://localhost:8000 (programėlė - /programele/)
 """
 
 import hashlib
@@ -21,7 +21,9 @@ sys.path.insert(0, SAKNIS)
 UZDUOTYS = os.path.join(SAKNIS, "praktika", "uzduotys.json")
 LISP = os.path.join(SAKNIS, "lisp", "Brezly.lsp")
 APP = os.path.join(SAKNIS, "app")
-PROGRAMELE = os.path.join(SAKNIS, "isvestis", "programele")
+SVETAINES_SALTINIS = os.path.join(SAKNIS, "svetaine")
+SVETAINE = os.path.join(SAKNIS, "isvestis", "svetaine")          # -> gh-pages
+PROGRAMELE = os.path.join(SVETAINE, "programele")
 
 LISP_PRADZIA = ";;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti"
 LISP_PABAIGA = ";;; </uzduotys>"
@@ -87,10 +89,36 @@ def lisp_atnaujintas(d):
 
 
 # ------------------------------------------------------------------ programėlė (PWA)
-def programele(d):
+def svetaine(d):
+    """Atsisiuntimo puslapis (svetaine/) su skaičiais iš pamokų ir užduočių + programėlė programele/."""
     import pamokos      # be pywin32 importuojasi (AutoCAD nereikia)
-    if os.path.exists(PROGRAMELE):
-        shutil.rmtree(PROGRAMELE)
+    if os.path.exists(SVETAINE):
+        shutil.rmtree(SVETAINE)
+    shutil.copytree(SVETAINES_SALTINIS, SVETAINE)
+    for ikona in ("icon-192.png", "icon-512.png"):
+        shutil.copy2(os.path.join(APP, ikona), SVETAINE)
+    zym = {"{{PAMOKOS}}": len(pamokos.PAMOKOS), "{{ZINGSNIAI}}": sum(len(p["zingsniai"]) for p in pamokos.PAMOKOS),
+           "{{UZDUOTYS}}": len(d["uzduotys"]), "{{VERSIJA}}": _versija()}
+    kelias = os.path.join(SVETAINE, "index.html")
+    with open(kelias, encoding="utf-8") as f:
+        s = f.read()
+    for k, v in zym.items():
+        s = s.replace(k, str(v))
+    with open(kelias, "w", encoding="utf-8") as f:
+        f.write(s)
+    open(os.path.join(SVETAINE, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
+    return programele(d, pamokos)
+
+
+def _versija():
+    try:
+        with open(os.path.join(SAKNIS, "versija.txt"), encoding="utf-8") as f:
+            return f.read().strip().lstrip("vV") or "naujausia"
+    except OSError:
+        return "naujausia"
+
+
+def programele(d, pamokos):
     shutil.copytree(APP, PROGRAMELE)
     with open(os.path.join(PROGRAMELE, "pamokos.json"), "w", encoding="utf-8") as f:
         json.dump(pamokos.viesai(), f, ensure_ascii=False, separators=(",", ":"))
@@ -115,12 +143,11 @@ def programele(d):
     sw = os.path.join(PROGRAMELE, "sw.js")
     with open(sw, encoding="utf-8") as f:
         s = f.read()
-    s = re.sub(r'const VERSIJA = "[^"]*";', f'const VERSIJA = "brezly-app-{h.hexdigest()[:10]}";', s, count=1)
+    s = re.sub(r'const VERSIJA = "[^"]*";', f'const VERSIJA = "brezly-programele-{h.hexdigest()[:10]}";', s, count=1)
     s = re.sub(r"const FAILAI = \[.*?\];", "const FAILAI = " + json.dumps(["./"] + failai, indent=1) + ";", s,
                count=1, flags=re.S)
     with open(sw, "w", encoding="utf-8") as f:
         f.write(s)
-    open(os.path.join(PROGRAMELE, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
     return len(failai)
 
 
@@ -137,8 +164,8 @@ def main():
         with open(LISP, "w", encoding="ascii", newline="") as f:
             f.write(naujas)
         print("Atnaujinta: lisp/Brezly.lsp")
-    n = programele(d)
-    print(f"Programėlė: {os.path.relpath(PROGRAMELE, SAKNIS)} ({n} failai)")
+    n = svetaine(d)
+    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} (atsisiuntimo puslapis + programele/, {n} failai)")
 
 
 if __name__ == "__main__":
