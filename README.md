@@ -22,3 +22,15 @@ Reikia: Windows 10/11 ir AutoCAD (pilna versija). Progresas saugomas `Dokumentai
 
 ---
 Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.
+
+## Jei Windows blokuoja .exe (Smart App Control)
+
+Naudok **AutoCAD priedą** – jo Windows neblokuoja, nes jį paleidžia pats AutoCAD:
+
+**[Brezly.lsp – AutoCAD priedas](../../releases/latest/download/Brezly.lsp)**
+
+1. Atsisiųsk `Brezly.lsp` ir nutempk jį į atidarytą AutoCAD langą → **Load Once** (arba **Always Load**).
+2. Įrašyk komandą `BREZLY`.
+3. Kad kraustųsi kiekvieną kartą: `APPLOAD` → **Startup Suite** → **Contents…** → **Add** → `Brezly.lsp`.
+
+Komandos: `BREZLY` (praktikos langas), `BRLAPAS` (lapo rėmelis), `TIKRINK` (patikrinti).

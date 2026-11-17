@@ -87,6 +87,7 @@ jobs:
           $f = @("brezly.py","brezly.html","brezly.ico","pamokos.py","programa.py","branduolys.py","kalba.py","meniu.py",
                  "zenklas.py","praktika.py","versija.txt","atnaujinimai_url.txt") | Where-Object { Test-Path $_ }
           Compress-Archive -Path ($f + "praktika") -DestinationPath isvestis\Brezly_programa.zip -Force
+          if (Test-Path lisp\Brezly.lsp) { Copy-Item lisp\Brezly.lsp isvestis\Brezly.lsp }
 
       - name: atnaujinimai.json (su kontrolinėmis sumomis)
         shell: pwsh
@@ -126,3 +127,4 @@ jobs:
             isvestis/Brezly_Setup.exe
             isvestis/Brezly_programa.zip
             isvestis/atnaujinimai.json
+            isvestis/Brezly.lsp
