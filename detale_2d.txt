@@ -1,0 +1,56 @@
+# Detalės brėžinys 2D: vaizdas iš viršaus (apačioje) ir iš priekio (viršuje)
+sluoksniai
+
+# ===== VAIZDAS IŠ VIRŠAUS (0..100 x 0..80) =====
+linija 10 0 90 0
+linija 100 10 100 70
+linija 90 80 10 80
+linija 0 70 0 10
+lankas 90 10 10 270 360
+lankas 90 70 10 0 90
+lankas 10 70 10 90 180
+lankas 10 10 10 180 270
+# Skylės ø10 x4
+apskritimas 10 10 5
+apskritimas 90 10 5
+apskritimas 10 70 5
+apskritimas 90 70 5
+# Centras ø50 ir ø40
+apskritimas 50 40 25
+apskritimas 50 40 20
+# Šešiakampis
+daugiakampis 65 40 57.5 52.99 42.5 52.99 35 40 42.5 27.01 57.5 27.01
+# Griovelis 30 ir briauna 20
+linija 35 80 35 64.36
+linija 65 80 65 64.36
+linija 40 0 40 18.33
+linija 60 0 60 18.33
+# Vidurinio bloko linijos (40)
+linija 0 20 33.4 20
+linija 66.6 20 100 20
+linija 0 60 33.4 60
+linija 66.6 60 100 60
+
+# ===== VAIZDAS IŠ PRIEKIO (apačia y=120, aukštis 70) =====
+staciakampis 0 120 100 30
+linija 0 130 100 130
+lankas 50 120 10 0 180
+daugiakampis 0 150 22 190 35 190 35 160 65 160 65 190 78 190 100 150
+# Skylės (paslėptos linijos)
+sluoksnis NEMATOMOS
+linija 5 120 5 130
+linija 15 120 15 130
+linija 85 120 85 130
+linija 95 120 95 130
+
+# ===== MATMENYS =====
+sluoksnis MATMENYS
+tekstas 45 -10 4 100
+tekstas 105 38 4 80
+tekstas 105 155 4 70
+tekstas 47 85 4 30
+tekstas 75 45 4 ø50
+tekstas 55 32 4 ø40
+tekstas -5 85 4 R10x4
+tekstas -5 -10 4 ø10x4
+sluoksnis KONTURAS

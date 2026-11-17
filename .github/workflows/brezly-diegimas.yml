@@ -1,0 +1,108 @@
+# Brėžly: automatinis Brezly_Setup.exe surinkimas ir atnaujinimai - NEMOKAMAI (viešai GitHub repozitorijai).
+#
+# Kaip išleisti naują versiją:
+#   GitHub -> Releases -> „Draft a new release“ -> Tag: v0.9 (nauja žyma) -> aprašyk, kas naujo -> „Publish release“.
+#   Po ~5 min. prie to Release atsiras Brezly_Setup.exe, Brezly_programa.zip ir atnaujinimai.json,
+#   o visi įdiegti Brėžly patys pasiūlys atnaujinti.
+# Bandomasis surinkimas be Release: Actions -> „Brėžly diegimo programa“ -> Run workflow.
+name: Brėžly diegimo programa
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: brezly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  surinkti:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Versija ir atnaujinimų adresas
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.release.tag_name }}"
+          $v = if ($tag) { $tag.TrimStart("v", "V") } else { "0.0.0-bandymas" }
+          if ($tag -and $v -notmatch '^\d+(\.\d+)*$') { throw "Žyma turi būti kaip v0.9 arba v1.0.2 (dabar: $tag)" }
+          Set-Content versija.txt $v -NoNewline -Encoding utf8
+          # programa žinos, kur tikrinti atnaujinimus - nieko rankiniu būdu nustatyti nereikia
+          Set-Content atnaujinimai_url.txt "https://github.com/${{ github.repository }}/releases/latest/download/atnaujinimai.json" -NoNewline -Encoding utf8
+          "VERSIJA=$v" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          New-Item -ItemType Directory -Force isvestis | Out-Null
+
+      - name: Paketai
+        run: python -m pip install --upgrade pyinstaller pywin32
+
+      - name: Brezly.exe
+        run: >
+          python -m PyInstaller --noconfirm --clean --windowed --name Brezly --icon brezly.ico
+          --contents-directory . --add-data "brezly.html;." --add-data "brezly.ico;." --add-data "praktika;praktika"
+          --add-data "versija.txt;." --add-data "atnaujinimai_url.txt;."
+          --hidden-import win32timezone brezly.py
+
+      - name: Patikra - ar Brezly.exe pasileidžia
+        shell: pwsh
+        run: |
+          $env:BREZLY_BE_LANGO = "1"
+          $p = Start-Process dist\Brezly\Brezly.exe -PassThru
+          Start-Sleep 8
+          if ($p.HasExited) { Get-Content dist\Brezly\klaida.txt -ErrorAction SilentlyContinue; throw "Brezly.exe užsidarė iškart" }
+          Stop-Process $p -Force
+
+      - name: Brezly_Setup.exe
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Null }
+          & $iscc "/DVersija=$env:VERSIJA" diegimas\brezly.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup klaida" }
+
+      - name: Brezly_programa.zip (atnaujinimui be .exe)
+        shell: pwsh
+        run: |
+          $f = @("brezly.py","brezly.html","brezly.ico","pamokos.py","programa.py","branduolys.py","kalba.py","meniu.py",
+                 "zenklas.py","praktika.py","versija.txt","atnaujinimai_url.txt") | Where-Object { Test-Path $_ }
+          Compress-Archive -Path ($f + "praktika") -DestinationPath isvestis\Brezly_programa.zip -Force
+
+      - name: atnaujinimai.json (su kontrolinėmis sumomis)
+        shell: pwsh
+        env:
+          PASTABOS: ${{ github.event.release.body }}
+        run: |
+          $u = "https://github.com/${{ github.repository }}/releases/latest/download"
+          $pastabos = "$env:PASTABOS".Trim(); if (-not $pastabos) { $pastabos = "Nauja Brėžly versija $env:VERSIJA" }
+          if ($pastabos.Length -gt 400) { $pastabos = $pastabos.Substring(0, 400) + "…" }
+          [ordered]@{
+            versija      = $env:VERSIJA
+            setup        = "$u/Brezly_Setup.exe"
+            setup_sha256 = (Get-FileHash isvestis\Brezly_Setup.exe -Algorithm SHA256).Hash.ToLower()
+            zip          = "$u/Brezly_programa.zip"
+            zip_sha256   = (Get-FileHash isvestis\Brezly_programa.zip -Algorithm SHA256).Hash.ToLower()
+            pastabos     = $pastabos
+          } | ConvertTo-Json | Set-Content isvestis\atnaujinimai.json -Encoding utf8
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Brezly_${{ env.VERSIJA }}
+          path: isvestis/*
+
+      - name: Prisegti prie Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            isvestis/Brezly_Setup.exe
+            isvestis/Brezly_programa.zip
+            isvestis/atnaujinimai.json

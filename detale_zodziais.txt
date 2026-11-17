@@ -1,0 +1,19 @@
+# Ta pati detalė kaip detale_3d.txt, tik parašyta žodžiais
+sukurk sluoksnius
+nauja detalė
+plokštė 100x80x10
+suapvalink kampus r10
+blokas 100x40x30 taške 0 20 0
+dėžė 56x40x40 taške 22 20 30
+briauna 22x40x40 taške 0 20 30, aukštoji pusė dešinėje
+briauna 22x40x40 taške 78 20 30, aukštoji pusė kairėje
+cilindras ø50 aukštis 70 taške 50 40
+griovelis 30x82x30 taške 35 -1 40
+skylė ø40 gylis 40 taške 50 40
+šešiakampė skylė 26 taške 50 40
+gulinti skylė r10 taške 50 -1 0
+skylė ø10 taške 10 10
+skylė ø10 taške 90 10
+skylė ø10 taške 10 70
+skylė ø10 taške 90 70
+3D vaizdas

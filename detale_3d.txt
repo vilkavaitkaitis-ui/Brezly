@@ -1,0 +1,44 @@
+# 3D detalė pagal brėžinį. X = 0..100, Y = 0..80, Z = aukštis 0..70  (1 vnt = 1 mm)
+sluoksniai
+naujas
+
+# Pagrindo plokštė 100 x 80, storis 10
+deze 0 0 0 100 80 10
+# R10 kampai: nupjauti kampą ir užpildyti cilindru
+-deze 0 0 0 10 10 10
+cilindras 10 10 0 10 10
+-deze 90 0 0 10 10 10
+cilindras 90 10 0 10 10
+-deze 0 70 0 10 10 10
+cilindras 10 70 0 10 10
+-deze 90 70 0 10 10 10
+cilindras 90 70 0 10 10
+
+# Vidurinis blokas 100 x 40, aukštis 30
+deze 0 20 0 100 40 30
+
+# Viršutinė dalis (30..70 aukštyje): vidurys + 2 nuožulnūs šonai
+deze 22 20 30 56 40 40
+pleistas 0 20 30 22 40 40 +x
+pleistas 78 20 30 22 40 40 -x
+
+# Centrinis cilindras ø50 per visą aukštį
+cilindras 50 40 0 25 70
+
+# Griovelis 30 pločio iš viršaus iki 40 aukščio
+-deze 35 -1 40 30 82 31
+# Centrinė skylė ø40 iš viršaus
+-cilindras 50 40 30 20 41
+# Šešiakampė skylė apačioje (30 tarp kampų = 26 tarp briaunų)
+-sesiakampis 50 40 -1 26 32
+# Lanko R10 tunelis apačioje per visą ilgį
+-cilindrasy 50 -1 0 10 82
+
+# Tvirtinimo skylės ø10 x4
+-cilindras 10 10 -1 5 12
+-cilindras 90 10 -1 5 12
+-cilindras 10 70 -1 5 12
+-cilindras 90 70 -1 5 12
+
+# Kopiją su ketvirtine išpjova aksonometrijai padarysi komanda: ketvirtine
+vaizdas3d

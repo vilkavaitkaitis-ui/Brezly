@@ -1,0 +1,33 @@
+# Užduotis 3: pagrindas su šešiakampe įvore, briaunomis ir išpjovomis
+# Koordinatės: X 0..130 (ilgis), Y 0..70 (gylis), Z aukštis 0..55. Centras x=65, y=35
+sukurk sluoksnius
+nauja detalė
+
+# Pagrindas: galai 15 aukščio, vidurys (100 ilgio) 25 aukščio
+plokštė 130x70x15
+blokas 100x70x10 taške 15 0 15
+
+# Šešiakampė prizmė 30 tarp briaunų iki 55 aukščio (plokšti šonai kairėje/dešinėje)
+šešiakampis 30 aukštis 30 taške 65 35 25 pasukta 90
+
+# Standumo briaunos 8 storio: nuo x=35 iki šešiakampio, iki viršaus
+briauna 15x8x30 taške 35 31 25, aukštoji pusė dešinėje
+briauna 15x8x30 taške 80 31 25, aukštoji pusė kairėje
+
+# Kanalas apačioje 50 pločio, 5 aukščio, per visą gylį
+griovelis 50x72x5 taške 40 -1 -1
+
+# U išpjovos galuose: 10 gylio, 40 pločio (130 - 110 = 2 x 10)
+išpjauk 11x40x17 taške -1 15 -1
+išpjauk 11x40x17 taške 120 15 -1
+
+# Grioveliai priekyje ir gale: 10 pločio, 8 gylio, 15 žemyn nuo viršaus
+išpjauk 10x9x16 taške 60 -1 10
+išpjauk 10x9x16 taške 60 62 10
+
+# Skylės: ø20 kiaurai per šešiakampį, 2 x ø10 per 80
+skylė ø20 taške 65 35
+skylė ø10 taške 25 35
+skylė ø10 taške 105 35
+
+3D vaizdas

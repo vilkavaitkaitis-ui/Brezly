@@ -1,0 +1,17 @@
+# Detalė: stovas su šešiakampiu, briaunomis ir skylėmis
+# Koordinatės: X 0..100, Y 0..60, Z aukštis. Centras x=50, y=30.
+sukurk sluoksnius
+nauja detalė
+cilindras ø100 aukštis 20 taške 50 30
+išpjauk 100x21x22 taške 0 -21 -1
+išpjauk 100x21x22 taške 0 60 -1
+griovelis 30x62x10 taške 35 -1 -1
+šešiakampis 52 aukštis 10 taške 50 30 20
+cilindras ø40 aukštis 65 taške 50 30 20
+briauna 14x6x50 taške 17 27 20, aukštoji pusė dešinėje
+briauna 14x6x50 taške 69 27 20, aukštoji pusė kairėje
+skylė ø30 taške 50 30
+gulinti skylė r5 taške 50 -1 70
+skylė ø10 taške 10 30
+skylė ø10 taške 90 30
+3D vaizdas

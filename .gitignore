@@ -1,0 +1,12 @@
+# Niekada nekelti į GitHub:
+api_raktas.txt
+testavimas.json
+klaida.txt
+*.log
+# Surinkimo failai
+__pycache__/
+build/
+dist/
+isvestis/
+*.spec
+brezinai/

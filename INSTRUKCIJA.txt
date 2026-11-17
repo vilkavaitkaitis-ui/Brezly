@@ -1,0 +1,408 @@
+BRĖŽLY  -  paketas 1.4 (2026-11-09)
+====================================
+Nepriklausoma programa, nesusijusi su Autodesk, Inc.
+AutoCAD® yra Autodesk, Inc. prekės ženklas. Brėžly veikia su tavo
+teisėtai įdiegtu AutoCAD (tinka ir nemokama studentų licencija).
+
+Pakete trys programos:
+  Brėžly          - mokymosi programa: braižai pats, Brėžly veda ir tikrina
+  Brėžly Pilotas  - braižo už tave: 2D, 3D detalės, elektrinės schemos,
+                    supranta lietuviškai parašytus sakinius
+  DarkCAD         - Brėžly Piloto „tamsioji pusė“ (juokinga išvaizda)
+
+REIKIA
+------
+- Windows ir pilnas AutoCAD (NE AutoCAD LT - jis neturi programavimo sąsajos)
+- Python 3 iš python.org (diegiant pažymėk "Add Python to PATH")
+- pywin32 - įsidiegia automatiškai pirmą kartą paleidus (reikia interneto)
+
+DarkCAD - TAMSIOJI PUSĖ 😈
+-------------------------
+  Ta pati Brėžly Piloto programa (braižo už tave), tik su piktadario išvaizda:
+  raudona ir juoda, robotas su ragais ir šakėmis, juokingi užrašai
+  („Kam mokytis, jei galima nesimokyti?“, „Padaryk už mane“).
+  Paleidimas: nuoroda "DarkCAD" (po IDIEGTI.bat) arba DARKCAD.bat.
+  Mygtukas „Grįžti į šviesiąją pusę“ atidaro Brėžly.
+
+  NAUJA DarkCAD 1.5 (patogiau dirbti):
+    👋 Pirmas paleidimas - vardas, grupė, dėstytojas ir dažniausias lapas.
+       Kampinis įrašas („Braižė“, „Grupė“, „Tikrino“) pildomas automatiškai visada.
+    🧠 Atsimena pasirinkimus - kitą kartą lapas, tipas, šablonas ir šriftai jau
+       pasirinkti, atsidaro iš karto 3 žingsnis („Liko tik turinys“).
+    🕘 Istorija - 30 paskutinių darbų; „Kartoti“ - viskas nustatoma vienu paspaudimu.
+    ⭐ Mano šablonai - „Rašysiu žodžiais“ tekstą išsaugok kaip šabloną ir kitą
+       kartą įdėk vienu paspaudimu.
+    ⚡ Greita komanda - viena eilutė žodžiais tiesiai į atidarytą brėžinį
+       (pvz. „skylė ø10 taške 20 20“); ↑ ↓ - ankstesnės komandos. Yra 5 žingsnyje
+       ir bet kada per Ctrl+K.
+    📌 Šalia AutoCAD - siauras langas dešinėje, visada virš AutoCAD (meniu ☰).
+    🔌 AutoCAD - „Atidaryti“, jei neatidarytas; aiškus pranešimas apie AutoCAD LT.
+    💾 Brėžiniai saugomi Dokumentai\DarkCAD\Breziniai, nustatymai, istorija ir
+       šablonai - Dokumentai\DarkCAD\darkcad.json (išlieka perdiegus).
+    ⚙ Nustatymai - tema, teksto dydis, šalia AutoCAD, atsiminti pasirinkimus,
+       kampinis įrašas, pranešti apie klaidą, atnaujinimai.
+    ⌨ Spartieji klavišai: Ctrl+Enter - padaryk už mane (iš bet kurio žingsnio),
+       Ctrl+K - greita komanda, Ctrl+S - išsaugoti, Ctrl+H - istorija,
+       Alt+← / Alt+→ - žingsniai, Esc - uždaryti langelį.
+
+BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
+-------------------------------------------------------
+  Mokymosi programa: braižai AutoCAD'e PATS, o Brėžly veda ir tikrina.
+  Paleidimas: nuoroda "Brėžly" (po IDIEGTI.bat) arba BREZLY.bat.
+
+  7 pamokos iš eilės (kiekviena su žingsniais, tikrinimu ir testu):
+    1. Failas ir formatai   - NEW iš acadiso.dwt, UNITS, SAVEAS (DWG), PLOT į PDF
+    2. A3 lapas             - LAYOUTWIZARD, rėmelis 20/5 mm, kampinis įrašas 185 × 40
+    3. 2D brėžinys          - sluoksniai, RECTANG, CIRCLE, ašys, FILLET
+    4. Elektrinė schema     - ženklas, ATTDEF, BLOCK, INSERT, DATAEXTRACTION
+    5. Matmenys             - DIMSTYLE, DIMLINEAR, DIMDIAMETER
+    6. Šriftai              - STYLE: ISO (isocp.shx) ir ISO_LT (ISOCPEUR, ąčęėįšųūž)
+    7. Pirmoji 3D detalė    - BOX, CYLINDER, UNION, POLYGON + EXTRUDE, SUBTRACT,
+                              WEDGE, MIRROR3D
+  Pamokas gali rinktis kairėje sąraše; baigus pamoką - mygtukas "Kita pamoka".
+
+  Kiekviename žingsnyje:
+    Kodėl?          - paaiškinimas, kam to reikia
+    Komandų eilutė  - ką tiksliai įvesti AutoCAD'e (geltona - tavo atsakymai,
+                      mygtukas "Kopijuoti")
+    ✓ Patikrinti    - Brėžly perskaito tavo brėžinį (kūnų ribas, tūrį,
+                      sluoksnius) ir pasako, kas ne taip, pvz.
+                      "dydis pagal Z yra 10, o turi būti 20"
+    💡 Užuomina     - kai įstringi (kiekviena atima 25 % žingsnio XP)
+    👀 Parodyk man  - Brėžly pats atlieka žingsnį (XP už jį negausi)
+
+  👕 TAVO ROBOTAS IR SPINTA (meniu kairėje: Pamokos, Spinta, Lygiai, Profilis)
+    - Tavo robotas matosi kairėje viršuje ir tave veda kaip gidas.
+    - 21 daiktas: kepurės/šalmai, akiniai, kaklo papuošalai, įrankiai
+      rankoje (pieštukas, skriestuvas, liniuotė, slankmatis), 4 spalvos, 4 fonai.
+    - Daiktai atsirakina UŽ TIKRĄ PAŽANGĄ: lygius (XP), ženklelius,
+      baigtas pamokas ir mokymosi seriją (kelias dienas iš eilės).
+    - Atrakinus iššoka langas „Naujas daiktas“ - „Užsidėti dabar“.
+    - Spinta: apsirenk, „Atsitiktinis derinys“, pakeisk roboto vardą.
+    - Lygiai: 5 lygiai ir ką kiekvienas atrakina.
+    - Profilis: statistika, ženkleliai, „Atsisiųsti kortelę (PNG)“
+      ir „Kopijuoti tekstą“ - pasigirti draugams.
+  🔒 KŪRĖJO REŽIMAS (testavimui): Nustatymai → Kūrėjo režimas → Atrakinti →
+    slaptažodis. Tada: +50 XP, +250 XP, Visi ženkleliai, +1 d. serija,
+    Atstatyti viską. Slaptažodis tikrinamas programos serveryje, faile
+    testavimas.json saugoma tik jo „maiša“ (atkurti neįmanoma); po 5 klaidų -
+    1 min. pertrauka. Pakeisti slaptažodį: SLAPTAZODIS.bat.
+    Naudotojų versijoje (Brezly_Setup.exe / .bat) testavimas.json nėra -
+    kūrėjo režimo visai nesimato.
+
+  🤖 ROBOTAS GIDAS iššoka ir rodykle bei paryškinimu parodo, kur spausti:
+    - pirmą kartą paleidus - trumpas turas po programą;
+    - pirmą kartą atidarius žingsnį - kas yra kas (juosta, komandos,
+      Patikrinti, Užuomina, Parodyk man);
+    - suklydus - paaiškina, kur parašyta klaida; suklydus antrą kartą -
+      pasiūlo užuominą arba „Parodyk man“;
+    - pavykus - parodo „Kitas žingsnis“;
+    - jei ilgai (1,5 min.) nieko nedarai - primena paspausti Patikrinti;
+    - jei AutoCAD neprijungtas - parodo mygtuką Jungtis.
+  Apačioje kairėje: "🤖 Gidas: įj./išj." - įjungti ar išjungti,
+  "❔ Turas" - parodyti turą iš naujo.
+
+  XP taškai, lygiai (Naujokas → Kadetas → Braižytojas → Konstruktorius →
+  Inžinierius) ir ženkleliai. Progresas įsimenamas (ir tas, kurį surinkai CADet versijoje).
+  Netrukus: pjūviai ir ketvirtinė išpjova, projekcijos iš 3D, aksonometrija.
+
+  Patarimas: pradėk nuo mygtuko "Naujas brėžinys (acadiso.dwt)", kad
+  tikrinimui netrukdytų kiti objektai.
+
+  KŪRĖJO PULTAS (Nustatymai -> Kūrėjo režimas -> slaptažodis -> 🛠 Kūrėjo pultas)
+    Matai tik tu. Užsirakina pats po 30 min. be veiklos (ir serveryje, ir lange).
+    🎯 Šuolis į bet kurią pamoką/žingsnį, įskaityti iki žingsnio, visa pamoka, iš naujo.
+    ⚡ Mygtukas apačioje dešinėje - įskaito dabartinį žingsnį ar praktikos užduotį be tikrinimo.
+    📐 Praktikos užduotis pažymėti atliktomis / nuimti.
+    ⭐ XP, lygis 1-5 vienu paspaudimu, ženkleliai, serija, profilio eksportas/importas (JSON).
+    🖥 AutoCAD imitacija (tikrinimas visada „gerai“ arba „blogai“ - testuok be AutoCAD)
+       ir „Ką mato tikrinimas“: AutoCAD versija, kalba, failas, sluoksniai, objektai,
+       apskritimų skersmenys, 3D kūnų ribos ir tūriai, pamokos/praktikos tikrinimo rezultatas.
+    🔁 Vedlys, „Kas naujo“, gido turas, atlygio langas - iš naujo.
+    🤖 Personažo reakcijos, animacijų greitis ×0.5/×1/×2, 🎬 demo režimas įrašams
+       (pavyzdinis progresas, vardas paslėptas, niekas neįrašoma), 📸 lango nuotrauka PNG.
+    📜 Žurnalas su kopijavimu. 🧩 Funkcijų jungikliai (funkcijos.json - keliauja su programa).
+    🔑 Slaptažodžio keitimas ir „leisti tik šiame kompiuteryje“.
+
+  NAUJA 0.8.1 - PATOGU NEŠIOJAMAME KOMPIUTERYJE
+    📌 „Šalia AutoCAD“: Brėžly dešinėje, o AutoCAD langas sumažinamas iki likusios vietos -
+       Brėžly nebeuždengia brėžinio. Grįžus į didelį langą AutoCAD vėl išdidinamas.
+    ▫ „Mini“: maža kortelė apačioje dešinėje (dabartinis žingsnis, komandos, Patikrinti,
+       Užuomina, Toliau) - AutoCAD gali būti per visą ekraną.
+    ⌨ Spartieji klavišai, veikia ir dirbant AutoCAD'e:
+       Ctrl+Alt+T - patikrinti brėžinį, Ctrl+Alt+M - mini / šalia, Ctrl+Alt+B - parodyti Brėžly.
+    💻 Mažas ekranas atpažįstamas pats: pirmą kartą įjungiamas „Šalia AutoCAD“,
+       langas niekada nebūna didesnis už ekraną, tekstas prisitaiko („Teksto dydis: Pagal ekraną“).
+    Žemame lange mygtukai „Patikrinti / Užuomina“ visada matomi apačioje,
+       o patikrinimo atsakymas parodomas automatiškai.
+
+  NAUJA 0.8 VERSIJOJE - PRAKTIKA
+    📐 Naujas skyrius „Praktika“ (meniu kairėje): 8 tikri brėžiniai su rėmeliu.
+       2D užduotys A4 lape: tarpinė, flanšas, L laikiklis, velenas, 3 projekcijos, schema.
+       3D užduotys A3 lape: izometrija, 3D detalė.
+    ▶ „Pradėti“ atidaro AutoCAD'e tuščią lapą su rėmeliu ir užpildytu įrašu
+       (failas Dokumentai\Brezly\Praktika\<užduotis>_mano.dxf - išsaugok kaip DWG).
+    ✔ „Patikrinti“ perskaito brėžinį: apskritimų skersmenis, linijas, HATCH,
+       blokus, 3D kūno tūrį - ir pasako, ko trūksta. Už atliktą užduotį - XP.
+    👁 „Pavyzdys“ - atsakymas atskirame faile, 🖨 „Spausdinti“ - PDF tikru dydžiu.
+    Ženklelis „📐 Praktikas“ - už 4 atliktas užduotis.
+
+  NAUJA 0.7 VERSIJOJE - PERSONAŽAI IR JUDESYS
+    🐱 8 personažai: robotas, katinas, pelėda, lapė, drakoniukas, ateivis,
+       pingvinas, meškiukas. Renkamasi pirmo paleidimo vedlyje („Pasirink savo
+       personažą“) arba bet kada Spintoje → „Personažas“. Visi atrakinti iš karto,
+       visiems tinka visi daiktai. Savo sugalvotas vardas keičiant personažą lieka.
+    🎬 Gyvas personažas: mirksi, kvėpuoja, seka pelę akimis, pašoka kai pavyksta,
+       nuliūsta kai suklysti, kalba kai rodo kelią, kartais pamoja.
+       Išjungti: Nustatymai → „Gyvas robotukas“ (ir Windows „Mažiau animacijų“).
+    ✨ Naujas logotipas: kryželis virš „ė“, robotas su iš už nugaros žvilgtelinčiu
+       katinu, žyma 0.7; nauja ikona ir užsklanda su visais personažais.
+    🎉 Atnaujinus iš senesnės versijos vieną kartą parodomas langas „Kas naujo“.
+
+  NAUJA 0.6 VERSIJOJE
+    📌 Šalia AutoCAD  - siauras langas dešinėje, visada virš AutoCAD
+                        (mygtukas viršuje arba Nustatymuose; ⇱ - didelis langas).
+    👀 Automatinis tikrinimas - Brėžly kas 4 s pažiūri į brėžinį ir pats
+                        pastebi, kai žingsnis padarytas („Pastebėjau - padarei!“).
+                        Netrukdo, kol AutoCAD'e vykdoma komanda. Išjungti -
+                        Nustatymuose arba žingsnio apačioje.
+    🔌 Ryšys su AutoCAD - jei AutoCAD neatidarytas, mygtukas „Atidaryti AutoCAD“;
+                        jei įdiegtas tik AutoCAD LT - aiškiai pasakoma, kad LT
+                        programoms valdyti neleidžia.
+    _ Komandos       - ne angliškam AutoCAD komandos rodomos su „_“
+                        (_LINE, _CIRCLE) - veikia bet kurioje kalboje.
+                        Nustatoma automatiškai pagal AutoCAD kalbą.
+    💾 Progresas faile - Dokumentai\Brezly\progresas.json (+ atsarginė kopija .bak).
+                        Išlieka perdiegus; norint perkelti į kitą kompiuterį -
+                        nukopijuok šį failą.
+    👋 Pirmo paleidimo vedlys - vardas, ar moki pagrindus (tada pradedama
+                        nuo 3 pamokos), tema ir šrifto dydis.
+    🔠 Šrifto dydis    - Įprastas / Didesnis / Didelis (Nustatymai).
+    🃏 Kartoti         - komandų kortelės ir testas iš visų pamokų be AutoCAD;
+                        „Atsisiųsti failą telefonui“ - vienas HTML failas,
+                        veikia telefone be interneto.
+    🐞 Pranešti apie klaidą - Nustatymai: sukuria ZIP su informacija
+                        (Dokumentai\Brezly\ataskaitos) - atsiųsk jį kūrėjui.
+    ↻ Atnaujinimai     - jei šalia programos yra atnaujinimai_url.txt (adresas
+                        į atnaujinimai.json, pvz. GitHub Release), Brėžly pats
+                        praneša apie naują versiją ir atsinaujina vienu paspaudimu.
+
+  TIKRA DIEGIMO PROGRAMA (Brezly_Setup.exe)
+    Tavo kompiuteryje: dukart spustelėk SUKURTI_DIEGIMA.bat (reikia Python ir
+    interneto). Jis sukuria Brezly.exe, prireikus įdiegia Inno Setup ir sudeda
+    viską į isvestis\Brezly_Setup.exe. Šį vieną failą gali duoti draugams:
+    „Toliau → Įdiegti → Baigti“, be administratoriaus teisių, be Python,
+    pašalinama per Windows „Programos“.
+    Arba GitHub: įkelk aplanką į GitHub saugyklą → Actions → „Brėžly diegimo
+    programa“ → Run workflow; įkėlus žymą (git tag v0.6) sukuriamas Release su
+    Brezly_Setup.exe ir atnaujinimai.json. Tada į atnaujinimai_url.txt įrašyk:
+    https://github.com/TAVO_VARDAS/SAUGYKLA/releases/latest/download/atnaujinimai.json
+    Pastaba: Windows SmartScreen pirmą kartą gali sakyti „Windows apsaugojo
+    jūsų kompiuterį“ - „Daugiau informacijos“ → „Vis tiek paleisti“
+    (taip yra visoms nepasirašytoms programoms).
+
+BRĖŽLY PILOTAS - PROGRAMA SU LANGU
+----------------------------------
+  Paleidimas: nuoroda "Brėžly Pilotas" (po IDIEGTI.bat) arba PROGRAMA.bat.
+  Atsidaro atskiras programos langas (per Microsoft Edge, be naršyklės juostų):
+    - roboto užsklanda;
+    - kairėje žingsniai: Formatas -> Tipas -> Turinys -> Nustatymai -> Braižyti
+      (spausk ant atlikto žingsnio, kad grįžtum);
+    - kortelės su lapo formomis, tipų piktogramomis ir paruoštomis detalėmis;
+    - "Rašysiu žodžiais" su mygtuku "Kaip programa supras";
+    - .txt failą ar nuotrauką gali įtempti pele;
+    - nustatymai: šablonas (acadiso.dwt - rekomenduojama), ISO šriftai,
+      ketvirtinė išpjova, kampinio įrašo laukai;
+    - Braižyti, spalvotas žurnalas, išsaugojimas DWG/DXF/PDF;
+    - apačioje kairėje: ryšys su AutoCAD, akcento spalva ir tamsi/šviesi tema.
+  Programa veikia tik tavo kompiuteryje (jokio interneto nereikia, išskyrus AI).
+  Uždarius langą, ji išsijungia pati po kelių sekundžių.
+
+KAIP PROGRAMA (su ikona ant darbalaukio)
+----------------------------------------
+  IDIEGTI.bat     - vieną kartą du kartus spausk: ant darbalaukio ir Start
+                    meniu atsiras "Brėžly" (mokymasis), "Brėžly Pilotas"
+                    (programa su langu), "Brėžly Pilotas konsole" (meniu
+                    juodame lange) ir "DarkCAD". Senos nuorodos
+                    "AutoCAD AI" ir "CADet" pašalinamos.
+                    Toliau paleidi kaip bet kurią programą.
+                    Svarbu: aplanko po to nebeperkelk (arba paleisk IDIEGTI.bat
+                    dar kartą naujoje vietoje).
+  SUKURTI_EXE.bat - nebūtina. Sukuria tikrus "Brezly.exe",
+                    "Brezly Pilotas.exe", "Brezly Pilotas konsole.exe" ir
+                    "DarkCAD.exe" (reikia interneto, 1-3 min.),
+                    tada pati sukuria nuorodas. .exe failai turi likti šiame
+                    aplanke šalia .txt detalių.
+                    Windows SmartScreen gali įspėti apie nežinomą programą:
+                    "Daugiau informacijos" -> "Vis tiek paleisti".
+
+PALEIDIMAS
+----------
+1. Išskleisk ZIP ("Extract All"), pvz. į Darbalaukį. Nepaleisk iš ZIP vidaus.
+2. Atsidaryk AutoCAD su NAUJU brėžiniu, AutoCAD'e paspausk Esc.
+3. Pasirink vieną iš būdų:
+
+   A) LANGAS.bat  - langas, kuriame rašai žodžiais (paprasčiausia)
+      Įrašai, ką nori, po vieną veiksmą eilutėje, spaudi "Braižyti" (Ctrl+Enter).
+      Mygtukai dešinėje įrašo paruoštus pavyzdžius:
+        Detalė iš brėžinio, Laikiklis su arka, Stovas su šešiakampiu,
+        3D detalė, Elektrinė schema, 2D figūros.
+      "Tik parodyti komandas" - parodo, kaip programa suprato tekstą, nebraižydama.
+
+   B) PALEISTI.bat - meniu žingsniais:
+        1 žingsnis: LAPO FORMATAS  - A4 (stačias), A3, A2, A1, A0 arba be lapo
+                    (N - naujas tuščias failas, T - testas, L - langas, Q - išeiti)
+        2 žingsnis: BRAIŽYMO TIPAS - 3D detalė / 2D brėžinys / elektrinė schema
+        3 žingsnis: KĄ BRAIŽYTI    - paruošta detalė
+                                     arba pagal tavo duomenis:
+                                       rašysiu žodžiais čia,
+                                       iš .txt failo (įtempk pele),
+                                       nuotrauka / aprašymas -> AI
+      Tada programa paklaus:
+        - BRĖŽINYS: naujas iš acadiso.dwt (Enter - numatyta), acadiso3D.dwt,
+          acad.dwt, savo .dwt šablono arba tęsti atidarytame;
+        - ar sukurti ISO ŠRIFTUS ir matmenų stilių (nebūtina, numatyta - ne).
+      Tada programa paklaus kampinio įrašo duomenų (pavadinimas, braižė,
+      tikrino, grupė) ir pati įformins:
+        3D     - kopija su ketvirtine išpjova + lapas PAPER erdvėje
+                 pasirinkto formato su rėmeliu ir kampiniu įrašu
+        2D     - rėmelis MODEL erdvėje aplink brėžinį + kampinis įrašas
+        schema - rėmelis + kampinis įrašas + aprašo lentelė
+      Pabaigoje - IŠSAUGOJIMAS: DWG (2018), DWG 2013/2010/2007/2004, DXF arba PDF.
+      Galima išsaugoti keliais formatais iš eilės. Failai dedami į aplanką
+      "brezinai" programos aplanke (arba įrašyk pilną kelią).
+      "0" bet kuriame žingsnyje - grįžti atgal.
+
+   N - NAUJAS TUŠČIAS FAILAS užduočiai: šablonas (acadiso.dwt), ISO šriftai
+      (nebūtina), sluoksniai, formatas, lapas PAPER erdvėje arba rėmelis
+      MODEL erdvėje, kampinis įrašas ir išsaugojimas norimu formatu.
+      Savo .txt failai, įdėti į šį aplanką, atsiranda 3 žingsnyje
+      kaip "Mano failas".
+
+FAILAI
+------
+  branduolys.py          Brėžly Piloto branduolys (braižymas per AutoCAD)
+  kalba.py               lietuviškų sakinių supratimas
+  langas.py              langas (paleidžiamas per LANGAS.bat)
+  programa.py, ui.html   programa su langu (paleidžiama per PROGRAMA.bat)
+  brezly.py, brezly.html,  Brėžly mokymosi programa (BREZLY.bat)
+  pamokos.py, brezly.ico
+  darkcad.py, darkcad.html, DarkCAD - tamsioji pusė (DARKCAD.bat)
+  darkcad.ico
+  meniu.py               meniu žingsniais konsolėje (PALEISTI.bat)
+  robotas.ico            programos ikona
+  IDIEGTI.bat            nuorodos ant darbalaukio ir Start meniu
+  SUKURTI_EXE.bat        .exe programos kūrimas (nebūtina)
+  zenklas.py             paleidimo užsklanda (talismanas + užrašas Brėžly);
+                         bet kuris klavišas - praleisti
+  detale_3d.txt          1-oji detalė komandomis
+  detale_zodziais.txt    ta pati 1-oji detalė žodžiais
+  detale2_zodziais.txt   laikiklis su arka (žodžiais)
+  detale3_zodziais.txt   stovas su šešiakampiu (žodžiais)
+  detale_2d.txt          1-osios detalės 2D vaizdai
+  schema_pvz.txt         elektrinė schema A4 lape
+  testas.txt             visko patikrinimas
+  api_raktas.txt         API raktas AI režimui (nebūtinas)
+Bet kurį .txt failą įvykdai: lange "Atidaryti .txt" -> "Braižyti",
+arba konsolėje: failas detale2_zodziais.txt
+Savo detalei nukopijuok kurį nors failą, pakeisk eilutes ir paleisk.
+
+RAŠYMAS ŽODŽIAIS
+----------------
+Po vieną veiksmą eilutėje. Pavyzdžiai:
+  sukurk sluoksnius
+  nauja detalė
+  plokštė 100x80x10
+  suapvalink kampus r10
+  blokas 100x40x30 taške 0 20 0
+  cilindras ø50 aukštis 70 taške 50 40
+  gulintis cilindras r20 ilgis 60 taške 70 0 60
+  šešiakampis 52 aukštis 10 taške 50 30 20
+  briauna 22x40x40 taške 0 20 30, aukštoji pusė dešinėje
+  skylė ø10 taške 10 10                 (kiaurai)
+  skylė ø40 gylis 40 taške 50 40        (gylis nuo detalės viršaus)
+  įleidimas ø20 gylis 5 taške 30 30 10  (gylis nuo paviršiaus z=10)
+  šešiakampė skylė 26 taške 50 40
+  kvadratinė skylė 10 taške 70 30 pasukta 45
+  gulinti skylė r10 taške 50 -1 0       (tunelis per visą ilgį)
+  griovelis 30x82x30 taške 35 -1 40
+  išpjauk 100x21x22 taške 0 -21 -1
+  ketvirtinė išpjova
+  3D vaizdas / vaizdas iš viršaus
+  A3 lapas / A4 lapas ... A0 lapas       (PAPER erdvėje)
+  rėmelis A3                            (MODEL erdvėje)
+  atšauk / išvalyk
+
+Dydžiai:  100x60x20, ø40 arba skersmuo 40, r20 arba spindulys 20,
+          aukštis, ilgis, plotis, storis, gylis, kampas / pasukta
+Vieta:    taške 50 30 (arba 50,30), taške 50 30 20 (su aukščiu z), x 12 y 12
+Ašys:     X - ilgis, Y - gylis, Z - aukštis. Pradžia - taškas 0,0,0.
+Trupmenos: su tašku - 2.5
+
+2D:       linija 0 0 100 100, apskritimas ø50 taške 0 0, kvadratas 40,
+          stačiakampis 100x60 taške 0 0, trikampis 0 0 50 0 25 40,
+          tekstas "Labas" taške 0 60 aukštis 8
+Schemos:  rėmelis A4, kampinis įrašas "Pavadinimas",
+          rezistorius 1 kΩ taške 105 250, lemputė 12 V taške 140 205 vertikali,
+          kondensatorius, diodas, jungiklis, saugiklis, ritė, baterija, variklis,
+          laidas 40 220 40 250 55 250, mazgas 140 250, aprašo lentelė
+
+Ko programa nesupranta - parodo raudonai. Jei yra API raktas - perduoda AI.
+
+ISO ŠRIFTAI (nebūtina funkcija: meniu klausimas arba žodžiai "sukurk šriftus")
+----------
+  ISO     - isocp.shx, stačias
+  ISO_K   - isocp.shx, pasvirasis 15° (ISO 3098 B tipas)
+  ISO_LT  - ISOCPEUR, pasvirasis 15°, su lietuviškomis raidėmis (aktyvus)
+            Jei ISOCPEUR šrifto kompiuteryje nėra - naudojamas Arial.
+  ISO_MATMENYS - matmenų stilius: tekstas ISO_LT 3.5 mm, rodyklės 3 mm,
+            tekstas virš matmens linijos, be dešimtainių.
+  Rekomenduojami teksto aukščiai: 2.5, 3.5, 5, 7, 10, 14 mm.
+
+FAILAI IR FORMATAI (žodžiais)
+-----------------------------
+  naujas failas                       - iš acadiso.dwt
+  naujas failas iš acadiso3D.dwt
+  išsaugok kaip detale.dwg            - DWG 2018
+  išsaugok kaip detale.dwg 2013       - senesnė DWG versija
+  išsaugok kaip detale.dxf
+  išsaugok kaip detale.pdf            - PDF (lapas arba visas MODEL vaizdas)
+
+KOMANDOS (tikslus formatas)
+---------------------------
+Visas sąrašas: konsolėje "pagalba" arba lange "Visos komandos".
+3D kūnai su minusu priekyje (-deze, -cilindras ...) IŠPJAUNA iš detalės.
+
+UŽDUOTIMS
+---------
+3D detalė su pjūviais (A3):
+  1. sukurk sluoksnius -> detalė -> ketvirtinė išpjova -> A3 lapas
+  2. Lape: Layout -> Base -> From Model Space (vaizdai), Section (pjūvis),
+     aksonometrijai pasirink kopiją su ketvirtine išpjova,
+     ašys sluoksnyje ASYS, matmenys sluoksnyje MATMENYS, Plot -> PDF.
+Elektrinė schema (A4):
+  remelis_a4, kampinis (išorinis blokas kampinis_irasas.dwg), elementai -
+  vidiniai blokai su atributais POZ (matomas) ir NUORODA (nematomas),
+  aprasas - lentelė virš kampinio įrašo. Kampinį įrašą pildyk du kartus
+  spustelėjęs ant jo.
+
+AI REŽIMAS (nebūtinas)
+----------------------
+Leidžia braižyti pagal nuotrauką ar laisvą aprašymą.
+  1. https://console.anthropic.com - užsiregistruok, Billing papildyk balansą
+     (mokama už užklausas, vienas brėžinys - centai).
+  2. API Keys -> Create Key -> nukopijuok (prasideda sk-ant-).
+  3. Įklijuok į api_raktas.txt ir išsaugok. Raktu nesidalink.
+  Naudojimas: ai <aprašymas>, foto <nuotrauka>, lange "Nuotrauka -> AI".
+
+JEI KAS NEVEIKIA
+----------------
+- "Nepavyko rasti AutoCAD" - reikia pilno AutoCAD, ne LT.
+- "Call was rejected" / programa laukia - AutoCAD'e atidarytas langas ar
+  vykdoma komanda. Uždaryk, paspausk Esc. Programa pati bando kelis kartus.
+- "Praleista ..." - ta eilutė nepavyko, kitos vykdomos toliau.
+  Nufotografuok klaidos tekstą - pagal jį lengva pataisyti.
+- Langas neatsidaro - žiūrėk klaida.txt programos aplanke.
+- Brūkšninės linijos ištisinės - AutoCAD'e LTSCALE, pabandyk 0.5 arba 1.
+- Nesimato linijų storių - apačioje įjunk Show Lineweight (LWDISPLAY).
+- pywin32 klaida - komandų lange: python -m pip install --upgrade pywin32

@@ -1,0 +1,38 @@
+# Elektrinė principinė schema A4 lape (pavyzdys)
+# Ženklai - blokai su atributais POZ (matomas) ir NUORODA (nematomas, rodomas aprašo lentelėje)
+sluoksniai
+
+# Rėmelis ir kampinio įrašo lentelė (išorinis blokas)
+remelis_a4
+kampinis Elektrinė principinė schema
+
+# ----- Elementai -----
+# elementas TIPAS x y kampas POZ nuoroda
+elementas MAITINIMAS 40 200 90 GB1 12 V
+elementas JUNGIKLIS 55 250 0 SA1
+elementas SAUGIKLIS 80 250 0 FU1 2 A
+elementas REZISTORIUS 105 250 0 R1 1 kΩ
+elementas REZISTORIUS 140 205 90 R2 2,2 kΩ
+elementas KONDENSATORIUS 165 205 90 C1 100 µF
+elementas LEMPUTE 190 205 90 HL1 12 V; 5 W
+elementas DIODAS 120 180 180 VD1 1N4007
+
+# ----- Laidai -----
+laidas 40 220 40 250 55 250
+laidas 75 250 80 250
+laidas 100 250 105 250
+laidas 125 250 190 250 190 225
+laidas 140 250 140 225
+laidas 165 250 165 225
+laidas 140 205 140 180
+laidas 165 205 165 180
+laidas 190 205 190 180 120 180
+laidas 100 180 40 180 40 200
+mazgas 140 250
+mazgas 165 250
+mazgas 140 180
+mazgas 165 180
+
+# ----- Aprašo lentelė virš kampinio įrašo -----
+aprasas
+zoom

@@ -1,0 +1,28 @@
+# Detalė: ovalus pagrindas su arka (U formos laikiklis)
+# Koordinatės: X 0..140 (ilgis), Y 0..60 (plotis), Z aukštis. Centras x=70, y=30.
+sukurk sluoksnius
+nauja detalė
+
+# Pagrindas: 80x60x10 vidurys + R30 galai (ilgis 80 + 2x30 = 140)
+plokštė 80x60x10 taške 30 0 0
+cilindras r30 aukštis 10 taške 30 30
+cilindras r30 aukštis 10 taške 110 30
+
+# Arka: stulpas 40 pločio iki 60 aukščio + R20 viršus (centras 60 aukštyje)
+blokas 40x60x60 taške 50 0 0
+gulintis cilindras r20 ilgis 60 taške 70 0 60
+
+# Anga arkos viduje: 20 pločio iki centro + R10 viršus, kiaurai per visą plotį
+griovelis 20x62x60 taške 60 -1 -1
+gulinti skylė r10 taške 70 -1 60
+
+# Kvadratinė skylė 10, pasukta 45°, per arkos viršų
+kvadratinė skylė 10 taške 70 30 pasukta 45
+
+# Tvirtinimo skylės 2x ø10 ir įleidimai 2x ø20, gylis 5 nuo plokštės viršaus (z=10)
+skylė ø10 taške 30 30
+skylė ø10 taške 110 30
+įleidimas ø20 gylis 5 taške 30 30 10
+įleidimas ø20 gylis 5 taške 110 30 10
+
+3D vaizdas

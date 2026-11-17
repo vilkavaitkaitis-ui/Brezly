@@ -1,0 +1,31 @@
+# ================================================================
+# TESTAS: viskas iš užduoties "Trimatis detalės modelis su pjūviais"
+# Detalė pagal užduoties pavyzdį: box 100x60x20, cilindras,
+# šešiakampė skylė, dvi standumo briaunos (wedge)
+# ================================================================
+
+# 1. Sluoksniai: KONTURAS, ASYS, MATMENYS, NEMATOMOS
+sluoksniai
+
+# 2. 3D detalė MODEL erdvėje (sluoksnyje KONTURAS)
+naujas
+# Pagrindas: box nuo 0,0,0 iki 100,60, aukštis 20
+deze 0 0 0 100 60 20
+# Cilindras ø40, aukštis 60, sujungiamas su pagrindu (Union)
+cilindras 50 30 0 20 60
+# Standumo briaunos: storis 8, nuo pagrindo iki 50 aukščio, aukštoji pusė prie cilindro
+pleistas 12 26 20 20 8 30 +x
+pleistas 68 26 20 20 8 30 -x
+# Šešiakampė skylė per visą cilindrą (Subtract), 24 tarp briaunų
+-sesiakampis 50 30 -1 24 62
+# Tvirtinimo skylės ø10
+-cilindras 12 12 -1 5 22
+-cilindras 88 12 -1 5 22
+-cilindras 12 48 -1 5 22
+-cilindras 88 48 -1 5 22
+
+# 3. Kopija su ketvirtine išpjova aksonometrijai (padedama dešinėje)
+ketvirtine
+
+# 4. A3 lapas PAPER erdvėje su rėmeliu ir kampiniu įrašu
+lapas_a3 A3_Detale

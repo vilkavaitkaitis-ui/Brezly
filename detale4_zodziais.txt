@@ -1,0 +1,12 @@
+# Detalė: "namelio" profilio prizmė su anga, kraigo grioveliu ir išpjovomis galuose
+# Koordinatės: X 0..75 (ilgis), Y 0..50 (gylis), Z aukštis 0..42. Kraigas ties x=37.5
+sukurk sluoksnius
+nauja detalė
+plokštė 75x50x15
+briauna 37.5x50x27 taške 0 0 15, aukštoji pusė dešinėje
+briauna 37.5x50x27 taške 37.5 0 15, aukštoji pusė kairėje
+išpjauk 42x52x24 taške 16.5 -1 -1
+griovelis 10x52x12 taške 32.5 -1 30
+išpjauk 6x16x30 taške -1 17 -1
+išpjauk 6x16x30 taške 70 17 -1
+3D vaizdas
