@@ -34,3 +34,6 @@ Naudok **AutoCAD priedą** – jo Windows neblokuoja, nes jį paleidžia pats Au
 3. Kad kraustųsi kiekvieną kartą: `APPLOAD` → **Startup Suite** → **Contents…** → **Add** → `Brezly.lsp`.
 
 Komandos: `BREZLY` (praktikos langas), `BRLAPAS` (lapo rėmelis), `TIKRINK` (patikrinti).
+
+**Jei naršyklė neleidžia atsisiųsti `.lsp`:** atsisiųsk [Brezly.txt](../../releases/latest/download/Brezly.txt)
+ir AutoCAD komandų eilutėje įrašyk `(load (getfiled "Brezly" "" "txt" 0))` → pasirink atsisiųstą failą.
