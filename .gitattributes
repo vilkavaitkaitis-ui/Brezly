@@ -1,0 +1,6 @@
+# .bat failai Windows'ui turi likti su CRLF eilučių pabaigomis
+*.bat text eol=crlf
+*.dxf -text
+*.ico binary
+*.png binary
+*.pdf binary
