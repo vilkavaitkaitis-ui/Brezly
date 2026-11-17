@@ -1,9 +1,10 @@
 /* Brėžly programėlės talpykla - veikia be interneto */
-const VERSIJA = "brezly-app-1";
+const VERSIJA = "brezly-app-2";
 const FAILAI = [
  "./",
  "index.html",
  "tikrinimas.js",
+ "pamokos.json",
  "manifest.webmanifest",
  "icon-192.png",
  "icon-512.png",
