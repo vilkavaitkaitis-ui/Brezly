@@ -20,9 +20,8 @@ echo [1/3] Diegiami PyInstaller ir pywin32...
 echo.
 echo [2/3] Kuriamas Brezly.exe...
 rem testavimas.json NEdedamas - naudotoju versijoje testavimo irankiu nera
-%PY% -m PyInstaller --noconfirm --clean --windowed --name Brezly --icon brezly.ico ^
-  --contents-directory . --add-data "brezly.html;." --add-data "brezly.ico;." --add-data "praktika;praktika" ^
-  --hidden-import win32timezone brezly.py || goto klaida
+rem failu sarasas - irankiai\surinkti.py (tas pats kaip GitHub surinkime)
+%PY% irankiai\surinkti.py exe || goto klaida
 
 echo.
 echo [3/3] Kuriama diegimo programa...

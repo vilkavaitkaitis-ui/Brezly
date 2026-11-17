@@ -38,12 +38,7 @@ echo Kuriamas "Brezly.exe" (mokymosi programa)...
 %PY% -m PyInstaller --noconfirm --clean --onefile --windowed --icon brezly.ico --name "Brezly" brezly.py
 if errorlevel 1 goto klaida
 
-echo.
-echo Kuriamas "DarkCAD.exe" (tamsioji puse)...
-%PY% -m PyInstaller --noconfirm --clean --onefile --windowed --icon darkcad.ico --name "DarkCAD" darkcad.py
-if errorlevel 1 goto klaida
 
-copy /y "dist\DarkCAD.exe" . >nul
 copy /y "dist\Brezly.exe" . >nul
 copy /y "dist\Brezly Pilotas.exe" . >nul
 copy /y "dist\Brezly Pilotas konsole.exe" . >nul
@@ -52,7 +47,7 @@ rmdir /s /q dist 2>nul
 del /q *.spec 2>nul
 
 echo.
-echo Sukurta: "Brezly Pilotas.exe", "Brezly Pilotas konsole.exe", "Brezly.exe" ir "DarkCAD.exe" siame aplanke.
+echo Sukurta: "Brezly Pilotas.exe", "Brezly Pilotas konsole.exe" ir "Brezly.exe" siame aplanke.
 echo .exe failai turi likti siame aplanke - salia ui.html, brezly.html ir .txt failu.
 echo.
 echo Dabar sukursiu nuorodas ant darbalaukio...

@@ -4,46 +4,16 @@ Nepriklausoma programa, nesusijusi su Autodesk, Inc.
 AutoCAD® yra Autodesk, Inc. prekės ženklas. Brėžly veikia su tavo
 teisėtai įdiegtu AutoCAD (tinka ir nemokama studentų licencija).
 
-Pakete trys programos:
+Pakete dvi programos:
   Brėžly          - mokymosi programa: braižai pats, Brėžly veda ir tikrina
   Brėžly Pilotas  - braižo už tave: 2D, 3D detalės, elektrinės schemos,
                     supranta lietuviškai parašytus sakinius
-  DarkCAD         - Brėžly Piloto „tamsioji pusė“ (juokinga išvaizda)
 
 REIKIA
 ------
 - Windows ir pilnas AutoCAD (NE AutoCAD LT - jis neturi programavimo sąsajos)
 - Python 3 iš python.org (diegiant pažymėk "Add Python to PATH")
 - pywin32 - įsidiegia automatiškai pirmą kartą paleidus (reikia interneto)
-
-DarkCAD - TAMSIOJI PUSĖ 😈
--------------------------
-  Ta pati Brėžly Piloto programa (braižo už tave), tik su piktadario išvaizda:
-  raudona ir juoda, robotas su ragais ir šakėmis, juokingi užrašai
-  („Kam mokytis, jei galima nesimokyti?“, „Padaryk už mane“).
-  Paleidimas: nuoroda "DarkCAD" (po IDIEGTI.bat) arba DARKCAD.bat.
-  Mygtukas „Grįžti į šviesiąją pusę“ atidaro Brėžly.
-
-  NAUJA DarkCAD 1.5 (patogiau dirbti):
-    👋 Pirmas paleidimas - vardas, grupė, dėstytojas ir dažniausias lapas.
-       Kampinis įrašas („Braižė“, „Grupė“, „Tikrino“) pildomas automatiškai visada.
-    🧠 Atsimena pasirinkimus - kitą kartą lapas, tipas, šablonas ir šriftai jau
-       pasirinkti, atsidaro iš karto 3 žingsnis („Liko tik turinys“).
-    🕘 Istorija - 30 paskutinių darbų; „Kartoti“ - viskas nustatoma vienu paspaudimu.
-    ⭐ Mano šablonai - „Rašysiu žodžiais“ tekstą išsaugok kaip šabloną ir kitą
-       kartą įdėk vienu paspaudimu.
-    ⚡ Greita komanda - viena eilutė žodžiais tiesiai į atidarytą brėžinį
-       (pvz. „skylė ø10 taške 20 20“); ↑ ↓ - ankstesnės komandos. Yra 5 žingsnyje
-       ir bet kada per Ctrl+K.
-    📌 Šalia AutoCAD - siauras langas dešinėje, visada virš AutoCAD (meniu ☰).
-    🔌 AutoCAD - „Atidaryti“, jei neatidarytas; aiškus pranešimas apie AutoCAD LT.
-    💾 Brėžiniai saugomi Dokumentai\DarkCAD\Breziniai, nustatymai, istorija ir
-       šablonai - Dokumentai\DarkCAD\darkcad.json (išlieka perdiegus).
-    ⚙ Nustatymai - tema, teksto dydis, šalia AutoCAD, atsiminti pasirinkimus,
-       kampinis įrašas, pranešti apie klaidą, atnaujinimai.
-    ⌨ Spartieji klavišai: Ctrl+Enter - padaryk už mane (iš bet kurio žingsnio),
-       Ctrl+K - greita komanda, Ctrl+S - išsaugoti, Ctrl+H - istorija,
-       Alt+← / Alt+→ - žingsniai, Esc - uždaryti langelį.
 
 BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
 -------------------------------------------------------
@@ -223,14 +193,14 @@ KAIP PROGRAMA (su ikona ant darbalaukio)
   IDIEGTI.bat     - vieną kartą du kartus spausk: ant darbalaukio ir Start
                     meniu atsiras "Brėžly" (mokymasis), "Brėžly Pilotas"
                     (programa su langu), "Brėžly Pilotas konsole" (meniu
-                    juodame lange) ir "DarkCAD". Senos nuorodos
+                    juodame lange). Senos nuorodos
                     "AutoCAD AI" ir "CADet" pašalinamos.
                     Toliau paleidi kaip bet kurią programą.
                     Svarbu: aplanko po to nebeperkelk (arba paleisk IDIEGTI.bat
                     dar kartą naujoje vietoje).
   SUKURTI_EXE.bat - nebūtina. Sukuria tikrus "Brezly.exe",
-                    "Brezly Pilotas.exe", "Brezly Pilotas konsole.exe" ir
-                    "DarkCAD.exe" (reikia interneto, 1-3 min.),
+                    "Brezly Pilotas.exe" ir "Brezly Pilotas konsole.exe"
+                    (reikia interneto, 1-3 min.),
                     tada pati sukuria nuorodas. .exe failai turi likti šiame
                     aplanke šalia .txt detalių.
                     Windows SmartScreen gali įspėti apie nežinomą programą:
@@ -285,10 +255,11 @@ FAILAI
   kalba.py               lietuviškų sakinių supratimas
   langas.py              langas (paleidžiamas per LANGAS.bat)
   programa.py, ui.html   programa su langu (paleidžiama per PROGRAMA.bat)
-  brezly.py, brezly.html,  Brėžly mokymosi programa (BREZLY.bat)
-  pamokos.py, brezly.ico
-  darkcad.py, darkcad.html, DarkCAD - tamsioji pusė (DARKCAD.bat)
-  darkcad.ico
+  brezly.py, brezly.html,  Brėžly mokymosi programa (BREZLY.bat);
+  brezly.css, brezly.js,   pamokų tekstai - pamokos.json, praktikos
+  pamokos.py, praktika.py, užduotys - praktika/uzduotys.json
+  brezly.ico
+  serveris.py            bendras Brėžly ir Piloto serveris bei ryšys su AutoCAD
   meniu.py               meniu žingsniais konsolėje (PALEISTI.bat)
   robotas.ico            programos ikona
   IDIEGTI.bat            nuorodos ant darbalaukio ir Start meniu

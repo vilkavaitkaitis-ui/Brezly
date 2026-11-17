@@ -48,29 +48,14 @@ if not defined TGT set "TGT=%DIR%BREZLY.bat"
 call :nuoroda
 set "ICO=%ICO_SENAS%"
 
-rem --- 4. DarkCAD - tamsioji puse ---
-set "LNK=DarkCAD.lnk"
-set "ARGS="
-set "TGT="
-set "ICO=%~dp0darkcad.ico"
-if exist "%DIR%DarkCAD.exe" set "TGT=%DIR%DarkCAD.exe"
-if not defined TGT (
-    for /f "delims=" %%i in ('where pythonw 2^>nul') do if not defined TGT set "TGT=%%i"
-    if defined TGT set "ARGS="%DIR%darkcad.py""
-)
-if not defined TGT set "TGT=%DIR%DARKCAD.bat"
-call :nuoroda
-set "ICO=%ICO_SENAS%"
-
 rem --- senos nuorodos (AutoCAD AI, CADet) pasalinimas ---
-powershell -NoProfile -Command "foreach ($v in @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('Programs'))) { foreach ($n in @('AutoCAD AI.lnk','AutoCAD AI konsole.lnk','AutoCAD AI langas.lnk','CADet.lnk')) { Remove-Item -ErrorAction SilentlyContinue (Join-Path $v $n) } }"
+powershell -NoProfile -Command "foreach ($v in @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('Programs'))) { foreach ($n in @('AutoCAD AI.lnk','AutoCAD AI konsole.lnk','AutoCAD AI langas.lnk','CADet.lnk','DarkCAD.lnk')) { Remove-Item -ErrorAction SilentlyContinue (Join-Path $v $n) } }"
 
 echo.
 echo Baigta! Ant darbalaukio ir Start meniu atsirado:
 echo    Brezly                  - mokykis braizyti pats (rekomenduojama)
 echo    Brezly Pilotas          - braizo uz tave, programa su langu
 echo    Brezly Pilotas konsole  - meniu juodame lange (atsarginis)
-echo    DarkCAD                 - tamsioji puse: padaro uz tave
 echo.
 echo  (darbalaukyje vardai rodomi su lietuviskomis raidemis)
 echo.

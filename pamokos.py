@@ -5,12 +5,17 @@ Tikrinimas skaito tavo brėžinį (MODEL erdvę) per AutoCAD COM:
 3D kūnų ribas (GetBoundingBox), tūrį (Volume) ir sluoksnį, sluoksnių savybes.
 """
 
+import json
 import math
 import os
+import sys
 import time
 
-import pythoncom
-import win32com.client
+try:
+    import pythoncom
+    import win32com.client
+except ImportError:         # ne Windows: sąsają ir tikrinimą galima kurti bei testuoti be AutoCAD
+    pythoncom = win32com = None
 
 import branduolys as A
 
@@ -933,398 +938,76 @@ def d_tekstas(b):
         pass
 
 
-# ------------------------------------------------------------- pamokų aprašai
-def _z(id, pav, xp, kodel, zingsniai, komandos, uzuominos, tikrinti, demo, tikslas=None):
-    z = {"id": id, "pavadinimas": pav, "xp": xp, "kodel": kodel, "zingsniai": zingsniai,
-         "komandos": komandos, "uzuominos": uzuominos, "tikrinti": tikrinti, "demo": demo}
-    if tikslas:
-        z["tikslas"] = tikslas
-    return z
+# ------------------------------------------------------------- pamokų turinys: pamokos.json
+# Tekstai (žingsniai, užuominos, testai, kortelės) - pamokos.json. Jį naudoja ir programėlė (app/).
+# Čia - tik kas tikrina žingsnį ir kas jį parodo AutoCAD'e: žingsnio id -> (tikrinti, demo).
+# Naujas žingsnis be įrašo čia veiks, tik nebus tikrinamas ir demonstruojamas.
+TIKRINIMAS = {
+    # failas
+    "naujas": (t_naujas, d_naujas),
+    "vienetai": (t_vienetai, d_vienetai),
+    "dwg": (t_issaugota, d_issaugoti),
+    "pdf": (t_pdf, d_pdf),
+    # lapas
+    "a3": (t_a3, d_a3),
+    "remelis": (t_remelis, d_remelis),
+    "kampinis": (t_kampinis, d_kampinis),
+    "uzpildyk": (t_uzpildyta, d_uzpildyti),
+    # 2d
+    "sluoksniai2d": (t_sluoksniai, d_sluoksniai),
+    "plokste": (t_plokste, d_plokste),
+    "centras": (t_centras, d_centras),
+    "skyles": (t_skyles, d_skyles),
+    "asys": (t_asys, d_asys),
+    "fillet": (t_fillet, d_fillet),
+    # schema
+    "naujas_sch": (None, d_naujas),
+    "zenklas": (t_zenklas, d_zenklas),
+    "attdef": (t_attdef, d_attdef),
+    "block": (t_blokas, d_blokas),
+    "insert": (t_insert, d_insert),
+    "lentele": (t_lentele, d_lentele),
+    # matmenys
+    "plokste_m": (t_plokste_yra, d_plokste_yra),
+    "dimstyle": (t_dimstyle, d_dimstyle),
+    "ilgis": (t_ilgis, d_ilgis),
+    "aukstis": (t_aukstis, d_aukstis),
+    "skersmuo": (t_skersmuo, d_skersmuo),
+    # sriftai
+    "iso": (t_iso, d_sriftai),
+    "isolt": (t_isolt, d_sriftai),
+    "tekstas": (t_tekstas, d_tekstas),
+    # pirmoji-3d
+    "pasiruosimas": (None, None),
+    "sluoksniai": (t_sluoksniai, d_sluoksniai),
+    "box": (t_deze, d_deze),
+    "cylinder": (t_cilindras, d_cilindras),
+    "union": (t_sujungta, d_sujungti),
+    "polygon": (t_prizme, d_prizme),
+    "subtract": (t_atimta, d_atimti),
+    "wedge": (t_pleistas, d_pleistas),
+    "mirror": (t_veidrodis, d_veidrodis),
+    "final": (t_galutinis, d_galutinis),
+}
+
+PAMOKU_FAILAS = os.path.join(os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__)),
+                             "pamokos.json")
 
 
-NAUJOS = [
-  {"id": "failas", "pavadinimas": "Failas ir formatai", "trukme": "~10 min.",
-   "aprasas": "Naujas brėžinys iš acadiso.dwt, vienetai, išsaugojimas DWG ir PDF - nuo to prasideda kiekvienas darbas.",
-   "pabaiga": "Moki teisingai pradėti brėžinį ir jį išsaugoti DWG bei PDF formatu.",
-   "zingsniai": [
-     _z("naujas", "Naujas brėžinys iš acadiso.dwt", 10,
-        "acadiso.dwt - metrinis šablonas: viskas milimetrais. acad.dwt - coliais, todėl brėžinyje matmenys būtų neteisingi.",
-        ["Viršuje kairėje spausk A (Application) → New → Drawing.", "Sąraše pasirink acadiso.dwt → Open."],
-        [["Command:", "NEW"], ["Select template:", "acadiso.dwt"]],
-        ["Jei atsidaro be lango - įvesk STARTUP → 0 ir bandyk iš naujo.", "Šablonų aplankas atsidaro automatiškai - ieškok acadiso.dwt, ne acad.dwt."],
-        t_naujas, d_naujas, "Metrinis brėžinys (mm)"),
-     _z("vienetai", "Vienetai: UNITS", 10,
-        "Vienetai nusako, ką reiškia skaičius 100. Mūsų brėžiniuose - 100 milimetrų, be nereikalingų skaitmenų po kablelio.",
-        ["Įvesk UNITS. Nustatyk:"],
-        [["Command:", "UNITS"], ["Length Type:", "Decimal"], ["Precision:", "0"], ["Insertion scale:", "Millimeters"], ["", "OK"]],
-        ["Precision 0 reiškia sveikus skaičius - braižymo brėžiniams to užtenka."],
-        t_vienetai, d_vienetai, "Decimal · 0 · Millimeters"),
-     _z("dwg", "Išsaugok kaip DWG", 15,
-        "DWG - pagrindinis AutoCAD formatas. Prasmingas failo vardas padeda rasti darbą po savaitės.",
-        ["Spausk Ctrl+Shift+S (SAVEAS).", "Pasirink aplanką, įrašyk vardą Pirmasis_brezinys → Save."],
-        [["Command:", "SAVEAS"], ["File name:", "Pirmasis_brezinys"], ["Files of type:", "AutoCAD 2018 Drawing (*.dwg)"]],
-        ["Senesniam AutoCAD (pvz. mokykloje) rinkis AutoCAD 2013 Drawing.", "Ctrl+S vėliau tiesiog išsaugo pakeitimus."],
-        t_issaugota, d_issaugoti, "Failas .dwg su tavo vardu"),
-     _z("pdf", "Spausdink į PDF", 15,
-        "Dėstytojui darbą dažnai reikia atiduoti PDF. Spausdintuvas DWG To PDF sukuria failą vietoj popieriaus.",
-        ["Įvesk PLOT (arba Ctrl+P).", "Printer: DWG To PDF.pc3, Plot area: Extents, Fit to paper → OK → Save."],
-        [["Command:", "PLOT"], ["Printer/plotter:", "DWG To PDF.pc3"], ["What to plot:", "Extents"], ["", "OK → Save"]],
-        ["PDF išsaugok tame pačiame aplanke kaip DWG - taip lengviau rasti.", "Jei PDF tuščias - brėžinyje dar nieko nėra, tai normalu šiame žingsnyje."],
-        t_pdf, d_pdf, "Naujas PDF failas"),
-   ],
-   "testas": [
-     {"k": "Kurį šabloną rinktis brėžiniams milimetrais?", "v": ["acad.dwt", "acadiso.dwt", "acadiso3D.dwt tik 2D", "Nesvarbu"], "t": 1,
-      "p": "acadiso.dwt - metrinis (ISO). acad.dwt - coliai."},
-     {"k": "Kam naudojamas DXF formatas?", "v": ["Spausdinimui", "Brėžiniui atidaryti kitose CAD programose", "Tik 3D modeliams", "Nuotraukoms"], "t": 1,
-      "p": "DXF - mainų formatas, jį atidaro daugelis CAD programų."},
-     {"k": "Mokykloje senas AutoCAD neatidaro tavo failo. Ką daryti?", "v": ["Išsaugoti kaip PDF", "SAVEAS → senesnė DWG versija, pvz. 2013", "Pervadinti failą", "Nieko"], "t": 1,
-      "p": "Naujesnės DWG versijos senesnėje programoje neatsidaro - išsaugok senesniu formatu."},
-   ]},
-  {"id": "lapas", "pavadinimas": "A3 lapas ir kampinis įrašas", "trukme": "~15 min.",
-   "aprasas": "LAYOUTWIZARD, A3 formatas, rėmelis ir kampinio įrašo lentelė - lapas, ant kurio dėsi visus brėžinius.",
-   "pabaiga": "Moki paruošti A3 lapą su rėmeliu ir kampiniu įrašu pagal reikalavimus.",
-   "zingsniai": [
-     _z("a3", "A3 lapas: LAYOUTWIZARD", 15,
-        "Model erdvėje braižai tikrais dydžiais, o lapas (Layout / PAPER) - tai popierius, kurį spausdinsi. A3 = 420 × 297 mm.",
-        ["Įvesk LAYOUTWIZARD ir eik per langus:"],
-        [["Command:", "LAYOUTWIZARD"], ["Begin:", "A3"], ["Printer:", "DWG To PDF.pc3"], ["Paper size:", "ISO full bleed A3 (420 x 297)"],
-         ["Orientation:", "Landscape"], ["Title block:", "None"], ["Define viewports:", "None"]],
-        ["Apačioje atsiras skirtukas „A3“ - tai tavo lapas.", "Jei popieriaus sąraše nėra A3 - pirma pasirink spausdintuvą DWG To PDF."],
-        t_a3, d_a3, "Lapas A3 (420 × 297)"),
-     _z("remelis", "Rėmelis", 15,
-        "Pagal standartą rėmelis kairėje 20 mm nuo krašto (segimui), kitose pusėse - 5 mm.",
-        ["Būdamas lape A3 (ne Model!), sluoksnyje KONTURAS įvesk:"],
-        [["Command:", "RECTANG"], ["Specify first corner:", "20,5"], ["Specify other corner:", "415,292"]],
-        ["Patikrink, kad apačioje aktyvus skirtukas A3, o ne Model.", "420 - 5 = 415, 297 - 5 = 292."],
-        t_remelis, d_remelis, "Rėmelis nuo (20,5) iki (415,292)"),
-     _z("kampinis", "Kampinio įrašo lentelė", 15,
-        "Kampinis įrašas - brėžinio „pasas“: kas braižė, kas tikrino, mastelis. Jis visada apatiniame dešiniame rėmelio kampe, 185 × 40.",
-        ["Nubraižyk lentelės kontūrą:", "Vidines linijas nubraižyk LINE komanda pagal pavyzdį."],
-        [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
-        ["415 - 185 = 230, 5 + 40 = 45.", "Įjunk OSNAP (F3) - linijos pritrauks prie kampų."],
-        t_kampinis, d_kampinis, "Lentelė 185 × 40 kampe"),
-     _z("uzpildyk", "Užpildyk kampinį įrašą", 10,
-        "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
-        ["Įrašyk darbo pavadinimą (aukštis 5) ir savo vardą (aukštis 2.5) į lentelės langelius."],
-        [["Command:", "TEXT"], ["Specify start point:", "(spustelėk langelyje)"], ["Specify height:", "5"], ["Enter text:", "Detalė"]],
-        ["Enter du kartus baigia TEXT komandą.", "Tekstą perkelti gali komanda MOVE."],
-        t_uzpildyta, d_uzpildyti, "Bent 2 tekstai lentelėje"),
-   ],
-   "testas": [
-     {"k": "Kiek milimetrų rėmelis nutolęs nuo kairiojo lapo krašto?", "v": ["5", "10", "20", "25"], "t": 2, "p": "Kairėje 20 mm segimui, kitur 5 mm."},
-     {"k": "Kur dedamas kampinis įrašas?", "v": ["Viršuje kairėje", "Apačioje dešinėje", "Centre", "Bet kur"], "t": 1, "p": "Visada apatiniame dešiniame rėmelio kampe."},
-     {"k": "Koks A3 lapo dydis?", "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"], "t": 1, "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."},
-   ]},
-  {"id": "2d", "pavadinimas": "2D brėžinys", "trukme": "~20 min.",
-   "aprasas": "Sluoksniai, RECTANG, CIRCLE, ašys ir FILLET - nubraižysi plokštę su skylėmis.",
-   "pabaiga": "Nubraižei 2D plokštę su skylėmis, ašimis ir suapvalintais kampais.",
-   "zingsniai": [
-     _z("sluoksniai2d", "Sukurk sluoksnius", 10,
-        "Kontūras, ašys ir matmenys - skirtingi sluoksniai su skirtingomis linijomis, kaip reikalauja standartas.",
-        ["LAYER → New Layer: KONTURAS (7), ASYS (1, linija CENTER), MATMENYS (3).", "Dukart spustelėk KONTURAS - jis taps aktyvus."],
-        [["Command:", "LAYER"]],
-        ["CENTER linijos tipą įkelk per Load...", "Spalvos numeris matomas lango apačioje."],
-        t_sluoksniai, d_sluoksniai),
-     _z("plokste", "Plokštės kontūras: RECTANG", 15,
-        "Pradedam nuo 0,0 - taip lengviausia skaičiuoti kitas koordinates.",
-        ["Sluoksnyje KONTURAS įvesk:"],
-        [["Command:", "RECTANG"], ["Specify first corner:", "0,0"], ["Specify other corner:", "100,60"]],
-        ["Koordinates rašyk su kableliu be tarpų.", "Dukart spustelėk pelės ratuką - matysi visą brėžinį."],
-        t_plokste, d_plokste, "Stačiakampis 100 × 60"),
-     _z("centras", "Skylė centre: CIRCLE", 15,
-        "Centrinė skylė ø30. CIRCLE klausia spindulio, todėl įvedame pusę skersmens - 15.",
-        ["Įvesk:"],
-        [["Command:", "CIRCLE"], ["Specify center point:", "50,30"], ["Specify radius:", "15"]],
-        ["Jei nori įvesti skersmenį - spausk D ir įvesk 30."],
-        t_centras, d_centras, "Apskritimas ø30 centre"),
-     _z("skyles", "4 tvirtinimo skylės", 15,
-        "Skylės ø10 kampuose, 15 mm nuo kraštų.",
-        ["Nubraižyk 4 apskritimus spinduliu 5:"],
-        [["Command:", "CIRCLE"], ["Center:", "15,15"], ["Radius:", "5"], ["", "taip pat 85,15 · 15,45 · 85,45"]],
-        ["Tuščias Enter (arba tarpas) pakartoja paskutinę komandą.", "Gali nubraižyti vieną ir nukopijuoti su COPY."],
-        t_skyles, d_skyles, "4 skylės ø10"),
-     _z("asys", "Ašys", 15,
-        "Ašys rodo simetriją ir skylių centrus. Jos braižomos plona brūkšnine-taškine linija ir išsikiša už kontūro.",
-        ["Pasirink sluoksnį ASYS ir nubraižyk dvi linijas:"],
-        [["Command:", "LINE"], ["Specify first point:", "-5,30"], ["Specify next point:", "105,30"], ["Command:", "LINE"], ["Specify first point:", "50,-5"], ["Specify next point:", "50,65"]],
-        ["Jei linija atrodo ištisinė - LTSCALE → 0.5.", "Ašys išsikiša 5 mm už kontūro."],
-        t_asys, d_asys, "Horizontali ir vertikali ašis"),
-     _z("fillet", "Suapvalink kampus: FILLET", 15,
-        "Aštrūs kampai pavojingi ir negražūs. FILLET su parinktimi Polyline suapvalina visus 4 kampus iš karto.",
-        ["Sluoksnyje KONTURAS įvesk:"],
-        [["Command:", "FILLET"], ["Select first object or [Radius/Polyline]:", "R"], ["Specify fillet radius:", "10"],
-         ["Select first object or [Radius/Polyline]:", "P"], ["Select 2D polyline:", "(spustelėk kontūrą)"]],
-        ["Jei suapvalino tik vieną kampą - pamiršai P (Polyline). Atšauk: U.", "Spindulys 10 - kampai suapvalinti R10."],
-        t_fillet, d_fillet, "4 kampai R10"),
-   ],
-   "testas": [
-     {"k": "Kurį skaičių įvesti CIRCLE komandai, kai skylė ø30?", "v": ["30", "15", "60", "7.5"], "t": 1, "p": "CIRCLE klausia spindulio - pusė skersmens."},
-     {"k": "Kokiame sluoksnyje braižomos ašys?", "v": ["KONTURAS", "MATMENYS", "ASYS", "0"], "t": 2, "p": "Ašys - atskirame sluoksnyje su CENTER linija."},
-     {"k": "Kaip FILLET suapvalinti visus stačiakampio kampus iš karto?", "v": ["Spausti 4 kartus", "Parinktis P (Polyline)", "Parinktis T (Trim)", "Neįmanoma"], "t": 1, "p": "Polyline parinktis suapvalina visus polilinijos kampus."},
-   ]},
-  {"id": "schema", "pavadinimas": "Elektrinė schema su blokais", "trukme": "~25 min.",
-   "aprasas": "Ženklas, atributai (ATTDEF), blokas (BLOCK), įterpimas (INSERT) ir aprašo lentelė (DATAEXTRACTION).",
-   "pabaiga": "Moki kurti blokus su atributais ir sudaryti aprašo lentelę - tai pagrindas schemų darbui.",
-   "zingsniai": [
-     _z("naujas_sch", "Naujas brėžinys schemai", 5,
-        "Schemą braižom švariame brėžinyje, kad nesusimaišytų su plokšte.",
-        ["Sukurk naują brėžinį iš acadiso.dwt (kaip 1 pamokoje)."],
-        [["Command:", "NEW"], ["Select template:", "acadiso.dwt"]],
-        ["Ctrl+N - greitas naujas brėžinys."], None, d_naujas),
-     _z("zenklas", "Rezistoriaus ženklas", 15,
-        "Visi schemos ženklai vienodo ilgio - 20 mm. Rezistorius: stačiakampis 10 × 4 ir du išvadai.",
-        ["Nubraižyk:"],
-        [["Command:", "LINE"], ["Points:", "0,0 → 5,0"], ["Command:", "RECTANG"], ["Corners:", "5,-2 → 15,2"], ["Command:", "LINE"], ["Points:", "15,0 → 20,0"]],
-        ["Ženklas ilgas 20: 5 + 10 + 5."],
-        t_zenklas, d_zenklas, "Ženklas 20 × 4"),
-     _z("attdef", "Atributai: ATTDEF", 20,
-        "Atributas - laukelis bloke. POZ (R1, R2...) matomas schemoje, NUORODA (1 kΩ) - nematomas, bet patenka į aprašo lentelę.",
-        ["Įvesk ATTDEF du kartus:"],
-        [["ATTDEF 1:", "Tag: POZ · Prompt: Pozicinis žymuo · Default: R · taškas 7,4"],
-         ["ATTDEF 2:", "pažymėk Invisible · Tag: NUORODA · taškas 7,-7"]],
-        ["Tag - stulpelio vardas aprašo lentelėje.", "Invisible varnelė - kairėje lango pusėje (Mode)."],
-        t_attdef, d_attdef, "Atributai POZ ir NUORODA"),
-     _z("block", "Blokas: BLOCK", 20,
-        "Blokas - ženklas, kurį nubraižai vieną kartą ir įterpi kiek nori. Pakeitus bloką, pasikeičia visi.",
-        ["Įvesk BLOCK:"],
-        [["Command:", "BLOCK"], ["Name:", "REZISTORIUS"], ["Base point:", "0,0"], ["Objects:", "(pažymėk ženklą ir abu atributus)"], ["", "Delete → OK"]],
-        ["Base point 0,0 - kairysis išvadas, už jo „tempsi“ bloką.", "Delete - ženklas dingsta, bet blokas lieka atmintyje."],
-        t_blokas, d_blokas, "Blokas REZISTORIUS su atributais"),
-     _z("insert", "Įterpk 3 rezistorius: INSERT", 20,
-        "Kiekvieną kartą įterpiant, AutoCAD paklaus atributų reikšmių.",
-        ["INSERT → REZISTORIUS → padėk 3 kartus:"],
-        [["Command:", "INSERT"], ["Name:", "REZISTORIUS"], ["Pozicinis žymuo:", "R1 (R2, R3)"], ["Nuoroda:", "1 kΩ"]],
-        ["Jei atributų neklausia - ATTREQ → 1.", "Klaidingą reikšmę pataisysi dukart spustelėjęs ant bloko."],
-        t_insert, d_insert, "R1, R2, R3"),
-     _z("lentele", "Aprašo lentelė: DATAEXTRACTION", 25,
-        "Aprašo lentelė sudaroma automatiškai iš blokų atributų - nereikia nieko perrašinėti ranka.",
-        ["Įvesk DATAEXTRACTION ir eik per vedlį:"],
-        [["Command:", "DATAEXTRACTION"], ["", "Create new → išsaugok .dxe"], ["Objects:", "tik REZISTORIUS"],
-         ["Properties:", "Attribute (POZ, NUORODA)"], ["Output:", "Insert data extraction table"]],
-        ["Count stulpelis - kiek tokių elementų.", "Lentelę padėk šalia schemos."],
-        t_lentele, d_lentele, "Lentelė su rezistoriais"),
-   ],
-   "testas": [
-     {"k": "Kodėl NUORODA atributas nustatomas Invisible?", "v": ["Kad neužimtų vietos schemoje, bet būtų lentelėje", "Kad jo nebūtų nieur", "Kad būtų raudonas", "Taip greičiau"], "t": 0,
-      "p": "Nematomas schemoje, bet DATAEXTRACTION jį paima į aprašo lentelę."},
-     {"k": "Ką daro BLOCK parinktis Delete?", "v": ["Ištrina bloką", "Ištrina pradinius objektus, blokas lieka atmintyje", "Ištrina atributus", "Nieko"], "t": 1,
-      "p": "Objektai dingsta iš brėžinio, o blokas lieka - įterpsi jį INSERT."},
-     {"k": "Kokio ilgio daromi schemos ženklai šioje pamokoje?", "v": ["10 mm", "15 mm", "20 mm", "50 mm"], "t": 2, "p": "Vienodas ilgis - laidus lengva sujungti."},
-   ]},
-  {"id": "matmenys", "pavadinimas": "Matmenys pagal standartą", "trukme": "~15 min.",
-   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER - sužymėsi plokštės matmenis sluoksnyje MATMENYS.",
-   "pabaiga": "Moki sukurti matmenų stilių ir sužymėti ilgius bei skersmenis.",
-   "zingsniai": [
-     _z("plokste_m", "Atsidaryk plokštę", 5,
-        "Matmenis žymėsim 3 pamokos plokštei.",
-        ["Atidaryk brėžinį su plokšte (OPEN) arba spausk „Parodyk man“ - nubraižysiu ją."],
-        [["Command:", "OPEN"]], ["Plokštė: 100 × 60, centre ø30."], t_plokste_yra, d_plokste_yra),
-     _z("dimstyle", "Matmenų stilius: DIMSTYLE", 20,
-        "Matmenų stilius nustato teksto aukštį, rodykles ir tarpus. Pagal reikalavimus tekstas 3.5 mm.",
-        ["DIMSTYLE → New → vardas ISO_MATMENYS → Continue:"],
-        [["Symbols and Arrows:", "Arrow size 3"], ["Text:", "Text height 3.5 · Text placement: Above"], ["Primary Units:", "Precision 0"], ["", "OK → Set Current"]],
-        ["Set Current - kad nauji matmenys naudotų šį stilių.", "Teksto stilius gali būti ISO_LT (6 pamoka)."],
-        t_dimstyle, d_dimstyle, "ISO_MATMENYS aktyvus"),
-     _z("ilgis", "Ilgis: DIMLINEAR 100", 15,
-        "Linijinis matmuo - atstumas tarp dviejų taškų horizontaliai arba vertikaliai.",
-        ["Pasirink sluoksnį MATMENYS. Įvesk:"],
-        [["Command:", "DIMLINEAR"], ["First extension line origin:", "(apatinis kairys kampas)"], ["Second:", "(apatinis dešinys kampas)"], ["Dimension line location:", "(patrauk žemyn ~15)"]],
-        ["Įjunk OSNAP (F3) - taškai pritrauks prie kampų.", "Suapvalintiems kampams naudok Endpoint ant lankų galų arba įvesk 0,0 ir 100,0."],
-        t_ilgis, d_ilgis, "Matmuo 100"),
-     _z("aukstis", "Aukštis: DIMLINEAR 60", 15,
-        "Tas pats DIMLINEAR - tik pele traukiam į šoną, ir matmuo tampa vertikalus.",
-        ["Įvesk DIMLINEAR dar kartą kairiajai kraštinei:"],
-        [["Command:", "DIMLINEAR"], ["Points:", "0,0 → 0,60"], ["Location:", "(patrauk kairėn ~15)"]],
-        ["Tarpas pakartoja paskutinę komandą."],
-        t_aukstis, d_aukstis, "Matmuo 60"),
-     _z("skersmuo", "Skersmuo: DIMDIAMETER", 15,
-        "Skersmens matmuo automatiškai prideda ženklą ø.",
-        ["Įvesk:"],
-        [["Command:", "DIMDIAMETER"], ["Select arc or circle:", "(spustelėk ø30 apskritimą)"], ["Location:", "(padėk tekstą)"]],
-        ["Mažoms skylėms parašyk 4x: DIMDIAMETER → M (Mtext) → 4x<>."],
-        t_skersmuo, d_skersmuo, "Matmuo ø30"),
-   ],
-   "testas": [
-     {"k": "Koks matmenų teksto aukštis šiuose brėžiniuose?", "v": ["2", "3.5", "7", "10"], "t": 1, "p": "3.5 mm - standartinis matmenų teksto aukštis."},
-     {"k": "Kuria komanda žymimas vertikalus ilgis?", "v": ["DIMDIAMETER", "DIMLINEAR", "DIMRADIUS", "LINE"], "t": 1, "p": "DIMLINEAR - ir horizontalūs, ir vertikalūs matmenys."},
-     {"k": "Kokiame sluoksnyje turi būti matmenys?", "v": ["KONTURAS", "ASYS", "MATMENYS", "0"], "t": 2, "p": "Atskiras sluoksnis - galima išjungti, keisti spalvą."},
-   ]},
-  {"id": "sriftai", "pavadinimas": "Šriftai ir tekstas", "trukme": "~10 min.",
-   "aprasas": "Teksto stiliai pagal ISO 3098: isocp.shx ir ISOCPEUR su lietuviškomis raidėmis.",
-   "pabaiga": "Moki sukurti ISO teksto stilius ir rašyti brėžinyje su lietuviškomis raidėmis.",
-   "zingsniai": [
-     _z("iso", "Teksto stilius ISO", 15,
-        "Brėžiniuose naudojamas standartinis inžinerinis šriftas (ISO 3098), o ne Arial.",
-        ["Įvesk STYLE → New → ISO:"],
-        [["Command:", "STYLE"], ["New:", "ISO"], ["Font Name:", "isocp.shx"], ["", "Apply"]],
-        ["Height palik 0 - aukštį pasirinksi rašydamas."],
-        t_iso, d_sriftai, "Stilius ISO (isocp.shx)"),
-     _z("isolt", "Stilius ISO_LT su lietuviškomis raidėmis", 20,
-        "isocp.shx neturi ąčęėįšųūž. ISOCPEUR - tas pats ISO šriftas, bet su lietuviškomis raidėmis.",
-        ["STYLE → New → ISO_LT:"],
-        [["Font Name:", "ISOCPEUR"], ["Oblique Angle:", "15"], ["", "Apply → Set Current"]],
-        ["Oblique 15° - pasvirasis ISO B tipo šriftas.", "Jei ISOCPEUR nėra - jis diegiamas kartu su AutoCAD, paieškok sąraše „isocpeur“."],
-        t_isolt, d_sriftai, "Stilius ISO_LT (ISOCPEUR, 15°)"),
-     _z("tekstas", "Parašyk „Brėžinys“", 15,
-        "Patikrinsim, ar lietuviškos raidės matosi teisingai. Standartiniai aukščiai: 2.5, 3.5, 5, 7, 10.",
-        ["Su aktyviu ISO_LT įvesk:"],
-        [["Command:", "TEXT"], ["Specify start point:", "0,80"], ["Specify height:", "5"], ["Rotation:", "0"], ["Enter text:", "Brėžinys"]],
-        ["Vietoj raidžių klaustukai? - stilius ne ISO_LT.", "Enter du kartus baigia TEXT."],
-        t_tekstas, d_tekstas, "„Brėžinys“, aukštis 5, ISO_LT"),
-   ],
-   "testas": [
-     {"k": "Kodėl isocp.shx netinka lietuviškam tekstui?", "v": ["Per mažas", "Neturi ąčęėįšųūž", "Per lėtas", "Tinka"], "t": 1, "p": "Naudok ISOCPEUR - jis turi lietuviškas raides."},
-     {"k": "Kuris aukštis NĖRA standartinis?", "v": ["3.5", "5", "6", "7"], "t": 2, "p": "Standartiniai: 2.5, 3.5, 5, 7, 10, 14."},
-     {"k": "Kokiu kampu pasviręs ISO B tipo šriftas?", "v": ["0°", "15°", "30°", "45°"], "t": 1, "p": "Oblique angle 15°."},
-   ]},
-]
+def _ikelti():
+    with open(PAMOKU_FAILAS, encoding="utf-8") as f:
+        d = json.load(f)
+    for p in d["pamokos"]:
+        for z in p["zingsniai"]:
+            z["tikrinti"], z["demo"] = TIKRINIMAS.get(z["id"], (None, None))
+    return d
 
 
-# ------------------------------------------------------------------ pamokos
-PAMOKOS = NAUJOS + [
-  {
-    "id": "pirmoji-3d",
-    "pavadinimas": "Pirmoji 3D detalė",
-    "aprasas": "BOX, CYLINDER, UNION, POLYGON, EXTRUDE, SUBTRACT, WEDGE, MIRROR3D - "
-               "visos komandos iš praktinio darbo „Trimatis detalės modelis“.",
-    "trukme": "~25 min.",
-    "pabaiga": "Sukūrei pirmą tikrą 3D detalę - tokią pat kaip praktiniame darbe!",
-    "zingsniai": [
-      {"id": "pasiruosimas", "pavadinimas": "Pasiruošk darbo vietai", "xp": 5,
-       "kodel": "3D modeliavimui AutoCAD turi atskirą darbo aplinką su 3D įrankiais. "
-                "Izometrinis vaizdas leidžia matyti detalę iš karto iš trijų pusių.",
-       "zingsniai": ["Atidaryk naują brėžinį iš šablono acadiso.dwt (milimetrai).",
-                     "Apačioje dešinėje paspausk krumpliaratį ⚙ ir pasirink „3D Modeling“.",
-                     "Viršuje: View → 3D Views → SE Isometric (arba ViewCube kampas)."],
-       "komandos": [],
-       "uzuominos": ["Krumpliaratis vadinasi „Workspace Switching“ - jis apatinėje juostoje.",
-                     "Vaizdui gali įvesti komandą: -VIEW → SEISO"],
-       "tikrinti": None, "demo": None},
-      {"id": "sluoksniai", "pavadinimas": "Sukurk sluoksnius", "xp": 10,
-       "kodel": "Sluoksniai - kaip skaidrės viena ant kitos. Kontūras, ašys ir matmenys turi skirtingas "
-                "spalvas ir linijas, todėl brėžinys tvarkingas ir atitinka standartą.",
-       "zingsniai": ["Įvesk LAYER ir spausk Enter - atsidarys Layer Properties Manager.",
-                     "Mygtuku „New Layer“ sukurk: KONTURAS (spalva 7 - balta), ASYS (1 - raudona), MATMENYS (3 - žalia).",
-                     "Sluoksniui ASYS paspausk ant „Continuous“ → Load... → CENTER → OK.",
-                     "Dukart spustelėk KONTURAS, kad jis taptų aktyvus (žalia varnelė)."],
-       "komandos": [["Command:", "LAYER"]],
-       "uzuominos": ["Spalvos numeris rodomas paspaudus ant spalvos kvadratėlio - lango apačioje „Color: 7“.",
-                     "Jei CENTER nėra sąraše - spausk Load..., susirask CENTER, pažymėk, OK."],
-       "tikrinti": t_sluoksniai, "demo": d_sluoksniai},
-      {"id": "box", "pavadinimas": "Pagrindas: BOX", "xp": 15,
-       "kodel": "Kiekviena detalė prasideda nuo pagrindinio kūno. Pradėdami nuo taško 0,0,0 lengvai "
-                "apskaičiuosime visas kitas koordinates.",
-       "zingsniai": ["Įsitikink, kad aktyvus sluoksnis KONTURAS.",
-                     "Įvesk BOX ir atsakyk į klausimus komandų eilutėje:"],
-       "komandos": [["Command:", "BOX"], ["Specify first corner:", "0,0,0"],
-                    ["Specify other corner:", "100,60,0"], ["Specify height:", "20"]],
-       "uzuominos": ["Koordinates rašyk su kableliais be tarpų: 100,60,0",
-                     "Jei pele spustelėsi ekrane vietoj įvedimo - dėžė atsiras ne ten. Tada ERASE ir iš naujo."],
-       "tikslas": "Dėžė nuo (0,0,0) iki (100,60,20)",
-       "tikrinti": t_deze, "demo": d_deze},
-      {"id": "cylinder", "pavadinimas": "Cilindras: CYLINDER", "xp": 15,
-       "kodel": "Cilindras stovės ant dėžės viršaus, todėl jo centro aukštis z = 20 - tiek, koks dėžės aukštis.",
-       "zingsniai": ["Įvesk CYLINDER:"],
-       "komandos": [["Command:", "CYLINDER"], ["Specify center point of base:", "50,30,20"],
-                    ["Specify base radius:", "20"], ["Specify height:", "40"]],
-       "uzuominos": ["Centras 50,30 - tai dėžės vidurys (100/2 = 50, 60/2 = 30).",
-                     "Spindulys 20 reiškia skersmenį ø40."],
-       "tikslas": "Cilindras ø40 nuo z=20 iki z=60",
-       "tikrinti": t_cilindras, "demo": d_cilindras},
-      {"id": "union", "pavadinimas": "Sujunk: UNION", "xp": 10,
-       "kodel": "Kol kas tai du atskiri kūnai. UNION juos paverčia viena detale - kaip suklijuoti.",
-       "zingsniai": ["Įvesk UNION, pele pažymėk dėžę ir cilindrą, spausk Enter."],
-       "komandos": [["Command:", "UNION"], ["Select objects:", "(spustelėk dėžę ir cilindrą)"],
-                    ["Select objects:", "Enter"]],
-       "uzuominos": ["Po sujungimo, užvedus pelę, visa detalė pasišviečia kaip vienas objektas."],
-       "tikslas": "Vienas kūnas, aukštis 60",
-       "tikrinti": t_sujungta, "demo": d_sujungti},
-      {"id": "polygon", "pavadinimas": "Šešiakampė prizmė: POLYGON + EXTRUDE", "xp": 20,
-       "kodel": "Šešiakampę skylę darysime taip: nubraižysime šešiakampę prizmę ir vėliau ją „išpjausime“. "
-                "POLYGON nubraižo plokščią figūrą, EXTRUDE ją ištempia į trečią matmenį.",
-       "zingsniai": ["Nubraižyk šešiakampį:", "Tada ištempk jį į 60 aukštį:"],
-       "komandos": [["Command:", "POLYGON"], ["Enter number of sides:", "6"],
-                    ["Specify center of polygon:", "50,30,0"], ["Enter an option [Inscribed/Circumscribed]:", "I"],
-                    ["Specify radius of circle:", "10"],
-                    ["Command:", "EXTRUDE"], ["Select objects to extrude:", "(spustelėk šešiakampį) Enter"],
-                    ["Specify height of extrusion:", "60"]],
-       "uzuominos": ["Inscribed = šešiakampio kampai ant apskritimo (spindulys 10 iki kampo).",
-                     "Jei šešiakampis neišsitempė - patikrink, ar EXTRUDE pasirinkai būtent jį, o ne detalę."],
-       "tikslas": "Prizmė ties 50,30, aukštis 60",
-       "tikrinti": t_prizme, "demo": d_prizme},
-      {"id": "subtract", "pavadinimas": "Išpjauk: SUBTRACT", "xp": 20,
-       "kodel": "SUBTRACT iš pirmojo objekto atima antrąjį. Svarbiausia - eilė: pirma IŠ KO, tada KĄ.",
-       "zingsniai": ["Įvesk SUBTRACT. Pirma pažymėk detalę (Enter), tada prizmę (Enter)."],
-       "komandos": [["Command:", "SUBTRACT"], ["Select solids... to subtract from:", "(detalė) Enter"],
-                    ["Select solids... to subtract:", "(prizmė) Enter"]],
-       "uzuominos": ["Jei detalė dingo, o liko prizmė - sumaišei eilę. Atšauk: U.",
-                     "Pasuk vaizdą (Shift + vidurinis pelės mygtukas) - skylė turi matytis kiaurai."],
-       "tikslas": "Viena detalė su šešiakampe kiauryme",
-       "tikrinti": t_atimta, "demo": d_atimti},
-      {"id": "wedge", "pavadinimas": "Standumo briauna: WEDGE", "xp": 20,
-       "kodel": "Briauna sustiprina cilindro jungtį su pagrindu. WEDGE - pleištas: aukščiausias pirmojo kampo pusėje, "
-                "nuolydis žemyn link antrojo kampo.",
-       "zingsniai": ["Įvesk WEDGE:"],
-       "komandos": [["Command:", "WEDGE"], ["Specify first corner:", "65,26,20"],
-                    ["Specify other corner:", "90,34,20"], ["Specify height:", "30"]],
-       "uzuominos": ["Briaunos storis 8: y nuo 26 iki 34 (30 - 4 ir 30 + 4).",
-                     "x = 65 - briauna truputį įlenda į cilindrą, kad gerai susijungtų."],
-       "tikslas": "Pleištas nuo (65,26,20) iki (90,34,50)",
-       "tikrinti": t_pleistas, "demo": d_pleistas},
-      {"id": "mirror", "pavadinimas": "Antra briauna: MIRROR3D", "xp": 20,
-       "kodel": "Užuot braižę antrą briauną iš naujo, atspindime pirmąją per detalės vidurį. "
-                "Veidrodžio plokštuma - YZ, einanti per x = 50.",
-       "zingsniai": ["Įvesk MIRROR3D:"],
-       "komandos": [["Command:", "MIRROR3D"], ["Select objects:", "(briauna) Enter"],
-                    ["Specify first point of mirror plane [... YZ ...]:", "YZ"],
-                    ["Specify point on YZ-plane:", "50,30,0"], ["Delete source objects? [Yes/No]:", "N"]],
-       "uzuominos": ["YZ plokštuma stati ir statmena X ašiai - lygiai tokia, kokios reikia atspindžiui į kairę.",
-                     "Atsakymas N (No) - kad liktų ir originali briauna."],
-       "tikslas": "Dvi briaunos: dešinėje ir kairėje",
-       "tikrinti": t_veidrodis, "demo": d_veidrodis},
-      {"id": "final", "pavadinimas": "Galutinis UNION", "xp": 25,
-       "kodel": "Paskutinis žingsnis - sujungti briaunas su detale. Po to detalė paruošta lapui ir pjūviams.",
-       "zingsniai": ["Įvesk UNION ir pažymėk viską rėmeliu, Enter.",
-                     "Pažiūrėk rezultatą: VSCURRENT → Conceptual."],
-       "komandos": [["Command:", "UNION"], ["Select objects:", "(pažymėk viską) Enter"]],
-       "uzuominos": ["Rėmelį tempk iš kairės į dešinę - pažymės viską, kas pilnai patenka į rėmelį."],
-       "tikslas": "Viena detalė 100 × 60 × 60",
-       "tikrinti": t_galutinis, "demo": d_galutinis},
-    ],
-    "testas": [
-      {"k": "Kuria komanda iš vieno kūno išpjauni kitą?",
-       "v": ["UNION", "SUBTRACT", "INTERSECT", "EXTRUDE"], "t": 1,
-       "p": "SUBTRACT atima: pirma pažymi IŠ KO, tada KĄ."},
-      {"k": "Ką reiškia POLYGON parinktis „Inscribed in circle“?",
-       "v": ["Daugiakampio kampai yra ant apskritimo", "Apskritimas liečia daugiakampio kraštines",
-             "Daugiakampis pasuktas 45°", "Daugiakampis tampa 3D"], "t": 0,
-       "p": "Inscribed - įbrėžtas: kampai ant apskritimo. Circumscribed - apibrėžtas: kraštinės liečia apskritimą."},
-      {"k": "Kodėl cilindro centras buvo 50,30,20, o ne 50,30,0?",
-       "v": ["Taip gražiau", "Kad cilindras stovėtų ant dėžės viršaus (dėžės aukštis 20)",
-             "AutoCAD neleidžia z = 0", "Kad būtų ø40"], "t": 1,
-       "p": "Trečia koordinatė - aukštis Z. Dėžės viršus yra z = 20."},
-      {"k": "MIRROR3D klausia „Delete source objects?“. Ką atsakyti, kad liktų abi briaunos?",
-       "v": ["Yes", "No"], "t": 1, "p": "No - originalas lieka, atsiranda dar ir veidrodinė kopija."},
-    ],
-  },
-]
-
-ATEITYJE = [
-    {"pavadinimas": "Pjūviai ir ketvirtinė išpjova", "aprasas": "SECTIONPLANE, VIEWBASE, VIEWSECTION"},
-    {"pavadinimas": "Projekcijos iš 3D modelio", "aprasas": "VIEWBASE, VIEWPROJ, A3 lape"},
-    {"pavadinimas": "Aksonometrija", "aprasas": "ISODRAFT, izometrinis apskritimas"},
-]
-
-PATARIMAI = [
-    "Tarpo klavišas AutoCAD'e veikia kaip Enter - o tuščias tarpas pakartoja paskutinę komandą.",
-    "Esc nutraukia bet kurią komandą. Užstrigai? Spausk Esc du kartus.",
-    "U - atšaukia paskutinį veiksmą. Tai pats geriausias draugas mokantis!",
-    "F8 įjungia ORTHO - linijos tik horizontalios ir vertikalios.",
-    "Shift + vidurinis pelės mygtukas suka 3D vaizdą (orbit).",
-    "Dukart spustelėk pelės ratuką - ZOOM Extents: parodo visą brėžinį.",
-    "Komandų eilutėje užtenka pirmų raidžių: L = LINE, C = CIRCLE, EXT = EXTRUDE.",
-    "VSCURRENT → C (Conceptual) parodo detalę spalvotą ir gražiai apšviestą.",
-]
+_TURINYS = _ikelti()
+PAMOKOS = _TURINYS["pamokos"]
+ATEITYJE = _TURINYS["ateityje"]
+PATARIMAI = _TURINYS["patarimai"]
+KORTELES = _TURINYS["korteles"]
 
 
 def pamoka(pid):
@@ -1334,44 +1017,12 @@ def pamoka(pid):
     raise ValueError("Tokios pamokos nėra.")
 
 
-# Komandų kortelės kartojimui be AutoCAD: (komanda, trumpinys, ką daro, pavyzdys, pamoka)
-KORTELES = [
-    ("NEW", "Ctrl+N", "Naujas brėžinys iš šablono. Mūsų brėžiniams - acadiso.dwt (milimetrai).", "NEW → acadiso.dwt", "failas"),
-    ("UNITS", "UN", "Brėžinio vienetai ir tikslumas.", "UNITS → Decimal · 0 · Millimeters", "failas"),
-    ("SAVEAS", "Ctrl+Shift+S", "Išsaugo brėžinį nauju vardu ar kitu formatu (DWG, DXF, senesnė versija).", "SAVEAS → Pirmasis_brezinys.dwg", "failas"),
-    ("PLOT", "Ctrl+P", "Spausdina. Su DWG To PDF.pc3 sukuria PDF failą.", "PLOT → DWG To PDF.pc3 → Extents", "failas"),
-    ("LAYOUTWIZARD", "", "Vedlys naujam lapui (Layout): spausdintuvas, popierius, orientacija.", "LAYOUTWIZARD → A3 → Landscape", "lapas"),
-    ("RECTANG", "REC", "Stačiakampis pagal du priešingus kampus.", "RECTANG → 0,0 → 100,60", "2d"),
-    ("LAYER", "LA", "Sluoksnių valdymas: kontūras, ašys, matmenys - skirtingos linijos ir spalvos.", "LAYER → New → KONTURAS", "2d"),
-    ("LINE", "L", "Atkarpa (linija) tarp taškų. Enter baigia.", "LINE → -5,30 → 105,30", "2d"),
-    ("CIRCLE", "C", "Apskritimas: centras ir spindulys (D - skersmuo).", "CIRCLE → 50,30 → 15", "2d"),
-    ("FILLET", "F", "Suapvalina kampą. P (Polyline) - visus polilinijos kampus.", "FILLET → R → 10 → P", "2d"),
-    ("COPY", "CO", "Nukopijuoja objektus iš vieno taško į kitą.", "COPY → objektas → bazinis taškas → naujas", "2d"),
-    ("ATTDEF", "ATT", "Atributo apibrėžimas - laukelis bloke (pvz. POZ, NUORODA).", "ATTDEF → Tag: POZ", "schema"),
-    ("BLOCK", "B", "Sukuria bloką iš objektų - ženklą, kurį galima įterpti daug kartų.", "BLOCK → REZISTORIUS → 0,0", "schema"),
-    ("INSERT", "I", "Įterpia bloką ir paklausia atributų reikšmių.", "INSERT → REZISTORIUS → R1", "schema"),
-    ("DATAEXTRACTION", "DX", "Ištraukia blokų atributus į lentelę - aprašo lentelė.", "DATAEXTRACTION → Insert table", "schema"),
-    ("DIMSTYLE", "D", "Matmenų stilius: teksto aukštis, rodyklės, tikslumas.", "DIMSTYLE → ISO_MATMENYS → 3.5", "matmenys"),
-    ("DIMLINEAR", "DLI", "Horizontalus arba vertikalus linijinis matmuo.", "DIMLINEAR → 0,0 → 100,0", "matmenys"),
-    ("DIMDIAMETER", "DDI", "Skersmens matmuo su ženklu ø.", "DIMDIAMETER → apskritimas", "matmenys"),
-    ("STYLE", "ST", "Teksto stilius: šriftas (isocp.shx, ISOCPEUR), pasvirimas.", "STYLE → ISO_LT → ISOCPEUR → 15°", "sriftai"),
-    ("TEXT", "DT", "Vienos eilutės tekstas: taškas, aukštis, kampas.", "TEXT → 0,80 → 5 → 0 → Brėžinys", "sriftai"),
-    ("BOX", "", "3D stačiakampis gretasienis (dėžė).", "BOX → 0,0,0 → 100,60,0 → 20", "pirmoji-3d"),
-    ("CYLINDER", "CYL", "3D cilindras: pagrindo centras, spindulys, aukštis.", "CYLINDER → 50,30,0 → 15 → 40", "pirmoji-3d"),
-    ("UNION", "UNI", "Sujungia kelis 3D kūnus į vieną.", "UNION → pažymėk kūnus → Enter", "pirmoji-3d"),
-    ("SUBTRACT", "SU", "Iš vieno kūno atima kitą (skylės, grioveliai).", "SUBTRACT → iš ko → ką atimti", "pirmoji-3d"),
-    ("EXTRUDE", "EXT", "Ištempia 2D kontūrą į 3D kūną.", "EXTRUDE → kontūras → aukštis", "pirmoji-3d"),
-    ("MIRROR3D", "", "Veidrodinis atspindys 3D erdvėje per plokštumą.", "MIRROR3D → YZ → taškas", "pirmoji-3d"),
-]
-
-
 def viesai():
-    """Pamokos be Python funkcijų - siuntimui į sąsają."""
+    """Pamokos be Python funkcijų - siuntimui į sąsają (ir programėlei)."""
     rez = []
     for p in PAMOKOS:
         z = [{k: v for k, v in s.items() if k not in ("tikrinti", "demo")} |
              {"tikrinama": s["tikrinti"] is not None, "demonstruojama": s["demo"] is not None}
              for s in p["zingsniai"]]
         rez.append({k: v for k, v in p.items() if k != "zingsniai"} | {"zingsniai": z})
-    return {"pamokos": rez, "ateityje": ATEITYJE, "patarimai": PATARIMAI,
-            "korteles": [dict(zip(("k", "trump", "ka", "pvz", "pamoka"), k)) for k in KORTELES]}
+    return {"pamokos": rez, "ateityje": ATEITYJE, "patarimai": PATARIMAI, "korteles": KORTELES}

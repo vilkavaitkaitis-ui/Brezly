@@ -30,7 +30,7 @@ import zipfile
 PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 os.chdir(PROGRAMOS_APLANKAS)
 
-import programa as P            # noqa: E402  (serveris, langas, ryšys su AutoCAD)
+import serveris as P            # noqa: E402  (serveris, langas, ryšys su AutoCAD)
 import pamokos                  # noqa: E402
 import praktika                 # noqa: E402
 
@@ -316,7 +316,8 @@ def info(_):
     return {"ok": True, "versija": VERSIJA_BREZLY, "testavimas": _testavimo_nustatymai() is not None,
             "funkcijos": funkcijos(),
             "langas": dict(P.LANGAS), "klavisai": KLAVISAI, "ekranas": P.darbo_sritis(),
-            "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS} | pamokos.viesai()
+            "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS,
+            "praktika": praktika.SARASAS} | pamokos.viesai()
 
 
 def _zingsnis(duom):
@@ -855,6 +856,7 @@ def _su_zurnalu(f):
 class BrezlyTvarkykle(P.Tvarkykle):
     HTML = "brezly.html"
     IKONA = "brezly.ico"
+    FAILAI = ("brezly.css", "brezly.js")
 
     def do_GET(self):
         if self.path.startswith("/praktika/"):          # praktikos brėžinių peržiūra (SVG/PDF)

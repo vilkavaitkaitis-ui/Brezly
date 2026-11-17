@@ -16,21 +16,21 @@
 
 ;;; Uzduotis: (id pav fmt d min xp aprasas komandos zingsniai taisykles)
 ;;; Taisykles: ("R" spindulys kiek) ("T" tipas kiek) ("DYDIS" plotis aukstis) ("TURIS" mm3 proc)
+;;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti
 (setq *br:uzd*
  (list
   (list "U1_Tarpine" "Tarpine" "A4" "2D" 10 30
    "Nubraizyk tarpine 120 x 80 su uzapvalintais kampais R10, centrine skyle D40 ir keturiomis skylemis D10."
    "RECTANG, FILLET, CIRCLE, COPY, DIMLINEAR"
-   (list "RECTANG -> Fillet -> 10, tada staciakampis @120,80"
+   (list "RECTANG -> Fillet -> R10, tada staciakampis 120,80"
          "CIRCLE centre -> spindulys 20 (D40)"
          "Viena skyle: CIRCLE spindulys 5, tada COPY i kitus 3 kampus (atstumai 96 ir 56)"
-         "Asys - sluoksnyje ASYS, matmenys - DIMLINEAR sluoksnyje MATMENYS")
-   (list (list "R" 20.0 1) (list "R" 5.0 4) (list "T" "LINE" 4) (list "T" "ARC" 4)
-         (list "DYDIS" 120.0 80.0)))
+         "Asys sluoksnyje ASYS, matmenys - DIMLINEAR")
+   (list (list "R" 20.0 1) (list "R" 5.0 4) (list "T" "LINE" 4) (list "T" "ARC" 4) (list "DYDIS" 120.0 80.0)))
 
   (list "U2_Flansas" "Flansas" "A4" "2D" 15 45
    "Flansas D120 su anga D50 ir 6 skylemis D12 ant D90 apskritimo. Du vaizdai: is virsaus ir is priekio."
-   "CIRCLE, ARRAYPOLAR, LINE, NEMATOMOS, DIMDIAMETER"
+   "CIRCLE, ARRAY (Polar), LINE, NEMATOMOS, DIMDIAMETER"
    (list "Trys koncentriniai apskritimai: R60, R25 ir R45 (asinis, sluoksnis ASYS)"
          "Viena skyle R6 ant asinio apskritimo virsaus"
          "ARRAYPOLAR -> 6 elementai, 360 laipsniu"
@@ -50,7 +50,7 @@
    "Pakopinis velenas D20 / D30 / D25 (ilgiai 30, 50, 40) su grioveliu 30 x 8 ir pjuviu A-A."
    "LINE, OFFSET, CHAMFER, MIRROR, HATCH"
    (list "Nubraizyk tik virsutine puse nuo asies, tada MIRROR per asi"
-         "CHAMFER 1 x 45 laipsniai galuose"
+         "CHAMFER 1 x 45 laipsniu galuose"
          "Griovelis: staciakampis su uzapvalintais galais 30 x 8"
          "Pjuvis A-A: apskritimas D30 su ipjova, uzpildyk HATCH (ANSI31)")
    (list (list "T" "LINE" 14) (list "T" "HATCH" 1)))
@@ -88,9 +88,10 @@
    (list "BOX nuo 0,0,0 -> 80,50,10"
          "CYLINDER centras 40,25,10, R15, aukstis 25 -> UNION su plokste"
          "CYLINDER R8 kiaurai visa auksti ir 4 x R4 (10 nuo krastu) -> SUBTRACT"
-         "Patikrink: MASSPROP -> turis apie 48 624 mm3")
+         "Patikrink: MASSPROP -> turis apie 48 600 mm3")
    (list (list "T" "3DSOLID" 1) (list "TURIS" 48623.7 2.0)))
  ))
+;;; </uzduotys>
 
 ;;; ---------- pagalbines ----------
 
