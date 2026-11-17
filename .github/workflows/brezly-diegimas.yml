@@ -1,8 +1,8 @@
 # Brėžly: automatinis Brezly_Setup.exe surinkimas ir atnaujinimai - NEMOKAMAI (viešai GitHub repozitorijai).
 #
-# Kaip išleisti naują versiją - užtenka žymos (tag):
-#   git tag -a v0.9 -m "Kas naujo..."  ir  git push origin v0.9
-#   (arba GitHub -> Releases -> Draft a new release -> naujas tag v0.9 -> Publish).
+# Kaip išleisti naują versiją (bet kuris būdas):
+#   A) GitHub -> Actions -> „Brėžly diegimo programa“ -> Run workflow -> versija 0.9, kas naujo -> Run.
+#   B) git tag -a v0.9 -m "Kas naujo..."  ir  git push origin v0.9
 #   Po ~5 min. atsiras Release su Brezly_Setup.exe, Brezly_programa.zip ir atnaujinimai.json,
 #   o visi įdiegti Brėžly patys pasiūlys atnaujinti.
 # Bandomasis surinkimas be Release: Actions -> „Brėžly diegimo programa“ -> Run workflow.
@@ -12,6 +12,15 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      versija:
+        description: "Versija be v, pvz. 0.9 (tuščia - tik bandomasis surinkimas be Release)"
+        required: false
+        default: ""
+      pastabos:
+        description: "Kas naujo (rodoma vartotojams atnaujinant)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -35,13 +44,14 @@ jobs:
       - name: Versija ir atnaujinimų adresas
         shell: pwsh
         run: |
-          $tag = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "" }
+          $tag = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } elseif ("${{ inputs.versija }}") { "v" + "${{ inputs.versija }}".Trim().TrimStart("v","V") } else { "" }
           $v = if ($tag) { $tag.TrimStart("v", "V") } else { "0.0.0-bandymas" }
           if ($tag -and $v -notmatch '^\d+(\.\d+)*$') { throw "Žyma turi būti kaip v0.9 arba v1.0.2 (dabar: $tag)" }
           Set-Content versija.txt $v -NoNewline -Encoding utf8
           # programa žinos, kur tikrinti atnaujinimus - nieko rankiniu būdu nustatyti nereikia
           Set-Content atnaujinimai_url.txt "https://github.com/${{ github.repository }}/releases/latest/download/atnaujinimai.json" -NoNewline -Encoding utf8
           "VERSIJA=$v" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "ZYMA=$tag" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
           New-Item -ItemType Directory -Force isvestis | Out-Null
 
       - name: Paketai
@@ -80,9 +90,11 @@ jobs:
 
       - name: atnaujinimai.json (su kontrolinėmis sumomis)
         shell: pwsh
+        env:
+          PASTABOS_IVESTOS: ${{ inputs.pastabos }}
         run: |
           $u = "https://github.com/${{ github.repository }}/releases/latest/download"
-          $pastabos = ""
+          $pastabos = "$env:PASTABOS_IVESTOS"
           if ("${{ github.ref_type }}" -eq "tag") { $pastabos = (git tag -l --format='%(contents)' "${{ github.ref_name }}" | Out-String) }
           $pastabos = $pastabos.Trim(); if (-not $pastabos) { $pastabos = "Nauja Brėžly versija $env:VERSIJA" }
           if ($pastabos.Length -gt 400) { $pastabos = $pastabos.Substring(0, 400) + "…" }
@@ -102,10 +114,11 @@ jobs:
           path: isvestis/*
 
       - name: Sukurti Release ir prisegti failus
-        if: github.ref_type == 'tag'
+        if: env.ZYMA != ''
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ env.ZYMA }}
+          target_commitish: ${{ github.sha }}
           name: Brėžly ${{ env.VERSIJA }}
           body_path: isvestis/pastabos.md
           make_latest: true
