@@ -8,7 +8,7 @@ Kiekvienai užduočiai aplanke praktika/ yra:
 Tikrinimas skaito aktyvų brėžinį per AutoCAD COM: apskritimų spindulius, objektų tipus, 3D kūno tūrį.
 """
 
-import math
+import json
 import os
 import shutil
 import subprocess
@@ -16,21 +16,36 @@ import sys
 
 APLANKAS = os.path.join(os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__)), "praktika")
 
-# apskritimai: {spindulys: kiekis}; tipai: {ObjectName: min kiekis}; turis: mm³ (3D kūnas)
-UZDUOTYS = {
-    "U1_Tarpine":     {"xp": 30, "apskritimai": {20: 1, 5: 4}, "tipai": {"AcDbLine": 4, "AcDbArc": 4}},
-    "U2_Flansas":     {"xp": 45, "apskritimai": {60: 1, 25: 1, 6: 6}},
-    "U3_Laikiklis":   {"xp": 45, "apskritimai": {6: 1}, "tipai": {"AcDbArc": 3}},
-    "U4_Velenas":     {"xp": 50, "tipai": {"AcDbLine": 14, "AcDbHatch": 1}},
-    "U5_Projekcijos": {"xp": 60, "apskritimai": {7: 1}, "tipai": {"AcDbLine": 14}},
-    "U6_Izometrija":  {"xp": 60, "tipai": {"AcDbLine": 12, "AcDbEllipse": 1}},
-    "U7_Schema":      {"xp": 45, "tipai": {"AcDbBlockReference": 4, "AcDbLine": 6}},
-    "U8_3D_detale":   {"xp": 80, "turis": 40000 + math.pi * 15 ** 2 * 25 - math.pi * 8 ** 2 * 35 - 4 * math.pi * 4 ** 2 * 10},  # ≈ 48 623
-}
+UZDUOCIU_FAILAS = os.path.join(APLANKAS, "uzduotys.json")
+# Taisyklės faile naudoja DXF tipų vardus (kaip programėlė), AutoCAD COM grąžina AcDb* vardus
+COM_TIPAI = {"LINE": "AcDbLine", "ARC": "AcDbArc", "HATCH": "AcDbHatch", "ELLIPSE": "AcDbEllipse",
+             "INSERT": "AcDbBlockReference", "CIRCLE": "AcDbCircle", "3DSOLID": "AcDb3dSolid"}
 PAVADINIMAI = {"AcDbLine": "linijų", "AcDbArc": "lankų", "AcDbHatch": "brūkšniuotės (HATCH)",
                "AcDbEllipse": "elipsių (ELLIPSE → Isocircle)", "AcDbBlockReference": "įterptų blokų (INSERT)"}
-TOL_R = 0.05
-TOL_V = 0.02
+
+
+def _ikelti():
+    """praktika/uzduotys.json -> {id: {xp, apskritimai {spindulys: kiekis}, tipai {AcDb...: kiekis}, turis}}"""
+    with open(UZDUOCIU_FAILAS, encoding="utf-8") as f:
+        d = json.load(f)
+    uzd = {}
+    for u in d["uzduotys"]:
+        t = u.get("tikrinimas", {})
+        r = {"xp": u["xp"]}
+        if t.get("apskritimai"):
+            r["apskritimai"] = dict(sorted(((float(k), v) for k, v in t["apskritimai"].items()), reverse=True))
+        if t.get("tipai"):
+            r["tipai"] = {COM_TIPAI.get(k, k): v for k, v in t["tipai"].items()}
+        if t.get("turis"):
+            r["turis"] = float(t["turis"])
+        uzd[u["id"]] = r
+    return d, uzd
+
+
+_DUOM, UZDUOTYS = _ikelti()
+SARASAS = _DUOM["uzduotys"]                     # visa informacija sąsajai (pavadinimai, žingsniai...)
+TOL_R = _DUOM["tolerancija"]["spindulys"]
+TOL_V = _DUOM["tolerancija"]["turis"]
 
 
 def _uzd(duom):

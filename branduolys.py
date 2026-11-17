@@ -21,8 +21,11 @@ import os
 import sys
 import time
 
-import pythoncom
-import win32com.client
+try:
+    import pythoncom
+    import win32com.client
+except ImportError:         # ne Windows: sąsają ir tikrinimą galima kurti bei testuoti be AutoCAD
+    pythoncom = win32com = None
 
 VERSIJA = "1.4 (2026-11-09)"
 MODELIS = "claude-sonnet-5-5"

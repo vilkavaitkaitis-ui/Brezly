@@ -1631,32 +1631,7 @@ async function tikrintiIvykius(){
 }
 
 /* =================== PRAKTIKA (0.8): 2D A4, 3D A3 =================== */
-const PRAKTIKA=[
- {id:"U1_Tarpine",nr:1,pav:"Tarpinė",fmt:"A4",d:"2D",lyg:1,min:10,xp:30,uzd:"Nubraižyk tarpinę 120 × 80 su užapvalintais kampais R10, centrine skyle ø40 ir keturiomis skylėmis ø10.",
-  kom:["RECTANG","FILLET","CIRCLE","COPY","DIMLINEAR"],
-  z:["RECTANG → Fillet → R10, tada stačiakampis 120,80","CIRCLE centre → spindulys 20 (ø40)","Viena skylė: CIRCLE spindulys 5, tada COPY į kitus 3 kampus (atstumai 96 ir 56)","Ašys sluoksnyje ASYS, matmenys - DIMLINEAR"]},
- {id:"U2_Flansas",nr:2,pav:"Flanšas",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Flanšas ø120 su anga ø50 ir 6 skylėmis ø12 ant ø90 apskritimo. Du vaizdai: iš viršaus ir iš priekio.",
-  kom:["CIRCLE","ARRAY (Polar)","LINE","NEMATOMOS","DIMDIAMETER"],
-  z:["Trys koncentriniai apskritimai: R60, R25 ir R45 (ašinis, sluoksnis ASYS)","Viena skylė R6 ant ašinio apskritimo viršaus","ARRAYPOLAR → 6 elementai, 360°","Vaizdas iš priekio: stačiakampis 120 × 15, skylės - brūkšninės (NEMATOMOS)"]},
- {id:"U3_Laikiklis",nr:3,pav:"L laikiklis",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"L formos laikiklis 100 × 80 su vidiniu kampu R10, skyle ø12 ir ovalia anga 30 × 10.",
-  kom:["PLINE","FILLET","CIRCLE","OFFSET","TRIM"],
-  z:["PLINE kontūras pagal matmenis (100, 30, 70, 50, 30, 80)","FILLET R10 vidiniame kampe","Skylė: CIRCLE R6 per 15 nuo krašto ir 20 nuo viršaus","Ovalas: du apskritimai R5 per 20 vienas nuo kito + dvi liestinės LINE, TRIM vidurį"]},
- {id:"U4_Velenas",nr:4,pav:"Velenas",fmt:"A4",d:"2D",lyg:2,min:15,xp:50,uzd:"Pakopinis velenas ø20 / ø30 / ø25 (ilgiai 30, 50, 40) su grioveliu 30 × 8 ir pjūviu A-A.",
-  kom:["LINE","OFFSET","CHAMFER","MIRROR","HATCH"],
-  z:["Nubraižyk tik viršutinę pusę nuo ašies, tada MIRROR per ašį","CHAMFER 1 × 45° galuose","Griovelis: stačiakampis su užapvalintais galais 30 × 8","Pjūvis A-A: apskritimas ø30 su įpjova, užpildyk HATCH (ANSI31)"]},
- {id:"U5_Projekcijos",nr:5,pav:"3 projekcijos",fmt:"A4",d:"2D",lyg:3,min:20,xp:60,uzd:"L formos blokas 60 × 40 × 40 su laipteliu ir kiaurine skyle ø14. Trys vaizdai E metodu.",
-  kom:["LINE","XLINE","CIRCLE","NEMATOMOS","DIMLINEAR"],
-  z:["Pradėk nuo vaizdo iš priekio (60 × 40 su laipteliu 30 × 20)","XLINE pagalbinėmis linijomis perkelk aukščius į vaizdą iš kairės (dešinėje)","Vaizdas iš viršaus - apačioje: 60 × 40, skylė R7","Nematomos skylės briaunos - sluoksnis NEMATOMOS"]},
- {id:"U7_Schema",nr:7,pav:"Elektrinė schema",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Schema: baterija G1, jungiklis S1, rezistorius R1 ir dvi lygiagrečios lemputės H1, H2 + aprašo lentelė.",
-  kom:["BLOCK","ATTDEF","INSERT","LINE","TABLE"],
-  z:["Nubraižyk ženklus (lemputė - apskritimas su X, rezistorius 15 × 5)","Kiekvieną paversk bloku: BLOCK, su atributu POZ (ATTDEF)","INSERT - sudėk blokus ir sujunk linijomis","Aprašo lentelė - TABLE arba linijos + tekstas"]},
- {id:"U6_Izometrija",nr:6,pav:"Izometrija",fmt:"A3",d:"3D",lyg:3,min:20,xp:60,uzd:"5 užduoties detalę nubraižyk izometrijoje mastelių 2:1. Skylė - izometrinis apskritimas.",
-  kom:["ISODRAFT","F5","LINE","ELLIPSE → Isocircle","COPY"],
-  z:["Įjunk ISODRAFT (arba būsenos juostoje izometrinį tinklelį)","F5 keičia plokštumą: kairė / viršus / dešinė","Matmenys ×2: 120, 80, 80, laiptelis 40","Skylė: ELLIPSE → I (Isocircle), spindulys 14, viršutinėje plokštumoje"]},
- {id:"U8_3D_detale",nr:8,pav:"3D detalė",fmt:"A3",d:"3D",lyg:3,min:25,xp:80,uzd:"Plokštė 80 × 50 × 10 su cilindru ø30 (aukštis iki 35), kiaurine skyle ø16 ir 4 skylėmis ø8.",
-  kom:["BOX","CYLINDER","UNION","SUBTRACT","ARRAY","VIEWBASE"],
-  z:["BOX nuo 0,0,0 → 80,50,10","CYLINDER centras 40,25,10, R15, aukštis 25 → UNION su plokšte","CYLINDER R8 kiaurai visą aukštį ir 4 × R4 (10 nuo kraštų) → SUBTRACT","Patikrink: MASSPROP → tūris ≈ 48 600 mm³"]},
-];
+let PRAKTIKA=[];      /* praktikos užduotys - iš praktika/uzduotys.json (ateina per /api/info) */
 let prFiltras="visos", prDabar=null, prPaskutinis={};
 function prAtlikta(id){ return !!(S.praktika||{})[id]; }
 function prZvaigzd(n){ return "★".repeat(n)+"☆".repeat(3-n); }
@@ -2186,7 +2161,7 @@ r();<\/script></body></html>`;
   const tvarka=["lape","katinas","peleda","robotas","drakonas","ateivis","pingvinas","meska"];
   $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:["robotas","drakonas"].includes(id)?"kepure":null,ranka:null})}</span>`).join("");
   u.onclick=baigti; setTimeout(baigti,2900);
-  INFO=await api("/api/info"); $("#ver").textContent=INFO.versija;
+  INFO=await api("/api/info"); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
   inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200);
   rodytiPatarima(); setInterval(rodytiPatarima,20000); Robotas.pradeti();
   rodytiPradzia(); tikrintiBusena(); Gidas.pradzia();

@@ -316,7 +316,8 @@ def info(_):
     return {"ok": True, "versija": VERSIJA_BREZLY, "testavimas": _testavimo_nustatymai() is not None,
             "funkcijos": funkcijos(),
             "langas": dict(P.LANGAS), "klavisai": KLAVISAI, "ekranas": P.darbo_sritis(),
-            "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS} | pamokos.viesai()
+            "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS,
+            "praktika": praktika.SARASAS} | pamokos.viesai()
 
 
 def _zingsnis(duom):
