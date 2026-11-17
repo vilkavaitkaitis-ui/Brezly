@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Brėžly</title>
 <link rel="icon" href="/ikona.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
 :root{
   --accent:#f59e0b; --accent2:#14b8a6;
@@ -484,6 +486,146 @@ body.mini-rez #mini{display:flex;position:fixed;inset:0;flex-direction:column;ga
 }
 @media (max-width:900px){.pr-det .pr-info{order:-1}}
 @media (max-width:560px){.nust-eil{flex-wrap:wrap;row-gap:10px}.nust-eil .pasir{flex-wrap:wrap}}
+
+/* =====================================================================
+   0.9 - INŽINERINIS DIZAINAS: grafitas, plonos linijos, IBM Plex,
+   oranžinė tik veiksmui, mažai apvalinimų, be gradientų.
+   ===================================================================== */
+:root{
+  --accent:#f28c28; --accent2:#56c2e6;
+  --bg:#0d1117; --panel:#10151c; --card:#141a22; --card-hi:#1a212b; --line:#283241;
+  --text:#e6eaf0; --muted:#93a0b2; --ok:#3fb950; --err:#f47067; --cmd:#0a0e14;
+  --accent-soft:color-mix(in srgb,var(--accent) 12%,transparent);
+  --font:"IBM Plex Sans","Segoe UI Variable Text","Segoe UI",system-ui,Arial,sans-serif;
+  --kond:"IBM Plex Sans Condensed","IBM Plex Sans","Segoe UI Semibold","Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono","Cascadia Mono",Consolas,"DejaVu Sans Mono",monospace;
+  --r:6px;
+}
+:root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--card:#fff;--card-hi:#f1f3f6;--line:#d5dbe3;--text:#161b22;--muted:#5b6676;--cmd:#0d1117;--accent:#d9730d}
+body{font-size:14.5px;letter-spacing:0}
+main{background-image:linear-gradient(color-mix(in srgb,var(--text) 3%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--text) 3%,transparent) 1px,transparent 1px);background-size:24px 24px}
+::selection{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* užsklanda */
+#uzsklanda{background-color:#0d1117;background-image:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px);background-size:24px 24px}
+#uzsklanda h1{background:none;color:var(--text);-webkit-text-fill-color:var(--text);font:600 54px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase}
+#uzsklanda h1 span{color:var(--text);-webkit-text-fill-color:var(--text)}
+#uzsklanda h1 .e-kr,#uzsklanda .e-kr .kryz{color:var(--accent);-webkit-text-fill-color:var(--accent)}
+#uzsklanda p{font:500 13px var(--kond);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.u-nauja{border-radius:3px;background:none;border:1px solid var(--accent);color:var(--accent);font:600 12px var(--mono);letter-spacing:.08em}
+
+/* šoninė */
+aside{background:var(--panel);padding:16px 12px;gap:14px}
+.logo b{font:600 19px var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.logo b span{color:inherit}
+.logo small{font:500 10.5px var(--kond);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.v-zyme{border-radius:3px;background:none;border:1px solid var(--accent);color:var(--accent);font:600 10px var(--mono);padding:1px 5px}
+.zaidejas{background:var(--card);border-radius:var(--r);padding:14px}
+.zaidejas .zenkl{border-radius:4px;background:none;border:1px solid var(--accent);color:var(--accent);font-family:var(--mono)}
+.juosta{height:5px;border-radius:2px}
+.juosta i{background:var(--accent);border-radius:2px}
+.zenklelis,.cip{border-radius:3px;font-size:11.5px}
+.sk-ant{font:600 11px var(--kond);letter-spacing:.14em;color:var(--muted)}
+.nav{grid-template-columns:1fr;gap:1px}
+.nav button{border:0;background:none;border-radius:4px;padding:8px 10px;font-weight:500;color:var(--muted)}
+.nav button:hover{background:var(--card-hi);color:var(--text)}
+.nav button.akt{background:var(--card);color:var(--text);box-shadow:inset 2px 0 0 var(--accent)}
+.pam{border-radius:4px;padding:9px 10px}
+.pam.akt{background:var(--card);border-color:var(--line);box-shadow:inset 2px 0 0 var(--accent)}
+.pam .nr{border-radius:4px;background:none;border:1px solid var(--line);font:600 12.5px var(--mono);width:30px;height:30px;color:var(--muted)}
+.pam.akt .nr{border-color:var(--accent);color:var(--accent)}
+.patarimas{border-radius:var(--r);border-style:solid;background:var(--panel)}
+.patarimas b{color:var(--accent2);font:600 11px var(--kond);letter-spacing:.14em}
+.busena,.tema{border-radius:4px}
+
+/* bendri */
+.btn{border-radius:var(--r);font-weight:600;padding:9px 16px}
+.btn.didelis{border-radius:var(--r);padding:12px 22px;font-size:15.5px}
+.btn.pagr{color:#1a0e02}
+.btn:hover{border-color:#3a4558}
+.btn:active{transform:none;filter:brightness(.95)}
+h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:30px 0 12px}
+.ant1{font-weight:600;font-size:28px;letter-spacing:-.01em}
+.zyme,.zyme.t{border-radius:3px;background:none;border:1px solid var(--line);color:var(--muted);font:600 11.5px var(--mono)}
+.zyme:first-child{border-color:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--accent)}
+
+/* pradžia */
+.herojus{border-radius:var(--r);background:var(--card);background-image:linear-gradient(90deg,color-mix(in srgb,var(--accent) 9%,transparent),transparent 55%);padding:28px 30px}
+.herojus h1{font-weight:600;font-size:32px;letter-spacing:-.01em}
+.planas div,.kaip div{border-radius:var(--r)}
+.planas span{border-radius:3px;font-family:var(--mono);background:none;border:1px solid var(--line)}
+.planas div.atl span{border-color:var(--ok)}
+.kaip i{filter:grayscale(.2)}
+
+/* žingsnis */
+.taskai{gap:3px}
+.taskai i{height:5px;border-radius:1px}
+.korta{border-radius:var(--r);padding:24px 26px}
+.korta-ant h1{font-weight:600;font-size:25px}
+.xp-zyme{background:none;border:1px solid var(--accent);color:var(--accent);border-radius:3px;font:600 12px var(--mono);padding:3px 8px}
+.kodel{background:none;border-left:2px solid var(--accent2);border-radius:0;padding:4px 0 4px 14px;color:var(--text)}
+.kodel b{font:600 11px var(--kond);letter-spacing:.14em}
+.komandos{border-radius:var(--r);border-color:var(--line)}
+.komandos .ant{border-bottom-color:var(--line)}
+.komandos .ant i{border-radius:1px;width:8px;height:8px;background:#2b3546}
+.komandos .ant span{font:600 11px var(--kond);letter-spacing:.12em;text-transform:uppercase;color:#6b7788}
+.kl .iv{color:var(--accent)}
+.kl .iv.pele{color:var(--accent2)}
+.kl button{border-radius:3px;border-color:var(--line)}
+.tikslas{border-radius:4px;font-size:13.5px}
+.tikslas b{font-family:var(--mono);font-weight:500;color:var(--text)}
+.uzuomina,.atsakas,.pr-ats,.mi-ats{border-radius:var(--r)}
+.atsakas.gerai{background:#13261a;border-color:#2e6b40}
+.atsakas.blogai{background:#2a1517;border-color:#6e2f30}
+:root[data-theme="light"] .atsakas.gerai{background:#eaf7ee;border-color:#9fd8ae}
+:root[data-theme="light"] .atsakas.blogai{background:#fdeeed;border-color:#f2b4ae}
+.skrenda{font-family:var(--mono);font-weight:600}
+
+/* testas, pabaiga */
+.klausimas{border-radius:var(--r)}
+.variantai button{border-radius:var(--r);border-width:1px}
+.statai div,.statai4 div{border-radius:var(--r)}
+.statai b,.statai4 b{font-family:var(--mono);font-weight:600}
+
+/* spinta, lygiai, profilis */
+.perziura,.prof-fon{border-radius:var(--r)}
+.skirt{border-radius:var(--r);padding:3px}
+.skirt button{border-radius:4px;font-weight:600}
+.daiktas{border-radius:var(--r);border-width:1px}
+.daiktas:hover:not(:disabled){transform:none}
+.daiktas .mini,.lyg-k .lyg-fon{border-radius:4px}
+.daiktas .naujas,.lyg-k .cia{border-radius:3px;font-family:var(--mono)}
+.lyg-k{border-radius:var(--r)}
+.lyg-k .nr{border-radius:4px;font-family:var(--mono)}
+.kitas-atl,.zen-tink div{border-radius:var(--r)}
+.avataras{border-radius:var(--r)}
+#atlygis .lang,#langelis .lang{border-radius:8px}
+
+/* nustatymai, langeliai, kortelės */
+.nust-gr{border-radius:var(--r)}
+.nust-gr h3{font:600 11.5px var(--kond);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pasir,.nustat{border-radius:var(--r)}
+.pasir button,.nustat button{border-radius:4px}
+.jung{border-radius:3px}
+.jung::after{border-radius:2px}
+.rinktis button{border-radius:var(--r)}
+.kortele{border-radius:var(--r)}
+.pranesimas{border-radius:var(--r);font-family:var(--font)}
+#gidas .burbulas{border-radius:var(--r)}
+#gidas .g-mygt button{border-radius:4px}
+
+/* praktika */
+.pr-filtr button{border-radius:4px}
+.pr-k{border-radius:var(--r)}
+.pr-lap{border-radius:3px}
+.pr-fmt,.pr-ok{border-radius:3px;font-family:var(--mono)}
+.pr-kom code{border-radius:3px}
+
+/* mini */
+#mini{border-radius:0}
+.mi-kom code{border-radius:3px}
+.mi-veiks .btn{border-radius:5px}
 </style>
 </head>
 <body>
@@ -1587,20 +1729,17 @@ async function prTikrinti(id){
 
 /* =================== KAS NAUJO 0.8 =================== */
 function kasNaujo(){
-  sg("matyta_versija","0.8");
-  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA 0.8</span></div>
-    <h2>Daugiau praktikos! 📐</h2>
-    <p>Naujas skyrius „Praktika“ - 8 tikri brėžiniai su rėmeliu ir pagrindiniu įrašu.</p>
-    <div class="pr-tink" style="grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0">${PRAKTIKA.slice(0,4).map(u=>`<div class="pr-lap" style="aspect-ratio:3/4"><img src="/praktika/${u.id}.svg" alt=""></div>`).join("")}</div>
+  sg("matyta_versija","0.9");
+  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA 0.9</span></div>
+    <h2 style="font:600 24px var(--font);letter-spacing:-.01em;text-transform:none;color:var(--text);margin:8px 0 4px">Naujas inžinerinis dizainas</h2>
+    <p>Brėžly dabar atrodo kaip tikra CAD programa - ramiau akims ir rimčiau prie studijų darbų.</p>
     <ul class="kas-sar">
-      <li><b>2D užduotys A4 lape</b> - tarpinė, flanšas, laikiklis, velenas, 3 projekcijos, schema.</li>
-      <li><b>3D užduotys A3 lape</b> - izometrija ir 3D detalė su vaizdais.</li>
-      <li><b>Vienu paspaudimu</b> atidarau tuščią lapą AutoCAD'e, o baigus - patikrinu tavo brėžinį. Galima ir atsispausdinti PDF.</li>
-      <li>Naujas ženklelis <b>📐 Praktikas</b> - už 4 atliktas užduotis.</li>
+      <li><b>Grafito spalvos ir plonos linijos</b> - mažiau blaškymo, daugiau dėmesio brėžiniui.</li>
+      <li><b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.</li>
+      <li><b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.</li>
+      <li>Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas.</li>
     </ul>
-    <div class="eil" style="margin-top:16px"><button class="btn" onclick="uzdarytiLangeli()">Vėliau</button><span class="tarpas"></span>
-      <button class="btn pagr" onclick="uzdarytiLangeli();rodytiPraktika()">Į praktiką →</button></div>`);
-  setTimeout(()=>Robotas.reaguoti("dziaug",1300),400);
+    <div class="eil" style="margin-top:16px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
 }
 
 /* =================== PIRMO PALEIDIMO VEDLYS =================== */
@@ -2054,8 +2193,8 @@ r();<\/script></body></html>`;
   setInterval(()=>{if(!tikrina)api("/api/ping",{}).catch(()=>{});},3000);
   setInterval(()=>{if(!tikrina)tikrintiBusena();},BUS.prisijungta?8000:5000);
   setInterval(()=>auto.tikrinti(),4000);
-  if(!sg("vedlys")){ sg("matyta_versija","0.8"); setTimeout(()=>Vedlys.pradeti(),3000); }
-  else if(sg("matyta_versija")!=="0.8" && (INFO.funkcijos||{}).praktika!==false) setTimeout(kasNaujo,3300);
+  if(!sg("vedlys")){ sg("matyta_versija","0.9"); setTimeout(()=>Vedlys.pradeti(),3000); }
+  else if(sg("matyta_versija")!=="0.9") setTimeout(kasNaujo,3300);
   if(!sg("praktika_matyta")) $("#praktikosTaskelis").classList.remove("hidden");
   { const lr=langoRez(), ekr=INFO.ekranas||[0,0,1920,1040];
     if(sg("langas_rez")===null&&sg("kompakt")===null&&INFO.windows&&ekr[2]<1700){     // mažas ekranas - pirmą kartą pats

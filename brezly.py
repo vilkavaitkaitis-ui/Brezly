@@ -45,7 +45,7 @@ def _versija():
             return v if " " in v else v + " beta"
     except OSError:
         pass
-    return "0.8.1 beta"
+    return "0.9 beta"
 
 
 VERSIJA_BREZLY = _versija()
