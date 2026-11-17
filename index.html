@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Brėžly</title>
+<meta name="description" content="AutoCAD pamokos ir praktikos užduotys inžinerijos studentams: žingsniai, testai, brėžinio tikrinimas ir XP.">
+<meta name="theme-color" content="#10151c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --fonas:#0d1117; --panele:#141a22; --panele2:#10151c; --kodas:#0a0e14; --linija:#283241; --linija2:#3a4558;
+  --tekstas:#e6eaf0; --blankus:#93a0b2; --vidutinis:#c3ccd8;
+  --akcentas:#f28c28; --akc-tamsus:#1a0e02; --matmenu:#56c2e6; --priimta:#3fb950; --priimta-sv:#7ee39a; --taisyti:#f47067;
+  --sans:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif; --kond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--fonas);color:var(--tekstas);font:15px/1.55 var(--sans);display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+a{color:var(--matmenu)}
+:focus-visible{outline:2px solid var(--akcentas);outline-offset:2px}
+
+/* ---- viršutinė juosta (su Window Controls Overlay) ---- */
+.virsus{display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid var(--linija);background:var(--panele2);min-height:48px;
+  -webkit-app-region:drag;app-region:drag}
+@media (display-mode: window-controls-overlay){
+  .virsus{position:fixed;left:env(titlebar-area-x,0);top:env(titlebar-area-y,0);width:env(titlebar-area-width,100%);height:env(titlebar-area-height,48px);min-height:0;border-bottom:0}
+  .apvalkalas{margin-top:env(titlebar-area-height,48px);border-top:1px solid var(--linija)}
+}
+.virsus button,.virsus a{-webkit-app-region:no-drag;app-region:no-drag}
+.zenklas{display:flex;align-items:center;gap:9px;font:600 15px var(--mono);letter-spacing:.18em}
+.tarpas{flex:1}
+.xp{display:flex;align-items:center;gap:10px;font:500 12.5px var(--mono);color:var(--vidutinis);white-space:nowrap}
+.xp .juosta{width:110px;height:5px;background:var(--linija);border-radius:3px;overflow:hidden}
+.xp .juosta i{display:block;height:100%;background:var(--akcentas);width:0;transition:width .4s}
+
+.apvalkalas{flex:1;min-height:0;display:grid;grid-template-columns:220px minmax(0,1fr)}
+.nav{border-right:1px solid var(--linija);background:var(--panele2);padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:6px;color:var(--vidutinis);text-decoration:none;font-weight:500}
+.nav a:hover{background:#161d27;color:var(--tekstas)}
+.nav a[aria-current="page"]{background:var(--panele);color:var(--tekstas);box-shadow:inset 2px 0 0 var(--akcentas)}
+.nav svg{width:18px;height:18px;flex-shrink:0}
+.nav .apac{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding:10px 4px 0}
+.nav .apac small{font:11.5px var(--mono);color:var(--blankus);padding:0 8px}
+
+.turinys{overflow:auto;padding:26px clamp(16px,3vw,40px) 48px;scroll-behavior:smooth}
+.plotis{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.kick{font:600 12px var(--kond);letter-spacing:.12em;color:var(--akcentas)}
+.kick.pilka{color:var(--blankus)}
+h1.ant{font-size:30px;font-weight:600;letter-spacing:-.01em}
+.apras{color:var(--vidutinis);max-width:72ch;font-size:15.5px}
+.galva{display:flex;flex-direction:column;gap:6px}
+.atgal{display:inline-flex;align-items:center;gap:6px;color:var(--blankus);text-decoration:none;font-size:13.5px;width:max-content}
+.atgal:hover{color:var(--tekstas)}
+
+.mygt{border:0;border-radius:6px;padding:10px 16px;font-weight:600;cursor:pointer;background:var(--akcentas);color:var(--akc-tamsus);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;min-height:40px;white-space:nowrap}
+.mygt:hover{filter:brightness(1.07)}
+.mygt.antr{background:#1a212b;color:var(--tekstas);border:1px solid var(--linija);font-weight:500}
+.mygt.antr:hover{border-color:var(--linija2);filter:none}
+.mygt.zalias{background:var(--priimta);color:#04140a}
+.mygt.tusc{background:none;color:var(--blankus);padding:10px 8px}
+.mygt.tusc:hover{color:var(--tekstas);filter:none}
+.mygt[hidden]{display:none}
+.mygt svg{width:17px;height:17px;flex-shrink:0}
+.mygt:disabled{opacity:.5;cursor:not-allowed;filter:none}
+
+.blokas{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.blokas h3{font:600 12px var(--kond);letter-spacing:.12em;color:var(--blankus)}
+.du{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:start}
+.stulp{display:flex;flex-direction:column;gap:14px;min-width:0}
+
+/* lentelės-sąrašai */
+.lent{border:1px solid var(--linija);border-radius:6px;overflow:hidden;background:var(--panele)}
+.eil{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 16px;border-top:1px solid var(--linija);color:inherit;text-decoration:none}
+.eil:first-child{border-top:0}
+a.eil:hover{background:#18202b}
+.eil .nr{font:600 13px var(--mono);color:var(--blankus);width:34px;height:34px;border:1px solid var(--linija);border-radius:4px;display:grid;place-items:center}
+.eil.atlikta .nr{background:#13261a;border-color:#2e6b40;color:var(--priimta-sv)}
+.eil.pradeta .nr{border-color:var(--akcentas);color:var(--akcentas)}
+.eil b{font-weight:600;display:block}
+.eil .sub{color:var(--blankus);font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eil .meta{font:12.5px var(--mono);color:var(--blankus);text-align:right;white-space:nowrap}
+.eil .pr{width:90px;height:4px;background:var(--linija);border-radius:2px;overflow:hidden}
+.eil .pr i{display:block;height:100%;background:var(--akcentas)}
+.eil.atlikta .pr i{background:var(--priimta)}
+
+.zyme{font:600 11.5px var(--sans);padding:3px 8px;border-radius:3px;border:1px solid var(--linija);background:#1a212b;color:var(--vidutinis);white-space:nowrap}
+.zyme.gerai{background:#1d3b26;color:var(--priimta-sv);border-color:#2e6b40}
+.zyme.akc{background:#2a1a08;color:#ffc58a;border-color:#6b4a1f}
+
+/* pradžia */
+.statai{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.statas{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:14px 16px}
+.statas b{display:block;font:600 26px var(--mono)}
+.statas span{font-size:13px;color:var(--blankus)}
+.testi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;border:1px solid var(--linija);border-radius:6px;background:linear-gradient(90deg,#1a140c,var(--panele) 60%);padding:20px}
+.testi h2{font-size:21px;font-weight:600;margin-top:2px}
+.testi p{color:var(--vidutinis);font-size:14px;margin-top:4px}
+.patarimas{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--linija);border-radius:6px;background:var(--panele2);padding:14px 16px;color:var(--vidutinis);font-size:14.5px}
+.patarimas svg{width:18px;height:18px;flex-shrink:0;color:var(--matmenu);margin-top:2px}
+
+/* žingsnis */
+.zjuosta{display:flex;gap:3px}
+.zjuosta a{flex:1;height:5px;background:var(--linija);border-radius:1px}
+.zjuosta a.atl{background:var(--priimta)}
+.zjuosta a.dab{background:var(--akcentas)}
+.zing{margin:0;padding:0;list-style:none;counter-reset:z;display:flex;flex-direction:column;gap:9px}
+.zing li{counter-increment:z;display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;color:var(--vidutinis);font-size:14.5px}
+.zing li::before{content:counter(z);font:600 12px var(--mono);color:var(--akcentas);border:1px solid var(--linija);border-radius:4px;height:22px;display:grid;place-items:center;margin-top:1px}
+.komeil{background:var(--kodas);border:1px solid var(--linija);border-radius:5px;font:13.5px var(--mono);padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.komeil div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.komeil span{color:var(--blankus);overflow-wrap:anywhere}
+.komeil b{color:var(--akcentas);text-align:right;overflow-wrap:anywhere}
+.komeil button{all:unset;cursor:pointer;color:var(--akcentas);font-weight:600;text-align:right}
+.komeil button:hover{text-decoration:underline}
+.tikslas{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14px;color:var(--vidutinis)}
+.tikslas b{font:500 13.5px var(--mono);color:var(--tekstas)}
+details.uzuom{border:1px solid var(--linija);border-radius:6px;background:var(--panele2)}
+details.uzuom summary{cursor:pointer;padding:10px 14px;font-weight:500;color:var(--vidutinis)}
+details.uzuom ul{margin:0;padding:0 14px 12px 32px;color:var(--vidutinis);font-size:14px;display:flex;flex-direction:column;gap:5px}
+.kodel{border-left:2px solid var(--matmenu);padding:2px 0 2px 14px;color:var(--vidutinis);font-size:14.5px}
+.kodel b{color:var(--tekstas)}
+.zvaldymas{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;border-top:1px solid var(--linija);padding-top:16px}
+
+/* testas */
+.klausimas{display:flex;flex-direction:column;gap:10px}
+.klausimas p.k{font-weight:600}
+.atsak{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.atsak button{text-align:left;padding:11px 14px;border-radius:6px;border:1px solid var(--linija);background:#1a212b;cursor:pointer;min-height:44px}
+.atsak button:hover:not(:disabled){border-color:var(--linija2)}
+.atsak button.teis{background:#13261a;border-color:#2e6b40;color:#d6f5de}
+.atsak button.neteis{background:#2a1517;border-color:#6e2f30}
+.atsak button:disabled{cursor:default}
+.paaisk{font-size:14px;color:var(--vidutinis)}
+
+/* praktika */
+.lapas{background:#fff;border-radius:4px;border:1px solid var(--linija);padding:6px;display:flex;justify-content:center}
+.lapas img{max-width:100%;max-height:72vh;height:auto;display:block}
+.lapo-nuor{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13.5px}
+.kom{display:flex;flex-wrap:wrap;gap:6px}
+.kom span{font:500 13px var(--mono);padding:4px 9px;background:var(--kodas);border:1px solid var(--linija);border-radius:4px;color:var(--akcentas)}
+.eiga{margin:0;padding-left:20px;color:var(--vidutinis);font-size:14px;display:flex;flex-direction:column;gap:4px}
+.eiga b{color:var(--tekstas)}
+.veiksmai{display:flex;flex-wrap:wrap;gap:8px}
+.failas{font:13px var(--mono);color:var(--blankus);overflow-wrap:anywhere}
+.ivestis{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input.lauk{width:160px;background:var(--kodas);border:1px solid var(--linija);border-radius:5px;padding:9px 10px;color:var(--tekstas);font:500 14px var(--mono)}
+input.lauk.platus{width:100%;max-width:420px;font-family:var(--sans)}
+.mesti{border:1.5px dashed var(--linija);border-radius:6px;padding:14px;text-align:center;color:var(--blankus);font-size:13.5px}
+.mesti.virs{border-color:var(--akcentas);color:var(--tekstas);background:#1a140c}
+.rez{border-radius:6px;padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.rez[hidden]{display:none}
+.rez.gerai{background:#13261a;border:1px solid #2e6b40}
+.rez.blogai{background:#2a1517;border:1px solid #6e2f30}
+.rez.info{background:var(--panele2);border:1px solid var(--linija)}
+.rez .ant{font-weight:600}
+.rez ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.rez .gr li::marker{color:var(--priimta-sv)}
+.rez .kl li::marker{color:var(--taisyti)}
+.rez .mato{font:12px var(--mono);color:var(--blankus);border-top:1px solid #ffffff14;padding-top:6px}
+
+/* kortelės */
+.korteles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.kortele{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:14px;display:flex;flex-direction:column;gap:6px}
+.kortele .vir{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.kortele b{font:600 16px var(--mono);color:var(--akcentas)}
+.kortele .tr{font:12px var(--mono);color:var(--blankus)}
+.kortele p{font-size:14px;color:var(--vidutinis)}
+.kortele code{font:12.5px var(--mono);color:var(--tekstas);background:var(--kodas);border:1px solid var(--linija);border-radius:4px;padding:4px 8px;overflow-wrap:anywhere}
+
+/* progresas */
+.lygiai{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.lygis{border:1px solid var(--linija);border-radius:6px;padding:12px;background:var(--panele);text-align:center}
+.lygis b{display:block;font-weight:600}
+.lygis span{font:12px var(--mono);color:var(--blankus)}
+.lygis.pasiektas{border-color:#2e6b40;background:#13261a}
+.lygis.dabar{border-color:var(--akcentas);background:#2a1a08}
+
+.idiegti{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--linija);border-radius:6px;background:var(--panele2);font-size:14px;color:var(--vidutinis)}
+.idiegti[hidden]{display:none}
+.idiegti svg{width:18px;height:18px;flex-shrink:0;color:var(--matmenu);margin-top:2px}
+.prane{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13261a;border:1px solid #2e6b40;color:#d6f5de;padding:10px 16px;border-radius:6px;font-weight:600;box-shadow:0 8px 30px #0008;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.prane.rodo{opacity:1}
+.tab{display:none}
+
+@media (max-width:1020px){.du{grid-template-columns:minmax(0,1fr)}.statai{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){
+  .apvalkalas{grid-template-columns:minmax(0,1fr)}
+  .nav{display:none}
+  .tab{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--linija);background:var(--panele2);padding-bottom:env(safe-area-inset-bottom)}
+  .tab a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;color:var(--blankus);text-decoration:none;font-size:11px}
+  .tab a[aria-current="page"]{color:var(--akcentas)}
+  .tab svg{width:20px;height:20px}
+  .xp .juosta{display:none}
+  .eil{grid-template-columns:38px minmax(0,1fr) auto}
+  .eil .pr{display:none}
+  .atsak{grid-template-columns:minmax(0,1fr)}
+  .lygiai{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .testi{grid-template-columns:minmax(0,1fr)}
+  h1.ant{font-size:25px}
+  .prane{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){.prane,.xp .juosta i{transition:none}.turinys{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="virsus">
+  <div class="zenklas">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 1v22M1 12h22"></path></svg>
+    BRĖŽLY
+  </div>
+  <div class="tarpas"></div>
+  <div class="xp" aria-live="polite"><span id="xpTekstas">0 XP</span><span class="juosta" aria-hidden="true"><i id="xpJuosta"></i></span></div>
+</header>
+
+<div class="apvalkalas">
+  <nav class="nav" aria-label="Pagrindinis meniu" id="nav"></nav>
+  <main class="turinys" id="turinys" tabindex="-1"></main>
+</div>
+<nav class="tab" aria-label="Meniu" id="tab"></nav>
+<div class="prane" id="prane" role="status"></div>
+
+<script src="tikrinimas.js"></script>
+<script>
+const PRAKTIKA=[
+ {id:"U1_Tarpine",nr:1,pav:"Tarpinė",fmt:"A4",d:"2D",lyg:1,min:10,xp:30,uzd:"Nubraižyk tarpinę 120 × 80 su užapvalintais kampais R10, centrine skyle ø40 ir keturiomis skylėmis ø10.",
+  kom:["RECTANG","FILLET","CIRCLE","COPY","DIMLINEAR"],
+  z:["RECTANG → Fillet → R10, tada stačiakampis 120,80","CIRCLE centre → spindulys 20 (ø40)","Viena skylė: CIRCLE spindulys 5, tada COPY į kitus 3 kampus (atstumai 96 ir 56)","Ašys sluoksnyje ASYS, matmenys - DIMLINEAR"]},
+ {id:"U2_Flansas",nr:2,pav:"Flanšas",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Flanšas ø120 su anga ø50 ir 6 skylėmis ø12 ant ø90 apskritimo. Du vaizdai: iš viršaus ir iš priekio.",
+  kom:["CIRCLE","ARRAY (Polar)","LINE","NEMATOMOS","DIMDIAMETER"],
+  z:["Trys koncentriniai apskritimai: R60, R25 ir R45 (ašinis, sluoksnis ASYS)","Viena skylė R6 ant ašinio apskritimo viršaus","ARRAYPOLAR → 6 elementai, 360°","Vaizdas iš priekio: stačiakampis 120 × 15, skylės - brūkšninės (NEMATOMOS)"]},
+ {id:"U3_Laikiklis",nr:3,pav:"L laikiklis",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"L formos laikiklis 100 × 80 su vidiniu kampu R10, skyle ø12 ir ovalia anga 30 × 10.",
+  kom:["PLINE","FILLET","CIRCLE","OFFSET","TRIM"],
+  z:["PLINE kontūras pagal matmenis (100, 30, 70, 50, 30, 80)","FILLET R10 vidiniame kampe","Skylė: CIRCLE R6 per 15 nuo krašto ir 20 nuo viršaus","Ovalas: du apskritimai R5 per 20 vienas nuo kito + dvi liestinės LINE, TRIM vidurį"]},
+ {id:"U4_Velenas",nr:4,pav:"Velenas",fmt:"A4",d:"2D",lyg:2,min:15,xp:50,uzd:"Pakopinis velenas ø20 / ø30 / ø25 (ilgiai 30, 50, 40) su grioveliu 30 × 8 ir pjūviu A-A.",
+  kom:["LINE","OFFSET","CHAMFER","MIRROR","HATCH"],
+  z:["Nubraižyk tik viršutinę pusę nuo ašies, tada MIRROR per ašį","CHAMFER 1 × 45° galuose","Griovelis: stačiakampis su užapvalintais galais 30 × 8","Pjūvis A-A: apskritimas ø30 su įpjova, užpildyk HATCH (ANSI31)"]},
+ {id:"U5_Projekcijos",nr:5,pav:"3 projekcijos",fmt:"A4",d:"2D",lyg:3,min:20,xp:60,uzd:"L formos blokas 60 × 40 × 40 su laipteliu ir kiaurine skyle ø14. Trys vaizdai E metodu.",
+  kom:["LINE","XLINE","CIRCLE","NEMATOMOS","DIMLINEAR"],
+  z:["Pradėk nuo vaizdo iš priekio (60 × 40 su laipteliu 30 × 20)","XLINE pagalbinėmis linijomis perkelk aukščius į vaizdą iš kairės (dešinėje)","Vaizdas iš viršaus - apačioje: 60 × 40, skylė R7","Nematomos skylės briaunos - sluoksnis NEMATOMOS"]},
+ {id:"U7_Schema",nr:7,pav:"Elektrinė schema",fmt:"A4",d:"2D",lyg:2,min:15,xp:45,uzd:"Schema: baterija G1, jungiklis S1, rezistorius R1 ir dvi lygiagrečios lemputės H1, H2 + aprašo lentelė.",
+  kom:["BLOCK","ATTDEF","INSERT","LINE","TABLE"],
+  z:["Nubraižyk ženklus (lemputė - apskritimas su X, rezistorius 15 × 5)","Kiekvieną paversk bloku: BLOCK, su atributu POZ (ATTDEF)","INSERT - sudėk blokus ir sujunk linijomis","Aprašo lentelė - TABLE arba linijos + tekstas"]},
+ {id:"U6_Izometrija",nr:6,pav:"Izometrija",fmt:"A3",d:"3D",lyg:3,min:20,xp:60,uzd:"5 užduoties detalę nubraižyk izometrijoje mastelių 2:1. Skylė - izometrinis apskritimas.",
+  kom:["ISODRAFT","F5","LINE","ELLIPSE → Isocircle","COPY"],
+  z:["Įjunk ISODRAFT (arba būsenos juostoje izometrinį tinklelį)","F5 keičia plokštumą: kairė / viršus / dešinė","Matmenys ×2: 120, 80, 80, laiptelis 40","Skylė: ELLIPSE → I (Isocircle), spindulys 14, viršutinėje plokštumoje"]},
+ {id:"U8_3D_detale",nr:8,pav:"3D detalė",fmt:"A3",d:"3D",lyg:3,min:25,xp:80,uzd:"Plokštė 80 × 50 × 10 su cilindru ø30 (aukštis iki 35), kiaurine skyle ø16 ir 4 skylėmis ø8.",
+  kom:["BOX","CYLINDER","UNION","SUBTRACT","ARRAY","VIEWBASE"],
+  z:["BOX nuo 0,0,0 → 80,50,10","CYLINDER centras 40,25,10, R15, aukštis 25 → UNION su plokšte","CYLINDER R8 kiaurai visą aukštį ir 4 × R4 (10 nuo kraštų) → SUBTRACT","Patikrink: MASSPROP → tūris ≈ 48 600 mm³"]},
+];
+PRAKTIKA.sort((a,b)=>a.nr-b.nr);
+const LYGIAI=[[0,"Naujokas"],[100,"Kadetas"],[250,"Braižytojas"],[450,"Konstruktorius"],[700,"Inžinierius"]];
+const XP_KLAUSIMAS = 5;
+
+const T = window.BrTikrinimas;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let D = { pamokos:[], patarimai:[], korteles:[], ateityje:[] };
+
+/* ---------------- būsena ---------------- */
+const RAKTAS = "brezly-app";
+let S = { zingsniai:{}, testai:{}, praktika:{}, turis:"", vardas:"" };
+try {
+  Object.assign(S, JSON.parse(localStorage.getItem(RAKTAS) || "{}"));
+  const senas = JSON.parse(localStorage.getItem("brezly-app-progresas") || "null");
+  if (senas && senas.atlikta) { Object.assign(S.praktika, senas.atlikta); localStorage.removeItem("brezly-app-progresas"); }
+} catch(e) {}
+const saugoti = () => { try { localStorage.setItem(RAKTAS, JSON.stringify(S)); } catch(e) {} };
+
+function xpViso(){
+  let x = 0;
+  for (const p of D.pamokos) for (const z of p.zingsniai) if (S.zingsniai[p.id+"/"+z.id]) x += z.xp;
+  for (const k in S.testai) x += Object.keys(S.testai[k] || {}).length * XP_KLAUSIMAS;
+  for (const u of PRAKTIKA) if (S.praktika[u.id]) x += u.xp;
+  return x;
+}
+const lygisNr = x => { let i=0; LYGIAI.forEach((l,j)=>{ if (x>=l[0]) i=j; }); return i; };
+function pamokosBusena(p){
+  const n = p.zingsniai.filter(z => S.zingsniai[p.id+"/"+z.id]).length;
+  return { n, viso:p.zingsniai.length, baigta: n===p.zingsniai.length };
+}
+function pridetiXP(fn){
+  const pries = xpViso(), lp = lygisNr(pries);
+  fn(); saugoti();
+  const po = xpViso();
+  if (po > pries) pranesti(`+${po-pries} XP`);
+  if (lygisNr(po) > lp) setTimeout(() => pranesti(`Naujas lygis: ${LYGIAI[lygisNr(po)][1]}`), 1300);
+  rodytiXP();
+}
+function rodytiXP(){
+  const x = xpViso(), i = lygisNr(x), kitas = LYGIAI[i+1];
+  $("#xpTekstas").textContent = `${x} XP · ${LYGIAI[i][1]}`;
+  $("#xpJuosta").style.width = (kitas ? 100*(x-LYGIAI[i][0])/(kitas[0]-LYGIAI[i][0]) : 100) + "%";
+}
+
+/* ---------------- navigacija ---------------- */
+const IK = {
+  pradzia:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
+  pamokos:'<path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3Z"/><path d="M8 9h6M8 13h6"/>',
+  praktika:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M4 16h16M12 16v5"/><circle cx="12" cy="9" r="3"/>',
+  korteles:'<rect x="3" y="6" width="14" height="14" rx="1"/><path d="M7 3h14v14"/>',
+  progresas:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
+};
+const MENIU = [["pradzia","Pradžia"],["pamokos","Pamokos"],["praktika","Praktika"],["korteles","Komandos"],["progresas","Progresas"]];
+const svg = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IK[k]}</svg>`;
+function rodytiNav(skyrius){
+  const nuor = ([k,v]) => `<a href="#/${k}" ${k===skyrius?'aria-current="page"':""}>${svg(k)}<span>${v}</span></a>`;
+  $("#nav").innerHTML = MENIU.map(nuor).join("") + `<div class="apac">
+    <button class="mygt" id="idiegtiBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Įdiegti</button>
+    <small>Brėžly programėlė · v1.0</small></div>`;
+  $("#tab").innerHTML = MENIU.map(nuor).join("");
+  $("#idiegtiBtn").hidden = !idiegimas;
+  $("#idiegtiBtn").onclick = idiegti;
+}
+
+function marsrutas(){
+  const d = (location.hash.replace(/^#\/?/,"") || "pradzia").split("/").map(decodeURIComponent);
+  const sk = d[0];
+  rodytiNav(sk === "pamoka" ? "pamokos" : sk);
+  const v = $("#turinys");
+  if (sk === "pamokos") v.innerHTML = vPamokos();
+  else if (sk === "pamoka") { v.innerHTML = vPamoka(d[1], d[2]); poPamokos(d[1], d[2]); }
+  else if (sk === "praktika") { v.innerHTML = d[1] ? vUzduotis(d[1]) : vPraktika(); if (d[1]) poUzduoties(d[1]); }
+  else if (sk === "korteles") { v.innerHTML = vKorteles(); poKorteliu(); }
+  else if (sk === "progresas") { v.innerHTML = vProgresas(); poProgreso(); }
+  else { v.innerHTML = vPradzia(); }
+  v.scrollTop = 0;
+  const h = v.querySelector("h1"); document.title = h ? h.textContent + " · Brėžly" : "Brėžly";
+  rodytiIdiegimoPatarima();
+}
+addEventListener("hashchange", marsrutas);
+
+/* ---------------- PRADŽIA ---------------- */
+function kitasZingsnis(){
+  for (const p of D.pamokos) {
+    const i = p.zingsniai.findIndex(z => !S.zingsniai[p.id+"/"+z.id]);
+    if (i >= 0) return { p, i };
+  }
+  return null;
+}
+function vPradzia(){
+  const x = xpViso(), i = lygisNr(x), kitas = LYGIAI[i+1];
+  const bp = D.pamokos.filter(p => pamokosBusena(p).baigta).length;
+  const bu = PRAKTIKA.filter(u => S.praktika[u.id]).length;
+  const k = kitasZingsnis();
+  const kp = PRAKTIKA.find(u => !S.praktika[u.id]);
+  const pat = D.patarimai.length ? D.patarimai[new Date().getDate() % D.patarimai.length] : "";
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">AUTOCAD PRAKTIKA INŽINERIJOS STUDIJOMS</p>
+      <h1 class="ant">${S.vardas ? "Labas, "+esc(S.vardas)+"!" : "Labas!"}</h1>
+      <p class="apras">Pamokos veda žingsnis po žingsnio, testai pasitikrina žinias, o praktikos užduotis Brėžly patikrina iš tavo brėžinio.</p></div>
+    <div class="idiegti" id="idiegtiPatarimas" hidden>${svgInfo}<span id="idiegtiTekstas"></span></div>
+    <div class="statai">
+      <div class="statas"><b>${x}</b><span>XP · ${LYGIAI[i][1]}</span></div>
+      <div class="statas"><b>${kitas ? kitas[0]-x : 0}</b><span>${kitas ? "XP iki „"+kitas[1]+"“" : "aukščiausias lygis"}</span></div>
+      <div class="statas"><b>${bp}/${D.pamokos.length}</b><span>pamokos baigtos</span></div>
+      <div class="statas"><b>${bu}/${PRAKTIKA.length}</b><span>praktikos užduotys</span></div>
+    </div>
+    ${k ? `<div class="testi"><div><p class="kick">TĘSK PAMOKĄ</p><h2>${esc(k.p.pavadinimas)} · ${esc(k.p.zingsniai[k.i].pavadinimas)}</h2><p>Žingsnis ${k.i+1} iš ${k.p.zingsniai.length} · ${esc(k.p.trukme||"")}</p></div><a class="mygt" href="#/pamoka/${k.p.id}/${k.i}">Tęsti →</a></div>` : ""}
+    ${kp ? `<div class="testi"><div><p class="kick">PRAKTIKA</p><h2>${String(kp.nr).padStart(2,"0")} · ${esc(kp.pav)}</h2><p>${kp.fmt} · ${kp.d} · ~${kp.min} min · ${kp.xp} XP</p></div><a class="mygt antr" href="#/praktika/${kp.id}">Atidaryti</a></div>` : ""}
+    ${pat ? `<div class="patarimas">${svgInfo}<span><b style="color:var(--tekstas)">Dienos patarimas.</b> ${esc(pat)}</span></div>` : ""}
+  </div>`;
+}
+const svgInfo = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.01"></path></svg>';
+
+/* ---------------- PAMOKOS ---------------- */
+function vPamokos(){
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">PAMOKOS</p><h1 class="ant">Pamokos</h1>
+      <p class="apras">Kiekviena pamoka - keli žingsniai su komandomis AutoCAD'e ir trumpas testas pabaigoje. Atlikęs žingsnį AutoCAD'e, spausk „Atlikau“.</p></div>
+    <div class="lent">${D.pamokos.map((p,j) => {
+      const b = pamokosBusena(p), testas = Object.keys(S.testai[p.id]||{}).length;
+      return `<a class="eil ${b.baigta?"atlikta":b.n?"pradeta":""}" href="#/pamoka/${p.id}/${b.baigta?0:b.n}">
+        <span class="nr">${b.baigta?"✓":String(j+1).padStart(2,"0")}</span>
+        <span><b>${esc(p.pavadinimas)}</b><span class="sub">${esc(p.aprasas)}</span></span>
+        <span class="pr" aria-hidden="true"><i style="width:${100*b.n/b.viso}%"></i></span>
+        <span class="meta">${b.n}/${b.viso} · ${esc(p.trukme||"")}${p.testas?.length?`<br>testas ${testas}/${p.testas.length}`:""}</span></a>`;
+    }).join("")}</div>
+    ${D.ateityje.length ? `<div class="blokas"><h3>NETRUKUS</h3>${D.ateityje.map(a=>`<p><b>${esc(a.pavadinimas)}</b> <span style="color:var(--blankus)">· ${esc(a.aprasas)}</span></p>`).join("")}</div>` : ""}
+  </div>`;
+}
+
+function vPamoka(pid, zs){
+  const p = D.pamokos.find(x => x.id === pid);
+  if (!p) return `<div class="plotis"><p>Pamokos nėra. <a href="#/pamokos">Į pamokas</a></p></div>`;
+  const testasRodinys = zs === "testas";
+  const i = testasRodinys ? p.zingsniai.length : Math.min(Math.max(0, parseInt(zs)||0), p.zingsniai.length-1);
+  const juosta = `<div class="zjuosta" aria-hidden="true">${p.zingsniai.map((z,j)=>`<a href="#/pamoka/${p.id}/${j}" tabindex="-1" class="${j===i?"dab":S.zingsniai[p.id+"/"+z.id]?"atl":""}"></a>`).join("")}${p.testas?.length?`<a href="#/pamoka/${p.id}/testas" tabindex="-1" class="${testasRodinys?"dab":Object.keys(S.testai[p.id]||{}).length===p.testas.length?"atl":""}"></a>`:""}</div>`;
+  const galva = `<a class="atgal" href="#/pamokos">← Visos pamokos</a>
+    <div class="galva"><p class="kick">${esc(p.pavadinimas.toUpperCase())} · ${testasRodinys?"TESTAS":`ŽINGSNIS ${i+1}/${p.zingsniai.length}`}</p>`;
+  if (testasRodinys) return `<div class="plotis">${galva}<h1 class="ant">Testas: ${esc(p.pavadinimas)}</h1>
+      <p class="apras">Už kiekvieną teisingą atsakymą +${XP_KLAUSIMAS} XP. Suklydus galima bandyti dar kartą.</p></div>${juosta}
+    <div class="blokas" id="testas">${p.testas.map((q,j)=>`<div class="klausimas" data-j="${j}"><p class="k">${j+1}. ${esc(q.k)}</p>
+      <div class="atsak">${q.v.map((v,a)=>`<button data-a="${a}">${esc(v)}</button>`).join("")}</div><p class="paaisk" hidden></p></div>`).join('<hr style="border:0;border-top:1px solid var(--linija);margin:4px 0">')}</div>
+    ${pamokosBusena(p).baigta ? `<div class="patarimas">${svgInfo}<span><b style="color:var(--tekstas)">Pamoka baigta.</b> ${esc(p.pabaiga||"")}</span></div>`:""}
+    <div class="zvaldymas"><a class="mygt antr" href="#/pamoka/${p.id}/${p.zingsniai.length-1}">← Atgal</a><a class="mygt" href="#/pamokos">Į pamokų sąrašą</a></div></div>`;
+  const z = p.zingsniai[i], rakt = p.id+"/"+z.id, atl = !!S.zingsniai[rakt];
+  const kitas = i+1 < p.zingsniai.length ? `#/pamoka/${p.id}/${i+1}` : (p.testas?.length ? `#/pamoka/${p.id}/testas` : "#/pamokos");
+  return `<div class="plotis">${galva}<h1 class="ant">${esc(z.pavadinimas)}</h1></div>${juosta}
+    <div class="du">
+      <div class="stulp">
+        <p class="kodel"><b>Kodėl?</b> ${esc(z.kodel)}</p>
+        <div class="blokas"><h3>KĄ DARYTI</h3><ol class="zing">${z.zingsniai.map(t=>`<li><span>${esc(t)}</span></li>`).join("")}</ol></div>
+        ${z.uzuominos?.length ? `<details class="uzuom"><summary>Užuominos (${z.uzuominos.length})</summary><ul>${z.uzuominos.map(u=>`<li>${esc(u)}</li>`).join("")}</ul></details>`:""}
+      </div>
+      <div class="stulp">
+        ${z.komandos?.length ? `<div class="blokas"><h3>KOMANDŲ EILUTĖ</h3><div class="komeil">${z.komandos.map(([a,b])=>`<div><span>${esc(a)}</span><button title="Kopijuoti" data-kop="${esc(b)}">${esc(b)}</button></div>`).join("")}</div><p style="font-size:12.5px;color:var(--blankus)">Spustelėk reikšmę - nukopijuos, AutoCAD'e įklijuok Ctrl+V.</p></div>`:""}
+        ${z.tikslas ? `<div class="blokas"><h3>REZULTATAS</h3><div class="tikslas"><span>Turi gautis:</span><b>${esc(z.tikslas)}</b></div></div>`:""}
+        <div class="blokas"><h3>ŽINGSNIS</h3>
+          <p style="font-size:14px;color:var(--vidutinis)">${atl ? "Šis žingsnis atliktas." : `Padaręs AutoCAD'e, pažymėk - gausi <b style="color:var(--tekstas)">+${z.xp} XP</b>.`}</p>
+          <div class="veiksmai"><button class="mygt ${atl?"antr":"zalias"}" id="atlikau">${atl?"Atlikta ✓ - kitas →":"Atlikau →"}</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="zvaldymas">${i>0?`<a class="mygt antr" href="#/pamoka/${p.id}/${i-1}">← Ankstesnis</a>`:`<span></span>`}<a class="mygt tusc" href="${kitas}">Praleisti →</a></div>
+  </div>`;
+}
+function poPamokos(pid, zs){
+  const p = D.pamokos.find(x => x.id === pid); if (!p) return;
+  document.querySelectorAll("[data-kop]").forEach(b => b.onclick = () => kopijuoti(b.dataset.kop.replace(/^\(.*\)$/,"")));
+  if (zs === "testas") {
+    document.querySelectorAll("#testas .klausimas").forEach(k => {
+      const j = +k.dataset.j, q = p.testas[j];
+      const parodyti = (a) => {
+        k.querySelectorAll("button").forEach(b => { const n=+b.dataset.a; b.disabled = true; if (n===q.t) b.classList.add("teis"); else if (n===a) b.classList.add("neteis"); });
+        const pa = k.querySelector(".paaisk"); pa.hidden = false;
+        pa.innerHTML = (a===q.t ? '<b style="color:var(--priimta-sv)">Teisingai.</b> ' : '<b style="color:var(--taisyti)">Ne visai.</b> ') + esc(q.p||"") + (a===q.t?"":' <button class="mygt tusc" style="min-height:0;padding:0 4px">Bandyti dar kartą</button>');
+        const bb = pa.querySelector("button"); if (bb) bb.onclick = () => { k.querySelectorAll(".atsak button").forEach(b=>{b.disabled=false;b.className="";}); pa.hidden = true; };
+      };
+      if ((S.testai[p.id]||{})[j]) parodyti(q.t);
+      k.querySelectorAll(".atsak button").forEach(b => b.onclick = () => {
+        const a = +b.dataset.a;
+        if (a === q.t) pridetiXP(() => { S.testai[p.id] = S.testai[p.id] || {}; S.testai[p.id][j] = 1; });
+        parodyti(a);
+      });
+    });
+    return;
+  }
+  const i = Math.min(Math.max(0, parseInt(zs)||0), p.zingsniai.length-1), z = p.zingsniai[i];
+  const kitas = i+1 < p.zingsniai.length ? `#/pamoka/${p.id}/${i+1}` : (p.testas?.length ? `#/pamoka/${p.id}/testas` : "#/pamokos");
+  $("#atlikau").onclick = () => {
+    const rakt = p.id+"/"+z.id;
+    if (!S.zingsniai[rakt]) pridetiXP(() => { S.zingsniai[rakt] = Date.now(); });
+    if (pamokosBusena(p).baigta && i === p.zingsniai.length-1) setTimeout(()=>pranesti("Pamoka baigta! Liko testas."), 900);
+    location.hash = kitas;
+  };
+}
+
+/* ---------------- PRAKTIKA ---------------- */
+const failai = {}, bazines = {};
+function vPraktika(){
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">PRAKTIKA</p><h1 class="ant">Praktikos užduotys</h1>
+      <p class="apras">Tikri brėžiniai su rėmeliu: 2D - A4, 3D - A3. Nubraižyk AutoCAD'e, išsaugok DXF ir Brėžly patikrins.</p></div>
+    <div class="lent">${PRAKTIKA.map(u=>`<a class="eil ${S.praktika[u.id]?"atlikta":""}" href="#/praktika/${u.id}">
+      <span class="nr">${S.praktika[u.id]?"✓":String(u.nr).padStart(2,"0")}</span>
+      <span><b>${esc(u.pav)}</b><span class="sub">${esc(u.uzd)}</span></span>
+      <span class="zyme">${u.fmt} · ${u.d}</span>
+      <span class="meta">~${u.min} min<br>${u.xp} XP</span></a>`).join("")}</div>
+  </div>`;
+}
+function vUzduotis(id){
+  const u = PRAKTIKA.find(x => x.id === id) || PRAKTIKA[0], f = failai[u.id], yra3D = u.id === "U8_3D_detale";
+  return `<div class="plotis">
+    <a class="atgal" href="#/praktika">← Visos užduotys</a>
+    <div class="galva"><p class="kick">UŽDUOTIS ${String(u.nr).padStart(2,"0")} · ${u.fmt} · ${u.d} · ~${u.min} MIN · ${u.xp} XP${S.praktika[u.id]?" · ATLIKTA":""}</p>
+      <h1 class="ant">${esc(u.pav)}</h1><p class="apras">${esc(u.uzd)}</p></div>
+    <div class="du">
+      <div>
+        <div class="lapas"><img src="praktika/${u.id}.svg" alt="Užduoties brėžinys: ${esc(u.pav)}, ${u.fmt} lapas"></div>
+        <div class="lapo-nuor"><a href="praktika/${u.id}.pdf" target="_blank" rel="noopener">Atidaryti PDF</a><span style="color:var(--blankus)">galima atsispausdinti</span></div>
+      </div>
+      <div class="stulp">
+        <section class="blokas" aria-label="Darbas">
+          <h3>DARBAS</h3>
+          <ol class="eiga">
+            <li><b>Atsisiųsk ruošinį</b> - DXF su ${u.fmt} rėmeliu ir spaudu.</li>
+            <li>Atidaryk jį AutoCAD'e ir braižyk rėmelio viduje.</li>
+            <li>Išsaugok <b>Ctrl+S</b> (failas lieka DXF).</li>
+            <li>Čia spausk <b>Pasirinkti brėžinį</b>, vėliau užtenka <b>Patikrinti</b>.</li>
+          </ol>
+          <div class="veiksmai">
+            <a class="mygt antr" href="praktika/${u.id}_ruosinys.dxf" download="${u.id}.dxf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Atsisiųsti ruošinį</a>
+            <button class="mygt antr" id="pasirinkti">Pasirinkti brėžinį (.dxf)</button>
+          </div>
+          <div class="mesti" id="mesti">arba nutempk .dxf failą čia</div>
+          <p class="failas" id="failoVardas">${f ? "Brėžinys: "+esc(f.vardas) : "Brėžinys dar nepasirinktas"}</p>
+          ${yra3D ? `<div class="ivestis"><label for="turis">Tūris iš MASSPROP (mm³):</label><input class="lauk" id="turis" inputmode="decimal" placeholder="pvz. 48623" value="${esc(S.turis)}"></div>` : ""}
+          <div class="veiksmai"><button class="mygt" id="tikrinti">Patikrinti</button></div>
+          <div class="rez" id="rez" hidden aria-live="polite"></div>
+        </section>
+        <section class="blokas"><h3>KOMANDOS</h3><div class="kom">${u.kom.map(k=>`<span>${esc(k)}</span>`).join("")}</div></section>
+        <section class="blokas"><h3>ŽINGSNIAI</h3><ol class="zing">${u.z.map(z=>`<li><span>${esc(z)}</span></li>`).join("")}</ol></section>
+      </div>
+    </div>
+  </div>`;
+}
+function poUzduoties(id){
+  const u = PRAKTIKA.find(x => x.id === id) || PRAKTIKA[0];
+  $("#pasirinkti").onclick = () => pasirinkti(u);
+  $("#tikrinti").onclick = () => tikrinti(u);
+  const m = $("#mesti");
+  m.ondragover = e => { e.preventDefault(); m.classList.add("virs"); };
+  m.ondragleave = () => m.classList.remove("virs");
+  m.ondrop = async e => {
+    e.preventDefault(); m.classList.remove("virs");
+    const it = [...e.dataTransfer.items].find(i => i.kind === "file"); if (!it) return;
+    let rankena = null;
+    try { if (it.getAsFileSystemHandle) rankena = await it.getAsFileSystemHandle(); } catch(err) {}
+    const failas = it.getAsFile();
+    failai[u.id] = { rankena, failas, vardas: failas.name };
+    $("#failoVardas").textContent = "Brėžinys: " + failas.name;
+    tikrinti(u);
+  };
+  const ti = $("#turis"); if (ti) ti.oninput = () => { S.turis = ti.value; saugoti(); };
+}
+async function pasirinkti(u){
+  try {
+    if (window.showOpenFilePicker) {
+      const [h] = await showOpenFilePicker({ id:"brezly-dxf", types:[{description:"AutoCAD DXF", accept:{"application/dxf":[".dxf"]}}], multiple:false });
+      failai[u.id] = { rankena:h, vardas:h.name };
+    } else {
+      const f = await new Promise(res => { const i = document.createElement("input"); i.type="file"; i.accept=".dxf"; i.onchange=()=>res(i.files[0]); i.click(); });
+      if (!f) return;
+      failai[u.id] = { failas:f, vardas:f.name };
+    }
+    $("#failoVardas").textContent = "Brėžinys: " + failai[u.id].vardas;
+    tikrinti(u);
+  } catch(e) { if (e.name !== "AbortError") rodytiRez("blogai", "Nepavyko atidaryti failo", [e.message]); }
+}
+async function bazine(u){
+  if (u.id in bazines) return bazines[u.id];
+  try { bazines[u.id] = T.analizuoti(T.skaityti(await (await fetch(`praktika/${u.id}_ruosinys.dxf`)).text())); }
+  catch(e) { bazines[u.id] = null; }
+  return bazines[u.id];
+}
+function rodytiRez(klase, antraste, klaidos=[], geri=[], mato="", pastabos=[]){
+  const r = $("#rez"); if (!r) return; r.hidden = false; r.className = "rez " + klase;
+  r.innerHTML = `<p class="ant">${esc(antraste)}</p>`
+    + (klaidos.length ? `<ul class="kl">${klaidos.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (pastabos.length ? `<ul>${pastabos.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (geri.length ? `<ul class="gr">${geri.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (mato ? `<p class="mato">Ką mato tikrinimas: ${esc(mato)}</p>` : "");
+}
+async function tikrinti(u){
+  const f = failai[u.id];
+  if (!f) { rodytiRez("info", "Pirma pasirink savo brėžinį (.dxf)", ["Atsisiųsk ruošinį, nubraižyk AutoCAD'e, išsaugok ir spausk „Pasirinkti brėžinį“."]); return; }
+  let tekstas;
+  try {
+    let failas = f.failas;
+    if (f.rankena && f.rankena.getFile) {
+      if (f.rankena.queryPermission && (await f.rankena.queryPermission({mode:"read"})) !== "granted") await f.rankena.requestPermission({mode:"read"});
+      failas = await f.rankena.getFile();
+    }
+    tekstas = await failas.text();
+  } catch(e) { rodytiRez("blogai", "Nepavyko perskaityti failo", ["Pasirink failą dar kartą."]); return; }
+  let a;
+  try { a = T.analizuoti(T.skaityti(tekstas)); }
+  catch(e) { rodytiRez("blogai", "Šio failo patikrinti negaliu", [e.message, "AutoCAD'e: SAVEAS → Files of type: AutoCAD DXF (*.dxf)."]); return; }
+  const ti = $("#turis");
+  const turis = ti && ti.value.trim() ? parseFloat(ti.value.replace(/\s/g,"").replace(",", ".")) : null;
+  const r = T.tikrinti(u.id, a, await bazine(u), turis);
+  if (r.priimta) {
+    const naujas = !S.praktika[u.id];
+    if (naujas) pridetiXP(() => { S.praktika[u.id] = Date.now(); });
+    rodytiRez("gerai", naujas ? `Priimta! +${u.xp} XP` : "Priimta (jau buvo atlikta)", [], r.geri, T.aprasas(a), r.pastabos);
+  } else rodytiRez("blogai", "Reikia pataisyti", r.klaidos, r.geri, T.aprasas(a), r.pastabos);
+}
+
+/* ---------------- KOMANDŲ KORTELĖS ---------------- */
+function vKorteles(){
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">KOMANDOS</p><h1 class="ant">Komandų žinynas</h1>
+      <p class="apras">Visos pamokose naudojamos komandos su trumpiniais ir pavyzdžiais. Spustelėk pavyzdį - nukopijuos.</p></div>
+    <input class="lauk platus" id="paieska" type="search" placeholder="Ieškoti: CIRCLE, sluoksnis, 3D…" aria-label="Ieškoti komandos">
+    <div class="korteles" id="korteles"></div></div>`;
+}
+function poKorteliu(){
+  const piesti = () => {
+    const q = $("#paieska").value.trim().toLowerCase();
+    const l = D.korteles.filter(k => !q || (k.k+" "+k.trump+" "+k.ka+" "+k.pvz).toLowerCase().includes(q));
+    $("#korteles").innerHTML = l.map(k => {
+      const p = D.pamokos.find(x => x.id === k.pamoka);
+      return `<div class="kortele"><div class="vir"><b>${esc(k.k)}</b>${k.trump?`<span class="tr">${esc(k.trump)}</span>`:""}</div>
+        <p>${esc(k.ka)}</p><code role="button" tabindex="0" data-kop="${esc(k.k)}" title="Kopijuoti komandą">${esc(k.pvz)}</code>
+        ${p?`<a href="#/pamoka/${p.id}/0" style="font-size:13px">Pamoka: ${esc(p.pavadinimas)}</a>`:""}</div>`;
+    }).join("") || `<p style="color:var(--blankus)">Nieko nerasta.</p>`;
+    document.querySelectorAll("#korteles [data-kop]").forEach(c => { c.onclick = () => kopijuoti(c.dataset.kop); c.onkeydown = e => { if (e.key==="Enter") kopijuoti(c.dataset.kop); }; });
+  };
+  $("#paieska").oninput = piesti; piesti();
+}
+
+/* ---------------- PROGRESAS ---------------- */
+function vProgresas(){
+  const x = xpViso(), i = lygisNr(x);
+  const zv = D.pamokos.reduce((s,p)=>s+p.zingsniai.length,0), za = Object.keys(S.zingsniai).length;
+  const tv = D.pamokos.reduce((s,p)=>s+(p.testas?.length||0),0), ta = Object.values(S.testai).reduce((s,t)=>s+Object.keys(t||{}).length,0);
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">PROGRESAS</p><h1 class="ant">${x} XP · ${LYGIAI[i][1]}</h1>
+      <p class="apras">Progresas saugomas šiame kompiuteryje. Pasidaryk atsarginę kopiją, jei keisi kompiuterį ar naršyklę.</p></div>
+    <div class="lygiai">${LYGIAI.map(([n,pav],j)=>`<div class="lygis ${j<i?"pasiektas":j===i?"dabar":""}"><b>${pav}</b><span>${n} XP</span></div>`).join("")}</div>
+    <div class="statai">
+      <div class="statas"><b>${za}/${zv}</b><span>pamokų žingsniai</span></div>
+      <div class="statas"><b>${ta}/${tv}</b><span>teisingi testų atsakymai</span></div>
+      <div class="statas"><b>${PRAKTIKA.filter(u=>S.praktika[u.id]).length}/${PRAKTIKA.length}</b><span>praktikos užduotys</span></div>
+      <div class="statas"><b>${D.pamokos.filter(p=>pamokosBusena(p).baigta).length}/${D.pamokos.length}</b><span>baigtos pamokos</span></div>
+    </div>
+    <div class="du">
+      <div class="blokas"><h3>PROFILIS</h3>
+        <div class="ivestis"><label for="vardas">Vardas:</label><input class="lauk" id="vardas" maxlength="30" value="${esc(S.vardas)}" placeholder="pvz. Vilius"></div>
+        <p style="font-size:13.5px;color:var(--blankus)">Rodomas pradžios ekrane.</p></div>
+      <div class="blokas"><h3>ATSARGINĖ KOPIJA</h3>
+        <div class="veiksmai"><button class="mygt antr" id="eksp">Išsaugoti progresą (.json)</button><button class="mygt antr" id="imp">Atkurti iš failo</button><button class="mygt tusc" id="isvalyti">Pradėti iš naujo</button></div>
+        <p style="font-size:13.5px;color:var(--blankus)" id="kopBus"></p></div>
+    </div>
+  </div>`;
+}
+function poProgreso(){
+  $("#vardas").oninput = e => { S.vardas = e.target.value.trim(); saugoti(); };
+  $("#eksp").onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({brezly:1, ...S}, null, 1)], {type:"application/json"}));
+    a.download = `Brezly_progresas_${new Date().toISOString().slice(0,10)}.json`; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  };
+  $("#imp").onclick = () => {
+    const i = document.createElement("input"); i.type = "file"; i.accept = ".json,application/json";
+    i.onchange = async () => {
+      try {
+        const d = JSON.parse(await i.files[0].text());
+        if (!d.brezly) throw 0;
+        S = { zingsniai:d.zingsniai||{}, testai:d.testai||{}, praktika:d.praktika||{}, turis:d.turis||"", vardas:d.vardas||"" };
+        saugoti(); rodytiXP(); marsrutas(); pranesti("Progresas atkurtas");
+      } catch(e) { $("#kopBus").textContent = "Tai ne Brėžly progreso failas."; }
+    };
+    i.click();
+  };
+  $("#isvalyti").onclick = () => {
+    const b = $("#isvalyti");
+    if (b.dataset.tikrai) { S = { zingsniai:{}, testai:{}, praktika:{}, turis:"", vardas:S.vardas }; saugoti(); rodytiXP(); marsrutas(); return; }
+    b.dataset.tikrai = 1; b.textContent = "Spausk dar kartą - viskas bus ištrinta"; b.style.color = "var(--taisyti)";
+  };
+}
+
+/* ---------------- bendri ---------------- */
+function pranesti(t){ const p=$("#prane"); p.textContent=t; p.classList.add("rodo"); clearTimeout(pranesti.l); pranesti.l=setTimeout(()=>p.classList.remove("rodo"),2200); }
+async function kopijuoti(t){
+  try { await navigator.clipboard.writeText(t); pranesti(`Nukopijuota: ${t}`); }
+  catch(e) { pranesti(t); }
+}
+
+/* įdiegimas */
+let idiegimas = null;
+const arIdiegta = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: window-controls-overlay)").matches || navigator.standalone;
+function rodytiIdiegimoPatarima(){
+  const p = $("#idiegtiPatarimas"); if (!p) return;
+  if (arIdiegta()) { p.hidden = true; return; }
+  p.hidden = false;
+  $("#idiegtiTekstas").innerHTML = idiegimas
+    ? `Įsidiek Brėžly kaip programą - atsiras piktograma darbalaukyje ir veiks be interneto. <button class="mygt" style="margin-top:8px;display:flex" id="idiegti2">Įdiegti Brėžly</button>`
+    : `Įsidiek Brėžly kaip programą: Edge arba Chrome adreso juostoje spausk įdiegimo piktogramą (arba meniu ⋯ → <b>Programos → Įdiegti šią svetainę kaip programą</b>). Atsiras piktograma darbalaukyje ir veiks be interneto.`;
+  const b = $("#idiegti2"); if (b) b.onclick = idiegti;
+}
+async function idiegti(){ if (!idiegimas) return; idiegimas.prompt(); await idiegimas.userChoice; idiegimas = null; marsrutas(); }
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); idiegimas = e; const b=$("#idiegtiBtn"); if (b) b.hidden = false; rodytiIdiegimoPatarima(); });
+addEventListener("appinstalled", () => { idiegimas = null; pranesti("Brėžly įdiegta"); marsrutas(); });
+
+/* DXF per „Atidaryti su → Brėžly“ */
+if ("launchQueue" in window) {
+  launchQueue.setConsumer(p => {
+    if (!p.files || !p.files.length) return;
+    const h = p.files[0];
+    const u = PRAKTIKA.find(x => h.name.toUpperCase().startsWith(x.id.split("_")[0] + "_")) || PRAKTIKA[0];
+    failai[u.id] = { rankena:h, vardas:h.name };
+    const eiti = () => { location.hash = "#/praktika/" + u.id; setTimeout(() => tikrinti(u), 50); };
+    if (D.pamokos.length) eiti(); else addEventListener("brezly-paruosta", eiti, { once:true });
+  });
+}
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+fetch("pamokos.json").then(r => r.json()).then(d => { D = d; })
+  .catch(() => {})
+  .finally(() => { rodytiXP(); marsrutas(); dispatchEvent(new Event("brezly-paruosta")); });
+</script>
+</body>
+</html>
