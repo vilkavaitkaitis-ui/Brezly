@@ -255,8 +255,11 @@ FAILAI
   kalba.py               lietuviškų sakinių supratimas
   langas.py              langas (paleidžiamas per LANGAS.bat)
   programa.py, ui.html   programa su langu (paleidžiama per PROGRAMA.bat)
-  brezly.py, brezly.html,  Brėžly mokymosi programa (BREZLY.bat)
-  pamokos.py, brezly.ico
+  brezly.py, brezly.html,  Brėžly mokymosi programa (BREZLY.bat);
+  brezly.css, brezly.js,   pamokų tekstai - pamokos.json, praktikos
+  pamokos.py, praktika.py, užduotys - praktika/uzduotys.json
+  brezly.ico
+  serveris.py            bendras Brėžly ir Piloto serveris bei ryšys su AutoCAD
   meniu.py               meniu žingsniais konsolėje (PALEISTI.bat)
   robotas.ico            programos ikona
   IDIEGTI.bat            nuorodos ant darbalaukio ir Start meniu

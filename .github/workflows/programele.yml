@@ -1,0 +1,48 @@
+# Brėžly programėlė (PWA) -> gh-pages šaka -> https://vilkavaitkaitis-ui.github.io/Brezly/
+# Paleidžiama pati, kai main šakoje pasikeičia programėlė, pamokos ar praktikos užduotys.
+# Rankiniu būdu: Actions -> „Brėžly programėlė“ -> Run workflow.
+name: Brėžly programėlė
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "pamokos.json"
+      - "praktika/**"
+      - "irankiai/generuoti.py"
+      - ".github/workflows/programele.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: programele
+  cancel-in-progress: true
+
+jobs:
+  skelbti:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUTF8: "1"          # lietuviškos raidės testų išvestyje
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Testai
+        run: python -m unittest discover -s testai -v
+
+      - name: Sukurti programėlę
+        run: python irankiai/generuoti.py
+
+      - name: Paskelbti į gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: isvestis/programele
+          commit_message: "Programėlė iš ${{ github.sha }}"

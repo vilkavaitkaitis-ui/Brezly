@@ -32,6 +32,8 @@ concurrency:
 jobs:
   surinkti:
     runs-on: windows-latest
+    env:
+      PYTHONUTF8: "1"          # lietuviškos raidės testų išvestyje
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,12 +59,11 @@ jobs:
       - name: Paketai
         run: python -m pip install --upgrade pyinstaller pywin32
 
+      - name: Testai (pamokos, praktika, serveris, programėlės tikrinimas, LISP)
+        run: python -m unittest discover -s testai -v
+
       - name: Brezly.exe
-        run: >
-          python -m PyInstaller --noconfirm --clean --windowed --name Brezly --icon brezly.ico
-          --contents-directory . --add-data "brezly.html;." --add-data "brezly.ico;." --add-data "praktika;praktika"
-          --add-data "versija.txt;." --add-data "atnaujinimai_url.txt;."
-          --hidden-import win32timezone brezly.py
+        run: python irankiai/surinkti.py exe
 
       - name: Patikra - ar Brezly.exe pasileidžia
         shell: pwsh
@@ -81,13 +82,8 @@ jobs:
           & $iscc "/DVersija=$env:VERSIJA" diegimas\brezly.iss
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup klaida" }
 
-      - name: Brezly_programa.zip (atnaujinimui be .exe)
-        shell: pwsh
-        run: |
-          $f = @("brezly.py","brezly.html","brezly.ico","pamokos.py","programa.py","branduolys.py","kalba.py","meniu.py",
-                 "zenklas.py","praktika.py","versija.txt","atnaujinimai_url.txt") | Where-Object { Test-Path $_ }
-          Compress-Archive -Path ($f + "praktika") -DestinationPath isvestis\Brezly_programa.zip -Force
-          if (Test-Path lisp\Brezly.lsp) { Copy-Item lisp\Brezly.lsp isvestis\Brezly.lsp; Copy-Item lisp\Brezly.lsp isvestis\Brezly.txt }
+      - name: Brezly_programa.zip (atnaujinimui be .exe) ir Brezly.lsp
+        run: python irankiai/surinkti.py zip
 
       - name: atnaujinimai.json (su kontrolinėmis sumomis)
         shell: pwsh

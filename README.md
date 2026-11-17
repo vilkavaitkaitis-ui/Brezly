@@ -39,3 +39,31 @@ Komandos: `BREZLY` (praktikos langas), `BRLAPAS` (lapo rėmelis), `TIKRINK` (pat
 
 **Jei naršyklė neleidžia atsisiųsti `.lsp`:** atsisiųsk [Brezly.txt](../../releases/latest/download/Brezly.txt)
 ir AutoCAD komandų eilutėje įrašyk `(load (getfiled "Brezly" "" "txt" 0))` → pasirink atsisiųstą failą.
+
+## Kūrėjams
+
+| Kas | Kur |
+|---|---|
+| Programa (Windows) | `brezly.py` – veiksmai, `serveris.py` – vietinis serveris, langas, ryšys su AutoCAD (bendras su Pilotu) |
+| Sąsaja | `brezly.html` + `brezly.css` + `brezly.js` |
+| Pamokų tekstai | `pamokos.json` (naudoja ir programa, ir programėlė) |
+| Pamokų tikrinimas AutoCAD'e | `pamokos.py` – žodynas `TIKRINIMAS`: žingsnio id → (tikrinti, parodyti) |
+| Praktikos užduotys ir taisyklės | `praktika/uzduotys.json` (naudoja programa, programėlė ir AutoCAD priedas) |
+| Programėlė (PWA) | `app/` – šaltinis; skelbiama automatiškai į `gh-pages` |
+| AutoCAD priedas | `lisp/Brezly.lsp` – užduočių blokas generuojamas |
+| Brėžly Pilotas (sena programa) | `programa.py`, `ui.html`, `meniu.py`, `kalba.py`, `langas.py` |
+
+**Pakeitei pamoką ar užduotį?** Redaguok `pamokos.json` arba `praktika/uzduotys.json`, tada:
+
+```
+python irankiai/generuoti.py                 # atnaujina lisp/Brezly.lsp ir sukuria isvestis/programele
+python -m unittest discover -s testai -v     # testai (AutoCAD nereikia; veikia ir ne Windows)
+```
+
+Programėlę galima išbandyti: `python -m http.server -d isvestis/programele 8000` → http://localhost:8000.
+Sąsają be AutoCAD: `python brezly.py` (ne Windows – be AutoCAD ryšio, bet visi langai veikia).
+
+**Išleidimas.** Actions → „Brėžly diegimo programa“ → Run workflow su versija (pvz. `1.0`):
+testai → `Brezly_Setup.exe`, `Brezly_programa.zip`, `Brezly.lsp` → Release, įdiegtos programos pasiūlo atnaujinti.
+Programėlė į https://vilkavaitkaitis-ui.github.io/Brezly/ pasiskelbia pati („Brėžly programėlė“), kai `main` šakoje pasikeičia `app/`, `pamokos.json` ar `praktika/`.
+Į surinkimą įtraukiami failai išvardyti vienoje vietoje – `irankiai/surinkti.py`.
