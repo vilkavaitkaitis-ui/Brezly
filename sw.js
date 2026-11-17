@@ -1,13 +1,14 @@
 /* Brėžly programėlės talpykla - veikia be interneto */
-const VERSIJA = "brezly-app-2";
+const VERSIJA = "brezly-app-fd84b871ed";      // tikrą versiją įrašo irankiai/generuoti.py
 const FAILAI = [
  "./",
- "index.html",
- "tikrinimas.js",
- "pamokos.json",
- "manifest.webmanifest",
  "icon-192.png",
  "icon-512.png",
+ "index.html",
+ "manifest.webmanifest",
+ "pamokos.json",
+ "tikrinimas.js",
+ "uzduotys.js",
  "praktika/U1_Tarpine.pdf",
  "praktika/U1_Tarpine.svg",
  "praktika/U1_Tarpine_ruosinys.dxf",
@@ -32,7 +33,7 @@ const FAILAI = [
  "praktika/U8_3D_detale.pdf",
  "praktika/U8_3D_detale.svg",
  "praktika/U8_3D_detale_ruosinys.dxf"
-];
+];                     // pilną sąrašą įrašo irankiai/generuoti.py
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSIJA).then(c => c.addAll(FAILAI)).then(() => self.skipWaiting()));
 });

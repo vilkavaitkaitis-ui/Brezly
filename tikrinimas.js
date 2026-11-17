@@ -2,19 +2,20 @@
 (function (global) {
   "use strict";
 
-  const TOL_R = 0.05;
   const IGNORUOTI = /^(REMELIS|BR_.*|DEFPOINTS)$/i;
 
-  const TAISYKLES = {
-    U1_Tarpine:     { apsk: { 20: 1, 5: 4 }, tipai: { LINE: 4, ARC: 4 } },
-    U2_Flansas:     { apsk: { 60: 1, 25: 1, 6: 6 } },
-    U3_Laikiklis:   { apsk: { 6: 1 }, tipai: { ARC: 3 } },
-    U4_Velenas:     { tipai: { LINE: 14, HATCH: 1 } },
-    U5_Projekcijos: { apsk: { 7: 1 }, tipai: { LINE: 14 } },
-    U6_Izometrija:  { tipai: { LINE: 12, ELLIPSE: 1 } },
-    U7_Schema:      { tipai: { INSERT: 4, LINE: 6 } },
-    U8_3D_detale:   { turis: 40000 + Math.PI * 225 * 25 - Math.PI * 64 * 35 - 4 * Math.PI * 16 * 10 }
-  };
+  // Taisyklės - iš praktika/uzduotys.json (programėlėje: uzduotys.js -> window.BREZLY_UZDUOTYS)
+  let TAISYKLES = {}, TOL_R = 0.05, TOL_V = 0.02;
+  function nustatytiUzduotis(d) {
+    TOL_R = d.tolerancija.spindulys;
+    TOL_V = d.tolerancija.turis;
+    TAISYKLES = {};
+    for (const u of d.uzduotys) {
+      const t = u.tikrinimas || {};
+      TAISYKLES[u.id] = { apsk: t.apskritimai, tipai: t.tipai, turis: t.turis };
+    }
+  }
+  if (global && global.BREZLY_UZDUOTYS) nustatytiUzduotis(global.BREZLY_UZDUOTYS);
 
   const VARDAI = {
     LINE: "atkarpų (LINE ir polilinijų tiesių dalių)",
@@ -142,7 +143,7 @@
       const tikslas = t.turis;
       if (turis == null || Number.isNaN(turis)) {
         klaidos.push("Įvesk kūno tūrį iš AutoCAD: komanda MASSPROP → pažymėk kūną → eilutė Volume.");
-      } else if (Math.abs(turis - tikslas) <= tikslas * 0.02) {
+      } else if (Math.abs(turis - tikslas) <= tikslas * TOL_V) {
         geri.push(`Tūris ${fmt(turis)} mm³ (turi būti ≈ ${fmt(tikslas)})`);
       } else {
         klaidos.push(`Tūris ${fmt(turis)} mm³, o turi būti ≈ ${fmt(tikslas)} mm³.` +
@@ -166,7 +167,7 @@
     return d.join(" · ") || "brėžinys tuščias";
   }
 
-  const API = { skaityti, analizuoti, tikrinti, aprasas, TAISYKLES };
+  const API = { skaityti, analizuoti, tikrinti, aprasas, nustatytiUzduotis, taisykles: () => TAISYKLES };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
   else global.BrTikrinimas = API;
 })(this);
