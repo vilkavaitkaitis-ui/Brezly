@@ -856,6 +856,7 @@ def _su_zurnalu(f):
 class BrezlyTvarkykle(P.Tvarkykle):
     HTML = "brezly.html"
     IKONA = "brezly.ico"
+    FAILAI = ("brezly.css", "brezly.js")
 
     def do_GET(self):
         if self.path.startswith("/praktika/"):          # praktikos brėžinių peržiūra (SVG/PDF)
