@@ -792,41 +792,54 @@ async function tikrintiBusena(){
   const b=$("#busena"), info=$("#busenaInfo");
   try{ BUS=await api("/api/busena"); }catch(e){ b.className="busena blogai"; b.querySelector(".txt").textContent="Brėžly neatsako"; $("#vTsk").className="v-tsk blogai"; return; }
   const r=BUS, mygt=b.querySelector("button");
-  b.className="busena "+(r.prisijungta?"gerai":"blogai"); $("#vTsk").className="v-tsk "+(r.prisijungta?"gerai":"blogai");
-  info.classList.add("hidden");
+  const klase=r.prisijungta?(r.be_brezinio||r.uzimtas?"ispejimas":"gerai"):"blogai";
+  b.className="busena "+klase; $("#vTsk").className="v-tsk "+klase;
+  info.classList.add("hidden"); info.title="";
   poBusenos();
   if(r.prisijungta){
-    b.querySelector(".txt").textContent=`AutoCAD · ${r.brezinys}`; mygt.textContent="↻"; mygt.title="Prisijungti iš naujo";
+    if(r.be_brezinio){ b.querySelector(".txt").textContent="AutoCAD · nėra brėžinio"; mygt.textContent="Naujas"; mygt.title="Sukurti naują brėžinį AutoCAD'e"; return; }
+    b.querySelector(".txt").textContent=r.uzimtas?"AutoCAD užimtas (Esc)":`AutoCAD · ${r.brezinys}`; mygt.textContent="↻"; mygt.title="Prisijungti iš naujo";
     if(r.kalba && sg("pabr")===null){ sg("pabr", r.kalba.toUpperCase()==="ENU"?"0":"1"); if(document.querySelector("#komandos")) piestiZingsni(); }
     return;
   }
   let txt="AutoCAD neprijungtas", m="Jungtis", pag="";
+  const pr=r.priezastis||"";
   if(r.paleidziamas){ txt="Paleidžiamas AutoCAD..."; m="⏳"; pag="Tai gali užtrukti iki minutės."; }
+  else if(pr==="pywin32"){ txt="Trūksta pywin32"; m="Kodėl?"; pag=r.paaiskinimas; }
   else if(r.lt_veikia || (r.lt_idiegtas && !r.pilnas_idiegtas)){ txt="Rastas AutoCAD LT"; m="Kodėl?"; pag="AutoCAD LT neleidžia programoms valdyti brėžinio, todėl Brėžly negali jo patikrinti. Reikia pilno AutoCAD (studentams nemokamas)."; }
+  else if(pr==="teises_acad"||pr==="teises_brezly"){ txt="Kitos teisės (admin)"; m="Kodėl?"; pag=r.paaiskinimas; }
+  else if(pr==="kraunasi"){ txt="AutoCAD dar neatsiliepia"; m="Jungtis"; pag=r.paaiskinimas; }
+  else if(pr==="uzimtas"){ txt="AutoCAD užimtas"; m="Jungtis"; pag=r.paaiskinimas; }
+  else if(pr==="neregistruotas"){ txt="AutoCAD nepasiekiamas"; m="Kodėl?"; pag=r.paaiskinimas; }
   else if(r.windows && !r.pilnas_idiegtas && !r.pilnas_veikia){ txt="AutoCAD nerastas"; m="Kaip gauti?"; }
   else if(r.pilnas_idiegtas && !r.pilnas_veikia){ txt="AutoCAD neatidarytas"; m="Atidaryti"; }
+  else if(pr==="kita"){ pag=r.paaiskinimas; }
   b.querySelector(".txt").textContent=txt; mygt.textContent=m; mygt.title="";
-  if(pag){ info.textContent=pag; info.classList.remove("hidden"); }
+  if(pag){ info.textContent=pag; if(r.klaida) info.title=r.klaida; info.classList.remove("hidden"); }
 }
 async function busenosVeiksmas(){
-  const r=BUS||{};
+  const r=BUS||{}, pr=r.priezastis||"";
+  if(r.prisijungta && r.be_brezinio){ await naujasBrezinys(); return tikrintiBusena(); }
   if(r.prisijungta || !r.windows) return prisijungti();
   if(r.paleidziamas) return;
+  if(pr==="pywin32"||pr==="teises_acad"||pr==="teises_brezly"||pr==="neregistruotas") return rodytiLangeli(`<h2>Kodėl neprisijungia?</h2>
+    <p>${esc(r.paaiskinimas)}</p>${r.klaida?`<p class="klaidos-kodas">Klaidos kodas: <code>${esc(r.klaida)}</code></p>`:""}
+    <div class="eil"><button class="btn pagr" onclick="uzdarytiLangeli();prisijungti()">Bandyti dar kartą</button><button class="btn" onclick="uzdarytiLangeli()">Uždaryti</button></div>`);
   if(r.lt_veikia || (r.lt_idiegtas && !r.pilnas_idiegtas)) return rodytiLangeli(`<h2>AutoCAD LT nepalaikomas</h2>
     <p>Brėžly tikrina tavo brėžinį per AutoCAD programavimo sąsają (COM). <b>AutoCAD LT</b> jos neturi, todėl su juo Brėžly gali tik rodyti pamokas, bet ne tikrinti.</p>
     <p>Studentams <b>pilnas AutoCAD nemokamas</b> - jį gausi per „Autodesk Education“ svetainę su universiteto el. paštu.</p>
     <div class="eil"><button class="btn pagr" onclick="uzdarytiLangeli()">Supratau</button></div>`);
-  if(!r.pilnas_idiegtas && !r.pilnas_veikia) return rodytiLangeli(`<h2>AutoCAD nerastas</h2>
+  if(!r.pilnas_idiegtas && !r.pilnas_veikia && !pr.match(/kraunasi|uzimtas|kita/)) return rodytiLangeli(`<h2>AutoCAD nerastas</h2>
     <p>Šiame kompiuteryje neradau įdiegto AutoCAD. Studentams jis <b>nemokamas</b> - ieškok „Autodesk Education AutoCAD“ ir prisiregistruok su universiteto el. paštu.</p>
     <p>Jei AutoCAD įdiegtas, bet aš jo nerandu - atsidaryk jį pats ir spausk „Bandyti dar kartą“.</p>
     <div class="eil"><button class="btn pagr" onclick="uzdarytiLangeli();prisijungti()">Bandyti dar kartą</button><button class="btn" onclick="uzdarytiLangeli()">Uždaryti</button></div>`);
-  if(r.pilnas_idiegtas && !r.pilnas_veikia){
+  if(r.pilnas_idiegtas && !r.pilnas_veikia && pr==="neatidarytas"){
     const a=await api("/api/paleisti_autocad",{}); if(!a.ok){pranesti(a.klaida);return;}
     pranesti("Paleidžiu AutoCAD - tai gali užtrukti iki minutės ⏳"); tikrintiBusena(); return;
   }
   prisijungti();
 }
-async function prisijungti(){$("#busena .txt").textContent="Jungiamasi...";const r=await api("/api/prisijungti",{});if(!r.ok)pranesti("Nepavyko: "+r.klaida);tikrintiBusena();}
+async function prisijungti(){$("#busena .txt").textContent="Jungiamasi...";let r;try{r=await api("/api/prisijungti",{});}catch(e){r={ok:false,klaida:"Brėžly neatsako"};}if(!r.ok)pranesti("Nepavyko: "+r.klaida);tikrintiBusena();}
 function rodytiPatarima(){ $("#patarimas").textContent=INFO.patarimai[Math.floor(Math.random()*INFO.patarimai.length)]; }
 
 /* =================== PROGRESAS FAILE =================== */
@@ -870,7 +883,7 @@ const auto={
   },
   perjungti(){ sg("auto",this.ijungtas()?"0":"1"); if(document.querySelector("#korta")) piestiZingsni(); if(rodinys==="nustatymai") rodytiNustatymus(); },
   async tikrinti(){
-    if(this.vyksta||!this.ijungtas()||tikrina||rodinys!=="pamoka"||!PAM||!document.querySelector("#korta")||!BUS.prisijungta) return;
+    if(this.vyksta||!this.ijungtas()||tikrina||rodinys!=="pamoka"||!PAM||!document.querySelector("#korta")||!BUS.prisijungta||BUS.be_brezinio||BUS.uzimtas) return;
     if(!$("#langelis").classList.contains("hidden")||!$("#atlygis").classList.contains("hidden")) return;
     const nr=S.dabartinis[PAM.id], z=PAM.zingsniai[nr];
     if(!z||!z.tikrinama||(S.atlikta[PAM.id]||[]).includes(z.id)) return;

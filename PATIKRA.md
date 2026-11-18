@@ -9,8 +9,12 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] Pirmą kartą po atnaujinimo parodomas „Kas naujo“ langas (iš `naujienos.json`).
 
 ## 2. Ryšys su AutoCAD
-- [ ] Atidarius AutoCAD būsena tampa žalia („AutoCAD prijungtas“).
+- [ ] Atidarius AutoCAD būsena tampa žalia („AutoCAD · Drawing1.dwg“).
+- [ ] AutoCAD tik su pradžios (Start) langu, be brėžinio → oranžinė „AutoCAD · nėra brėžinio“; „Naujas“ sukuria brėžinį iš acadiso.dwt.
+- [ ] AutoCAD'e atidarytas langas (pvz. OPTIONS) → „AutoCAD užimtas (Esc)“, uždarius - vėl žalia, ryšys nenutrūksta.
+- [ ] AutoCAD paleistas „Run as administrator“ → „Kitos teisės (admin)“, „Kodėl?“ paaiškina; `brezly.log` yra eilutė „AutoCAD ryšys: teises_acad“.
 - [ ] Uždarius ir vėl atidarius AutoCAD - ryšys atsistato pats.
+- [ ] Jei įdiegtos dvi AutoCAD versijos - prisijungia prie tos, kuri atidaryta (ne tik naujausios).
 
 ## 3. Pamokos (po vieną žingsnį iš kelių pamokų)
 - [ ] 1 pamoka: naujas brėžinys iš acadiso.dwt → „Patikrinti“ priima.

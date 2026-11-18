@@ -372,6 +372,12 @@ Leidžia braižyti pagal nuotrauką ar laisvą aprašymą.
 
 JEI KAS NEVEIKIA
 ----------------
+- Brėžly neprisijungia prie AutoCAD - po būsena (apačioje kairėje) parašyta
+  priežastis, "Kodėl?" parodo ką daryti ir klaidos kodą:
+    "AutoCAD · nėra brėžinio" - AutoCAD rodo tik pradžios langą, spausk "Naujas".
+    "Kitos teisės (admin)"     - AutoCAD arba Brėžly paleistas "kaip
+                                 administratorius". Uždaryk ir atidaryk įprastai.
+    "AutoCAD dar neatsiliepia" - palauk, kol AutoCAD visiškai užsikraus.
 - "Nepavyko rasti AutoCAD" - reikia pilno AutoCAD, ne LT.
 - "Call was rejected" / programa laukia - AutoCAD'e atidarytas langas ar
   vykdoma komanda. Uždaryk, paspausk Esc. Programa pati bando kelis kartus.

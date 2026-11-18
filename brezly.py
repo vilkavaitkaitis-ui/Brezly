@@ -337,8 +337,8 @@ def _procesai():
     if not WINDOWS:
         return ""
     try:
-        return subprocess.run(["tasklist", "/fo", "csv", "/nh"], capture_output=True, text=True, timeout=5,
-                              creationflags=0x08000000).stdout.lower()
+        return P.dekoduoti(subprocess.run(["tasklist", "/fo", "csv", "/nh"], capture_output=True, timeout=5,
+                                          creationflags=0x08000000).stdout).lower()
     except Exception:
         return ""
 
@@ -359,10 +359,18 @@ def aplinka(_=None):
     return d
 
 
+_RYSIO_PRIEZASTIS = {"kodas": ""}
+
+
 def busena(duom):
     if KUREJAS["imitacija"]:
         return {"ok": True, "prisijungta": True, "brezinys": "Imitacija.dwg", "laisvas": True, "imitacija": KUREJAS["imitacija"]}
     r = P.busena(duom)
+    kodas = r.get("priezastis") or ""
+    if kodas != _RYSIO_PRIEZASTIS["kodas"]:             # žurnale (ir klaidos ataskaitoje) - kodėl neprisijungia
+        _RYSIO_PRIEZASTIS["kodas"] = kodas
+        if kodas not in ("", "neatidarytas"):
+            rasyti_zurnala(f"AutoCAD ryšys: {kodas} - {r.get('klaida', '')}")
     if r.get("prisijungta"):
         try:
             b = P.BUSENA["darbas"].b
@@ -470,7 +478,7 @@ def naujas_brezinys(_):
     if KUREJAS["imitacija"]:
         return {"ok": True}
     with contextlib.redirect_stdout(io.StringIO()):
-        b = P.braizytojas()
+        b = P.braizytojas(brezinys=False)
         P.A.naujas_brezinys(b.acad, "acadiso.dwt")
         b.palaukti()
         b.kunas = None
@@ -748,7 +756,7 @@ def praktika_atidaryti(duom):
     if KUREJAS["imitacija"]:
         return {"ok": True, "failas": os.path.basename(kelias)}
     with contextlib.redirect_stdout(io.StringIO()):
-        b = P.braizytojas()
+        b = P.braizytojas(brezinys=False)
         P.A.kartoti(lambda: b.acad.Documents.Open(kelias))
         b.kunas = None
         try:
@@ -990,6 +998,10 @@ class BrezlyTvarkykle(P.Tvarkykle):
 
 
 if __name__ == "__main__":
+    if os.environ.get("BREZLY_PATIKRA"):         # surinkimo patikra: ar .exe viduje veikia ryšio su AutoCAD dalis
+        with open(os.path.join(PROGRAMOS_APLANKAS, "patikra.txt"), "w", encoding="utf-8") as f:
+            f.write("pywin32: " + ("gerai" if P.A.win32com else "KLAIDA - " + P.A.IMPORTO_KLAIDA))
+        sys.exit(0 if P.A.win32com else 3)
     if WINDOWS:
         threading.Thread(target=lambda: _saugiai(klavisu_gija), daemon=True).start()
     try:
