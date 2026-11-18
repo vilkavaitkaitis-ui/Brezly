@@ -2,6 +2,27 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.0.2",
+   "pavadinimas": "Pamokos nauja, logiška tvarka",
+   "aprasas": "Pamokos eina kaip inžinerinės grafikos kurse: kiekviena remiasi ankstesnėmis.",
+   "punktai": [
+    "<b>Nauja tvarka:</b> failas → 2D brėžinys → šriftai → matmenys → A3 lapas → 3D detalė → projekcijos → aksonometrija → pjūviai → elektrinė schema.",
+    "Šriftai dabar prieš matmenis ir kampinį įrašą, projekcijos - prieš pjūvius.",
+    "Tavo progresas išliko - baigtos pamokos lieka baigtos.",
+    "Programa veikia be interneto: šriftai įdėti į ją pačią."
+   ],
+   "en": {
+    "pavadinimas": "Lessons in a new, logical order",
+    "aprasas": "Lessons follow the engineering graphics course: each builds on the previous ones.",
+    "punktai": [
+     "<b>New order:</b> file → 2D drawing → fonts → dimensions → A3 sheet → 3D part → projections → isometric → sections → electrical diagram.",
+     "Fonts now come before dimensions and the title block, projections before sections.",
+     "Your progress is kept - finished lessons stay finished.",
+     "The app works offline: fonts are built in."
+    ]
+   }
+  },
+  {
    "versija": "1.0.1",
    "pavadinimas": "Patikimesnis ryšys su AutoCAD",
    "aprasas": "Brėžly prisijungia ir tada, kai AutoCAD rodo tik pradžios langą, o kai negali - pasako kodėl.",

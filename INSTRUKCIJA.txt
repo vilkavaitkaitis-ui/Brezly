@@ -22,17 +22,19 @@ BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
 
   10 pamokų iš eilės (kiekviena su žingsniais, tikrinimu ir testu):
     1. Failas ir formatai   - NEW iš acadiso.dwt, UNITS, SAVEAS (DWG), PLOT į PDF
-    2. A3 lapas             - LAYOUTWIZARD, rėmelis 20/5 mm, kampinis įrašas 185 × 40
-    3. 2D brėžinys          - sluoksniai, RECTANG, CIRCLE, ašys, FILLET
-    4. Elektrinė schema     - ženklas, ATTDEF, BLOCK, INSERT, DATAEXTRACTION
-    5. Matmenys             - DIMSTYLE, DIMLINEAR, DIMDIAMETER
-    6. Šriftai              - STYLE: ISO (isocp.shx) ir ISO_LT (ISOCPEUR, ąčęėįšųūž)
-    7. Pirmoji 3D detalė    - BOX, CYLINDER, UNION, POLYGON + EXTRUDE, SUBTRACT,
+    2. 2D brėžinys          - sluoksniai, RECTANG, CIRCLE, ašys, FILLET
+    3. Šriftai              - STYLE: ISO (isocp.shx) ir ISO_LT (ISOCPEUR, ąčęėįšųūž)
+    4. Matmenys             - DIMSTYLE, DIMLINEAR, DIMDIAMETER (2D plokštei)
+    5. A3 lapas             - LAYOUTWIZARD, rėmelis 20/5 mm, kampinis įrašas 185 × 40
+    6. Pirmoji 3D detalė    - BOX, CYLINDER, UNION, POLYGON + EXTRUDE, SUBTRACT,
                               WEDGE, MIRROR3D
-    8. Pjūviai              - ketvirtinė išpjova, SECTIONPLANE, VIEWBASE, VIEWSECTION
-    9. Projekcijos iš 3D    - VIEWSTD (First angle), VIEWBASE, VIEWPROJ, A3 lape
-   10. Aksonometrija        - ISODRAFT, izometrinė dėžė, ELLIPSE Isocircle, DIMEDIT
-  8 ir 9 pamokoms reikia pilno AutoCAD su Model Documentation (AutoCAD LT neturi).
+    7. Projekcijos iš 3D    - VIEWSTD (First angle), VIEWBASE, VIEWPROJ, A3 lape
+    8. Aksonometrija        - ISODRAFT, izometrinė dėžė, ELLIPSE Isocircle, DIMEDIT
+    9. Pjūviai              - ketvirtinė išpjova, SECTIONPLANE, VIEWBASE, VIEWSECTION
+   10. Elektrinė schema     - ženklas, ATTDEF, BLOCK, INSERT, DATAEXTRACTION
+  Tvarka - kaip inžinerinės grafikos kurse: kiekviena pamoka remiasi ankstesnėmis
+  (šriftai prieš matmenis ir kampinį įrašą, projekcijos prieš pjūvius).
+  Projekcijoms ir pjūviams reikia pilno AutoCAD su Model Documentation (AutoCAD LT neturi).
   Pamokas gali rinktis kairėje sąraše; baigus pamoką - mygtukas "Kita pamoka".
 
   Kiekviename žingsnyje:
@@ -150,7 +152,7 @@ BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
                         Išlieka perdiegus; norint perkelti į kitą kompiuterį -
                         nukopijuok šį failą.
     👋 Pirmo paleidimo vedlys - vardas, ar moki pagrindus (tada pradedama
-                        nuo 3 pamokos), tema ir šrifto dydis.
+                        nuo pamokos „2D brėžinys“), tema ir šrifto dydis.
     🔠 Šrifto dydis    - Įprastas / Didesnis / Didelis (Nustatymai).
     🃏 Kartoti         - komandų kortelės ir testas iš visų pamokų be AutoCAD;
                         „Atsisiųsti failą telefonui“ - vienas HTML failas,

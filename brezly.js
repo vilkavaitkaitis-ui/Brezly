@@ -1093,8 +1093,8 @@ const Vedlys={
     }
     if(this.nr===2) h=`${this.taskai()}<h2>Ar jau naudojai AutoCAD?</h2><p>Pagal tai parinksiu, nuo kurios pamokos pradėti.</p>
       <div class="rinktis">
-        <button aria-pressed="${p("patirtis","naujas")}" onclick="Vedlys.d.patirtis='naujas';Vedlys.piesti()"><b>Pirmą kartą</b><small>Pradėsim nuo pradžių: failas, lapas, 2D...</small></button>
-        <button aria-pressed="${p("patirtis","pagrindai")}" onclick="Vedlys.d.patirtis='pagrindai';Vedlys.piesti()"><b>Moku pagrindus</b><small>Pradėsim nuo 3 pamokos „2D brėžinys“. Prie 1-2 galėsi grįžti bet kada.</small></button>
+        <button aria-pressed="${p("patirtis","naujas")}" onclick="Vedlys.d.patirtis='naujas';Vedlys.piesti()"><b>Pirmą kartą</b><small>Pradėsim nuo pradžių: failas, 2D brėžinys, šriftai...</small></button>
+        <button aria-pressed="${p("patirtis","pagrindai")}" onclick="Vedlys.d.patirtis='pagrindai';Vedlys.piesti()"><b>Moku pagrindus</b><small>Pradėsim nuo pamokos „2D brėžinys“. Prie pirmosios galėsi grįžti bet kada.</small></button>
       </div>`;
     if(this.nr===3) h=`${this.taskai()}<h2>Kaip tau patogiau?</h2><p>Visa tai galėsi pakeisti „Nustatymuose“.</p>
       <div class="nust-eil"><div><b>Tema</b></div><div class="pasir">${[["dark","☾ Tamsi"],["light","☀ Šviesi"]].map(([v,t])=>`<button aria-pressed="${p("tema",v)}" onclick="Vedlys.d.tema='${v}';sg('tema','${v}');taikytiTema();Vedlys.piesti()">${t}</button>`).join("")}</div></div>
@@ -1117,7 +1117,7 @@ const Vedlys={
     S.eq.personazas=d.personazas||"robotas"; S.vardas=(d.pvardas||personazas(S.eq.personazas).vardas).trim()||personazas(S.eq.personazas).vardas;
     piestiZaideja();
     S.savininkas=(d.vardas||"").trim(); sg("vedlys","1"); saugoti(); uzdarytiLangeli();
-    if(d.patirtis==="pagrindai"){ PAM=null; rodytiPradzia(INFO.pamokos[2].id); } else rodytiPradzia();
+    if(d.patirtis==="pagrindai"){ PAM=null; rodytiPradzia((INFO.pamokos.find(p=>p.id==="2d")||INFO.pamokos[0]).id); } else rodytiPradzia();
     pranesti(S.savininkas?`Malonu susipažinti, ${S.savininkas}! 👋`:"Pradedam! 👋");
     if(!sg("cadet_turas")) setTimeout(()=>Gidas.pradetiTura(Gidas.PRADZIOS_TURAS,"cadet_turas"),900);
   }
