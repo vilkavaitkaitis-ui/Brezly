@@ -730,12 +730,13 @@ def atnaujinti(_):
     kelias = os.path.join(tempfile.gettempdir(), "brezly_atnaujinimas.zip")
     _atsisiusti(d["zip"], kelias, d.get("zip_sha256", ""))
     with zipfile.ZipFile(kelias) as z:
-        for n in z.namelist():                     # plokšti failai + praktika/<failas> (be kitų katalogų)
-            gilus = n.startswith("praktika/") and n.count("/") == 1 and ".." not in n and len(n) > 9
+        for n in z.namelist():                     # plokšti failai + praktika/<failas>, sriftai/<failas>
+            ap, _, vardas = n.partition("/")
+            gilus = ap in ("praktika", "sriftai") and vardas and "/" not in vardas and ".." not in n
             if (("/" in n and not gilus) or "\\" in n or n.startswith(".") or n in ("testavimas.json",)):
                 continue
             if gilus:
-                os.makedirs(os.path.join(PROGRAMOS_APLANKAS, "praktika"), exist_ok=True)
+                os.makedirs(os.path.join(PROGRAMOS_APLANKAS, ap), exist_ok=True)
             with z.open(n) as src, open(os.path.join(PROGRAMOS_APLANKAS, n + ".naujas"), "wb") as dst:
                 shutil.copyfileobj(src, dst)
         for n in z.namelist():

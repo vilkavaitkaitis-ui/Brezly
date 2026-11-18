@@ -40,3 +40,11 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 
 ## 7. AutoCAD priedas
 - [ ] `Brezly.lsp` nutempus į AutoCAD: `BREZLY` rodo 8 užduotis, versija sutampa su programos.
+
+## 8. Microsoft Store versija (MSIX) - prieš pateikiant Store'ui
+- [ ] Iš Actions artefakto paleisk `IDIEGTI_BANDOMAJI_MSIX.ps1` (šalia `Brezly_bandomasis.msix` ir `.cer`) → Brėžly atsiranda meniu Pradžia.
+- [ ] **Svarbiausia:** prisijungia prie AutoCAD (žalia būsena), „Patikrinti“ ir „Parodyk man“ veikia - ar ryšys su AutoCAD veikia iš paketo.
+- [ ] Praktika: „Pavyzdys AutoCAD'e“ atsidaro.
+- [ ] Nustatymai › Tikrinti atnaujinimus → „Brėžly atnaujina Microsoft Store“.
+- [ ] Progresas tas pats kaip įprastoje versijoje (`Dokumentai\Brezly`).
+- [ ] Šalinimas: Parametrai › Programos › Brėžly → Šalinti.

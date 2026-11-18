@@ -18,7 +18,7 @@ ISVESTIS = os.path.join(SAKNIS, "isvestis")
 
 # Failai šalia programos (sąsaja, turinys). Aplankas praktika/ - visas.
 DUOMENYS = ["brezly.html", "brezly.css", "brezly.js", "brezly.ico", "pamokos.json", "pamokos_en.json", "sasaja_en.json", "naujienos.json"]
-APLANKAI = ["praktika"]
+APLANKAI = ["praktika", "sriftai"]
 # Įrašomi tik GitHub surinkime (versija ir atnaujinimų adresas)
 NEBUTINI = ["versija.txt", "atnaujinimai_url.txt"]
 # Python moduliai (.exe juos randa pats; ZIP atnaujinimui reikia išvardyti)
@@ -44,7 +44,8 @@ def exe():
 def zip_():
     os.makedirs(ISVESTIS, exist_ok=True)
     kelias = os.path.join(ISVESTIS, "Brezly_programa.zip")
-    # Senesnės versijos išskleidžia tik failus šaknyje ir praktika/<failas> - kitų katalogų nedėti
+    # Senesnės versijos išskleidžia tik failus šaknyje ir praktika/<failas> (nuo 1.1 - ir sriftai/<failas>);
+    # kitų katalogų nedėti. Be šriftų sąsaja veikia su Segoe UI.
     with zipfile.ZipFile(kelias, "w", zipfile.ZIP_DEFLATED) as z:
         for v in MODULIAI + DUOMENYS + [v for v in NEBUTINI if os.path.exists(_kelias(v))]:
             z.write(_kelias(v), v)
