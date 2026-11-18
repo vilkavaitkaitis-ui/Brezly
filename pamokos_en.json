@@ -68,68 +68,6 @@
     }
    ]
   },
-  "lapas": {
-   "pavadinimas": "A3 sheet and title block",
-   "aprasas": "LAYOUTWIZARD, A3 paper, a border and the title block - the sheet you will put all your drawings on.",
-   "trukme": "~15 min.",
-   "pabaiga": "You can prepare an A3 sheet with a border and a title block as required.",
-   "zingsniai": {
-    "a3": {
-     "pavadinimas": "A3 sheet: LAYOUTWIZARD",
-     "kodel": "In Model space you draw at real size, while the sheet (Layout / PAPER) is the paper you will print. A3 = 420 × 297 mm.",
-     "zingsniai": ["Type LAYOUTWIZARD and go through the pages:"],
-     "uzuominos": [
-      "A tab called „A3“ appears at the bottom - that is your sheet.",
-      "If A3 is not in the paper list, first choose the DWG To PDF printer."
-     ],
-     "tikslas": "A3 sheet (420 × 297)"
-    },
-    "remelis": {
-     "pavadinimas": "Border",
-     "kodel": "By the standard the border is 20 mm from the left edge (for binding) and 5 mm on the other sides.",
-     "zingsniai": ["On the A3 sheet (not Model!), on layer KONTURAS (outline), type:"],
-     "uzuominos": ["Check that the A3 tab is active at the bottom, not Model.", "420 - 5 = 415, 297 - 5 = 292."],
-     "tikslas": "Border from (20,5) to (415,292)"
-    },
-    "kampinis": {
-     "pavadinimas": "Title block table",
-     "kodel": "The title block is the drawing's „passport“: who drew it, who checked it, the scale. It always sits in the bottom right corner of the border, 185 × 40.",
-     "zingsniai": ["Draw the outline of the table:", "Draw the inner lines with LINE following the example."],
-     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Turn on OSNAP (F3) - lines will snap to corners."],
-     "tikslas": "185 × 40 table in the corner"
-    },
-    "uzpildyk": {
-     "pavadinimas": "Fill in the title block",
-     "kodel": "An empty title block is the first thing your tutor will notice.",
-     "zingsniai": ["Type the drawing title (height 5) and your name (height 2.5) into the table cells."],
-     "komandos": [
-      ["Command:", "TEXT"],
-      ["Specify start point:", "(click inside a cell)"],
-      ["Specify height:", "5"],
-      ["Enter text:", "Part"]
-     ],
-     "uzuominos": ["Enter twice ends the TEXT command.", "You can move text with MOVE."],
-     "tikslas": "At least 2 texts in the table"
-    }
-   },
-   "testas": [
-    {
-     "k": "How far is the border from the left edge of the sheet?",
-     "v": ["5", "10", "20", "25"],
-     "p": "20 mm on the left for binding, 5 mm elsewhere."
-    },
-    {
-     "k": "Where does the title block go?",
-     "v": ["Top left", "Bottom right", "Centre", "Anywhere"],
-     "p": "Always in the bottom right corner of the border."
-    },
-    {
-     "k": "What size is an A3 sheet?",
-     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
-     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
-    }
-   ]
-  },
   "2d": {
    "pavadinimas": "2D drawing",
    "aprasas": "Layers, RECTANG, CIRCLE, centre lines and FILLET - you will draw a plate with holes.",
@@ -210,109 +148,52 @@
     }
    ]
   },
-  "schema": {
-   "pavadinimas": "Electrical diagram with blocks",
-   "aprasas": "A symbol, attributes (ATTDEF), a block (BLOCK), inserting (INSERT) and a parts list (DATAEXTRACTION).",
-   "trukme": "~25 min.",
-   "pabaiga": "You can create blocks with attributes and build a parts list - the basis of diagram work.",
+  "sriftai": {
+   "pavadinimas": "Fonts and text",
+   "aprasas": "ISO 3098 text styles: isocp.shx and ISOCPEUR with Lithuanian letters.",
+   "trukme": "~10 min.",
+   "pabaiga": "You can create ISO text styles and write in a drawing with Lithuanian letters.",
    "zingsniai": {
-    "naujas_sch": {
-     "pavadinimas": "New drawing for the diagram",
-     "kodel": "We draw the diagram in a clean drawing so it doesn't mix with the plate.",
-     "zingsniai": ["Create a new drawing from acadiso.dwt (as in lesson 1)."],
-     "uzuominos": ["Ctrl+N - a quick new drawing."]
+    "iso": {
+     "pavadinimas": "Text style ISO",
+     "kodel": "Drawings use the standard engineering font (ISO 3098), not Arial.",
+     "zingsniai": ["Type STYLE → New → ISO:"],
+     "uzuominos": ["Leave Height at 0 - you choose the height when writing."],
+     "tikslas": "Style ISO (isocp.shx)"
     },
-    "zenklas": {
-     "pavadinimas": "Resistor symbol",
-     "kodel": "All diagram symbols have the same length - 20 mm. Resistor: a 10 × 4 rectangle and two leads.",
-     "zingsniai": ["Draw:"],
-     "uzuominos": ["The symbol is 20 long: 5 + 10 + 5."],
-     "tikslas": "Symbol 20 × 4"
-    },
-    "attdef": {
-     "pavadinimas": "Attributes: ATTDEF",
-     "kodel": "An attribute is a field inside a block. POZ (R1, R2...) is visible on the diagram, NUORODA (1 kΩ) is invisible but goes into the parts list.",
-     "zingsniai": ["Run ATTDEF twice:"],
-     "komandos": [
-      ["ATTDEF 1:", "Tag: POZ · Prompt: Reference designator · Default: R · point 7,4"],
-      ["ATTDEF 2:", "tick Invisible · Tag: NUORODA · point 7,-7"]
-     ],
+    "isolt": {
+     "pavadinimas": "Style ISO_LT with Lithuanian letters",
+     "kodel": "isocp.shx has no ąčęėįšųūž. ISOCPEUR is the same ISO font but with Lithuanian (and other European) letters.",
+     "zingsniai": ["STYLE → New → ISO_LT:"],
      "uzuominos": [
-      "The tag becomes the column name in the parts list. Keep the tags POZ and NUORODA - Brėžly checks them.",
-      "The Invisible tick box is on the left of the dialog (Mode)."
+      "Oblique 15° - the slanted ISO type B font.",
+      "ISOCPEUR is installed with AutoCAD - look for „isocpeur“ in the list."
      ],
-     "tikslas": "Attributes POZ and NUORODA"
+     "tikslas": "Style ISO_LT (ISOCPEUR, 15°)"
     },
-    "block": {
-     "pavadinimas": "Block: BLOCK",
-     "kodel": "A block is a symbol you draw once and insert as many times as you like. Change the block and all copies change.",
-     "zingsniai": ["Type BLOCK:"],
-     "komandos": [
-      ["Command:", "BLOCK"],
-      ["Name:", "REZISTORIUS"],
-      ["Base point:", "0,0"],
-      ["Objects:", "(select the symbol and both attributes)"],
-      ["", "Delete → OK"]
-     ],
-     "uzuominos": [
-      "Base point 0,0 is the left lead - you will „drag“ the block by it.",
-      "Delete - the symbol disappears but the block stays in memory."
-     ],
-     "tikslas": "Block REZISTORIUS with attributes"
-    },
-    "insert": {
-     "pavadinimas": "Insert 3 resistors: INSERT",
-     "kodel": "Every time you insert the block, AutoCAD asks for the attribute values.",
-     "zingsniai": ["INSERT → REZISTORIUS → place it 3 times:"],
-     "komandos": [
-      ["Command:", "INSERT"],
-      ["Name:", "REZISTORIUS"],
-      ["Reference designator:", "R1 (R2, R3)"],
-      ["Value:", "1 kΩ"]
-     ],
-     "uzuominos": ["If it doesn't ask for attributes - ATTREQ → 1.", "Fix a wrong value by double-clicking the block."],
-     "tikslas": "R1, R2, R3"
-    },
-    "lentele": {
-     "pavadinimas": "Parts list: DATAEXTRACTION",
-     "kodel": "The parts list is built automatically from the block attributes - nothing to retype by hand.",
-     "zingsniai": ["Type DATAEXTRACTION and go through the wizard:"],
-     "komandos": [
-      ["Command:", "DATAEXTRACTION"],
-      ["", "Create new → save the .dxe"],
-      ["Objects:", "only REZISTORIUS"],
-      ["Properties:", "Attribute (POZ, NUORODA)"],
-      ["Output:", "Insert data extraction table"]
-     ],
-     "uzuominos": ["The Count column shows how many of each part there are.", "Place the table next to the diagram."],
-     "tikslas": "A table with the resistors"
+    "tekstas": {
+     "pavadinimas": "Write „Brėžinys“",
+     "kodel": "Let's check that special letters display correctly. „Brėžinys“ is Lithuanian for „drawing“. Standard heights: 2.5, 3.5, 5, 7, 10.",
+     "zingsniai": ["With ISO_LT current, type:"],
+     "uzuominos": ["Question marks instead of letters? The style is not ISO_LT.", "Enter twice ends TEXT."],
+     "tikslas": "„Brėžinys“, height 5, ISO_LT"
     }
    },
    "testas": [
     {
-     "k": "Why is the NUORODA (value) attribute set to Invisible?",
-     "v": [
-      "So it takes no space on the diagram but is in the table",
-      "So it is nowhere",
-      "So it is red",
-      "It's faster"
-     ],
-     "p": "Invisible on the diagram, but DATAEXTRACTION puts it into the parts list."
+     "k": "Why is isocp.shx not suitable for Lithuanian text?",
+     "v": ["Too small", "It has no ąčęėįšųūž", "Too slow", "It is fine"],
+     "p": "Use ISOCPEUR - it has the Lithuanian letters."
     },
     {
-     "k": "What does the Delete option of BLOCK do?",
-     "v": [
-      "Deletes the block",
-      "Deletes the original objects, the block stays in memory",
-      "Deletes the attributes",
-      "Nothing"
-     ],
-     "p": "The objects disappear from the drawing, the block stays - you insert it with INSERT."
+     "k": "Which height is NOT standard?",
+     "v": ["3.5", "5", "6", "7"],
+     "p": "Standard: 2.5, 3.5, 5, 7, 10, 14."
     },
     {
-     "k": "How long are the diagram symbols in this lesson?",
-     "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
-     "p": "Equal length makes the wires easy to connect."
+     "k": "At what angle is the ISO type B font slanted?",
+     "v": ["0°", "15°", "30°", "45°"],
+     "p": "Oblique angle 15°."
     }
    ]
   },
@@ -324,7 +205,7 @@
    "zingsniai": {
     "plokste_m": {
      "pavadinimas": "Open the plate",
-     "kodel": "We will dimension the plate from lesson 3.",
+     "kodel": "We will dimension the plate from the lesson „2D drawing“.",
      "zingsniai": ["Open the drawing with the plate (OPEN) or click „Show me“ - I will draw it."],
      "uzuominos": ["The plate: 100 × 60, ø30 in the centre."]
     },
@@ -332,7 +213,10 @@
      "pavadinimas": "Dimension style: DIMSTYLE",
      "kodel": "A dimension style sets text height, arrows and gaps. The requirement is 3.5 mm text.",
      "zingsniai": ["DIMSTYLE → New → name ISO_MATMENYS → Continue:"],
-     "uzuominos": ["Set Current - so new dimensions use this style.", "The text style can be ISO_LT (lesson 6)."],
+     "uzuominos": [
+      "Set Current - so new dimensions use this style.",
+      "The text style can be ISO_LT from the lesson „Fonts and text“."
+     ],
      "tikslas": "ISO_MATMENYS current"
     },
     "ilgis": {
@@ -390,52 +274,65 @@
     }
    ]
   },
-  "sriftai": {
-   "pavadinimas": "Fonts and text",
-   "aprasas": "ISO 3098 text styles: isocp.shx and ISOCPEUR with Lithuanian letters.",
-   "trukme": "~10 min.",
-   "pabaiga": "You can create ISO text styles and write in a drawing with Lithuanian letters.",
+  "lapas": {
+   "pavadinimas": "A3 sheet and title block",
+   "aprasas": "LAYOUTWIZARD, A3 paper, a border and the title block - the sheet you will put all your drawings on.",
+   "trukme": "~15 min.",
+   "pabaiga": "You can prepare an A3 sheet with a border and a title block as required.",
    "zingsniai": {
-    "iso": {
-     "pavadinimas": "Text style ISO",
-     "kodel": "Drawings use the standard engineering font (ISO 3098), not Arial.",
-     "zingsniai": ["Type STYLE → New → ISO:"],
-     "uzuominos": ["Leave Height at 0 - you choose the height when writing."],
-     "tikslas": "Style ISO (isocp.shx)"
-    },
-    "isolt": {
-     "pavadinimas": "Style ISO_LT with Lithuanian letters",
-     "kodel": "isocp.shx has no ąčęėįšųūž. ISOCPEUR is the same ISO font but with Lithuanian (and other European) letters.",
-     "zingsniai": ["STYLE → New → ISO_LT:"],
+    "a3": {
+     "pavadinimas": "A3 sheet: LAYOUTWIZARD",
+     "kodel": "In Model space you draw at real size, while the sheet (Layout / PAPER) is the paper you will print. A3 = 420 × 297 mm.",
+     "zingsniai": ["Type LAYOUTWIZARD and go through the pages:"],
      "uzuominos": [
-      "Oblique 15° - the slanted ISO type B font.",
-      "ISOCPEUR is installed with AutoCAD - look for „isocpeur“ in the list."
+      "A tab called „A3“ appears at the bottom - that is your sheet.",
+      "If A3 is not in the paper list, first choose the DWG To PDF printer."
      ],
-     "tikslas": "Style ISO_LT (ISOCPEUR, 15°)"
+     "tikslas": "A3 sheet (420 × 297)"
     },
-    "tekstas": {
-     "pavadinimas": "Write „Brėžinys“",
-     "kodel": "Let's check that special letters display correctly. „Brėžinys“ is Lithuanian for „drawing“. Standard heights: 2.5, 3.5, 5, 7, 10.",
-     "zingsniai": ["With ISO_LT current, type:"],
-     "uzuominos": ["Question marks instead of letters? The style is not ISO_LT.", "Enter twice ends TEXT."],
-     "tikslas": "„Brėžinys“, height 5, ISO_LT"
+    "remelis": {
+     "pavadinimas": "Border",
+     "kodel": "By the standard the border is 20 mm from the left edge (for binding) and 5 mm on the other sides.",
+     "zingsniai": ["On the A3 sheet (not Model!), on layer KONTURAS (outline), type:"],
+     "uzuominos": ["Check that the A3 tab is active at the bottom, not Model.", "420 - 5 = 415, 297 - 5 = 292."],
+     "tikslas": "Border from (20,5) to (415,292)"
+    },
+    "kampinis": {
+     "pavadinimas": "Title block table",
+     "kodel": "The title block is the drawing's „passport“: who drew it, who checked it, the scale. It always sits in the bottom right corner of the border, 185 × 40.",
+     "zingsniai": ["Draw the outline of the table:", "Draw the inner lines with LINE following the example."],
+     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Turn on OSNAP (F3) - lines will snap to corners."],
+     "tikslas": "185 × 40 table in the corner"
+    },
+    "uzpildyk": {
+     "pavadinimas": "Fill in the title block",
+     "kodel": "An empty title block is the first thing your tutor will notice.",
+     "zingsniai": ["Type the drawing title (height 5) and your name (height 2.5) into the table cells."],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(click inside a cell)"],
+      ["Specify height:", "5"],
+      ["Enter text:", "Part"]
+     ],
+     "uzuominos": ["Enter twice ends the TEXT command.", "You can move text with MOVE."],
+     "tikslas": "At least 2 texts in the table"
     }
    },
    "testas": [
     {
-     "k": "Why is isocp.shx not suitable for Lithuanian text?",
-     "v": ["Too small", "It has no ąčęėįšųūž", "Too slow", "It is fine"],
-     "p": "Use ISOCPEUR - it has the Lithuanian letters."
+     "k": "How far is the border from the left edge of the sheet?",
+     "v": ["5", "10", "20", "25"],
+     "p": "20 mm on the left for binding, 5 mm elsewhere."
     },
     {
-     "k": "Which height is NOT standard?",
-     "v": ["3.5", "5", "6", "7"],
-     "p": "Standard: 2.5, 3.5, 5, 7, 10, 14."
+     "k": "Where does the title block go?",
+     "v": ["Top left", "Bottom right", "Centre", "Anywhere"],
+     "p": "Always in the bottom right corner of the border."
     },
     {
-     "k": "At what angle is the ISO type B font slanted?",
-     "v": ["0°", "15°", "30°", "45°"],
-     "p": "Oblique angle 15°."
+     "k": "What size is an A3 sheet?",
+     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
+     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
     }
    ]
   },
@@ -605,125 +502,6 @@
     }
    ]
   },
-  "pjuviai": {
-   "pavadinimas": "Sections and quarter cut-out",
-   "aprasas": "A quarter cut-out in the 3D part, SECTIONPLANE, VIEWBASE and VIEWSECTION - section A–A on a sheet. Needs full AutoCAD (Model Documentation).",
-   "trukme": "~20 min.",
-   "pabaiga": "Your part has a quarter cut-out and the sheet has section A–A - this is how real drawings show the inside of a part.",
-   "zingsniai": {
-    "pj-detale": {
-     "pavadinimas": "Open the 3D part",
-     "kodel": "Sections are made from a finished model. We use the lesson 7 part, 100 × 60 × 60 with a hexagonal hole.",
-     "zingsniai": [
-      "Open the drawing with the lesson 7 part (if you no longer have it, click „Show me“ and I will draw it).",
-      "Switch to the 3D Modeling workspace and the SE Isometric view.",
-      "The part must be a single body - if not, UNION."
-     ],
-     "uzuominos": [
-      "One body: clicking anywhere on the part selects the whole part.",
-      "If the part is made of several pieces - UNION, select everything, Enter."
-     ],
-     "tikslas": "One part 100 × 60 × 60"
-    },
-    "pj-ispjova": {
-     "pavadinimas": "Quarter cut-out: BOX + SUBTRACT",
-     "kodel": "A quarter cut-out removes a quarter of the part so the inside is visible: the hole and the wall thickness. In an isometric view it replaces a separate section.",
-     "zingsniai": [
-      "Draw a box covering the front right quarter - from the middle of the part to the corner, through the full height.",
-      "SUBTRACT: select the part first (WHAT FROM), Enter, then the box (WHAT), Enter."
-     ],
-     "komandos": [
-      ["Command:", "BOX"],
-      ["Specify first corner:", "50,0,0"],
-      ["Specify other corner:", "100,30,0"],
-      ["Specify height:", "60"],
-      ["Command:", "SUBTRACT"],
-      ["Select solids... to subtract from:", "(the part) Enter"],
-      ["Select solids... to subtract:", "(the box) Enter"]
-     ],
-     "uzuominos": [
-      "The quarter starts in the middle of the part: x = 50 (half of 100), y = 30 (half of 60).",
-      "Cut the wrong quarter? U undoes it - try again."
-     ],
-     "tikslas": "The hexagonal hole is visible, volume ~118 927 mm³"
-    },
-    "pj-plokstuma": {
-     "pavadinimas": "Section plane: SECTIONPLANE",
-     "kodel": "A section plane is like a knife: it shows where the part is cut. AutoCAD shows the section both in 3D and on the sheet.",
-     "zingsniai": [
-      "Type SECTIONPLANE.",
-      "Choose Orthographic (O) and Front - the plane goes through the middle of the part, parallel to the front.",
-      "Click the plane and drag the arrow - watch the section change."
-     ],
-     "uzuominos": [
-      "The plane looks like a transparent rectangle with an arrow - the arrow shows the viewing direction.",
-      "Live section: click the plane → right-click → Activate live sectioning."
-     ],
-     "tikslas": "A section plane through the part"
-    },
-    "pj-vaizdas": {
-     "pavadinimas": "Base view on a sheet: VIEWBASE",
-     "kodel": "VIEWBASE draws 2D views on a sheet from the 3D model. Dimensions always match the model, and the views update when the model changes.",
-     "zingsniai": [
-      "Click the Layout1 tab at the bottom.",
-      "Type VIEWBASE, choose Model, orientation Front and scale 1:2.",
-      "Place the view top left and press Enter. Don't add projected views yet - press Enter again."
-     ],
-     "komandos": [
-      ["Command:", "VIEWBASE"],
-      ["Select type [Model/File] <Model>:", "M"],
-      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
-      ["Specify location of base view:", "(click on the sheet)"],
-      ["Select option:", "Enter"],
-      ["Specify location of projected view:", "Enter"]
-     ],
-     "uzuominos": [
-      "AutoCAD says „Unknown command VIEWBASE“? Your AutoCAD has no Model Documentation (e.g. AutoCAD LT) - you can skip this and the next two steps.",
-      "To move a view: click it and drag the blue square."
-     ],
-     "tikslas": "A front view on the sheet"
-    },
-    "pj-pjuvis": {
-     "pavadinimas": "Section A–A: VIEWSECTION",
-     "kodel": "A section shows the inside of the part as if it were cut. The cut is marked by a line with the letters A–A, and the cut material is hatched.",
-     "zingsniai": [
-      "Type VIEWSECTION and click the base view.",
-      "Type Full. Click two points across the middle of the view - start and end outside the part.",
-      "Press Enter and place the section below the view."
-     ],
-     "komandos": [
-      ["Command:", "VIEWSECTION"],
-      ["Select parent view:", "(the base view)"],
-      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
-      ["Specify start point:", "(left, outside the part)"],
-      ["Specify end point:", "(right, outside the part) Enter"],
-      ["Specify location of section view:", "(below the view)"]
-     ],
-     "uzuominos": [
-      "Pick the middle with OSNAP Midpoint, then move the mouse sideways and click outside the part.",
-      "The letters A–A are added automatically. To change them, click the section line."
-     ],
-     "tikslas": "Section A–A with hatching on the sheet"
-    }
-   },
-   "testas": [
-    {
-     "k": "Which command creates a 2D view on a sheet from a 3D model?",
-     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
-     "p": "VIEWBASE creates the base view; projected views and sections are made from it."
-    },
-    {
-     "k": "For a quarter cut-out a box is removed from the part. Which command?",
-     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
-     "p": "SUBTRACT: first WHAT FROM (the part), then WHAT (the box)."
-    },
-    {
-     "k": "How is cut metal shown in a section?",
-     "v": ["A thicker line", "Thin hatching at 45°", "Red colour", "Dots"],
-     "p": "Metal is hatched with thin parallel lines at 45° (ANSI31)."
-    }
-   ]
-  },
   "projekcijos": {
    "pavadinimas": "Projections from a 3D model",
    "aprasas": "European (first angle) arrangement on an A3 sheet: VIEWSTD, VIEWBASE, VIEWPROJ and an isometric view of the same model. Needs full AutoCAD.",
@@ -734,11 +512,11 @@
      "pavadinimas": "A3 sheet",
      "kodel": "A part drawing with three projections and an isometric view needs an A3 sheet (420 × 297).",
      "zingsniai": [
-      "If you created an A3 sheet in lesson 2 - switch to it (tab at the bottom).",
+      "If you created an A3 sheet in the lesson „A3 sheet and title block“ - switch to it (tab at the bottom).",
       "If not - LAYOUTWIZARD: name A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
      ],
      "uzuominos": [
-      "The drawing must contain the 3D part from lesson 7 - we make the views from it.",
+      "The drawing must contain the 3D part from the lesson „First 3D part“ - we make the views from it.",
       "To change the paper: right-click the tab → Page Setup Manager → Modify."
      ],
      "tikslas": "A3 sheet"
@@ -813,7 +591,7 @@
      ],
      "uzuominos": [
       "Hidden lines are not shown in the isometric view.",
-      "If the part has the quarter cut-out from lesson 8 - it shows here too."
+      "In the lesson „Sections and quarter cut-out“ you will cut the part - the cut-out will appear in these views too."
      ],
      "tikslas": "4 views on the A3 sheet"
     }
@@ -921,6 +699,231 @@
      "k": "Which key switches the isometric plane (Top/Right/Left)?",
      "v": ["F3", "F5", "F8", "F12"],
      "p": "F5 (or Ctrl+E) switches the isoplane."
+    }
+   ]
+  },
+  "pjuviai": {
+   "pavadinimas": "Sections and quarter cut-out",
+   "aprasas": "A quarter cut-out in the 3D part, SECTIONPLANE, VIEWBASE and VIEWSECTION - section A–A on a sheet. Needs full AutoCAD (Model Documentation).",
+   "trukme": "~20 min.",
+   "pabaiga": "Your part has a quarter cut-out and the sheet has section A–A - this is how real drawings show the inside of a part.",
+   "zingsniai": {
+    "pj-detale": {
+     "pavadinimas": "Open the 3D part",
+     "kodel": "Sections are made from a finished model. We use the part from the lesson „First 3D part“: 100 × 60 × 60 with a hexagonal hole.",
+     "zingsniai": [
+      "Open the drawing with the part from the lesson „First 3D part“ (if you no longer have it, click „Show me“ and I will draw it).",
+      "Switch to the 3D Modeling workspace and the SE Isometric view.",
+      "The part must be a single body - if not, UNION."
+     ],
+     "uzuominos": [
+      "One body: clicking anywhere on the part selects the whole part.",
+      "If the part is made of several pieces - UNION, select everything, Enter."
+     ],
+     "tikslas": "One part 100 × 60 × 60"
+    },
+    "pj-ispjova": {
+     "pavadinimas": "Quarter cut-out: BOX + SUBTRACT",
+     "kodel": "A quarter cut-out removes a quarter of the part so the inside is visible: the hole and the wall thickness. In an isometric view it replaces a separate section.",
+     "zingsniai": [
+      "Draw a box covering the front right quarter - from the middle of the part to the corner, through the full height.",
+      "SUBTRACT: select the part first (WHAT FROM), Enter, then the box (WHAT), Enter."
+     ],
+     "komandos": [
+      ["Command:", "BOX"],
+      ["Specify first corner:", "50,0,0"],
+      ["Specify other corner:", "100,30,0"],
+      ["Specify height:", "60"],
+      ["Command:", "SUBTRACT"],
+      ["Select solids... to subtract from:", "(the part) Enter"],
+      ["Select solids... to subtract:", "(the box) Enter"]
+     ],
+     "uzuominos": [
+      "The quarter starts in the middle of the part: x = 50 (half of 100), y = 30 (half of 60).",
+      "Cut the wrong quarter? U undoes it - try again."
+     ],
+     "tikslas": "The hexagonal hole is visible, volume ~118 927 mm³"
+    },
+    "pj-plokstuma": {
+     "pavadinimas": "Section plane: SECTIONPLANE",
+     "kodel": "A section plane is like a knife: it shows where the part is cut. AutoCAD shows the section both in 3D and on the sheet.",
+     "zingsniai": [
+      "Type SECTIONPLANE.",
+      "Choose Orthographic (O) and Front - the plane goes through the middle of the part, parallel to the front.",
+      "Click the plane and drag the arrow - watch the section change."
+     ],
+     "uzuominos": [
+      "The plane looks like a transparent rectangle with an arrow - the arrow shows the viewing direction.",
+      "Live section: click the plane → right-click → Activate live sectioning."
+     ],
+     "tikslas": "A section plane through the part"
+    },
+    "pj-vaizdas": {
+     "pavadinimas": "Base view on a sheet: VIEWBASE",
+     "kodel": "You already know VIEWBASE from the lesson „Projections from a 3D model“: it draws 2D views on a sheet from the 3D model. Dimensions always match the model, and the views update when the model changes.",
+     "zingsniai": [
+      "Click the Layout1 tab at the bottom.",
+      "Type VIEWBASE, choose Model, orientation Front and scale 1:2.",
+      "Place the view top left and press Enter. Don't add projected views yet - press Enter again."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(click on the sheet)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "AutoCAD says „Unknown command VIEWBASE“? Your AutoCAD has no Model Documentation (e.g. AutoCAD LT) - you can skip this and the next two steps.",
+      "To move a view: click it and drag the blue square."
+     ],
+     "tikslas": "A front view on the sheet"
+    },
+    "pj-pjuvis": {
+     "pavadinimas": "Section A–A: VIEWSECTION",
+     "kodel": "A section shows the inside of the part as if it were cut. The cut is marked by a line with the letters A–A, and the cut material is hatched.",
+     "zingsniai": [
+      "Type VIEWSECTION and click the base view.",
+      "Type Full. Click two points across the middle of the view - start and end outside the part.",
+      "Press Enter and place the section below the view."
+     ],
+     "komandos": [
+      ["Command:", "VIEWSECTION"],
+      ["Select parent view:", "(the base view)"],
+      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
+      ["Specify start point:", "(left, outside the part)"],
+      ["Specify end point:", "(right, outside the part) Enter"],
+      ["Specify location of section view:", "(below the view)"]
+     ],
+     "uzuominos": [
+      "Pick the middle with OSNAP Midpoint, then move the mouse sideways and click outside the part.",
+      "The letters A–A are added automatically. To change them, click the section line."
+     ],
+     "tikslas": "Section A–A with hatching on the sheet"
+    }
+   },
+   "testas": [
+    {
+     "k": "Which command creates a 2D view on a sheet from a 3D model?",
+     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
+     "p": "VIEWBASE creates the base view; projected views and sections are made from it."
+    },
+    {
+     "k": "For a quarter cut-out a box is removed from the part. Which command?",
+     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
+     "p": "SUBTRACT: first WHAT FROM (the part), then WHAT (the box)."
+    },
+    {
+     "k": "How is cut metal shown in a section?",
+     "v": ["A thicker line", "Thin hatching at 45°", "Red colour", "Dots"],
+     "p": "Metal is hatched with thin parallel lines at 45° (ANSI31)."
+    }
+   ]
+  },
+  "schema": {
+   "pavadinimas": "Electrical diagram with blocks",
+   "aprasas": "A symbol, attributes (ATTDEF), a block (BLOCK), inserting (INSERT) and a parts list (DATAEXTRACTION).",
+   "trukme": "~25 min.",
+   "pabaiga": "You can create blocks with attributes and build a parts list - the basis of diagram work.",
+   "zingsniai": {
+    "naujas_sch": {
+     "pavadinimas": "New drawing for the diagram",
+     "kodel": "We draw the diagram in a clean drawing so it doesn't mix with the plate.",
+     "zingsniai": ["Create a new drawing from acadiso.dwt (as in the lesson „File and formats“)."],
+     "uzuominos": ["Ctrl+N - a quick new drawing."]
+    },
+    "zenklas": {
+     "pavadinimas": "Resistor symbol",
+     "kodel": "All diagram symbols have the same length - 20 mm. Resistor: a 10 × 4 rectangle and two leads.",
+     "zingsniai": ["Draw:"],
+     "uzuominos": ["The symbol is 20 long: 5 + 10 + 5."],
+     "tikslas": "Symbol 20 × 4"
+    },
+    "attdef": {
+     "pavadinimas": "Attributes: ATTDEF",
+     "kodel": "An attribute is a field inside a block. POZ (R1, R2...) is visible on the diagram, NUORODA (1 kΩ) is invisible but goes into the parts list.",
+     "zingsniai": ["Run ATTDEF twice:"],
+     "komandos": [
+      ["ATTDEF 1:", "Tag: POZ · Prompt: Reference designator · Default: R · point 7,4"],
+      ["ATTDEF 2:", "tick Invisible · Tag: NUORODA · point 7,-7"]
+     ],
+     "uzuominos": [
+      "The tag becomes the column name in the parts list. Keep the tags POZ and NUORODA - Brėžly checks them.",
+      "The Invisible tick box is on the left of the dialog (Mode)."
+     ],
+     "tikslas": "Attributes POZ and NUORODA"
+    },
+    "block": {
+     "pavadinimas": "Block: BLOCK",
+     "kodel": "A block is a symbol you draw once and insert as many times as you like. Change the block and all copies change.",
+     "zingsniai": ["Type BLOCK:"],
+     "komandos": [
+      ["Command:", "BLOCK"],
+      ["Name:", "REZISTORIUS"],
+      ["Base point:", "0,0"],
+      ["Objects:", "(select the symbol and both attributes)"],
+      ["", "Delete → OK"]
+     ],
+     "uzuominos": [
+      "Base point 0,0 is the left lead - you will „drag“ the block by it.",
+      "Delete - the symbol disappears but the block stays in memory."
+     ],
+     "tikslas": "Block REZISTORIUS with attributes"
+    },
+    "insert": {
+     "pavadinimas": "Insert 3 resistors: INSERT",
+     "kodel": "Every time you insert the block, AutoCAD asks for the attribute values.",
+     "zingsniai": ["INSERT → REZISTORIUS → place it 3 times:"],
+     "komandos": [
+      ["Command:", "INSERT"],
+      ["Name:", "REZISTORIUS"],
+      ["Reference designator:", "R1 (R2, R3)"],
+      ["Value:", "1 kΩ"]
+     ],
+     "uzuominos": ["If it doesn't ask for attributes - ATTREQ → 1.", "Fix a wrong value by double-clicking the block."],
+     "tikslas": "R1, R2, R3"
+    },
+    "lentele": {
+     "pavadinimas": "Parts list: DATAEXTRACTION",
+     "kodel": "The parts list is built automatically from the block attributes - nothing to retype by hand.",
+     "zingsniai": ["Type DATAEXTRACTION and go through the wizard:"],
+     "komandos": [
+      ["Command:", "DATAEXTRACTION"],
+      ["", "Create new → save the .dxe"],
+      ["Objects:", "only REZISTORIUS"],
+      ["Properties:", "Attribute (POZ, NUORODA)"],
+      ["Output:", "Insert data extraction table"]
+     ],
+     "uzuominos": ["The Count column shows how many of each part there are.", "Place the table next to the diagram."],
+     "tikslas": "A table with the resistors"
+    }
+   },
+   "testas": [
+    {
+     "k": "Why is the NUORODA (value) attribute set to Invisible?",
+     "v": [
+      "So it takes no space on the diagram but is in the table",
+      "So it is nowhere",
+      "So it is red",
+      "It's faster"
+     ],
+     "p": "Invisible on the diagram, but DATAEXTRACTION puts it into the parts list."
+    },
+    {
+     "k": "What does the Delete option of BLOCK do?",
+     "v": [
+      "Deletes the block",
+      "Deletes the original objects, the block stays in memory",
+      "Deletes the attributes",
+      "Nothing"
+     ],
+     "p": "The objects disappear from the drawing, the block stays - you insert it with INSERT."
+    },
+    {
+     "k": "How long are the diagram symbols in this lesson?",
+     "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
+     "p": "Equal length makes the wires easy to connect."
     }
    ]
   }

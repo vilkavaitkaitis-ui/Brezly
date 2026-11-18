@@ -28,7 +28,7 @@ V_DEZE = 100 * 60 * 20
 V_SUJUNGTA = V_DEZE + math.pi * 20 ** 2 * 40                  # 170265.5
 V_SU_SKYLE = V_SUJUNGTA - 3 * math.sqrt(3) / 2 * 10 ** 2 * 60   # 154677.0
 V_GALUTINIS = 158568.8                                        # + 2 briaunos be persidengimo su cilindru
-# Ketvirtinė išpjova (8 pamoka): atimamas ketvirtis x 50..100, y 0..30, z 0..60 =
+# Ketvirtinė išpjova (pamoka „Pjūviai“): atimamas ketvirtis x 50..100, y 0..30, z 0..60 =
 #   dėžės dalis 30000 + cilindro ketvirtis π·20²·40/4 + pusė briaunos už cilindro 1945.9/2 - kiaurymės ketvirtis
 V_ISPJOVA = 118926.6
 
@@ -305,7 +305,7 @@ def d_galutinis(b):
 
 
 # =====================================================================
-#  NAUJOS PAMOKOS: failas -> lapas -> 2D -> schema -> matmenys -> šriftai
+#  PAMOKOS (tvarka - pamokos.json): failas, 2D, šriftai, matmenys, lapas, schema
 # =====================================================================
 
 
@@ -807,7 +807,7 @@ def d_lentele(b):
 def t_plokste_yra(b):
     objs = objektai(b.ms)
     if not staciakampis(objs, 0, 0, 100, 60, tol=1.5) or not apskritimai(objs, 15):
-        return [tr("Neradau plokštės iš 3 pamokos (100 × 60 su skyle ø30). Atidaryk tą brėžinį arba spausk „Parodyk man“.", "The plate from lesson 3 (100 × 60 with a ø30 hole) was not found. Open that drawing or click „Show me“.")]
+        return [tr("Neradau plokštės iš pamokos „2D brėžinys“ (100 × 60 su skyle ø30). Atidaryk tą brėžinį arba spausk „Parodyk man“.", "The plate from the lesson „2D drawing“ (100 × 60 with a ø30 hole) was not found. Open that drawing or click „Show me“.")]
     return []
 
 
@@ -946,24 +946,24 @@ def d_tekstas(b):
 
 
 # =====================================================================
-#  8-10 PAMOKOS: pjūviai, projekcijos iš 3D, aksonometrija
+#  3D IR VAIZDAI LAPE: pjūviai, projekcijos iš 3D, aksonometrija
 # =====================================================================
 DETALE_MIN, DETALE_MAX = (0, 0, 0), (100, 60, 60)
 ISPJOVA_MIN, ISPJOVA_MAX = (50, 0, 0), (100, 30, 60)
 
 
 def _viena_detale(b):
-    """(kūnas, pastabos) - 7 pamokos detalė 100 × 60 × 60 (su išpjova ar be)."""
+    """(kūnas, pastabos) - pamokos „Pirmoji 3D detalė“ detalė 100 × 60 × 60 (su išpjova ar be)."""
     ks = kunai(b)
     if not ks:
-        return None, [tr("Neradau 3D detalės. Atidaryk brėžinį su 7 pamokos detale arba spausk „Parodyk man“.", "No 3D part found. Open the drawing with the lesson 7 part or click „Show me“.")]
+        return None, [tr("Neradau 3D detalės. Atidaryk brėžinį su detale iš pamokos „Pirmoji 3D detalė“ arba spausk „Parodyk man“.", "No 3D part found. Open the drawing with the part from the lesson „First 3D part“ or click „Show me“.")]
     if len(ks) > 1:
         if rasti(ks, ISPJOVA_MIN, ISPJOVA_MAX):
             return None, [tr("Dėžė jau yra, bet dar neatimta: SUBTRACT → pirma detalė, Enter, tada dėžė, Enter.", "The box is there but not subtracted yet: SUBTRACT → the part first, Enter, then the box, Enter.")]
         return None, [tr(f"Brėžinyje {len(ks)} kūnai, o detalė turi būti vienas kūnas. Sujunk UNION.", f"The drawing has {len(ks)} bodies, but the part must be one body. Join them with UNION.")]
     k = ks[0]
     if not ribos_atitinka(k, DETALE_MIN, DETALE_MAX, tol=1.0):
-        return None, [tr("Tai ne 7 pamokos detalė: ", "This is not the lesson 7 part: ") + kas_ne_taip(k, DETALE_MIN, DETALE_MAX) + "."]
+        return None, [tr("Tai ne detalė iš pamokos „Pirmoji 3D detalė“: ", "This is not the part from the lesson „First 3D part“: ") + kas_ne_taip(k, DETALE_MIN, DETALE_MAX) + "."]
     return k, []
 
 
@@ -972,7 +972,7 @@ def t_detale3d(b):
     if pastabos:
         return pastabos
     if not (turis_tinka(k, V_GALUTINIS) or turis_tinka(k, V_ISPJOVA)):
-        return [tr(f"Detalės tūris {tf(round(k['turis'] or 0))} mm³, tikėtasi apie {tf(round(V_GALUTINIS))} mm³. Ar visos 7 pamokos dalys sujungtos?", f"The part volume is {tf(round(k['turis'] or 0))} mm³, expected about {tf(round(V_GALUTINIS))} mm³. Are all lesson 7 pieces joined?")]
+        return [tr(f"Detalės tūris {tf(round(k['turis'] or 0))} mm³, tikėtasi apie {tf(round(V_GALUTINIS))} mm³. Ar visos detalės dalys sujungtos (UNION)?", f"The part volume is {tf(round(k['turis'] or 0))} mm³, expected about {tf(round(V_GALUTINIS))} mm³. Are all pieces of the part joined (UNION)?")]
     return []
 
 
@@ -1142,7 +1142,7 @@ def t_iso_matmuo(b):
 
 # ---- demonstracijos
 def d_detale3d(b):
-    """Nubraižo 7 pamokos detalę, jei jos nėra."""
+    """Nubraižo pamokos „Pirmoji 3D detalė“ detalę, jei jos nėra."""
     if kunai(b):
         return
     for f in (d_deze, d_cilindras, d_sujungti, d_prizme, d_atimti, d_pleistas, d_veidrodis, d_galutinis):

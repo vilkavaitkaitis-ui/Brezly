@@ -322,6 +322,10 @@
   "Paleidžiu AutoCAD - tai gali užtrukti iki minutės ⏳": "Starting AutoCAD - this can take up to a minute ⏳",
   "Kitos teisės (admin)": "Rights mismatch (admin)",
   "AutoCAD užimtas (Esc)": "AutoCAD busy (Esc)",
-  "Atidarytas naujas brėžinys iš acadiso.dwt": "Opened a new drawing from acadiso.dwt"
+  "Atidarytas naujas brėžinys iš acadiso.dwt": "Opened a new drawing from acadiso.dwt",
+  "Pirmą kartą": "First time",
+  "Moku pagrindus": "I know the basics",
+  "Pradėsim nuo pradžių: failas, 2D brėžinys, šriftai...": "We'll start from the beginning: file, 2D drawing, fonts...",
+  "Pradėsim nuo pamokos „2D brėžinys“. Prie pirmosios galėsi grįžti bet kada.": "We'll start with the lesson „2D drawing“. You can go back to the first one any time."
  }
 }

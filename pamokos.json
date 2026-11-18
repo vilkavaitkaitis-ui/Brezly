@@ -95,91 +95,6 @@
    ]
   },
   {
-   "id": "lapas",
-   "pavadinimas": "A3 lapas ir kampinis įrašas",
-   "trukme": "~15 min.",
-   "aprasas": "LAYOUTWIZARD, A3 formatas, rėmelis ir kampinio įrašo lentelė - lapas, ant kurio dėsi visus brėžinius.",
-   "pabaiga": "Moki paruošti A3 lapą su rėmeliu ir kampiniu įrašu pagal reikalavimus.",
-   "zingsniai": [
-    {
-     "id": "a3",
-     "pavadinimas": "A3 lapas: LAYOUTWIZARD",
-     "xp": 15,
-     "kodel": "Model erdvėje braižai tikrais dydžiais, o lapas (Layout / PAPER) - tai popierius, kurį spausdinsi. A3 = 420 × 297 mm.",
-     "zingsniai": ["Įvesk LAYOUTWIZARD ir eik per langus:"],
-     "komandos": [
-      ["Command:", "LAYOUTWIZARD"],
-      ["Begin:", "A3"],
-      ["Printer:", "DWG To PDF.pc3"],
-      ["Paper size:", "ISO full bleed A3 (420 x 297)"],
-      ["Orientation:", "Landscape"],
-      ["Title block:", "None"],
-      ["Define viewports:", "None"]
-     ],
-     "uzuominos": [
-      "Apačioje atsiras skirtukas „A3“ - tai tavo lapas.",
-      "Jei popieriaus sąraše nėra A3 - pirma pasirink spausdintuvą DWG To PDF."
-     ],
-     "tikslas": "Lapas A3 (420 × 297)"
-    },
-    {
-     "id": "remelis",
-     "pavadinimas": "Rėmelis",
-     "xp": 15,
-     "kodel": "Pagal standartą rėmelis kairėje 20 mm nuo krašto (segimui), kitose pusėse - 5 mm.",
-     "zingsniai": ["Būdamas lape A3 (ne Model!), sluoksnyje KONTURAS įvesk:"],
-     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "20,5"], ["Specify other corner:", "415,292"]],
-     "uzuominos": ["Patikrink, kad apačioje aktyvus skirtukas A3, o ne Model.", "420 - 5 = 415, 297 - 5 = 292."],
-     "tikslas": "Rėmelis nuo (20,5) iki (415,292)"
-    },
-    {
-     "id": "kampinis",
-     "pavadinimas": "Kampinio įrašo lentelė",
-     "xp": 15,
-     "kodel": "Kampinis įrašas - brėžinio „pasas“: kas braižė, kas tikrino, mastelis. Jis visada apatiniame dešiniame rėmelio kampe, 185 × 40.",
-     "zingsniai": ["Nubraižyk lentelės kontūrą:", "Vidines linijas nubraižyk LINE komanda pagal pavyzdį."],
-     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
-     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Įjunk OSNAP (F3) - linijos pritrauks prie kampų."],
-     "tikslas": "Lentelė 185 × 40 kampe"
-    },
-    {
-     "id": "uzpildyk",
-     "pavadinimas": "Užpildyk kampinį įrašą",
-     "xp": 10,
-     "kodel": "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
-     "zingsniai": ["Įrašyk darbo pavadinimą (aukštis 5) ir savo vardą (aukštis 2.5) į lentelės langelius."],
-     "komandos": [
-      ["Command:", "TEXT"],
-      ["Specify start point:", "(spustelėk langelyje)"],
-      ["Specify height:", "5"],
-      ["Enter text:", "Detalė"]
-     ],
-     "uzuominos": ["Enter du kartus baigia TEXT komandą.", "Tekstą perkelti gali komanda MOVE."],
-     "tikslas": "Bent 2 tekstai lentelėje"
-    }
-   ],
-   "testas": [
-    {
-     "k": "Kiek milimetrų rėmelis nutolęs nuo kairiojo lapo krašto?",
-     "v": ["5", "10", "20", "25"],
-     "t": 2,
-     "p": "Kairėje 20 mm segimui, kitur 5 mm."
-    },
-    {
-     "k": "Kur dedamas kampinis įrašas?",
-     "v": ["Viršuje kairėje", "Apačioje dešinėje", "Centre", "Bet kur"],
-     "t": 1,
-     "p": "Visada apatiniame dešiniame rėmelio kampe."
-    },
-    {
-     "k": "Koks A3 lapo dydis?",
-     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
-     "t": 1,
-     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
-    }
-   ]
-  },
-  {
    "id": "2d",
    "pavadinimas": "2D brėžinys",
    "trukme": "~20 min.",
@@ -290,125 +205,70 @@
    ]
   },
   {
-   "id": "schema",
-   "pavadinimas": "Elektrinė schema su blokais",
-   "trukme": "~25 min.",
-   "aprasas": "Ženklas, atributai (ATTDEF), blokas (BLOCK), įterpimas (INSERT) ir aprašo lentelė (DATAEXTRACTION).",
-   "pabaiga": "Moki kurti blokus su atributais ir sudaryti aprašo lentelę - tai pagrindas schemų darbui.",
+   "id": "sriftai",
+   "pavadinimas": "Šriftai ir tekstas",
+   "trukme": "~10 min.",
+   "aprasas": "Teksto stiliai pagal ISO 3098: isocp.shx ir ISOCPEUR su lietuviškomis raidėmis.",
+   "pabaiga": "Moki sukurti ISO teksto stilius ir rašyti brėžinyje su lietuviškomis raidėmis.",
    "zingsniai": [
     {
-     "id": "naujas_sch",
-     "pavadinimas": "Naujas brėžinys schemai",
-     "xp": 5,
-     "kodel": "Schemą braižom švariame brėžinyje, kad nesusimaišytų su plokšte.",
-     "zingsniai": ["Sukurk naują brėžinį iš acadiso.dwt (kaip 1 pamokoje)."],
-     "komandos": [["Command:", "NEW"], ["Select template:", "acadiso.dwt"]],
-     "uzuominos": ["Ctrl+N - greitas naujas brėžinys."]
-    },
-    {
-     "id": "zenklas",
-     "pavadinimas": "Rezistoriaus ženklas",
+     "id": "iso",
+     "pavadinimas": "Teksto stilius ISO",
      "xp": 15,
-     "kodel": "Visi schemos ženklai vienodo ilgio - 20 mm. Rezistorius: stačiakampis 10 × 4 ir du išvadai.",
-     "zingsniai": ["Nubraižyk:"],
-     "komandos": [
-      ["Command:", "LINE"],
-      ["Points:", "0,0 → 5,0"],
-      ["Command:", "RECTANG"],
-      ["Corners:", "5,-2 → 15,2"],
-      ["Command:", "LINE"],
-      ["Points:", "15,0 → 20,0"]
-     ],
-     "uzuominos": ["Ženklas ilgas 20: 5 + 10 + 5."],
-     "tikslas": "Ženklas 20 × 4"
+     "kodel": "Brėžiniuose naudojamas standartinis inžinerinis šriftas (ISO 3098), o ne Arial.",
+     "zingsniai": ["Įvesk STYLE → New → ISO:"],
+     "komandos": [["Command:", "STYLE"], ["New:", "ISO"], ["Font Name:", "isocp.shx"], ["", "Apply"]],
+     "uzuominos": ["Height palik 0 - aukštį pasirinksi rašydamas."],
+     "tikslas": "Stilius ISO (isocp.shx)"
     },
     {
-     "id": "attdef",
-     "pavadinimas": "Atributai: ATTDEF",
+     "id": "isolt",
+     "pavadinimas": "Stilius ISO_LT su lietuviškomis raidėmis",
      "xp": 20,
-     "kodel": "Atributas - laukelis bloke. POZ (R1, R2...) matomas schemoje, NUORODA (1 kΩ) - nematomas, bet patenka į aprašo lentelę.",
-     "zingsniai": ["Įvesk ATTDEF du kartus:"],
-     "komandos": [
-      ["ATTDEF 1:", "Tag: POZ · Prompt: Pozicinis žymuo · Default: R · taškas 7,4"],
-      ["ATTDEF 2:", "pažymėk Invisible · Tag: NUORODA · taškas 7,-7"]
-     ],
-     "uzuominos": ["Tag - stulpelio vardas aprašo lentelėje.", "Invisible varnelė - kairėje lango pusėje (Mode)."],
-     "tikslas": "Atributai POZ ir NUORODA"
-    },
-    {
-     "id": "block",
-     "pavadinimas": "Blokas: BLOCK",
-     "xp": 20,
-     "kodel": "Blokas - ženklas, kurį nubraižai vieną kartą ir įterpi kiek nori. Pakeitus bloką, pasikeičia visi.",
-     "zingsniai": ["Įvesk BLOCK:"],
-     "komandos": [
-      ["Command:", "BLOCK"],
-      ["Name:", "REZISTORIUS"],
-      ["Base point:", "0,0"],
-      ["Objects:", "(pažymėk ženklą ir abu atributus)"],
-      ["", "Delete → OK"]
-     ],
+     "kodel": "isocp.shx neturi ąčęėįšųūž. ISOCPEUR - tas pats ISO šriftas, bet su lietuviškomis raidėmis.",
+     "zingsniai": ["STYLE → New → ISO_LT:"],
+     "komandos": [["Font Name:", "ISOCPEUR"], ["Oblique Angle:", "15"], ["", "Apply → Set Current"]],
      "uzuominos": [
-      "Base point 0,0 - kairysis išvadas, už jo „tempsi“ bloką.",
-      "Delete - ženklas dingsta, bet blokas lieka atmintyje."
+      "Oblique 15° - pasvirasis ISO B tipo šriftas.",
+      "Jei ISOCPEUR nėra - jis diegiamas kartu su AutoCAD, paieškok sąraše „isocpeur“."
      ],
-     "tikslas": "Blokas REZISTORIUS su atributais"
+     "tikslas": "Stilius ISO_LT (ISOCPEUR, 15°)"
     },
     {
-     "id": "insert",
-     "pavadinimas": "Įterpk 3 rezistorius: INSERT",
-     "xp": 20,
-     "kodel": "Kiekvieną kartą įterpiant, AutoCAD paklaus atributų reikšmių.",
-     "zingsniai": ["INSERT → REZISTORIUS → padėk 3 kartus:"],
+     "id": "tekstas",
+     "pavadinimas": "Parašyk „Brėžinys“",
+     "xp": 15,
+     "kodel": "Patikrinsim, ar lietuviškos raidės matosi teisingai. Standartiniai aukščiai: 2.5, 3.5, 5, 7, 10.",
+     "zingsniai": ["Su aktyviu ISO_LT įvesk:"],
      "komandos": [
-      ["Command:", "INSERT"],
-      ["Name:", "REZISTORIUS"],
-      ["Pozicinis žymuo:", "R1 (R2, R3)"],
-      ["Nuoroda:", "1 kΩ"]
+      ["Command:", "TEXT"],
+      ["Specify start point:", "0,80"],
+      ["Specify height:", "5"],
+      ["Rotation:", "0"],
+      ["Enter text:", "Brėžinys"]
      ],
-     "uzuominos": ["Jei atributų neklausia - ATTREQ → 1.", "Klaidingą reikšmę pataisysi dukart spustelėjęs ant bloko."],
-     "tikslas": "R1, R2, R3"
-    },
-    {
-     "id": "lentele",
-     "pavadinimas": "Aprašo lentelė: DATAEXTRACTION",
-     "xp": 25,
-     "kodel": "Aprašo lentelė sudaroma automatiškai iš blokų atributų - nereikia nieko perrašinėti ranka.",
-     "zingsniai": ["Įvesk DATAEXTRACTION ir eik per vedlį:"],
-     "komandos": [
-      ["Command:", "DATAEXTRACTION"],
-      ["", "Create new → išsaugok .dxe"],
-      ["Objects:", "tik REZISTORIUS"],
-      ["Properties:", "Attribute (POZ, NUORODA)"],
-      ["Output:", "Insert data extraction table"]
-     ],
-     "uzuominos": ["Count stulpelis - kiek tokių elementų.", "Lentelę padėk šalia schemos."],
-     "tikslas": "Lentelė su rezistoriais"
+     "uzuominos": ["Vietoj raidžių klaustukai? - stilius ne ISO_LT.", "Enter du kartus baigia TEXT."],
+     "tikslas": "„Brėžinys“, aukštis 5, ISO_LT"
     }
    ],
    "testas": [
     {
-     "k": "Kodėl NUORODA atributas nustatomas Invisible?",
-     "v": [
-      "Kad neužimtų vietos schemoje, bet būtų lentelėje",
-      "Kad jo nebūtų nieur",
-      "Kad būtų raudonas",
-      "Taip greičiau"
-     ],
-     "t": 0,
-     "p": "Nematomas schemoje, bet DATAEXTRACTION jį paima į aprašo lentelę."
-    },
-    {
-     "k": "Ką daro BLOCK parinktis Delete?",
-     "v": ["Ištrina bloką", "Ištrina pradinius objektus, blokas lieka atmintyje", "Ištrina atributus", "Nieko"],
+     "k": "Kodėl isocp.shx netinka lietuviškam tekstui?",
+     "v": ["Per mažas", "Neturi ąčęėįšųūž", "Per lėtas", "Tinka"],
      "t": 1,
-     "p": "Objektai dingsta iš brėžinio, o blokas lieka - įterpsi jį INSERT."
+     "p": "Naudok ISOCPEUR - jis turi lietuviškas raides."
     },
     {
-     "k": "Kokio ilgio daromi schemos ženklai šioje pamokoje?",
-     "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
+     "k": "Kuris aukštis NĖRA standartinis?",
+     "v": ["3.5", "5", "6", "7"],
      "t": 2,
-     "p": "Vienodas ilgis - laidus lengva sujungti."
+     "p": "Standartiniai: 2.5, 3.5, 5, 7, 10, 14."
+    },
+    {
+     "k": "Kokiu kampu pasviręs ISO B tipo šriftas?",
+     "v": ["0°", "15°", "30°", "45°"],
+     "t": 1,
+     "p": "Oblique angle 15°."
     }
    ]
   },
@@ -423,7 +283,7 @@
      "id": "plokste_m",
      "pavadinimas": "Atsidaryk plokštę",
      "xp": 5,
-     "kodel": "Matmenis žymėsim 3 pamokos plokštei.",
+     "kodel": "Matmenis žymėsim plokštei iš pamokos „2D brėžinys“.",
      "zingsniai": ["Atidaryk brėžinį su plokšte (OPEN) arba spausk „Parodyk man“ - nubraižysiu ją."],
      "komandos": [["Command:", "OPEN"]],
      "uzuominos": ["Plokštė: 100 × 60, centre ø30."]
@@ -440,7 +300,10 @@
       ["Primary Units:", "Precision 0"],
       ["", "OK → Set Current"]
      ],
-     "uzuominos": ["Set Current - kad nauji matmenys naudotų šį stilių.", "Teksto stilius gali būti ISO_LT (6 pamoka)."],
+     "uzuominos": [
+      "Set Current - kad nauji matmenys naudotų šį stilių.",
+      "Teksto stilius gali būti ISO_LT iš pamokos „Šriftai ir tekstas“."
+     ],
      "tikslas": "ISO_MATMENYS aktyvus"
     },
     {
@@ -508,70 +371,87 @@
    ]
   },
   {
-   "id": "sriftai",
-   "pavadinimas": "Šriftai ir tekstas",
-   "trukme": "~10 min.",
-   "aprasas": "Teksto stiliai pagal ISO 3098: isocp.shx ir ISOCPEUR su lietuviškomis raidėmis.",
-   "pabaiga": "Moki sukurti ISO teksto stilius ir rašyti brėžinyje su lietuviškomis raidėmis.",
+   "id": "lapas",
+   "pavadinimas": "A3 lapas ir kampinis įrašas",
+   "trukme": "~15 min.",
+   "aprasas": "LAYOUTWIZARD, A3 formatas, rėmelis ir kampinio įrašo lentelė - lapas, ant kurio dėsi visus brėžinius.",
+   "pabaiga": "Moki paruošti A3 lapą su rėmeliu ir kampiniu įrašu pagal reikalavimus.",
    "zingsniai": [
     {
-     "id": "iso",
-     "pavadinimas": "Teksto stilius ISO",
+     "id": "a3",
+     "pavadinimas": "A3 lapas: LAYOUTWIZARD",
      "xp": 15,
-     "kodel": "Brėžiniuose naudojamas standartinis inžinerinis šriftas (ISO 3098), o ne Arial.",
-     "zingsniai": ["Įvesk STYLE → New → ISO:"],
-     "komandos": [["Command:", "STYLE"], ["New:", "ISO"], ["Font Name:", "isocp.shx"], ["", "Apply"]],
-     "uzuominos": ["Height palik 0 - aukštį pasirinksi rašydamas."],
-     "tikslas": "Stilius ISO (isocp.shx)"
-    },
-    {
-     "id": "isolt",
-     "pavadinimas": "Stilius ISO_LT su lietuviškomis raidėmis",
-     "xp": 20,
-     "kodel": "isocp.shx neturi ąčęėįšųūž. ISOCPEUR - tas pats ISO šriftas, bet su lietuviškomis raidėmis.",
-     "zingsniai": ["STYLE → New → ISO_LT:"],
-     "komandos": [["Font Name:", "ISOCPEUR"], ["Oblique Angle:", "15"], ["", "Apply → Set Current"]],
-     "uzuominos": [
-      "Oblique 15° - pasvirasis ISO B tipo šriftas.",
-      "Jei ISOCPEUR nėra - jis diegiamas kartu su AutoCAD, paieškok sąraše „isocpeur“."
+     "kodel": "Model erdvėje braižai tikrais dydžiais, o lapas (Layout / PAPER) - tai popierius, kurį spausdinsi. A3 = 420 × 297 mm.",
+     "zingsniai": ["Įvesk LAYOUTWIZARD ir eik per langus:"],
+     "komandos": [
+      ["Command:", "LAYOUTWIZARD"],
+      ["Begin:", "A3"],
+      ["Printer:", "DWG To PDF.pc3"],
+      ["Paper size:", "ISO full bleed A3 (420 x 297)"],
+      ["Orientation:", "Landscape"],
+      ["Title block:", "None"],
+      ["Define viewports:", "None"]
      ],
-     "tikslas": "Stilius ISO_LT (ISOCPEUR, 15°)"
+     "uzuominos": [
+      "Apačioje atsiras skirtukas „A3“ - tai tavo lapas.",
+      "Jei popieriaus sąraše nėra A3 - pirma pasirink spausdintuvą DWG To PDF."
+     ],
+     "tikslas": "Lapas A3 (420 × 297)"
     },
     {
-     "id": "tekstas",
-     "pavadinimas": "Parašyk „Brėžinys“",
+     "id": "remelis",
+     "pavadinimas": "Rėmelis",
      "xp": 15,
-     "kodel": "Patikrinsim, ar lietuviškos raidės matosi teisingai. Standartiniai aukščiai: 2.5, 3.5, 5, 7, 10.",
-     "zingsniai": ["Su aktyviu ISO_LT įvesk:"],
+     "kodel": "Pagal standartą rėmelis kairėje 20 mm nuo krašto (segimui), kitose pusėse - 5 mm.",
+     "zingsniai": ["Būdamas lape A3 (ne Model!), sluoksnyje KONTURAS įvesk:"],
+     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "20,5"], ["Specify other corner:", "415,292"]],
+     "uzuominos": ["Patikrink, kad apačioje aktyvus skirtukas A3, o ne Model.", "420 - 5 = 415, 297 - 5 = 292."],
+     "tikslas": "Rėmelis nuo (20,5) iki (415,292)"
+    },
+    {
+     "id": "kampinis",
+     "pavadinimas": "Kampinio įrašo lentelė",
+     "xp": 15,
+     "kodel": "Kampinis įrašas - brėžinio „pasas“: kas braižė, kas tikrino, mastelis. Jis visada apatiniame dešiniame rėmelio kampe, 185 × 40.",
+     "zingsniai": ["Nubraižyk lentelės kontūrą:", "Vidines linijas nubraižyk LINE komanda pagal pavyzdį."],
+     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
+     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Įjunk OSNAP (F3) - linijos pritrauks prie kampų."],
+     "tikslas": "Lentelė 185 × 40 kampe"
+    },
+    {
+     "id": "uzpildyk",
+     "pavadinimas": "Užpildyk kampinį įrašą",
+     "xp": 10,
+     "kodel": "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
+     "zingsniai": ["Įrašyk darbo pavadinimą (aukštis 5) ir savo vardą (aukštis 2.5) į lentelės langelius."],
      "komandos": [
       ["Command:", "TEXT"],
-      ["Specify start point:", "0,80"],
+      ["Specify start point:", "(spustelėk langelyje)"],
       ["Specify height:", "5"],
-      ["Rotation:", "0"],
-      ["Enter text:", "Brėžinys"]
+      ["Enter text:", "Detalė"]
      ],
-     "uzuominos": ["Vietoj raidžių klaustukai? - stilius ne ISO_LT.", "Enter du kartus baigia TEXT."],
-     "tikslas": "„Brėžinys“, aukštis 5, ISO_LT"
+     "uzuominos": ["Enter du kartus baigia TEXT komandą.", "Tekstą perkelti gali komanda MOVE."],
+     "tikslas": "Bent 2 tekstai lentelėje"
     }
    ],
    "testas": [
     {
-     "k": "Kodėl isocp.shx netinka lietuviškam tekstui?",
-     "v": ["Per mažas", "Neturi ąčęėįšųūž", "Per lėtas", "Tinka"],
-     "t": 1,
-     "p": "Naudok ISOCPEUR - jis turi lietuviškas raides."
-    },
-    {
-     "k": "Kuris aukštis NĖRA standartinis?",
-     "v": ["3.5", "5", "6", "7"],
+     "k": "Kiek milimetrų rėmelis nutolęs nuo kairiojo lapo krašto?",
+     "v": ["5", "10", "20", "25"],
      "t": 2,
-     "p": "Standartiniai: 2.5, 3.5, 5, 7, 10, 14."
+     "p": "Kairėje 20 mm segimui, kitur 5 mm."
     },
     {
-     "k": "Kokiu kampu pasviręs ISO B tipo šriftas?",
-     "v": ["0°", "15°", "30°", "45°"],
+     "k": "Kur dedamas kampinis įrašas?",
+     "v": ["Viršuje kairėje", "Apačioje dešinėje", "Centre", "Bet kur"],
      "t": 1,
-     "p": "Oblique angle 15°."
+     "p": "Visada apatiniame dešiniame rėmelio kampe."
+    },
+    {
+     "k": "Koks A3 lapo dydis?",
+     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
+     "t": 1,
+     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
     }
    ]
   },
@@ -787,145 +667,6 @@
    ]
   },
   {
-   "id": "pjuviai",
-   "pavadinimas": "Pjūviai ir ketvirtinė išpjova",
-   "aprasas": "Ketvirtinė išpjova 3D detalėje, SECTIONPLANE, VIEWBASE ir VIEWSECTION - pjūvis A–A lape. Reikia pilno AutoCAD (Model Documentation).",
-   "trukme": "~20 min.",
-   "pabaiga": "Tavo detalė turi ketvirtinę išpjovą, o lape - pjūvį A–A. Taip detalės vidų rodo tikri brėžiniai.",
-   "zingsniai": [
-    {
-     "id": "pj-detale",
-     "pavadinimas": "Atsidaryk 3D detalę",
-     "xp": 5,
-     "kodel": "Pjūviai daromi iš jau sumodeliuotos detalės. Naudosime 7 pamokos detalę 100 × 60 × 60 su šešiakampe kiauryme.",
-     "zingsniai": [
-      "Atidaryk brėžinį su 7 pamokos detale (jei jo nebeturi - spausk „Parodyk man“, nubraižysiu).",
-      "Įjunk 3D Modeling darbo aplinką ir SE Isometric vaizdą.",
-      "Detalė turi būti vienas kūnas - jei ne, UNION."
-     ],
-     "komandos": [["Command:", "-VIEW"], ["Enter an option:", "SEISO"]],
-     "uzuominos": [
-      "Vienas kūnas: spustelėjus bet kurią detalės vietą pasižymi visa detalė.",
-      "Jei detalė sudaryta iš kelių dalių - UNION, pažymėk viską, Enter."
-     ],
-     "tikslas": "Viena detalė 100 × 60 × 60"
-    },
-    {
-     "id": "pj-ispjova",
-     "pavadinimas": "Ketvirtinė išpjova: BOX + SUBTRACT",
-     "xp": 15,
-     "kodel": "Ketvirtinė išpjova - iš detalės išimamas ketvirtis, kad matytųsi vidus: kiaurymė ir sienelių storis. Aksonometrijoje ji atstoja atskirą pjūvį.",
-     "zingsniai": [
-      "Nubraižyk dėžę, kuri uždengia priekinį dešinį ketvirtį - nuo detalės vidurio iki kampo, per visą aukštį.",
-      "SUBTRACT: pirma pažymi detalę (IŠ KO), Enter, tada dėžę (KĄ), Enter."
-     ],
-     "komandos": [
-      ["Command:", "BOX"],
-      ["Specify first corner:", "50,0,0"],
-      ["Specify other corner:", "100,30,0"],
-      ["Specify height:", "60"],
-      ["Command:", "SUBTRACT"],
-      ["Select solids... to subtract from:", "(detalė) Enter"],
-      ["Select solids... to subtract:", "(dėžė) Enter"]
-     ],
-     "uzuominos": [
-      "Ketvirtis prasideda detalės viduryje: x = 50 (pusė iš 100), y = 30 (pusė iš 60).",
-      "Išpjovei ne tą ketvirtį? U atšaukia, ir bandyk iš naujo."
-     ],
-     "tikslas": "Matosi šešiakampė kiaurymė, tūris ~118 927 mm³"
-    },
-    {
-     "id": "pj-plokstuma",
-     "pavadinimas": "Pjūvio plokštuma: SECTIONPLANE",
-     "xp": 10,
-     "kodel": "Pjūvio plokštuma - tarsi peilis: parodo, kur detalė perpjaunama. Iš jos AutoCAD rodo pjūvį ir 3D vaizde, ir lape.",
-     "zingsniai": [
-      "Įvesk SECTIONPLANE.",
-      "Pasirink Orthographic (O) ir Front - plokštuma eis per detalės vidurį lygiagrečiai priekiui.",
-      "Spustelėk plokštumą ir patempk rodyklę - pamatysi, kaip keičiasi pjūvis."
-     ],
-     "komandos": [
-      ["Command:", "SECTIONPLANE"],
-      ["Select face or any point to locate section line or [Draw section/Orthographic/Type]:", "O"],
-      ["Align section to: [Front/bAck/Top/Bottom/Left/Right]:", "Front"]
-     ],
-     "uzuominos": [
-      "Plokštuma atrodo kaip permatomas stačiakampis su rodykle - rodyklė rodo, į kurią pusę žiūrima.",
-      "Gyvas pjūvis: spustelėk plokštumą → dešinys pelės mygtukas → Activate live sectioning."
-     ],
-     "tikslas": "Pjūvio plokštuma per detalę"
-    },
-    {
-     "id": "pj-vaizdas",
-     "pavadinimas": "Pagrindinis vaizdas lape: VIEWBASE",
-     "xp": 15,
-     "kodel": "VIEWBASE iš 3D modelio pats nubraižo 2D vaizdus lape. Matmenys visada sutampa su modeliu, o pakeitus modelį vaizdai atsinaujina.",
-     "zingsniai": [
-      "Spustelėk lapo kortelę Layout1 apačioje.",
-      "Įvesk VIEWBASE, pasirink Model, orientaciją Front ir mastelį 1:2.",
-      "Padėk vaizdą lapo kairėje viršuje ir spausk Enter. Projekcijų dar nedėk - dar kartą Enter."
-     ],
-     "komandos": [
-      ["Command:", "VIEWBASE"],
-      ["Select type [Model/File] <Model>:", "M"],
-      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
-      ["Specify location of base view:", "(spustelėk lape)"],
-      ["Select option:", "Enter"],
-      ["Specify location of projected view:", "Enter"]
-     ],
-     "uzuominos": [
-      "AutoCAD sako „Unknown command VIEWBASE“? Tavo AutoCAD neturi Model Documentation (pvz. AutoCAD LT) - šį ir kitus du žingsnius gali praleisti.",
-      "Vaizdą perkelti: spustelėk jį ir tempk mėlyną kvadratėlį."
-     ],
-     "tikslas": "Lape yra vaizdas iš priekio"
-    },
-    {
-     "id": "pj-pjuvis",
-     "pavadinimas": "Pjūvis A–A: VIEWSECTION",
-     "xp": 20,
-     "kodel": "Pjūvis rodo detalės vidų taip, lyg ji būtų perpjauta. Pjūvio vietą žymi linija su raidėmis A–A, o perpjauta medžiaga brūkšniuojama.",
-     "zingsniai": [
-      "Įvesk VIEWSECTION ir spustelėk pagrindinį vaizdą.",
-      "Tipas Full. Spustelėk du taškus per vaizdo vidurį - pradėk ir baik už detalės ribų.",
-      "Spausk Enter ir padėk pjūvį po vaizdu."
-     ],
-     "komandos": [
-      ["Command:", "VIEWSECTION"],
-      ["Select parent view:", "(pagrindinis vaizdas)"],
-      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
-      ["Specify start point:", "(kairėje už detalės)"],
-      ["Specify end point:", "(dešinėje už detalės) Enter"],
-      ["Specify location of section view:", "(po vaizdu)"]
-     ],
-     "uzuominos": [
-      "Vidurį pagauk su OSNAP Midpoint, tada patrauk pelę į šoną ir spustelėk už detalės.",
-      "Raidės A–A uždedamos pačios. Pakeisti - spustelėk pjūvio liniją."
-     ],
-     "tikslas": "Lape yra pjūvis A–A su brūkšniuote"
-    }
-   ],
-   "testas": [
-    {
-     "k": "Kuria komanda iš 3D modelio sukuriamas 2D vaizdas lape?",
-     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
-     "t": 0,
-     "p": "VIEWBASE sukuria pagrindinį vaizdą; nuo jo kuriami projekciniai vaizdai ir pjūviai."
-    },
-    {
-     "k": "Ketvirtinei išpjovai iš detalės atimama dėžė. Kokia komanda?",
-     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
-     "t": 2,
-     "p": "SUBTRACT: pirma IŠ KO (detalė), tada KĄ (dėžė)."
-    },
-    {
-     "k": "Kaip pjūvyje žymima perpjauta metalinė detalė?",
-     "v": ["Storesne linija", "Plonu brūkšniavimu 45° kampu", "Raudona spalva", "Taškais"],
-     "t": 1,
-     "p": "Metalas brūkšniuojamas plonomis lygiagrečiomis linijomis 45° kampu (ANSI31)."
-    }
-   ]
-  },
-  {
    "id": "projekcijos",
    "pavadinimas": "Projekcijos iš 3D modelio",
    "aprasas": "Europietiškas (pirmo kampo) išdėstymas A3 lape: VIEWSTD, VIEWBASE, VIEWPROJ ir aksonometrinis vaizdas iš to paties modelio. Reikia pilno AutoCAD.",
@@ -938,12 +679,12 @@
      "xp": 5,
      "kodel": "Detalės brėžiniui su trimis projekcijomis ir aksonometrija reikia A3 lapo (420 × 297).",
      "zingsniai": [
-      "Jei 2 pamokoje susikūrei A3 lapą - pereik į jį (kortelė apačioje).",
+      "Jei pamokoje „A3 lapas ir kampinis įrašas“ susikūrei A3 lapą - pereik į jį (kortelė apačioje).",
       "Jei neturi - LAYOUTWIZARD: vardas A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
      ],
      "komandos": [["Command:", "LAYOUTWIZARD"]],
      "uzuominos": [
-      "Brėžinyje turi būti 3D detalė iš 7 pamokos - iš jos darysime vaizdus.",
+      "Brėžinyje turi būti 3D detalė iš pamokos „Pirmoji 3D detalė“ - iš jos darysime vaizdus.",
       "Lapo popierių pakeisti: dešinys pelės mygtukas ant kortelės → Page Setup Manager → Modify."
      ],
      "tikslas": "A3 lapas"
@@ -1027,7 +768,7 @@
      ],
      "uzuominos": [
       "Aksonometrijoje nematomos linijos nerodomos.",
-      "Jei detalė turi ketvirtinę išpjovą iš 8 pamokos - ji matysis ir čia."
+      "Pamokoje „Pjūviai ir ketvirtinė išpjova“ detalei padarysi išpjovą - ji atsiras ir šiuose vaizduose."
      ],
      "tikslas": "A3 lape 4 vaizdai"
     }
@@ -1182,6 +923,268 @@
      "v": ["F3", "F5", "F8", "F12"],
      "t": 1,
      "p": "F5 (arba Ctrl+E) perjungia Isoplane."
+    }
+   ]
+  },
+  {
+   "id": "pjuviai",
+   "pavadinimas": "Pjūviai ir ketvirtinė išpjova",
+   "aprasas": "Ketvirtinė išpjova 3D detalėje, SECTIONPLANE, VIEWBASE ir VIEWSECTION - pjūvis A–A lape. Reikia pilno AutoCAD (Model Documentation).",
+   "trukme": "~20 min.",
+   "pabaiga": "Tavo detalė turi ketvirtinę išpjovą, o lape - pjūvį A–A. Taip detalės vidų rodo tikri brėžiniai.",
+   "zingsniai": [
+    {
+     "id": "pj-detale",
+     "pavadinimas": "Atsidaryk 3D detalę",
+     "xp": 5,
+     "kodel": "Pjūviai daromi iš jau sumodeliuotos detalės. Naudosime detalę iš pamokos „Pirmoji 3D detalė“: 100 × 60 × 60 su šešiakampe kiauryme.",
+     "zingsniai": [
+      "Atidaryk brėžinį su detale iš pamokos „Pirmoji 3D detalė“ (jei jo nebeturi - spausk „Parodyk man“, nubraižysiu).",
+      "Įjunk 3D Modeling darbo aplinką ir SE Isometric vaizdą.",
+      "Detalė turi būti vienas kūnas - jei ne, UNION."
+     ],
+     "komandos": [["Command:", "-VIEW"], ["Enter an option:", "SEISO"]],
+     "uzuominos": [
+      "Vienas kūnas: spustelėjus bet kurią detalės vietą pasižymi visa detalė.",
+      "Jei detalė sudaryta iš kelių dalių - UNION, pažymėk viską, Enter."
+     ],
+     "tikslas": "Viena detalė 100 × 60 × 60"
+    },
+    {
+     "id": "pj-ispjova",
+     "pavadinimas": "Ketvirtinė išpjova: BOX + SUBTRACT",
+     "xp": 15,
+     "kodel": "Ketvirtinė išpjova - iš detalės išimamas ketvirtis, kad matytųsi vidus: kiaurymė ir sienelių storis. Aksonometrijoje ji atstoja atskirą pjūvį.",
+     "zingsniai": [
+      "Nubraižyk dėžę, kuri uždengia priekinį dešinį ketvirtį - nuo detalės vidurio iki kampo, per visą aukštį.",
+      "SUBTRACT: pirma pažymi detalę (IŠ KO), Enter, tada dėžę (KĄ), Enter."
+     ],
+     "komandos": [
+      ["Command:", "BOX"],
+      ["Specify first corner:", "50,0,0"],
+      ["Specify other corner:", "100,30,0"],
+      ["Specify height:", "60"],
+      ["Command:", "SUBTRACT"],
+      ["Select solids... to subtract from:", "(detalė) Enter"],
+      ["Select solids... to subtract:", "(dėžė) Enter"]
+     ],
+     "uzuominos": [
+      "Ketvirtis prasideda detalės viduryje: x = 50 (pusė iš 100), y = 30 (pusė iš 60).",
+      "Išpjovei ne tą ketvirtį? U atšaukia, ir bandyk iš naujo."
+     ],
+     "tikslas": "Matosi šešiakampė kiaurymė, tūris ~118 927 mm³"
+    },
+    {
+     "id": "pj-plokstuma",
+     "pavadinimas": "Pjūvio plokštuma: SECTIONPLANE",
+     "xp": 10,
+     "kodel": "Pjūvio plokštuma - tarsi peilis: parodo, kur detalė perpjaunama. Iš jos AutoCAD rodo pjūvį ir 3D vaizde, ir lape.",
+     "zingsniai": [
+      "Įvesk SECTIONPLANE.",
+      "Pasirink Orthographic (O) ir Front - plokštuma eis per detalės vidurį lygiagrečiai priekiui.",
+      "Spustelėk plokštumą ir patempk rodyklę - pamatysi, kaip keičiasi pjūvis."
+     ],
+     "komandos": [
+      ["Command:", "SECTIONPLANE"],
+      ["Select face or any point to locate section line or [Draw section/Orthographic/Type]:", "O"],
+      ["Align section to: [Front/bAck/Top/Bottom/Left/Right]:", "Front"]
+     ],
+     "uzuominos": [
+      "Plokštuma atrodo kaip permatomas stačiakampis su rodykle - rodyklė rodo, į kurią pusę žiūrima.",
+      "Gyvas pjūvis: spustelėk plokštumą → dešinys pelės mygtukas → Activate live sectioning."
+     ],
+     "tikslas": "Pjūvio plokštuma per detalę"
+    },
+    {
+     "id": "pj-vaizdas",
+     "pavadinimas": "Pagrindinis vaizdas lape: VIEWBASE",
+     "xp": 15,
+     "kodel": "VIEWBASE jau pažįsti iš pamokos „Projekcijos iš 3D modelio“: jis iš 3D modelio pats nubraižo 2D vaizdus lape. Matmenys visada sutampa su modeliu, o pakeitus modelį vaizdai atsinaujina.",
+     "zingsniai": [
+      "Spustelėk lapo kortelę Layout1 apačioje.",
+      "Įvesk VIEWBASE, pasirink Model, orientaciją Front ir mastelį 1:2.",
+      "Padėk vaizdą lapo kairėje viršuje ir spausk Enter. Projekcijų dar nedėk - dar kartą Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(spustelėk lape)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "AutoCAD sako „Unknown command VIEWBASE“? Tavo AutoCAD neturi Model Documentation (pvz. AutoCAD LT) - šį ir kitus du žingsnius gali praleisti.",
+      "Vaizdą perkelti: spustelėk jį ir tempk mėlyną kvadratėlį."
+     ],
+     "tikslas": "Lape yra vaizdas iš priekio"
+    },
+    {
+     "id": "pj-pjuvis",
+     "pavadinimas": "Pjūvis A–A: VIEWSECTION",
+     "xp": 20,
+     "kodel": "Pjūvis rodo detalės vidų taip, lyg ji būtų perpjauta. Pjūvio vietą žymi linija su raidėmis A–A, o perpjauta medžiaga brūkšniuojama.",
+     "zingsniai": [
+      "Įvesk VIEWSECTION ir spustelėk pagrindinį vaizdą.",
+      "Tipas Full. Spustelėk du taškus per vaizdo vidurį - pradėk ir baik už detalės ribų.",
+      "Spausk Enter ir padėk pjūvį po vaizdu."
+     ],
+     "komandos": [
+      ["Command:", "VIEWSECTION"],
+      ["Select parent view:", "(pagrindinis vaizdas)"],
+      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
+      ["Specify start point:", "(kairėje už detalės)"],
+      ["Specify end point:", "(dešinėje už detalės) Enter"],
+      ["Specify location of section view:", "(po vaizdu)"]
+     ],
+     "uzuominos": [
+      "Vidurį pagauk su OSNAP Midpoint, tada patrauk pelę į šoną ir spustelėk už detalės.",
+      "Raidės A–A uždedamos pačios. Pakeisti - spustelėk pjūvio liniją."
+     ],
+     "tikslas": "Lape yra pjūvis A–A su brūkšniuote"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kuria komanda iš 3D modelio sukuriamas 2D vaizdas lape?",
+     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
+     "t": 0,
+     "p": "VIEWBASE sukuria pagrindinį vaizdą; nuo jo kuriami projekciniai vaizdai ir pjūviai."
+    },
+    {
+     "k": "Ketvirtinei išpjovai iš detalės atimama dėžė. Kokia komanda?",
+     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
+     "t": 2,
+     "p": "SUBTRACT: pirma IŠ KO (detalė), tada KĄ (dėžė)."
+    },
+    {
+     "k": "Kaip pjūvyje žymima perpjauta metalinė detalė?",
+     "v": ["Storesne linija", "Plonu brūkšniavimu 45° kampu", "Raudona spalva", "Taškais"],
+     "t": 1,
+     "p": "Metalas brūkšniuojamas plonomis lygiagrečiomis linijomis 45° kampu (ANSI31)."
+    }
+   ]
+  },
+  {
+   "id": "schema",
+   "pavadinimas": "Elektrinė schema su blokais",
+   "trukme": "~25 min.",
+   "aprasas": "Ženklas, atributai (ATTDEF), blokas (BLOCK), įterpimas (INSERT) ir aprašo lentelė (DATAEXTRACTION).",
+   "pabaiga": "Moki kurti blokus su atributais ir sudaryti aprašo lentelę - tai pagrindas schemų darbui.",
+   "zingsniai": [
+    {
+     "id": "naujas_sch",
+     "pavadinimas": "Naujas brėžinys schemai",
+     "xp": 5,
+     "kodel": "Schemą braižom švariame brėžinyje, kad nesusimaišytų su plokšte.",
+     "zingsniai": ["Sukurk naują brėžinį iš acadiso.dwt (kaip pamokoje „Failas ir formatai“)."],
+     "komandos": [["Command:", "NEW"], ["Select template:", "acadiso.dwt"]],
+     "uzuominos": ["Ctrl+N - greitas naujas brėžinys."]
+    },
+    {
+     "id": "zenklas",
+     "pavadinimas": "Rezistoriaus ženklas",
+     "xp": 15,
+     "kodel": "Visi schemos ženklai vienodo ilgio - 20 mm. Rezistorius: stačiakampis 10 × 4 ir du išvadai.",
+     "zingsniai": ["Nubraižyk:"],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Points:", "0,0 → 5,0"],
+      ["Command:", "RECTANG"],
+      ["Corners:", "5,-2 → 15,2"],
+      ["Command:", "LINE"],
+      ["Points:", "15,0 → 20,0"]
+     ],
+     "uzuominos": ["Ženklas ilgas 20: 5 + 10 + 5."],
+     "tikslas": "Ženklas 20 × 4"
+    },
+    {
+     "id": "attdef",
+     "pavadinimas": "Atributai: ATTDEF",
+     "xp": 20,
+     "kodel": "Atributas - laukelis bloke. POZ (R1, R2...) matomas schemoje, NUORODA (1 kΩ) - nematomas, bet patenka į aprašo lentelę.",
+     "zingsniai": ["Įvesk ATTDEF du kartus:"],
+     "komandos": [
+      ["ATTDEF 1:", "Tag: POZ · Prompt: Pozicinis žymuo · Default: R · taškas 7,4"],
+      ["ATTDEF 2:", "pažymėk Invisible · Tag: NUORODA · taškas 7,-7"]
+     ],
+     "uzuominos": ["Tag - stulpelio vardas aprašo lentelėje.", "Invisible varnelė - kairėje lango pusėje (Mode)."],
+     "tikslas": "Atributai POZ ir NUORODA"
+    },
+    {
+     "id": "block",
+     "pavadinimas": "Blokas: BLOCK",
+     "xp": 20,
+     "kodel": "Blokas - ženklas, kurį nubraižai vieną kartą ir įterpi kiek nori. Pakeitus bloką, pasikeičia visi.",
+     "zingsniai": ["Įvesk BLOCK:"],
+     "komandos": [
+      ["Command:", "BLOCK"],
+      ["Name:", "REZISTORIUS"],
+      ["Base point:", "0,0"],
+      ["Objects:", "(pažymėk ženklą ir abu atributus)"],
+      ["", "Delete → OK"]
+     ],
+     "uzuominos": [
+      "Base point 0,0 - kairysis išvadas, už jo „tempsi“ bloką.",
+      "Delete - ženklas dingsta, bet blokas lieka atmintyje."
+     ],
+     "tikslas": "Blokas REZISTORIUS su atributais"
+    },
+    {
+     "id": "insert",
+     "pavadinimas": "Įterpk 3 rezistorius: INSERT",
+     "xp": 20,
+     "kodel": "Kiekvieną kartą įterpiant, AutoCAD paklaus atributų reikšmių.",
+     "zingsniai": ["INSERT → REZISTORIUS → padėk 3 kartus:"],
+     "komandos": [
+      ["Command:", "INSERT"],
+      ["Name:", "REZISTORIUS"],
+      ["Pozicinis žymuo:", "R1 (R2, R3)"],
+      ["Nuoroda:", "1 kΩ"]
+     ],
+     "uzuominos": ["Jei atributų neklausia - ATTREQ → 1.", "Klaidingą reikšmę pataisysi dukart spustelėjęs ant bloko."],
+     "tikslas": "R1, R2, R3"
+    },
+    {
+     "id": "lentele",
+     "pavadinimas": "Aprašo lentelė: DATAEXTRACTION",
+     "xp": 25,
+     "kodel": "Aprašo lentelė sudaroma automatiškai iš blokų atributų - nereikia nieko perrašinėti ranka.",
+     "zingsniai": ["Įvesk DATAEXTRACTION ir eik per vedlį:"],
+     "komandos": [
+      ["Command:", "DATAEXTRACTION"],
+      ["", "Create new → išsaugok .dxe"],
+      ["Objects:", "tik REZISTORIUS"],
+      ["Properties:", "Attribute (POZ, NUORODA)"],
+      ["Output:", "Insert data extraction table"]
+     ],
+     "uzuominos": ["Count stulpelis - kiek tokių elementų.", "Lentelę padėk šalia schemos."],
+     "tikslas": "Lentelė su rezistoriais"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kodėl NUORODA atributas nustatomas Invisible?",
+     "v": [
+      "Kad neužimtų vietos schemoje, bet būtų lentelėje",
+      "Kad jo nebūtų nieur",
+      "Kad būtų raudonas",
+      "Taip greičiau"
+     ],
+     "t": 0,
+     "p": "Nematomas schemoje, bet DATAEXTRACTION jį paima į aprašo lentelę."
+    },
+    {
+     "k": "Ką daro BLOCK parinktis Delete?",
+     "v": ["Ištrina bloką", "Ištrina pradinius objektus, blokas lieka atmintyje", "Ištrina atributus", "Nieko"],
+     "t": 1,
+     "p": "Objektai dingsta iš brėžinio, o blokas lieka - įterpsi jį INSERT."
+    },
+    {
+     "k": "Kokio ilgio daromi schemos ženklai šioje pamokoje?",
+     "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
+     "t": 2,
+     "p": "Vienodas ilgis - laidus lengva sujungti."
     }
    ]
   }
