@@ -17,15 +17,19 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] Jei įdiegtos dvi AutoCAD versijos - prisijungia prie tos, kuri atidaryta (ne tik naujausios).
 
 ## 3. Pamokos (po vieną žingsnį iš kelių pamokų)
-- [ ] Pamokų sąrašas eina tokia tvarka: Failas ir formatai, 2D brėžinys, Šriftai ir tekstas, Matmenys, A3 lapas,
-      Pirmoji 3D detalė, Projekcijos, Aksonometrija, Pjūviai, Elektrinė schema.
+- [ ] Pamokų sąrašas: Failas ir formatai, Kampinis įrašas, 2D brėžinys, Šriftai ir tekstas, Matmenys,
+      Pirmoji 3D detalė, Projekcijos, Aksonometrija, Pjūviai, Elektrinė schema, A3 lapas (paskutinė).
 - [ ] 1 pamoka („Failas ir formatai“): naujas brėžinys iš acadiso.dwt → „Patikrinti“ priima.
-- [ ] 2 pamoka („2D brėžinys“): „Parodyk man“ nubraižo plokštę; automatinis tikrinimas pastebi atliktą žingsnį.
+- [ ] 2 pamoka („Kampinis įrašas“): visi 4 žingsniai priimami; be vertikalios linijos 295,5 → 295,45 - aiški pastaba;
+      išsaugotas `Kampinis_irasas.dwg`.
+- [ ] 3 pamoka („2D brėžinys“): „Parodyk man“ nubraižo plokštę; automatinis tikrinimas pastebi atliktą žingsnį.
 - [ ] 6 pamoka („Pirmoji 3D detalė“): BOX žingsnis - specialiai suklysk (z = 10) ir pažiūrėk, ar paaiškinimas aiškus.
 - [ ] 7 pamoka („Projekcijos“): 1, 3 ir 4 vaizdai A3 lape atpažįstami.
 - [ ] 8 pamoka („Aksonometrija“): visi 4 žingsniai su „Parodyk man“ ir tikrinimu.
 - [ ] 9 pamoka („Pjūviai“): ketvirtinė išpjova (BOX + SUBTRACT) priimama; VIEWBASE ir VIEWSECTION žingsniai priimami
       (**pirmas kartas su tikru AutoCAD** - jei ne, `Pranešti apie klaidą` ir pažiūrėk `brezly.log`).
+- [ ] 11 pamoka („A3 lapas“): COPYBASE iš `Kampinis_irasas.dwg` (0,0) → lape PASTECLIP 0,0 → lentelė atsiduria
+      rėmelio kampe ir „Patikrinti“ priima abu paskutinius žingsnius.
 - [ ] Vedlyje „Moku pagrindus“ → atsidaro pamoka „2D brėžinys“.
 
 ## 4. Praktika
