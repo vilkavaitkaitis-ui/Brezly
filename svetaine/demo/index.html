@@ -176,7 +176,9 @@ const LAUKAI = {{LAUKAI}};
       if (BUDAS === "netlify") {
         const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
                                      body: new URLSearchParams(new FormData(f)).toString() });
-        if (!r.ok) throw new Error("HTTP " + r.status);
+        if (!r.ok) throw new Error(r.status === 404 || r.status === 405
+          ? "Registracija dar neįjungta (Netlify: Forms → Enable form detection ir įkelti svetainę iš naujo). Kodas " + r.status
+          : "Serveris atsakė klaida " + r.status + ". Bandyk po minutės.");
       } else {
         const duom = new URLSearchParams();
         for (const [laukas, entry] of Object.entries(LAUKAI)) duom.append(entry, v(laukas));
@@ -187,7 +189,8 @@ const LAUKAI = {{LAUKAI}};
       document.getElementById("aciuTekstas").textContent = "Ačiū, " + v("vardas") + "!";
       document.getElementById("forma").classList.add("issiusta");
     } catch (err) {
-      klaida("Nepavyko išsiųsti - patikrink interneto ryšį ir bandyk dar kartą.");
+      klaida(err && err.message && !/fetch|network/i.test(err.message) ? err.message
+             : "Nepavyko išsiųsti - patikrink interneto ryšį ir bandyk dar kartą.");
       btn.disabled = false; btn.textContent = "Registruotis";
     }
   });
