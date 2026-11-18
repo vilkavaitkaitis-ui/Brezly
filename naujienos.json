@@ -2,6 +2,27 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.0.3",
+   "pavadinimas": "Pirmas brėžinys - kampinis įrašas, A3 lapas - pabaigoje",
+   "aprasas": "Braižyti pradedi nuo kampinio įrašo lentelės, o paskutinėje pamokoje ją perkeli į A3 lapą su rėmeliu.",
+   "punktai": [
+    "<b>Nauja pamoka „Kampinis įrašas“</b> - pirmas brėžinys: RECTANG, LINE, TEXT ir išsaugojimas.",
+    "<b>A3 lapas su rėmeliu</b> - paskutinė pamoka: į jo kampą nukopijuoji savo kampinį įrašą.",
+    "<b>Tvarka:</b> failas → kampinis įrašas → 2D brėžinys → šriftai → matmenys → 3D detalė → projekcijos → aksonometrija → pjūviai → elektrinė schema → A3 lapas.",
+    "Tavo progresas išliko."
+   ],
+   "en": {
+    "pavadinimas": "First drawing - the title block, the A3 sheet at the end",
+    "aprasas": "You start drawing with the title block table, and in the last lesson you move it onto an A3 sheet with a border.",
+    "punktai": [
+     "<b>New lesson „Title block“</b> - your first drawing: RECTANG, LINE, TEXT and saving.",
+     "<b>A3 sheet with a border</b> - the last lesson: you copy your title block into its corner.",
+     "<b>Order:</b> file → title block → 2D drawing → fonts → dimensions → 3D part → projections → isometric → sections → electrical diagram → A3 sheet.",
+     "Your progress is kept."
+    ]
+   }
+  },
+  {
    "versija": "1.0.2",
    "pavadinimas": "Pamokos nauja, logiška tvarka",
    "aprasas": "Pamokos eina kaip inžinerinės grafikos kurse: kiekviena remiasi ankstesnėmis.",

@@ -95,6 +95,109 @@
    ]
   },
   {
+   "id": "kampinis-irasas",
+   "pavadinimas": "Kampinis įrašas",
+   "trukme": "~15 min.",
+   "aprasas": "Pirmas tavo brėžinys: kampinio įrašo lentelė 185 × 40 su RECTANG, LINE ir TEXT. Paskutinėje pamokoje ją perkelsi į A3 lapą.",
+   "pabaiga": "Nubraižei pirmą brėžinį - kampinio įrašo lentelę. Paskutinėje pamokoje ji atsidurs A3 lapo kampe.",
+   "zingsniai": [
+    {
+     "id": "ki-konturas",
+     "pavadinimas": "Lentelės kontūras: RECTANG",
+     "xp": 15,
+     "kodel": "Kampinis įrašas - brėžinio „pasas“: kas braižė, kas tikrino, mastelis. Tai lentelė 185 × 40 mm. Taškus įvedi koordinatėmis x,y: pirmas skaičius - į dešinę, antras - aukštyn.",
+     "zingsniai": ["Model erdvėje įvesk RECTANG ir du priešingus stačiakampio kampus:"],
+     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
+     "uzuominos": [
+      "415 - 230 = 185, 45 - 5 = 40.",
+      "Kodėl ne 0,0? Tai A3 lapo apatinis dešinys kampas - paskutinėje pamokoje lentelė atsidurs savo vietoje.",
+      "Nematai lentelės? Įvesk ZOOM → E (Extents)."
+     ],
+     "tikslas": "Stačiakampis 185 × 40 nuo (230,5) iki (415,45)"
+    },
+    {
+     "id": "ki-linijos",
+     "pavadinimas": "Vidinės linijos: LINE",
+     "xp": 15,
+     "kodel": "Linijos padalija lentelę į langelius: kairėje - Braižė, Tikrino, Data, dešinėje - darbo pavadinimas, mastelis ir lapas.",
+     "zingsniai": [
+      "Pirma - vertikali skiriamoji linija:",
+      "Kitos linijos - taip pat, kiekviena su atskira LINE komanda.",
+      "Kairėje horizontalios: 230,15 → 295,15; 230,25 → 295,25; 230,35 → 295,35.",
+      "Dešinėje: 295,20 → 415,20, o žemiau vertikalios 335,5 → 335,20 ir 375,5 → 375,20."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "295,5"],
+      ["Specify next point:", "295,45"],
+      ["Specify next point:", "(Enter)"]
+     ],
+     "uzuominos": [
+      "Enter baigia LINE, dar vienas Enter pradeda naują liniją.",
+      "Įjunk OSNAP (F3) - pele pataikysi tiksliai į kampus.",
+      "Suklydai? Ctrl+Z atšaukia paskutinį veiksmą."
+     ],
+     "tikslas": "Bent 4 vidinės linijos, tarp jų 295,5 → 295,45"
+    },
+    {
+     "id": "ki-tekstas",
+     "pavadinimas": "Užpildyk: TEXT",
+     "xp": 10,
+     "kodel": "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
+     "zingsniai": [
+      "Dešinėje viršuje įrašyk darbo pavadinimą (aukštis 5), kairėje eilutėje „Braižė“ - savo vardą (aukštis 2.5)."
+     ],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(spustelėk langelyje)"],
+      ["Specify height:", "5"],
+      ["Specify rotation angle:", "0"],
+      ["Enter text:", "Detalė"]
+     ],
+     "uzuominos": [
+      "Enter du kartus baigia TEXT komandą.",
+      "Tekstą perkelti gali komanda MOVE.",
+      "Gražius ISO šriftus išmoksi pamokoje „Šriftai ir tekstas“."
+     ],
+     "tikslas": "Bent 2 tekstai lentelėje"
+    },
+    {
+     "id": "ki-issaugok",
+     "pavadinimas": "Išsaugok: Kampinis_irasas.dwg",
+     "xp": 10,
+     "kodel": "Šią lentelę naudosi paskutinėje pamokoje - nukopijuosi ją į A3 lapo kampą.",
+     "zingsniai": ["Spausk Ctrl+Shift+S (SAVEAS), įrašyk vardą Kampinis_irasas → Save."],
+     "komandos": [
+      ["Command:", "SAVEAS"],
+      ["File name:", "Kampinis_irasas"],
+      ["Files of type:", "AutoCAD 2018 Drawing (*.dwg)"]
+     ],
+     "uzuominos": ["Failo varde geriau be lietuviškų raidžių - kai kurios programos jų nesupranta."],
+     "tikslas": "Failas Kampinis_irasas.dwg"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kokio dydžio kampinis įrašas šiuose brėžiniuose?",
+     "v": ["185 × 40", "210 × 297", "100 × 60", "420 × 297"],
+     "t": 0,
+     "p": "Kampinis įrašas - 185 × 40 mm, apatiniame dešiniame rėmelio kampe."
+    },
+    {
+     "k": "Ką reiškia koordinatė 230,5?",
+     "v": ["x = 230, y = 5", "Ilgis 230, plotis 5", "Kampas 230°, ilgis 5", "230 mm nuo viršaus"],
+     "t": 0,
+     "p": "Pirmas skaičius - x (į dešinę), antras - y (aukštyn)."
+    },
+    {
+     "k": "Kaip baigti LINE komandą?",
+     "v": ["Enter arba Esc", "Ctrl+S", "F3", "Delete"],
+     "t": 0,
+     "p": "Enter (arba Esc) baigia komandą, dar vienas Enter ją pakartoja."
+    }
+   ]
+  },
+  {
    "id": "2d",
    "pavadinimas": "2D brėžinys",
    "trukme": "~20 min.",
@@ -371,91 +474,6 @@
    ]
   },
   {
-   "id": "lapas",
-   "pavadinimas": "A3 lapas ir kampinis įrašas",
-   "trukme": "~15 min.",
-   "aprasas": "LAYOUTWIZARD, A3 formatas, rėmelis ir kampinio įrašo lentelė - lapas, ant kurio dėsi visus brėžinius.",
-   "pabaiga": "Moki paruošti A3 lapą su rėmeliu ir kampiniu įrašu pagal reikalavimus.",
-   "zingsniai": [
-    {
-     "id": "a3",
-     "pavadinimas": "A3 lapas: LAYOUTWIZARD",
-     "xp": 15,
-     "kodel": "Model erdvėje braižai tikrais dydžiais, o lapas (Layout / PAPER) - tai popierius, kurį spausdinsi. A3 = 420 × 297 mm.",
-     "zingsniai": ["Įvesk LAYOUTWIZARD ir eik per langus:"],
-     "komandos": [
-      ["Command:", "LAYOUTWIZARD"],
-      ["Begin:", "A3"],
-      ["Printer:", "DWG To PDF.pc3"],
-      ["Paper size:", "ISO full bleed A3 (420 x 297)"],
-      ["Orientation:", "Landscape"],
-      ["Title block:", "None"],
-      ["Define viewports:", "None"]
-     ],
-     "uzuominos": [
-      "Apačioje atsiras skirtukas „A3“ - tai tavo lapas.",
-      "Jei popieriaus sąraše nėra A3 - pirma pasirink spausdintuvą DWG To PDF."
-     ],
-     "tikslas": "Lapas A3 (420 × 297)"
-    },
-    {
-     "id": "remelis",
-     "pavadinimas": "Rėmelis",
-     "xp": 15,
-     "kodel": "Pagal standartą rėmelis kairėje 20 mm nuo krašto (segimui), kitose pusėse - 5 mm.",
-     "zingsniai": ["Būdamas lape A3 (ne Model!), sluoksnyje KONTURAS įvesk:"],
-     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "20,5"], ["Specify other corner:", "415,292"]],
-     "uzuominos": ["Patikrink, kad apačioje aktyvus skirtukas A3, o ne Model.", "420 - 5 = 415, 297 - 5 = 292."],
-     "tikslas": "Rėmelis nuo (20,5) iki (415,292)"
-    },
-    {
-     "id": "kampinis",
-     "pavadinimas": "Kampinio įrašo lentelė",
-     "xp": 15,
-     "kodel": "Kampinis įrašas - brėžinio „pasas“: kas braižė, kas tikrino, mastelis. Jis visada apatiniame dešiniame rėmelio kampe, 185 × 40.",
-     "zingsniai": ["Nubraižyk lentelės kontūrą:", "Vidines linijas nubraižyk LINE komanda pagal pavyzdį."],
-     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
-     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Įjunk OSNAP (F3) - linijos pritrauks prie kampų."],
-     "tikslas": "Lentelė 185 × 40 kampe"
-    },
-    {
-     "id": "uzpildyk",
-     "pavadinimas": "Užpildyk kampinį įrašą",
-     "xp": 10,
-     "kodel": "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
-     "zingsniai": ["Įrašyk darbo pavadinimą (aukštis 5) ir savo vardą (aukštis 2.5) į lentelės langelius."],
-     "komandos": [
-      ["Command:", "TEXT"],
-      ["Specify start point:", "(spustelėk langelyje)"],
-      ["Specify height:", "5"],
-      ["Enter text:", "Detalė"]
-     ],
-     "uzuominos": ["Enter du kartus baigia TEXT komandą.", "Tekstą perkelti gali komanda MOVE."],
-     "tikslas": "Bent 2 tekstai lentelėje"
-    }
-   ],
-   "testas": [
-    {
-     "k": "Kiek milimetrų rėmelis nutolęs nuo kairiojo lapo krašto?",
-     "v": ["5", "10", "20", "25"],
-     "t": 2,
-     "p": "Kairėje 20 mm segimui, kitur 5 mm."
-    },
-    {
-     "k": "Kur dedamas kampinis įrašas?",
-     "v": ["Viršuje kairėje", "Apačioje dešinėje", "Centre", "Bet kur"],
-     "t": 1,
-     "p": "Visada apatiniame dešiniame rėmelio kampe."
-    },
-    {
-     "k": "Koks A3 lapo dydis?",
-     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
-     "t": 1,
-     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
-    }
-   ]
-  },
-  {
    "id": "pirmoji-3d",
    "pavadinimas": "Pirmoji 3D detalė",
    "aprasas": "BOX, CYLINDER, UNION, POLYGON, EXTRUDE, SUBTRACT, WEDGE, MIRROR3D - visos komandos iš praktinio darbo „Trimatis detalės modelis“.",
@@ -679,7 +697,7 @@
      "xp": 5,
      "kodel": "Detalės brėžiniui su trimis projekcijomis ir aksonometrija reikia A3 lapo (420 × 297).",
      "zingsniai": [
-      "Jei pamokoje „A3 lapas ir kampinis įrašas“ susikūrei A3 lapą - pereik į jį (kortelė apačioje).",
+      "Jei jau turi A3 lapą - pereik į jį (kortelė apačioje). Rėmelį ir kampinį įrašą lape išmoksi paskutinėje pamokoje.",
       "Jei neturi - LAYOUTWIZARD: vardas A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
      ],
      "komandos": [["Command:", "LAYOUTWIZARD"]],
@@ -1187,6 +1205,104 @@
      "p": "Vienodas ilgis - laidus lengva sujungti."
     }
    ]
+  },
+  {
+   "id": "lapas",
+   "pavadinimas": "A3 lapas: rėmelis ir kampinis įrašas",
+   "trukme": "~15 min.",
+   "aprasas": "Paskutinė pamoka: A3 lapas (LAYOUTWIZARD), rėmelis ir tavo kampinis įrašas jo kampe - taip atrodo atiduodamas brėžinys.",
+   "pabaiga": "Baigei visas pamokas! Moki paruošti A3 lapą su rėmeliu ir kampiniu įrašu - taip atiduodamas kiekvienas brėžinys.",
+   "zingsniai": [
+    {
+     "id": "a3",
+     "pavadinimas": "A3 lapas: LAYOUTWIZARD",
+     "xp": 15,
+     "kodel": "Model erdvėje braižai tikrais dydžiais, o lapas (Layout / PAPER) - tai popierius, kurį spausdinsi. A3 = 420 × 297 mm.",
+     "zingsniai": ["Įvesk LAYOUTWIZARD ir eik per langus:"],
+     "komandos": [
+      ["Command:", "LAYOUTWIZARD"],
+      ["Begin:", "A3"],
+      ["Printer:", "DWG To PDF.pc3"],
+      ["Paper size:", "ISO full bleed A3 (420 x 297)"],
+      ["Orientation:", "Landscape"],
+      ["Title block:", "None"],
+      ["Define viewports:", "None"]
+     ],
+     "uzuominos": [
+      "Apačioje atsiras skirtukas „A3“ - tai tavo lapas.",
+      "Jei popieriaus sąraše nėra A3 - pirma pasirink spausdintuvą DWG To PDF."
+     ],
+     "tikslas": "Lapas A3 (420 × 297)"
+    },
+    {
+     "id": "remelis",
+     "pavadinimas": "Rėmelis",
+     "xp": 15,
+     "kodel": "Pagal standartą rėmelis kairėje 20 mm nuo krašto (segimui), kitose pusėse - 5 mm.",
+     "zingsniai": ["Būdamas lape A3 (ne Model!), sluoksnyje KONTURAS įvesk:"],
+     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "20,5"], ["Specify other corner:", "415,292"]],
+     "uzuominos": ["Patikrink, kad apačioje aktyvus skirtukas A3, o ne Model.", "420 - 5 = 415, 297 - 5 = 292."],
+     "tikslas": "Rėmelis nuo (20,5) iki (415,292)"
+    },
+    {
+     "id": "kampinis",
+     "pavadinimas": "Kampinis įrašas į lapą: COPYBASE",
+     "xp": 15,
+     "kodel": "Kampinį įrašą jau nubraižei pamokoje „Kampinis įrašas“. Jo koordinatės (230,5 - 415,45) sutampa su lapo kampu, todėl nukopijuotas jis atsiras ten, kur reikia.",
+     "zingsniai": [
+      "Atidaryk Kampinis_irasas.dwg, įvesk COPYBASE, bazinis taškas 0,0, pažymėk lentelę su tekstais ir spausk Enter.",
+      "Grįžk į šį brėžinį, būdamas lape A3 įklijuok:"
+     ],
+     "komandos": [["Command:", "PASTECLIP"], ["Specify insertion point:", "0,0"]],
+     "uzuominos": [
+      "Ctrl+Shift+C - tas pats COPYBASE, Ctrl+V - PASTECLIP.",
+      "Nebeturi failo? Nubraižyk lentelę čia pat lape: RECTANG → 230,5 → 415,45 ir vidines linijas, kaip pamokoje „Kampinis įrašas“."
+     ],
+     "tikslas": "Lentelė 185 × 40 lapo kampe"
+    },
+    {
+     "id": "uzpildyk",
+     "pavadinimas": "Užpildyk kampinį įrašą",
+     "xp": 10,
+     "kodel": "Neužpildytas kampinis įrašas - pirmas dalykas, ko pasiges dėstytojas.",
+     "zingsniai": [
+      "Jei kopijavai su tekstais - jie jau yra: dukart spustelėk pavadinimą ir pakeisk jį šio darbo pavadinimu.",
+      "Jei tekstų nėra - įrašyk darbo pavadinimą (aukštis 5) ir savo vardą (aukštis 2.5)."
+     ],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(spustelėk langelyje)"],
+      ["Specify height:", "5"],
+      ["Enter text:", "Detalė"]
+     ],
+     "uzuominos": [
+      "Dukart spustelėtą tekstą gali taisyti vietoje.",
+      "Enter du kartus baigia TEXT komandą.",
+      "Tekstą perkelti gali komanda MOVE."
+     ],
+     "tikslas": "Bent 2 tekstai lentelėje"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kiek milimetrų rėmelis nutolęs nuo kairiojo lapo krašto?",
+     "v": ["5", "10", "20", "25"],
+     "t": 2,
+     "p": "Kairėje 20 mm segimui, kitur 5 mm."
+    },
+    {
+     "k": "Kur dedamas kampinis įrašas?",
+     "v": ["Viršuje kairėje", "Apačioje dešinėje", "Centre", "Bet kur"],
+     "t": 1,
+     "p": "Visada apatiniame dešiniame rėmelio kampe."
+    },
+    {
+     "k": "Koks A3 lapo dydis?",
+     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
+     "t": 1,
+     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
+    }
+   ]
   }
  ],
  "ateityje": [
@@ -1254,7 +1370,7 @@
    "trump": "REC",
    "ka": "Stačiakampis pagal du priešingus kampus.",
    "pvz": "RECTANG → 0,0 → 100,60",
-   "pamoka": "2d"
+   "pamoka": "kampinis-irasas"
   },
   {
    "k": "LAYER",
@@ -1268,7 +1384,7 @@
    "trump": "L",
    "ka": "Atkarpa (linija) tarp taškų. Enter baigia.",
    "pvz": "LINE → -5,30 → 105,30",
-   "pamoka": "2d"
+   "pamoka": "kampinis-irasas"
   },
   {
    "k": "CIRCLE",
@@ -1352,7 +1468,7 @@
    "trump": "DT",
    "ka": "Vienos eilutės tekstas: taškas, aukštis, kampas.",
    "pvz": "TEXT → 0,80 → 5 → 0 → Brėžinys",
-   "pamoka": "sriftai"
+   "pamoka": "kampinis-irasas"
   },
   {
    "k": "BOX",
@@ -1408,7 +1524,7 @@
    "trump": "",
    "ka": "Iš 3D modelio sukuria 2D vaizdą lape (Model Documentation).",
    "pvz": "VIEWBASE → Model → Front, 1:2",
-   "pamoka": "pjuviai"
+   "pamoka": "projekcijos"
   },
   {
    "k": "VIEWSECTION",

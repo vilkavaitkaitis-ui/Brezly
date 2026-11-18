@@ -68,6 +68,95 @@
     }
    ]
   },
+  "kampinis-irasas": {
+   "pavadinimas": "Title block",
+   "trukme": "~15 min.",
+   "aprasas": "Your first drawing: a 185 × 40 title block table with RECTANG, LINE and TEXT. In the last lesson you will move it onto an A3 sheet.",
+   "pabaiga": "You drew your first drawing - the title block table. In the last lesson it will land in the corner of an A3 sheet.",
+   "zingsniai": {
+    "ki-konturas": {
+     "pavadinimas": "Table outline: RECTANG",
+     "kodel": "The title block is the drawing's „passport“: who drew it, who checked it, the scale. It is a 185 × 40 mm table. You enter points as x,y coordinates: the first number goes right, the second goes up.",
+     "zingsniai": ["In Model space type RECTANG and two opposite corners of the rectangle:"],
+     "komandos": [["Command:", "RECTANG"], ["Specify first corner:", "230,5"], ["Specify other corner:", "415,45"]],
+     "uzuominos": [
+      "415 - 230 = 185, 45 - 5 = 40.",
+      "Why not 0,0? This is the bottom right corner of an A3 sheet - in the last lesson the table will land in its place.",
+      "Can't see the table? Type ZOOM → E (Extents)."
+     ],
+     "tikslas": "A 185 × 40 rectangle from (230,5) to (415,45)"
+    },
+    "ki-linijos": {
+     "pavadinimas": "Inner lines: LINE",
+     "kodel": "The lines split the table into cells: on the left - Drawn, Checked, Date; on the right - the drawing title, scale and sheet.",
+     "zingsniai": [
+      "First - the vertical divider:",
+      "The other lines the same way, each with its own LINE command.",
+      "Left, horizontal: 230,15 → 295,15; 230,25 → 295,25; 230,35 → 295,35.",
+      "Right: 295,20 → 415,20, and below it the verticals 335,5 → 335,20 and 375,5 → 375,20."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "295,5"],
+      ["Specify next point:", "295,45"],
+      ["Specify next point:", "(Enter)"]
+     ],
+     "uzuominos": [
+      "Enter ends LINE, one more Enter starts a new line.",
+      "Turn on OSNAP (F3) - the mouse will snap exactly to corners.",
+      "Made a mistake? Ctrl+Z undoes the last action."
+     ],
+     "tikslas": "At least 4 inner lines, including 295,5 → 295,45"
+    },
+    "ki-tekstas": {
+     "pavadinimas": "Fill it in: TEXT",
+     "kodel": "An empty title block is the first thing your tutor will notice.",
+     "zingsniai": ["Top right: the drawing title (height 5); on the left, in the „Drawn“ row - your name (height 2.5)."],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(click inside a cell)"],
+      ["Specify height:", "5"],
+      ["Specify rotation angle:", "0"],
+      ["Enter text:", "Part"]
+     ],
+     "uzuominos": [
+      "Enter twice ends the TEXT command.",
+      "You can move text with MOVE.",
+      "You will learn proper ISO fonts in the lesson „Fonts and text“."
+     ],
+     "tikslas": "At least 2 texts in the table"
+    },
+    "ki-issaugok": {
+     "pavadinimas": "Save: Title_block.dwg",
+     "kodel": "You will use this table in the last lesson - you will copy it into the corner of an A3 sheet.",
+     "zingsniai": ["Press Ctrl+Shift+S (SAVEAS), type the name Title_block → Save."],
+     "komandos": [
+      ["Command:", "SAVEAS"],
+      ["File name:", "Title_block"],
+      ["Files of type:", "AutoCAD 2018 Drawing (*.dwg)"]
+     ],
+     "uzuominos": ["Avoid special letters in file names - some programs don't understand them."],
+     "tikslas": "File Title_block.dwg"
+    }
+   },
+   "testas": [
+    {
+     "k": "What size is the title block in these drawings?",
+     "v": ["185 × 40", "210 × 297", "100 × 60", "420 × 297"],
+     "p": "The title block is 185 × 40 mm, in the bottom right corner of the border."
+    },
+    {
+     "k": "What does the coordinate 230,5 mean?",
+     "v": ["x = 230, y = 5", "Length 230, width 5", "Angle 230°, length 5", "230 mm from the top"],
+     "p": "The first number is x (right), the second is y (up)."
+    },
+    {
+     "k": "How do you end the LINE command?",
+     "v": ["Enter or Esc", "Ctrl+S", "F3", "Delete"],
+     "p": "Enter (or Esc) ends the command, one more Enter repeats it."
+    }
+   ]
+  },
   "2d": {
    "pavadinimas": "2D drawing",
    "aprasas": "Layers, RECTANG, CIRCLE, centre lines and FILLET - you will draw a plate with holes.",
@@ -274,68 +363,6 @@
     }
    ]
   },
-  "lapas": {
-   "pavadinimas": "A3 sheet and title block",
-   "aprasas": "LAYOUTWIZARD, A3 paper, a border and the title block - the sheet you will put all your drawings on.",
-   "trukme": "~15 min.",
-   "pabaiga": "You can prepare an A3 sheet with a border and a title block as required.",
-   "zingsniai": {
-    "a3": {
-     "pavadinimas": "A3 sheet: LAYOUTWIZARD",
-     "kodel": "In Model space you draw at real size, while the sheet (Layout / PAPER) is the paper you will print. A3 = 420 × 297 mm.",
-     "zingsniai": ["Type LAYOUTWIZARD and go through the pages:"],
-     "uzuominos": [
-      "A tab called „A3“ appears at the bottom - that is your sheet.",
-      "If A3 is not in the paper list, first choose the DWG To PDF printer."
-     ],
-     "tikslas": "A3 sheet (420 × 297)"
-    },
-    "remelis": {
-     "pavadinimas": "Border",
-     "kodel": "By the standard the border is 20 mm from the left edge (for binding) and 5 mm on the other sides.",
-     "zingsniai": ["On the A3 sheet (not Model!), on layer KONTURAS (outline), type:"],
-     "uzuominos": ["Check that the A3 tab is active at the bottom, not Model.", "420 - 5 = 415, 297 - 5 = 292."],
-     "tikslas": "Border from (20,5) to (415,292)"
-    },
-    "kampinis": {
-     "pavadinimas": "Title block table",
-     "kodel": "The title block is the drawing's „passport“: who drew it, who checked it, the scale. It always sits in the bottom right corner of the border, 185 × 40.",
-     "zingsniai": ["Draw the outline of the table:", "Draw the inner lines with LINE following the example."],
-     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Turn on OSNAP (F3) - lines will snap to corners."],
-     "tikslas": "185 × 40 table in the corner"
-    },
-    "uzpildyk": {
-     "pavadinimas": "Fill in the title block",
-     "kodel": "An empty title block is the first thing your tutor will notice.",
-     "zingsniai": ["Type the drawing title (height 5) and your name (height 2.5) into the table cells."],
-     "komandos": [
-      ["Command:", "TEXT"],
-      ["Specify start point:", "(click inside a cell)"],
-      ["Specify height:", "5"],
-      ["Enter text:", "Part"]
-     ],
-     "uzuominos": ["Enter twice ends the TEXT command.", "You can move text with MOVE."],
-     "tikslas": "At least 2 texts in the table"
-    }
-   },
-   "testas": [
-    {
-     "k": "How far is the border from the left edge of the sheet?",
-     "v": ["5", "10", "20", "25"],
-     "p": "20 mm on the left for binding, 5 mm elsewhere."
-    },
-    {
-     "k": "Where does the title block go?",
-     "v": ["Top left", "Bottom right", "Centre", "Anywhere"],
-     "p": "Always in the bottom right corner of the border."
-    },
-    {
-     "k": "What size is an A3 sheet?",
-     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
-     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
-    }
-   ]
-  },
   "pirmoji-3d": {
    "pavadinimas": "First 3D part",
    "aprasas": "BOX, CYLINDER, UNION, POLYGON, EXTRUDE, SUBTRACT, WEDGE, MIRROR3D - every command from the practical work „3D part model“.",
@@ -512,7 +539,7 @@
      "pavadinimas": "A3 sheet",
      "kodel": "A part drawing with three projections and an isometric view needs an A3 sheet (420 × 297).",
      "zingsniai": [
-      "If you created an A3 sheet in the lesson „A3 sheet and title block“ - switch to it (tab at the bottom).",
+      "If you already have an A3 sheet - switch to it (tab at the bottom). You will learn the border and title block on the sheet in the last lesson.",
       "If not - LAYOUTWIZARD: name A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
      ],
      "uzuominos": [
@@ -924,6 +951,82 @@
      "k": "How long are the diagram symbols in this lesson?",
      "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
      "p": "Equal length makes the wires easy to connect."
+    }
+   ]
+  },
+  "lapas": {
+   "pavadinimas": "A3 sheet: border and title block",
+   "aprasas": "The last lesson: an A3 sheet (LAYOUTWIZARD), the border and your title block in its corner - this is how a finished drawing looks.",
+   "trukme": "~15 min.",
+   "pabaiga": "You finished all the lessons! You can prepare an A3 sheet with a border and a title block - every drawing is handed in like this.",
+   "zingsniai": {
+    "a3": {
+     "pavadinimas": "A3 sheet: LAYOUTWIZARD",
+     "kodel": "In Model space you draw at real size, while the sheet (Layout / PAPER) is the paper you will print. A3 = 420 × 297 mm.",
+     "zingsniai": ["Type LAYOUTWIZARD and go through the pages:"],
+     "uzuominos": [
+      "A tab called „A3“ appears at the bottom - that is your sheet.",
+      "If A3 is not in the paper list, first choose the DWG To PDF printer."
+     ],
+     "tikslas": "A3 sheet (420 × 297)"
+    },
+    "remelis": {
+     "pavadinimas": "Border",
+     "kodel": "By the standard the border is 20 mm from the left edge (for binding) and 5 mm on the other sides.",
+     "zingsniai": ["On the A3 sheet (not Model!), on layer KONTURAS (outline), type:"],
+     "uzuominos": ["Check that the A3 tab is active at the bottom, not Model.", "420 - 5 = 415, 297 - 5 = 292."],
+     "tikslas": "Border from (20,5) to (415,292)"
+    },
+    "kampinis": {
+     "pavadinimas": "Title block onto the sheet: COPYBASE",
+     "kodel": "You already drew the title block in the lesson „Title block“. Its coordinates (230,5 - 415,45) match the corner of the sheet, so once copied it lands exactly where it belongs.",
+     "zingsniai": [
+      "Open Title_block.dwg, type COPYBASE, base point 0,0, select the table with its texts and press Enter.",
+      "Go back to this drawing and, on the A3 sheet, paste:"
+     ],
+     "uzuominos": [
+      "Ctrl+Shift+C is the same as COPYBASE, Ctrl+V is PASTECLIP.",
+      "Don't have the file any more? Draw the table right here on the sheet: RECTANG → 230,5 → 415,45 and the inner lines, as in the lesson „Title block“."
+     ],
+     "tikslas": "A 185 × 40 table in the sheet corner",
+     "komandos": [["Command:", "PASTECLIP"], ["Specify insertion point:", "0,0"]]
+    },
+    "uzpildyk": {
+     "pavadinimas": "Fill in the title block",
+     "kodel": "An empty title block is the first thing your tutor will notice.",
+     "zingsniai": [
+      "If you copied it with texts, they are already there: double-click the title and change it to this drawing's title.",
+      "If there are no texts - type the drawing title (height 5) and your name (height 2.5)."
+     ],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(click inside a cell)"],
+      ["Specify height:", "5"],
+      ["Enter text:", "Part"]
+     ],
+     "uzuominos": [
+      "Double-clicked text can be edited in place.",
+      "Enter twice ends the TEXT command.",
+      "You can move text with MOVE."
+     ],
+     "tikslas": "At least 2 texts in the table"
+    }
+   },
+   "testas": [
+    {
+     "k": "How far is the border from the left edge of the sheet?",
+     "v": ["5", "10", "20", "25"],
+     "p": "20 mm on the left for binding, 5 mm elsewhere."
+    },
+    {
+     "k": "Where does the title block go?",
+     "v": ["Top left", "Bottom right", "Centre", "Anywhere"],
+     "p": "Always in the bottom right corner of the border."
+    },
+    {
+     "k": "What size is an A3 sheet?",
+     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
+     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
     }
    ]
   }

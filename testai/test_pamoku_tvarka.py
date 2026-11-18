@@ -12,12 +12,13 @@ SAKNIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # pamoka -> pamokos, kurių įgūdžių ar failų jai reikia
 REMIASI = {
-    "2d": ["failas"],
-    "sriftai": ["failas"],
+    "kampinis-irasas": ["failas"],          # pirmas brėžinys
+    "2d": ["kampinis-irasas"],              # RECTANG, LINE jau pažįstami
+    "sriftai": ["kampinis-irasas"],         # TEXT jau pažįstamas
     "matmenys": ["2d", "sriftai"],          # matmenys plokštei iš 2D, teksto stilius ISO_LT
-    "lapas": ["sriftai"],                   # kampinio įrašo tekstas
+    "lapas": ["kampinis-irasas", "projekcijos", "pjuviai", "schema"],   # A3 - paskutinė: kampinis įrašas į lapą
     "pirmoji-3d": ["2d"],
-    "projekcijos": ["pirmoji-3d", "lapas"],  # vaizdai iš 3D detalės A3 lape
+    "projekcijos": ["pirmoji-3d"],          # vaizdai iš 3D detalės (A3 lapą susikuria pati)
     "aksonometrija": ["matmenys"],          # DIMALIGNED + Oblique
     "pjuviai": ["pirmoji-3d", "projekcijos"],  # VIEWBASE jau pažįstamas
     "schema": ["sriftai"],                  # atributai - tekstas
@@ -35,6 +36,12 @@ class Tvarka(unittest.TestCase):
         for pamoka, reikia in REMIASI.items():
             for r in reikia:
                 self.assertLess(ids.index(r), ids.index(pamoka), f"{r} turi būti prieš {pamoka}: {ids}")
+
+    def test_kampinis_pradzioje_a3_pabaigoje(self):
+        """Pirmas bandymas braižyti - kampinio įrašo lentelė, A3 lapas - paskutinė tema."""
+        ids = [p["id"] for p in _ikelti("pamokos.json")["pamokos"]]
+        self.assertEqual(ids[:2], ["failas", "kampinis-irasas"])
+        self.assertEqual(ids[-1], "lapas")
 
     def test_angliska_tvarka_sutampa(self):
         ids = [p["id"] for p in _ikelti("pamokos.json")["pamokos"]]

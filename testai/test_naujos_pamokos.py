@@ -171,3 +171,43 @@ class Aksonometrija(Bendra):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class KampinisIrasas(unittest.TestCase):
+    """Pirmas brėžinys - kampinio įrašo lentelė Model erdvėje (pamoka „Kampinis įrašas“)."""
+
+    def _b(self, objs, failas=""):
+        class B:
+            pass
+        b = B()
+        b.ms = Talpa(objs)
+        b.doc = type("D", (), {"FullName": failas})()
+        return b
+
+    @staticmethod
+    def _linija(x0, y0, x1, y1):
+        return Obj("AcDbLine", (min(x0, x1), min(y0, y1), 0), (max(x0, x1), max(y0, y1), 0))
+
+    @staticmethod
+    def _tekstas(x, y, t="Detalė"):
+        return Obj("AcDbText", (x, y, 0), (x + 20, y + 5, 0), TextString=t, Height=5, StyleName="Standard",
+                   InsertionPoint=(x, y, 0))
+
+    def test_visa_lentele_priimama(self):
+        kontur = Obj("AcDbPolyline", (230, 5, 0), (415, 45, 0))
+        lin = [self._linija(*l) for l in P.KI_LINIJOS]
+        b = self._b([kontur] + lin + [self._tekstas(300, 28), self._tekstas(232, 27, "Braižė")],
+                    r"C:\Users\Ona\Documents\Kampinis_irasas.dwg")
+        for t in (P.t_ki_konturas, P.t_ki_linijos, P.t_ki_tekstas, P.t_ki_issaugota):
+            self.assertEqual(t(b), [], t.__name__)
+
+    def test_tipines_klaidos(self):
+        self.assertIn("RECTANG → 230,5 → 415,45", P.t_ki_konturas(self._b([Obj("AcDbPolyline", (0, 0, 0), (185, 40, 0))]))[0])
+        kontur = Obj("AcDbPolyline", (230, 5, 0), (415, 45, 0))
+        be_skirtuko = [self._linija(*l) for l in P.KI_LINIJOS[1:]]
+        self.assertIn("295,5 → 295,45", P.t_ki_linijos(self._b([kontur] + be_skirtuko))[0])
+        # 4 linijos, nubraižytos ant kontūro, vidinėmis nelaikomos
+        krastai = [self._linija(230, 5, 415, 5), self._linija(230, 45, 415, 45), self._linija(295, 5, 295, 45)]
+        self.assertIn("radau 1", P.t_ki_linijos(self._b([kontur] + krastai))[0])
+        self.assertIn("radau 1", P.t_ki_tekstas(self._b([kontur, self._tekstas(300, 28), self._tekstas(10, 10)]))[0])
+        self.assertIn("Kampinis_irasas.dwg", P.t_ki_issaugota(self._b([], r"C:\Docs\Pirmasis_brezinys.dwg"))[0])

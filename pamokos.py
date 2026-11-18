@@ -482,7 +482,90 @@ def d_pdf(b):
     b.issaugoti(os.path.join(mano_aplankas(), "Pirmasis_brezinys"), "pdf")
 
 
-# ------------------------------------------------------------- 2. LAPAS
+# ------------------------------------------------------------- KAMPINIS ĮRAŠAS (pirmas brėžinys, Model)
+# Koordinatės tos pačios kaip A3 lape (230,5 - 415,45): paskutinėje pamokoje lentelė su COPYBASE /
+# PASTECLIP 0,0 atsiduria rėmelio kampe.
+KI_X0, KI_Y0, KI_X1, KI_Y1 = 230, 5, 415, 45
+KI_LINIJOS = ((295, 5, 295, 45), (230, 15, 295, 15), (230, 25, 295, 25), (230, 35, 295, 35),
+              (295, 20, 415, 20), (335, 5, 335, 20), (375, 5, 375, 20))
+
+
+def _ki_vidaus_linijos(objs, tol=1.0):
+    """Linijos lentelės viduje (ne ant išorinio kontūro)."""
+    rez = []
+    for o in objs:
+        if o["tipas"] != "AcDbLine":
+            continue
+        (x0, y0), (x1, y1) = o["min"][:2], o["max"][:2]
+        if not (KI_X0 - tol <= x0 and x1 <= KI_X1 + tol and KI_Y0 - tol <= y0 and y1 <= KI_Y1 + tol):
+            continue
+        ant_krasto = ((abs(y0 - y1) <= tol and (abs(y0 - KI_Y0) <= tol or abs(y0 - KI_Y1) <= tol))
+                      or (abs(x0 - x1) <= tol and (abs(x0 - KI_X0) <= tol or abs(x0 - KI_X1) <= tol)))
+        if not ant_krasto:
+            rez.append(o)
+    return rez
+
+
+def t_ki_konturas(b):
+    if not staciakampis(objektai(b.ms), KI_X0, KI_Y0, KI_X1, KI_Y1):
+        return [tr("Neradau lentelės kontūro. Model erdvėje: RECTANG → 230,5 → 415,45 (185 × 40).",
+                   "No table outline found. In Model space: RECTANG → 230,5 → 415,45 (185 × 40).")]
+    return []
+
+
+def d_ki_konturas(b):
+    _pl(b.ms, [(KI_X0, KI_Y0), (KI_X1, KI_Y0), (KI_X1, KI_Y1), (KI_X0, KI_Y1)])
+
+
+def t_ki_linijos(b):
+    objs = objektai(b.ms)
+    if not staciakampis(objs, KI_X0, KI_Y0, KI_X1, KI_Y1):
+        return [tr("Pirma nubraižyk lentelės kontūrą (ankstesnis žingsnis).", "Draw the table outline first (previous step).")]
+    vid = _ki_vidaus_linijos(objs)
+    skirtukas = any(abs(o["min"][0] - 295) <= 1 and abs(o["max"][0] - 295) <= 1 and o["min"][1] <= KI_Y0 + 1
+                    and o["max"][1] >= KI_Y1 - 1 for o in vid)
+    if not skirtukas:
+        return [tr("Trūksta vertikalios skiriamosios linijos: LINE → 295,5 → 295,45.",
+                   "The vertical divider is missing: LINE → 295,5 → 295,45.")]
+    if len(vid) < 4:
+        return [tr(f"Lentelės viduje radau {len(vid)} linijas(-ų), reikia bent 4 (pagal pavyzdį - 7).",
+                   f"Found {len(vid)} line(s) inside the table, need at least 4 (the example has 7).")]
+    return []
+
+
+def d_ki_linijos(b):
+    for (x0, y0, x1, y1) in KI_LINIJOS:
+        b.ms.AddLine(A.taskas(x0, y0), A.taskas(x1, y1))
+
+
+def t_ki_tekstas(b):
+    viduj = [t for t in tekstai(objektai(b.ms))
+             if KI_X0 - 1 <= t["p"][0] <= KI_X1 + 1 and KI_Y0 - 1 <= t["p"][1] <= KI_Y1 + 1]
+    if len(viduj) < 2:
+        return [tr(f"Lentelėje radau {len(viduj)} tekstą(-us). Įrašyk bent darbo pavadinimą ir savo vardą (TEXT).",
+                   f"Found {len(viduj)} text(s) in the table. Write at least the drawing title and your name (TEXT).")]
+    return []
+
+
+def d_ki_tekstas(b):
+    b.ms.AddText(tr("Detalė", "Part"), A.taskas(300, 28), 5)
+    b.ms.AddText(tr("Braižė", "Drawn"), A.taskas(232, 27), 2.5)
+    b.ms.AddText(tr("Vardas Pavardė", "Name Surname"), A.taskas(250, 27), 2.5)
+
+
+def t_ki_issaugota(b):
+    vardas = os.path.basename((getattr(b.doc, "FullName", "") or "").lower())
+    if not vardas.endswith(".dwg") or not any(z in vardas for z in ("kampin", "title")):
+        return [tr("Išsaugok brėžinį vardu Kampinis_irasas.dwg (SAVEAS) - jo prireiks paskutinėje pamokoje.",
+                   "Save the drawing as Title_block.dwg (SAVEAS) - you will need it in the last lesson.")]
+    return []
+
+
+def d_ki_issaugoti(b):
+    b.issaugoti(os.path.join(mano_aplankas(), tr("Kampinis_irasas", "Title_block")), "dwg")
+
+
+# ------------------------------------------------------------- A3 LAPAS (paskutinė pamoka)
 def t_a3(b):
     L = a3_lapas(b)
     if not L:
@@ -1196,6 +1279,10 @@ TIKRINIMAS = {
     "dwg": (t_issaugota, d_issaugoti),
     "pdf": (t_pdf, d_pdf),
     # lapas
+    "ki-konturas": (t_ki_konturas, d_ki_konturas),
+    "ki-linijos": (t_ki_linijos, d_ki_linijos),
+    "ki-tekstas": (t_ki_tekstas, d_ki_tekstas),
+    "ki-issaugok": (t_ki_issaugota, d_ki_issaugoti),
     "a3": (t_a3, d_a3),
     "remelis": (t_remelis, d_remelis),
     "kampinis": (t_kampinis, d_kampinis),
