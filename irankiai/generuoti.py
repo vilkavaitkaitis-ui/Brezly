@@ -1,11 +1,12 @@
 """
 Brėžly: failai, kurie kuriami iš vieno šaltinio (pamokos.json ir praktika/uzduotys.json).
 
-  python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą
-                                              ir sukuria programėlę aplanke isvestis/programele
+  python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą ir sukuria svetainę
+                                              isvestis/svetaine: atsisiuntimo puslapis + programele/
+  python irankiai/generuoti.py --netlify    - papildomai isvestis/Brezly_svetaine(.zip) Netlify'ui (demo registracija - Netlify Forms)
   python irankiai/generuoti.py --tikrinti   - tik patikrina, ar lisp/Brezly.lsp atnaujintas (GitHub Actions)
 
-Programėlę išbandyti: python -m http.server -d isvestis/programele 8000  ->  http://localhost:8000
+Išbandyti: python -m http.server -d isvestis/svetaine 8000  ->  http://localhost:8000 (programėlė - /programele/)
 """
 
 import hashlib
@@ -21,7 +22,9 @@ sys.path.insert(0, SAKNIS)
 UZDUOTYS = os.path.join(SAKNIS, "praktika", "uzduotys.json")
 LISP = os.path.join(SAKNIS, "lisp", "Brezly.lsp")
 APP = os.path.join(SAKNIS, "app")
-PROGRAMELE = os.path.join(SAKNIS, "isvestis", "programele")
+SVETAINES_SALTINIS = os.path.join(SAKNIS, "svetaine")
+SVETAINE = os.path.join(SAKNIS, "isvestis", "svetaine")          # -> gh-pages
+NETLIFY = os.path.join(SAKNIS, "isvestis", "Brezly_svetaine")    # -> Netlify (nutempti aplanką)
 
 LISP_PRADZIA = ";;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti"
 LISP_PABAIGA = ";;; </uzduotys>"
@@ -87,10 +90,61 @@ def lisp_atnaujintas(d):
 
 
 # ------------------------------------------------------------------ programėlė (PWA)
-def programele(d):
+def svetaine(d, kur=SVETAINE, budas="google"):
+    """Atsisiuntimo puslapis (svetaine/) su skaičiais iš pamokų ir užduočių + demo/ + programėlė programele/.
+    budas - kur demo registracija siunčia duomenis: "google" (Google Forma, forma.json) arba "netlify" (Netlify Forms)."""
     import pamokos      # be pywin32 importuojasi (AutoCAD nereikia)
-    if os.path.exists(PROGRAMELE):
-        shutil.rmtree(PROGRAMELE)
+    if os.path.exists(kur):
+        shutil.rmtree(kur)
+    shutil.copytree(SVETAINES_SALTINIS, kur)
+    for ikona in ("icon-192.png", "icon-512.png"):
+        shutil.copy2(os.path.join(APP, ikona), kur)
+    import html
+    with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
+        forma = json.load(f)
+    zym = {"{{PAMOKOS}}": len(pamokos.PAMOKOS), "{{ZINGSNIAI}}": sum(len(p["zingsniai"]) for p in pamokos.PAMOKOS),
+           "{{UZDUOTYS}}": len(d["uzduotys"]), "{{VERSIJA}}": _versija(),
+           "{{ATEITYJE}}": "\n".join(f'        <li><b>{html.escape(a["pavadinimas"])}</b><span>{html.escape(a["aprasas"])}</span></li>'
+                                     for a in pamokos.ATEITYJE),
+           "{{FORMA}}": forma["forma"] if forma["forma"] else "{{FORMA}}",
+           "{{LAUKAI}}": json.dumps(forma["laukai"]), "{{BUDAS}}": budas}
+    with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
+        nust = json.load(f)
+    # <!--ZYME-->...<!--/ZYME--> blokai: paliekami arba išmetami pagal nustatymai.json
+    blokai = {"ATIDARYTA": nust["atsisiuntimas"], "UZDARYTA": not nust["atsisiuntimas"], "PROGRAMELE": nust["programele"]}
+    for sakn, _, vardai in os.walk(kur):
+        for v in vardai:
+            if v.endswith(".html"):
+                kelias = os.path.join(sakn, v)
+                with open(kelias, encoding="utf-8") as f:
+                    s = f.read()
+                for zyme, rodyti in blokai.items():
+                    s = re.sub(rf"<!--{zyme}-->\n?(.*?)<!--/{zyme}-->\n?", (lambda m: m.group(1)) if rodyti else "", s, flags=re.S)
+                for k, reiksme in zym.items():
+                    if k != "{{FORMA}}" or reiksme != k:
+                        s = s.replace(k, str(reiksme))
+                with open(kelias, "w", encoding="utf-8") as f:
+                    f.write(s)
+    os.remove(os.path.join(kur, "demo", "forma.json"))
+    os.remove(os.path.join(kur, "nustatymai.json"))
+    if budas == "netlify":
+        os.remove(os.path.join(kur, "sw.js"))       # senos programėlės valytojas reikalingas tik GitHub Pages adrese
+    else:
+        open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
+    if not nust["programele"]:
+        return 0
+    return programele(d, pamokos, os.path.join(kur, "programele"))
+
+
+def _versija():
+    try:
+        with open(os.path.join(SAKNIS, "versija.txt"), encoding="utf-8") as f:
+            return f.read().strip().lstrip("vV") or "naujausia"
+    except OSError:
+        return "naujausia"
+
+
+def programele(d, pamokos, PROGRAMELE):
     shutil.copytree(APP, PROGRAMELE)
     with open(os.path.join(PROGRAMELE, "pamokos.json"), "w", encoding="utf-8") as f:
         json.dump(pamokos.viesai(), f, ensure_ascii=False, separators=(",", ":"))
@@ -115,12 +169,11 @@ def programele(d):
     sw = os.path.join(PROGRAMELE, "sw.js")
     with open(sw, encoding="utf-8") as f:
         s = f.read()
-    s = re.sub(r'const VERSIJA = "[^"]*";', f'const VERSIJA = "brezly-app-{h.hexdigest()[:10]}";', s, count=1)
+    s = re.sub(r'const VERSIJA = "[^"]*";', f'const VERSIJA = "brezly-programele-{h.hexdigest()[:10]}";', s, count=1)
     s = re.sub(r"const FAILAI = \[.*?\];", "const FAILAI = " + json.dumps(["./"] + failai, indent=1) + ";", s,
                count=1, flags=re.S)
     with open(sw, "w", encoding="utf-8") as f:
         f.write(s)
-    open(os.path.join(PROGRAMELE, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
     return len(failai)
 
 
@@ -137,8 +190,15 @@ def main():
         with open(LISP, "w", encoding="ascii", newline="") as f:
             f.write(naujas)
         print("Atnaujinta: lisp/Brezly.lsp")
-    n = programele(d)
-    print(f"Programėlė: {os.path.relpath(PROGRAMELE, SAKNIS)} ({n} failai)")
+    n = svetaine(d)
+    with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
+        nust = json.load(f)
+    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} - atsisiuntimas {'atidarytas' if nust['atsisiuntimas'] else 'UŽDARYTAS'}, "
+          f"programėlė {'yra' if nust['programele'] else 'NEĮDĖTA'} ({n} programėlės failai)")
+    if "--netlify" in sys.argv:
+        svetaine(d, NETLIFY, "netlify")
+        zipas = shutil.make_archive(NETLIFY, "zip", NETLIFY)
+        print(f"Netlify: {os.path.relpath(NETLIFY, SAKNIS)} (aplankas) ir {os.path.relpath(zipas, SAKNIS)}")
 
 
 if __name__ == "__main__":

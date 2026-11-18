@@ -4,7 +4,7 @@
 
 ## ⬇ Atsisiųsti
 
-**[Brėžly programėlė – atidaryk ir spausk „Įdiegti“](https://vilkavaitkaitis-ui.github.io/Brezly/)** (veikia ir kai Windows blokuoja .exe)
+**[Atsisiuntimo puslapis](https://vilkavaitkaitis-ui.github.io/Brezly/)** · **[Programėlė naršyklėje](https://vilkavaitkaitis-ui.github.io/Brezly/programele/)** (veikia ir kai Windows blokuoja .exe)
 
 **[Brezly_Setup.exe – naujausia versija](../../releases/latest/download/Brezly_Setup.exe)**
 
@@ -49,21 +49,22 @@ ir AutoCAD komandų eilutėje įrašyk `(load (getfiled "Brezly" "" "txt" 0))` �
 | Pamokų tekstai | `pamokos.json` (naudoja ir programa, ir programėlė) |
 | Pamokų tikrinimas AutoCAD'e | `pamokos.py` – žodynas `TIKRINIMAS`: žingsnio id → (tikrinti, parodyti) |
 | Praktikos užduotys ir taisyklės | `praktika/uzduotys.json` (naudoja programa, programėlė ir AutoCAD priedas) |
-| Programėlė (PWA) | `app/` – šaltinis; skelbiama automatiškai į `gh-pages` |
+| Atsisiuntimo puslapis | `svetaine/index.html` → https://vilkavaitkaitis-ui.github.io/Brezly/ |
+| Programėlė (PWA) | `app/` → `/Brezly/programele/`; abu skelbiami automatiškai į `gh-pages` |
 | AutoCAD priedas | `lisp/Brezly.lsp` – užduočių blokas generuojamas |
 | Brėžly Pilotas (sena programa) | `programa.py`, `ui.html`, `meniu.py`, `kalba.py`, `langas.py` |
 
 **Pakeitei pamoką ar užduotį?** Redaguok `pamokos.json` arba `praktika/uzduotys.json`, tada:
 
 ```
-python irankiai/generuoti.py                 # atnaujina lisp/Brezly.lsp ir sukuria isvestis/programele
+python irankiai/generuoti.py                 # atnaujina lisp/Brezly.lsp ir sukuria isvestis/svetaine
 python -m unittest discover -s testai -v     # testai (AutoCAD nereikia; veikia ir ne Windows)
 ```
 
-Programėlę galima išbandyti: `python -m http.server -d isvestis/programele 8000` → http://localhost:8000.
+Svetainę ir programėlę galima išbandyti: `python -m http.server -d isvestis/svetaine 8000` → http://localhost:8000 (programėlė – `/programele/`).
 Sąsają be AutoCAD: `python brezly.py` (ne Windows – be AutoCAD ryšio, bet visi langai veikia).
 
 **Išleidimas.** Actions → „Brėžly diegimo programa“ → Run workflow su versija (pvz. `1.0`):
 testai → `Brezly_Setup.exe`, `Brezly_programa.zip`, `Brezly.lsp` → Release, įdiegtos programos pasiūlo atnaujinti.
-Programėlė į https://vilkavaitkaitis-ui.github.io/Brezly/ pasiskelbia pati („Brėžly programėlė“), kai `main` šakoje pasikeičia `app/`, `pamokos.json` ar `praktika/`.
+Svetainė ir programėlė pasiskelbia pačios („Brėžly programėlė“), kai `main` šakoje pasikeičia `svetaine/`, `app/`, `pamokos.json` ar `praktika/`.
 Į surinkimą įtraukiami failai išvardyti vienoje vietoje – `irankiai/surinkti.py`.
