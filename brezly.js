@@ -14,6 +14,20 @@ function planuotiSaugojima(dabar){
 let DEMO_S=null;     // demo režimas: tikras progresas laikomas čia, rodomas pavyzdinis
 addEventListener("pagehide",()=>{try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
 async function api(kelias,duom){const r=await fetch(kelias,duom===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(duom)});return r.json();}
+/* Sąsajos klaidos -> brezly.log (Dokumentai\Brezly), kad „Pranešti apie klaidą“ ataskaitoje jos būtų */
+const JS_KLAIDOS={n:0,matytos:new Set()};
+function uzrasytiKlaida(zinute,vieta,deklas){
+  try{
+    const raktas=String(zinute).slice(0,200)+"|"+vieta;
+    if(JS_KLAIDOS.n>=20||JS_KLAIDOS.matytos.has(raktas)) return;
+    JS_KLAIDOS.n++; JS_KLAIDOS.matytos.add(raktas);
+    fetch("/api/js_klaida",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({zinute:String(zinute).slice(0,500),vieta:String(vieta||"").slice(0,200),
+        deklas:String(deklas||"").slice(0,1500),rodinys:typeof rodinys!=="undefined"?rodinys:""})}).catch(()=>{});
+  }catch(e){}
+}
+window.addEventListener("error",e=>uzrasytiKlaida(e.message,(e.filename||"").split("/").pop()+":"+e.lineno+":"+e.colno,e.error&&e.error.stack));
+window.addEventListener("unhandledrejection",e=>uzrasytiKlaida("Promise: "+((e.reason&&e.reason.message)||e.reason),"",e.reason&&e.reason.stack));
 function pranesti(t){const p=$("#pranesimas");p.textContent=t;p.classList.add("rodo");clearTimeout(p._t);p._t=setTimeout(()=>p.classList.remove("rodo"),2600);}
 
 const LYGIAI=[[0,"Naujokas"],[100,"Kadetas"],[250,"Braižytojas"],[450,"Konstruktorius"],[700,"Inžinierius"]];

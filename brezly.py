@@ -560,6 +560,13 @@ def ataskaita(duom):
     return {"ok": True, "kelias": kelias}
 
 
+def js_klaida(duom):
+    """Sąsajos (JavaScript) klaida -> brezly.log. Sąsaja siunčia ne daugiau kaip 20 skirtingų per paleidimą."""
+    tekstas = " | ".join(str(duom.get(k, ""))[:1500] for k in ("zinute", "vieta", "rodinys", "deklas") if duom.get(k))
+    rasyti_zurnala("Sąsajos klaida: " + tekstas.replace("\n", " ⏎ "))
+    return {"ok": True}
+
+
 def atidaryti_duomenis(_):
     _aplankas()
     if WINDOWS:
@@ -886,6 +893,7 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/prisijungti": P.prisijungti, "/api/paleisti_autocad": paleisti_autocad, "/api/ping": P.ping,
         "/api/progresas": progresas, "/api/testas": testas_atrakinti, "/api/testas_galioja": testas_patikrinti,
         "/api/langas": langas, "/api/ivykiai": ivykiai, "/api/ataskaita": ataskaita, "/api/duomenys": atidaryti_duomenis,
+        "/api/js_klaida": js_klaida,
         "/api/atnaujinimai": atnaujinimai, "/api/atnaujinti": atnaujinti, "/api/perkrauti": perkrauti,
         "/api/praktika_atidaryti": praktika_atidaryti, "/api/praktika_pdf": praktika_pdf,
         "/api/praktika_aplankas": praktika_aplankas, "/api/praktika_tikrinti": praktika_tikrinti,
