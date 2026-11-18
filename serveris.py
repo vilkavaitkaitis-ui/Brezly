@@ -27,6 +27,24 @@ from urllib.parse import parse_qs, urlparse
 PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 os.chdir(PROGRAMOS_APLANKAS)
 
+
+def _supakuota():
+    """Ar paleista iš MSIX paketo (Microsoft Store). Tada programos aplankas tik skaitomas,
+    o atnaujina Store - savo atnaujinimų nedarome."""
+    if os.environ.get("BREZLY_SUPAKUOTA"):      # testams
+        return os.environ["BREZLY_SUPAKUOTA"] == "1"
+    if sys.platform != "win32":
+        return False
+    try:
+        import ctypes
+        ilgis = ctypes.c_uint32(0)
+        return ctypes.windll.kernel32.GetCurrentPackageFullName(ctypes.byref(ilgis), None) != 15700  # NO_PACKAGE
+    except Exception:
+        return False
+
+
+SUPAKUOTA = _supakuota()
+
 import branduolys as A          # noqa: E402
 from vertimas import tr         # noqa: E402
 
@@ -239,7 +257,9 @@ def ping(_):
 # ------------------------------------------------------------------ HTTP tvarkyklė
 TIPAI = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
          ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
-         ".ico": "image/x-icon", ".svg": "image/svg+xml", ".png": "image/png", ".pdf": "application/pdf"}
+         ".ico": "image/x-icon", ".svg": "image/svg+xml", ".png": "image/png", ".pdf": "application/pdf",
+         ".woff2": "font/woff2"}
+SRIFTAI = "sriftai"             # šriftų aplankas šalia programos (sriftai.css + .woff2)
 
 
 class Tvarkykle(BaseHTTPRequestHandler):
@@ -281,6 +301,11 @@ class Tvarkykle(BaseHTTPRequestHandler):
             return self._failas(self.IKONA)
         if u.path.lstrip("/") in self.FAILAI:
             return self._failas(u.path.lstrip("/"))
+        if u.path.startswith(f"/{SRIFTAI}/"):       # tik failai, kurie tikrai yra aplanke (be ../)
+            vardas = u.path[len(SRIFTAI) + 2:]
+            aplankas = os.path.join(PROGRAMOS_APLANKAS, SRIFTAI)
+            if os.path.isdir(aplankas) and vardas in os.listdir(aplankas):
+                return self._failas(os.path.join(SRIFTAI, vardas))
         if u.path in self.VEIKSMAI:
             q = {k: v[0] for k, v in parse_qs(u.query).items()}
             return self._atsakyti(self.VEIKSMAI[u.path], q)

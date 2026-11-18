@@ -103,6 +103,7 @@ def programele(d):
     if os.path.exists(PROGRAMELE):
         shutil.rmtree(PROGRAMELE)
     shutil.copytree(APP, PROGRAMELE)
+    shutil.copytree(os.path.join(SAKNIS, "sriftai"), os.path.join(PROGRAMELE, "sriftai"))     # šriftai be Google Fonts
     with open(os.path.join(PROGRAMELE, "pamokos.json"), "w", encoding="utf-8") as f:
         json.dump(pamokos.viesai(), f, ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(PROGRAMELE, "uzduotys.js"), "w", encoding="utf-8") as f:

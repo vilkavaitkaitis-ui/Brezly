@@ -90,6 +90,52 @@ jobs:
           & $iscc "/DVersija=$env:VERSIJA" diegimas\brezly.iss
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup klaida" }
 
+      - name: MSIX paketas Microsoft Store'ui
+        shell: pwsh
+        env:   # Partner Center -> Produkto tapatybė; nenustačius - bandomoji tapatybė
+          MSIX_TAPATYBE: ${{ vars.MSIX_TAPATYBE }}
+          MSIX_LEIDEJAS: ${{ vars.MSIX_LEIDEJAS }}
+          MSIX_LEIDEJO_VARDAS: ${{ vars.MSIX_LEIDEJO_VARDAS }}
+        run: |
+          python -m pip install --upgrade pillow
+          python irankiai/msix.py
+          if ($LASTEXITCODE -ne 0) { throw "MSIX klaida" }
+
+      - name: MSIX bandomasis (pasirašytas) ir patikra - įdiegiama ir paleidžiama čia pat
+        shell: powershell      # Windows PowerShell: Appx komandos (pwsh 7 jų tiesiogiai neturi); tekstai be lietuviškų raidžių
+        run: |
+          $ns = @{ m = "http://schemas.microsoft.com/appx/manifest/foundation/windows10" }
+          $id = (Select-Xml -Path dist\msix\AppxManifest.xml -Namespace $ns -XPath "/m:Package/m:Identity").Node
+          $cert = New-SelfSignedCertificate -Type Custom -Subject $id.Publisher -KeyUsage DigitalSignature `
+            -FriendlyName "Brezly bandomasis" -CertStoreLocation Cert:\CurrentUser\My `
+            -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+          $pfx = "$env:RUNNER_TEMP\bandomasis.pfx"
+          Export-PfxCertificate -Cert $cert -FilePath $pfx -Password (ConvertTo-SecureString "brezly" -Force -AsPlainText) | Out-Null
+          Export-Certificate -Cert $cert -FilePath isvestis\Brezly_bandomasis.cer | Out-Null
+          Copy-Item isvestis\Brezly_Store.msix isvestis\Brezly_bandomasis.msix
+          $signtool = (Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.*\x64\signtool.exe" | Sort-Object FullName | Select-Object -Last 1).FullName
+          & $signtool sign /fd SHA256 /f $pfx /p brezly isvestis\Brezly_bandomasis.msix
+          if ($LASTEXITCODE -ne 0) { throw "signtool klaida" }
+          Remove-Item $pfx
+          Copy-Item diegimas\IDIEGTI_BANDOMAJI_MSIX.ps1 isvestis\
+          # idiegiame ir paleidziame per brezly.exe alias: ar pakete veikia rysio su AutoCAD dalis
+          Import-Certificate -FilePath isvestis\Brezly_bandomasis.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople | Out-Null
+          Add-AppxPackage -Path (Resolve-Path isvestis\Brezly_bandomasis.msix).Path
+          $pk = Get-AppxPackage -Name $id.Name
+          "Idiegta: $($pk.PackageFullName)"
+          $ataskaita = "$env:RUNNER_TEMP\msix_patikra.txt"
+          $env:BREZLY_PATIKRA = $ataskaita
+          Start-Process "$env:LOCALAPPDATA\Microsoft\WindowsApps\brezly.exe"
+          for ($i = 0; $i -lt 90 -and -not (Test-Path $ataskaita); $i++) { Start-Sleep 1 }
+          $t = if (Test-Path $ataskaita) { Get-Content $ataskaita -Raw } else { "(ataskaitos nera)" }
+          $t
+          Remove-AppxPackage $pk.PackageFullName
+          if ($t -notmatch "pywin32: gerai") { throw "MSIX pakete neveikia pywin32 (rysys su AutoCAD)" }
+          if ($t -notmatch "supakuota: taip") { throw "Brezly nesupranta, kad paleistas is MSIX (atnaujintu pats)" }
+          if ("$env:MSIX_TAPATYBE_YRA" -ne "true") { "::warning::MSIX su bandomaja tapatybe - Store'ui nustatyk repo kintamuosius MSIX_TAPATYBE, MSIX_LEIDEJAS, MSIX_LEIDEJO_VARDAS" }
+        env:
+          MSIX_TAPATYBE_YRA: ${{ vars.MSIX_TAPATYBE != '' }}
+
       - name: Brezly_programa.zip (atnaujinimui be .exe) ir Brezly.lsp
         run: python irankiai/surinkti.py zip
 

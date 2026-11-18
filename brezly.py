@@ -67,6 +67,8 @@ VERSIJA_BREZLY = _versija()
 LANGO_PAVADINIMAS = "Brėžly"
 # Atnaujinimų aprašas (JSON: {"versija","zip","setup","pastabos"}). Tuščias - tikrinimas išjungtas.
 def _atnaujinimu_url():
+    if P.SUPAKUOTA:             # Microsoft Store versiją atnaujina pati parduotuvė
+        return ""
     if os.environ.get("BREZLY_ATNAUJINIMAI"):
         return os.environ["BREZLY_ATNAUJINIMAI"]
     try:        # failas šalia programos: viena eilutė su adresu (pvz. GitHub atnaujinimai.json)
@@ -100,6 +102,10 @@ def dokumentu_aplankas():
 DUOM = dokumentu_aplankas()
 PROGRESAS = os.path.join(DUOM, "progresas.json")
 ZURNALAS = os.path.join(DUOM, "brezly.log")
+# Kur programa rašo savo failus (klaida.txt, kūrėjo nustatymai): šalia programos, o MSIX pakete
+# (programos aplankas tik skaitomas) - Dokumentai\Brezly
+RASOMAS_APLANKAS = DUOM if P.SUPAKUOTA else PROGRAMOS_APLANKAS
+KLAIDOS_FAILAS = os.path.join(RASOMAS_APLANKAS, "klaida.txt")
 
 
 def _aplankas():
@@ -239,7 +245,7 @@ def progresas_importuoti(duom):
 
 
 # ================================================================== testavimo įrankiai (slaptažodis)
-TESTAVIMO_FAILAS = os.path.join(PROGRAMOS_APLANKAS, "testavimas.json")
+TESTAVIMO_FAILAS = os.path.join(RASOMAS_APLANKAS, "testavimas.json")
 _TEST = {"zetonai": {}, "klaidos": 0, "uzrakinta_iki": 0.0}
 ZETONO_GALIOJIMAS = 30 * 60      # s be veiklos - kūrėjo režimas užsirakina
 
@@ -642,7 +648,7 @@ def ataskaita(duom):
         z.writestr("aprasymas.txt", str(duom.get("aprasymas", "")).strip() or "(neaprašyta)")
         z.writestr("sistema.json", json.dumps(sist, ensure_ascii=False, indent=1))
         z.writestr("rodinys.json", json.dumps(duom.get("busena", {}), ensure_ascii=False, indent=1))
-        for f in (ZURNALAS, ZURNALAS + ".1", PROGRESAS, os.path.join(PROGRAMOS_APLANKAS, "klaida.txt")):
+        for f in (ZURNALAS, ZURNALAS + ".1", PROGRESAS, KLAIDOS_FAILAS):
             if os.path.exists(f):
                 z.write(f, os.path.basename(f))
     if WINDOWS:
@@ -696,7 +702,7 @@ def _atsisiusti(url, kelias, sha256=""):
 
 def atnaujinimai(_):
     if not ATNAUJINIMU_URL:
-        return {"ok": True, "yra": False}
+        return {"ok": True, "yra": False, "parduotuve": P.SUPAKUOTA}
     try:
         d = _aprasas()
     except Exception as e:
@@ -707,6 +713,8 @@ def atnaujinimai(_):
 
 def atnaujinti(_):
     """Atsisiunčia ir įdiegia naują versiją. .exe versijai - diegimo programa tyliai, kitaip - ZIP failai."""
+    if P.SUPAKUOTA:
+        return {"ok": False, "klaida": tr("Šią versiją atnaujina Microsoft Store.", "This version is updated by Microsoft Store.")}
     d = _aprasas()
     if getattr(sys, "frozen", False):
         if not d.get("setup"):
@@ -722,12 +730,13 @@ def atnaujinti(_):
     kelias = os.path.join(tempfile.gettempdir(), "brezly_atnaujinimas.zip")
     _atsisiusti(d["zip"], kelias, d.get("zip_sha256", ""))
     with zipfile.ZipFile(kelias) as z:
-        for n in z.namelist():                     # plokšti failai + praktika/<failas> (be kitų katalogų)
-            gilus = n.startswith("praktika/") and n.count("/") == 1 and ".." not in n and len(n) > 9
+        for n in z.namelist():                     # plokšti failai + praktika/<failas>, sriftai/<failas>
+            ap, _, vardas = n.partition("/")
+            gilus = ap in ("praktika", "sriftai") and vardas and "/" not in vardas and ".." not in n
             if (("/" in n and not gilus) or "\\" in n or n.startswith(".") or n in ("testavimas.json",)):
                 continue
             if gilus:
-                os.makedirs(os.path.join(PROGRAMOS_APLANKAS, "praktika"), exist_ok=True)
+                os.makedirs(os.path.join(PROGRAMOS_APLANKAS, ap), exist_ok=True)
             with z.open(n) as src, open(os.path.join(PROGRAMOS_APLANKAS, n + ".naujas"), "wb") as dst:
                 shutil.copyfileobj(src, dst)
         for n in z.namelist():
@@ -792,7 +801,7 @@ def praktika_tikrinti(duom):
 
 # ================================================================== kūrėjo įrankiai (tik su slaptažodžiu)
 KUREJAS = {"imitacija": None}       # None | "gerai" | "blogai" - tikrinimas be AutoCAD
-FUNKCIJU_FAILAS = os.path.join(PROGRAMOS_APLANKAS, "funkcijos.json")
+FUNKCIJU_FAILAS = os.path.join(RASOMAS_APLANKAS, "funkcijos.json")
 FUNKCIJOS = ("praktika", "spinta", "lygiai", "kartoti", "profilis")
 
 
@@ -858,7 +867,7 @@ def k_zurnalas(_):
             pass
     klaida = ""
     try:
-        with open(os.path.join(PROGRAMOS_APLANKAS, "klaida.txt"), encoding="utf-8", errors="replace") as fh:
+        with open(KLAIDOS_FAILAS, encoding="utf-8", errors="replace") as fh:
             klaida = fh.read()[-4000:]
     except OSError:
         pass
@@ -999,8 +1008,10 @@ class BrezlyTvarkykle(P.Tvarkykle):
 
 if __name__ == "__main__":
     if os.environ.get("BREZLY_PATIKRA"):         # surinkimo patikra: ar .exe viduje veikia ryšio su AutoCAD dalis
-        with open(os.path.join(PROGRAMOS_APLANKAS, "patikra.txt"), "w", encoding="utf-8") as f:
-            f.write("pywin32: " + ("gerai" if P.A.win32com else "KLAIDA - " + P.A.IMPORTO_KLAIDA))
+        kur = os.environ["BREZLY_PATIKRA"]          # "1" - šalia programos, kitaip - failo kelias (MSIX patikrai)
+        with open(os.path.join(PROGRAMOS_APLANKAS, "patikra.txt") if kur == "1" else kur, "w", encoding="utf-8") as f:
+            f.write("pywin32: " + ("gerai" if P.A.win32com else "KLAIDA - " + P.A.IMPORTO_KLAIDA)
+                    + "\nsupakuota: " + ("taip" if P.SUPAKUOTA else "ne") + f"\nversija: {VERSIJA_BREZLY}\n")
         sys.exit(0 if P.A.win32com else 3)
     if WINDOWS:
         threading.Thread(target=lambda: _saugiai(klavisu_gija), daemon=True).start()
@@ -1008,6 +1019,7 @@ if __name__ == "__main__":
         P.main(BrezlyTvarkykle, 8732)
     except Exception:
         rasyti_zurnala("Paleidimas: " + traceback.format_exc())
-        with open("klaida.txt", "w", encoding="utf-8") as f:
+        os.makedirs(RASOMAS_APLANKAS, exist_ok=True)
+        with open(KLAIDOS_FAILAS, "w", encoding="utf-8") as f:
             f.write(traceback.format_exc())
         raise

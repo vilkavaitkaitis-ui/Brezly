@@ -22,6 +22,9 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 
 Reikia: Windows 10/11 ir AutoCAD (pilna versija). Progresas saugomas `Dokumentai\Brezly`.
 
+Privatumas: Brėžly apie tave nieko nesiunčia – [privatumo politika](PRIVATUMAS.md). Licencija: [MIT](LICENSE)
+(šriftai IBM Plex – [SIL OFL](sriftai/OFL.txt)).
+
 ---
 Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.
 
