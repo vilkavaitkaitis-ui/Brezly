@@ -27,6 +27,24 @@ from urllib.parse import parse_qs, urlparse
 PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 os.chdir(PROGRAMOS_APLANKAS)
 
+
+def _supakuota():
+    """Ar paleista iš MSIX paketo (Microsoft Store). Tada programos aplankas tik skaitomas,
+    o atnaujina Store - savo atnaujinimų nedarome."""
+    if os.environ.get("BREZLY_SUPAKUOTA"):      # testams
+        return os.environ["BREZLY_SUPAKUOTA"] == "1"
+    if sys.platform != "win32":
+        return False
+    try:
+        import ctypes
+        ilgis = ctypes.c_uint32(0)
+        return ctypes.windll.kernel32.GetCurrentPackageFullName(ctypes.byref(ilgis), None) != 15700  # NO_PACKAGE
+    except Exception:
+        return False
+
+
+SUPAKUOTA = _supakuota()
+
 import branduolys as A          # noqa: E402
 from vertimas import tr         # noqa: E402
 

@@ -1517,7 +1517,7 @@ async function kurtiAtaskaita(){
 async function tikrintiAtnaujinimus(rankinis){
   let r; try{ r=await api("/api/atnaujinimai"); }catch(e){ r={ok:false}; }
   if(!r.ok){ if(rankinis) pranesti("Nepavyko patikrinti - ar yra internetas?"); return; }
-  if(!r.yra){ if(rankinis) pranesti("Turi naujausią versiją ✓"); return; }
+  if(!r.yra){ if(rankinis) pranesti(r.parduotuve?"Brėžly atnaujina Microsoft Store ✓":"Turi naujausią versiją ✓"); return; }
   rodytiLangeli(`<h2>Nauja versija ${esc(r.versija)} 🎉</h2><p>${esc(r.pastabos||"Pataisymai ir patobulinimai.")}</p><p>Tavo progresas išliks.</p>
     <div class="eil"><button class="btn pagr" id="atnBtn" onclick="atnaujinti()">Atnaujinti dabar</button><button class="btn" onclick="uzdarytiLangeli()">Vėliau</button></div>`);
 }
