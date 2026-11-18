@@ -1,0 +1,11 @@
+{
+ "_aprasas": "Google Formos prijungimas demo registracijai. forma - ID iš docs.google.com/forms/d/e/<ID>/viewform; laukai - puslapio laukas -> Google Formos entry.<numeris>. Kol forma tuščia, registracijos mygtukas išjungtas.",
+ "forma": "",
+ "laukai": {
+  "vardas": "entry.0",
+  "pastas": "entry.0",
+  "istaiga": "entry.0",
+  "kas": "entry.0",
+  "autocad": "entry.0"
+ }
+}

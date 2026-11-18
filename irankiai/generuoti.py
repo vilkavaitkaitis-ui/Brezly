@@ -97,15 +97,27 @@ def svetaine(d):
     shutil.copytree(SVETAINES_SALTINIS, SVETAINE)
     for ikona in ("icon-192.png", "icon-512.png"):
         shutil.copy2(os.path.join(APP, ikona), SVETAINE)
+    import html
+    with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
+        forma = json.load(f)
     zym = {"{{PAMOKOS}}": len(pamokos.PAMOKOS), "{{ZINGSNIAI}}": sum(len(p["zingsniai"]) for p in pamokos.PAMOKOS),
-           "{{UZDUOTYS}}": len(d["uzduotys"]), "{{VERSIJA}}": _versija()}
-    kelias = os.path.join(SVETAINE, "index.html")
-    with open(kelias, encoding="utf-8") as f:
-        s = f.read()
-    for k, v in zym.items():
-        s = s.replace(k, str(v))
-    with open(kelias, "w", encoding="utf-8") as f:
-        f.write(s)
+           "{{UZDUOTYS}}": len(d["uzduotys"]), "{{VERSIJA}}": _versija(),
+           "{{ATEITYJE}}": "\n".join(f'        <li><b>{html.escape(a["pavadinimas"])}</b><span>{html.escape(a["aprasas"])}</span></li>'
+                                     for a in pamokos.ATEITYJE),
+           "{{FORMA}}": forma["forma"] if forma["forma"] else "{{FORMA}}",
+           "{{LAUKAI}}": json.dumps(forma["laukai"])}
+    for sakn, _, vardai in os.walk(SVETAINE):
+        for v in vardai:
+            if v.endswith(".html"):
+                kelias = os.path.join(sakn, v)
+                with open(kelias, encoding="utf-8") as f:
+                    s = f.read()
+                for k, reiksme in zym.items():
+                    if k != "{{FORMA}}" or reiksme != k:
+                        s = s.replace(k, str(reiksme))
+                with open(kelias, "w", encoding="utf-8") as f:
+                    f.write(s)
+    os.remove(os.path.join(SVETAINE, "demo", "forma.json"))
     open(os.path.join(SVETAINE, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
     return programele(d, pamokos)
 

@@ -9,105 +9,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
-<style>
-:root{
-  --fonas:#0d1117; --panele:#141a22; --panele2:#10151c; --kodas:#0a0e14; --linija:#283241; --linija2:#3a4558;
-  --tekstas:#e6eaf0; --blankus:#93a0b2; --vidutinis:#c3ccd8;
-  --akcentas:#f28c28; --akc-tamsus:#1a0e02; --matmenu:#56c2e6; --priimta:#3fb950; --taisyti:#f47067;
-  --sans:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif; --kond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
-  color-scheme:dark;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--fonas);color:var(--tekstas);font:15px/1.6 var(--sans)}
-h1,h2,h3,p{margin:0}
-a{color:var(--matmenu)}
-:focus-visible{outline:2px solid var(--akcentas);outline-offset:2px}
-code{font:13px var(--mono);background:var(--kodas);border:1px solid var(--linija);border-radius:4px;padding:1px 6px;color:var(--vidutinis)}
-
-.virsus{display:flex;align-items:center;gap:14px;padding:0 clamp(16px,4vw,40px);border-bottom:1px solid var(--linija);background:var(--panele2);height:52px;position:sticky;top:0;z-index:5}
-.zenklas{display:flex;align-items:center;gap:9px;font:600 15px var(--mono);letter-spacing:.18em;color:var(--tekstas);text-decoration:none}
-.tarpas{flex:1}
-.virsus nav{display:flex;gap:4px}
-.virsus nav a{color:var(--blankus);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:5px}
-.virsus nav a:hover{color:var(--tekstas);background:#161d27}
-
-.plotis{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
-.kick{font:600 12px var(--kond);letter-spacing:.14em;color:var(--akcentas);text-transform:uppercase}
-.kick.pilka{color:var(--blankus)}
-
-/* ---- pagrindinė dalis ---- */
-.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center;padding-top:64px;padding-bottom:56px}
-.hero h1{font:600 clamp(38px,5.4vw,56px)/1.05 var(--sans);letter-spacing:-.02em;margin:10px 0 16px}
-.hero h1 em{font-style:normal;color:var(--akcentas)}
-.hero .apras{color:var(--vidutinis);font-size:17px;max-width:46ch}
-.veiksmai{display:flex;flex-direction:column;gap:12px;margin-top:30px;align-items:flex-start}
-.mygt{border:0;border-radius:6px;padding:12px 20px;font:600 16px var(--sans);cursor:pointer;background:var(--akcentas);color:var(--akc-tamsus);display:inline-flex;align-items:center;gap:12px;text-decoration:none;min-height:52px}
-.mygt:hover{filter:brightness(1.07)}
-.mygt svg{width:20px;height:20px;flex-shrink:0}
-.mygt.antr{background:#1a212b;color:var(--tekstas);border:1px solid var(--linija);font-weight:500;font-size:14.5px;min-height:42px;padding:9px 16px}
-.mygt.antr:hover{border-color:var(--linija2);filter:none}
-.failo-info{font:12.5px var(--mono);color:var(--blankus);display:flex;gap:6px 14px;flex-wrap:wrap}
-.failo-info b{color:var(--vidutinis);font-weight:500}
-.ispejimas{display:none;border:1px solid #5a4423;background:#1d160c;color:#f5c88a;border-radius:6px;padding:10px 14px;font-size:14px;max-width:52ch}
-.ispejimas.rodyti{display:block}
-
-/* brėžinio lapas su matmenimis */
-.lapas{position:relative;border:1px solid var(--linija);border-radius:6px;background:
-  linear-gradient(var(--kodas),var(--kodas)) padding-box;overflow:hidden;aspect-ratio:1.414/1}
-.lapas::before{content:"";position:absolute;inset:0;background-image:
-  linear-gradient(rgba(86,194,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(86,194,230,.06) 1px,transparent 1px);
-  background-size:20px 20px}
-.lapas svg{position:absolute;inset:0;width:100%;height:100%}
-.spaudas{position:absolute;right:14px;bottom:14px;border:1px solid var(--linija2);display:grid;grid-template-columns:auto auto;font:11px var(--mono);background:var(--kodas)}
-.spaudas span{padding:4px 9px;border-right:1px solid var(--linija);border-bottom:1px solid var(--linija);color:var(--blankus)}
-.spaudas span:nth-child(2n){border-right:0;color:var(--tekstas)}
-.spaudas span:nth-last-child(-n+2){border-bottom:0}
-
-/* ---- skyriai ---- */
-section{padding:44px 0;border-top:1px solid var(--linija)}
-section h2{font:600 24px var(--sans);letter-spacing:-.01em;margin:8px 0 20px}
-.zingsniai{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;counter-reset:z}
-.zingsniai li{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:18px;counter-increment:z;display:flex;flex-direction:column;gap:6px}
-.zingsniai li::before{content:counter(z,decimal-leading-zero);font:500 12px var(--mono);color:var(--akcentas);border:1px solid var(--linija2);border-radius:4px;width:34px;text-align:center;padding:3px 0;margin-bottom:6px}
-.zingsniai b{font-weight:600}
-.zingsniai p{color:var(--vidutinis);font-size:14.5px}
-.pastaba{margin-top:16px;border-left:2px solid var(--matmenu);padding:4px 0 4px 14px;color:var(--vidutinis);font-size:14.5px}
-.pastaba b{color:var(--tekstas)}
-
-.lent{border:1px solid var(--linija);border-radius:6px;overflow:hidden;background:var(--panele)}
-.eil{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:18px 20px;border-top:1px solid var(--linija)}
-.eil:first-child{border-top:0}
-.eil h3{font-size:16px;font-weight:600;margin-bottom:3px}
-.eil p{color:var(--vidutinis);font-size:14.5px}
-.eil .mygtai{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-details{margin-top:10px;color:var(--vidutinis);font-size:14px}
-details summary{cursor:pointer;color:var(--blankus);font-size:13.5px;width:max-content}
-details summary:hover{color:var(--tekstas)}
-details ol{margin:10px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
-
-.reik{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--linija);border:1px solid var(--linija);border-radius:6px;overflow:hidden}
-.reik div{background:var(--panele);padding:16px 18px;display:flex;flex-direction:column;gap:2px}
-.reik small{font:600 11.5px var(--kond);letter-spacing:.12em;color:var(--blankus);text-transform:uppercase}
-.reik b{font-weight:600}
-.reik span{color:var(--blankus);font-size:13.5px}
-
-.naujiena{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:18px 20px;display:flex;flex-direction:column;gap:8px}
-.naujiena .data{font:12.5px var(--mono);color:var(--blankus)}
-.naujiena p{color:var(--vidutinis);white-space:pre-line}
-
-footer{border-top:1px solid var(--linija);padding:26px 0 40px;color:var(--blankus);font-size:13px}
-footer .plotis{display:flex;gap:10px 24px;flex-wrap:wrap;justify-content:space-between}
-
-@media (max-width:860px){
-  .hero{grid-template-columns:1fr;padding-top:40px;padding-bottom:40px;gap:32px}
-  .zingsniai{grid-template-columns:1fr}
-  .reik{grid-template-columns:1fr 1fr}
-  .eil{grid-template-columns:1fr}
-  .eil .mygtai{justify-content:flex-start}
-  .virsus nav a.neb{display:none}
-}
-</style>
+<link rel="stylesheet" href="stilius.css">
 </head>
 <body>
 
@@ -120,6 +22,7 @@ footer .plotis{display:flex;gap:10px 24px;flex-wrap:wrap;justify-content:space-b
   <nav>
     <a href="#diegimas" class="neb">Diegimas</a>
     <a href="#kitos">Kitos parinktys</a>
+    <a href="demo/">Demo</a>
     <a href="https://github.com/vilkavaitkaitis-ui/Brezly" class="neb">GitHub</a>
   </nav>
 </header>
