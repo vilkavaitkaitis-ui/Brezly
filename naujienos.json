@@ -16,7 +16,17 @@
     "<b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.",
     "<b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.",
     "Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas."
-   ]
+   ],
+   "en": {
+    "pavadinimas": "New engineering design",
+    "aprasas": "Brėžly now looks like a real CAD program - easier on the eyes and more serious for coursework.",
+    "punktai": [
+     "<b>Graphite colours and thin lines</b> - less distraction, more focus on the drawing.",
+     "<b>Numbers and commands</b> - a monospaced font, coordinates are easier to read.",
+     "<b>Colour only for meaning:</b> orange - action, green - accepted, red - fix it, blue - information.",
+     "Everything else stays: lessons, practice, checking, XP and your progress."
+    ]
+   }
   }
  ]
 }

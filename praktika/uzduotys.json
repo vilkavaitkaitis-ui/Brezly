@@ -32,6 +32,16 @@
      "ARC": 4
     },
     "dydis": [120, 80]
+   },
+   "en": {
+    "pav": "Gasket",
+    "uzd": "Draw a 120 × 80 gasket with rounded corners R10, a centre hole ø40 and four holes ø10.",
+    "z": [
+     "RECTANG → Fillet → R10, then a rectangle 120,80",
+     "CIRCLE at the centre → radius 20 (ø40)",
+     "One hole: CIRCLE radius 5, then COPY to the other 3 corners (distances 96 and 56)",
+     "Centre lines on layer ASYS, dimensions - DIMLINEAR"
+    ]
    }
   },
   {
@@ -57,6 +67,16 @@
      "25": 1,
      "6": 6
     }
+   },
+   "en": {
+    "pav": "Flange",
+    "uzd": "A ø120 flange with a ø50 opening and 6 holes ø12 on a ø90 circle. Two views: top and front.",
+    "z": [
+     "Three concentric circles: R60, R25 and R45 (pitch circle, layer ASYS)",
+     "One R6 hole at the top of the pitch circle",
+     "ARRAYPOLAR → 6 items, 360°",
+     "Front view: rectangle 120 × 15, holes as dashed lines (layer NEMATOMOS - hidden)"
+    ]
    }
   },
   {
@@ -83,6 +103,16 @@
     "tipai": {
      "ARC": 3
     }
+   },
+   "en": {
+    "pav": "L bracket",
+    "uzd": "An L-shaped bracket 100 × 80 with an inner corner R10, a ø12 hole and a 30 × 10 slot.",
+    "z": [
+     "PLINE outline by the dimensions (100, 30, 70, 50, 30, 80)",
+     "FILLET R10 in the inner corner",
+     "Hole: CIRCLE R6, 15 from the edge and 20 from the top",
+     "Slot: two R5 circles 20 apart + two tangent LINEs, TRIM the middle"
+    ]
    }
   },
   {
@@ -107,6 +137,16 @@
      "LINE": 14,
      "HATCH": 1
     }
+   },
+   "en": {
+    "pav": "Shaft",
+    "uzd": "A stepped shaft ø20 / ø30 / ø25 (lengths 30, 50, 40) with a 30 × 8 keyway and section A-A.",
+    "z": [
+     "Draw only the upper half from the axis, then MIRROR across the axis",
+     "CHAMFER 1 × 45° at the ends",
+     "Keyway: a 30 × 8 rectangle with rounded ends",
+     "Section A-A: a ø30 circle with the keyway notch, fill with HATCH (ANSI31)"
+    ]
    }
   },
   {
@@ -133,6 +173,16 @@
     "tipai": {
      "LINE": 14
     }
+   },
+   "en": {
+    "pav": "3 projections",
+    "uzd": "An L-shaped block 60 × 40 × 40 with a step and a ø14 through-hole. Three views, first angle (E) method.",
+    "z": [
+     "Start with the front view (60 × 40 with a 30 × 20 step)",
+     "Carry the heights to the left view (on the right) with XLINE construction lines",
+     "Top view - below: 60 × 40, hole R7",
+     "Hidden hole edges - layer NEMATOMOS (hidden)"
+    ]
    }
   },
   {
@@ -157,6 +207,16 @@
      "INSERT": 4,
      "LINE": 6
     }
+   },
+   "en": {
+    "pav": "Electrical diagram",
+    "uzd": "Diagram: battery G1, switch S1, resistor R1 and two parallel lamps H1, H2 + a parts list.",
+    "z": [
+     "Draw the symbols (lamp - a circle with an X, resistor 15 × 5)",
+     "Turn each into a block: BLOCK with a POZ attribute (ATTDEF)",
+     "INSERT - place the blocks and connect them with lines",
+     "Parts list - TABLE or lines + text"
+    ]
    }
   },
   {
@@ -181,6 +241,16 @@
      "LINE": 12,
      "ELLIPSE": 1
     }
+   },
+   "en": {
+    "pav": "Isometric",
+    "uzd": "Draw the part from task 5 in isometric at scale 2:1. The hole is an isocircle.",
+    "z": [
+     "Turn on ISODRAFT (or the isometric grid in the status bar)",
+     "F5 switches the plane: left / top / right",
+     "Dimensions ×2: 120, 80, 80, step 40",
+     "Hole: ELLIPSE → I (Isocircle), radius 14, on the top plane"
+    ]
    }
   },
   {
@@ -202,6 +272,16 @@
    ],
    "tikrinimas": {
     "turis": 48623.7
+   },
+   "en": {
+    "pav": "3D part",
+    "uzd": "An 80 × 50 × 10 plate with a ø30 cylinder (up to height 35), a ø16 through-hole and 4 holes ø8.",
+    "z": [
+     "BOX from 0,0,0 → 80,50,10",
+     "CYLINDER centre 40,25,10, R15, height 25 → UNION with the plate",
+     "CYLINDER R8 through the full height and 4 × R4 (10 from the edges) → SUBTRACT",
+     "Check: MASSPROP → volume ≈ 48 600 mm³"
+    ]
    }
   }
  ]

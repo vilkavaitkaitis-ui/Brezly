@@ -15,6 +15,50 @@ function planuotiSaugojima(dabar){
 let DEMO_S=null;     // demo režimas: tikras progresas laikomas čia, rodomas pavyzdinis
 addEventListener("pagehide",()=>{if(NESAUGOTI)return;try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
 async function api(kelias,duom){const r=await fetch(kelias,duom===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(duom)});return r.json();}
+/* ===== Kalba. Pamokos, užduotys ir tikrinimo pastabos ateina iš serverio jau išverstos;
+   sąsajos tekstai verčiami žodynu sasaja_en.json (# - skaičius, {} - tekstas). Neišversti lieka lietuviški. ===== */
+const I18N={zod:null,sk:new Map(),sab:[],NUM:/\d+(?:[.,]\d+)?/g,
+  async ikelti(){
+    if(sg("kalba")!=="en") return;
+    try{ const d=await (await fetch("/sasaja_en.json")).json(); this.paruosti(d.tekstai); }catch(e){ return; }
+    document.documentElement.lang="en"; this.versti(document.body);
+    new MutationObserver(ms=>{ for(const m of ms){
+      if(m.type==="characterData") this.mazgas(m.target);
+      else if(m.type==="attributes") this.atributai(m.target);
+      else m.addedNodes.forEach(n=>this.versti(n)); } })
+      .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["placeholder","title","aria-label"]});
+    const c=window.confirm.bind(window); window.confirm=t=>c(this.vertimas(String(t)));
+  },
+  paruosti(t){
+    this.zod=new Map(); const er=x=>x.replace(/[.*+?^$()|[\]\\]/g,"\\$&");
+    for(const [lt,en] of Object.entries(t)){
+      if(lt.includes("{}")){ const rusys=[...lt.matchAll(/#|\{\}/g)].map(m=>m[0]);
+        const re=new RegExp("^"+lt.split(/(#|\{\})/).map(x=>x==="#"?"(\\d+(?:[.,]\\d+)?)":x==="{}"?"(.+?)":er(x)).join("")+"$");
+        this.sab.push({re,rusys,en}); }
+      else if(lt.includes("#")) this.sk.set(lt,en);
+      else this.zod.set(lt,en);
+    }
+  },
+  vertimas(t){
+    if(!this.zod) return t;
+    const tr=t.trim(); if(!tr||!/[A-Za-zĄ-ž]/.test(tr)) return t;
+    let en=this.zod.get(tr);
+    if(en===undefined){ const sk=tr.match(this.NUM); if(sk){ const e=this.sk.get(tr.replace(this.NUM,"#")); if(e!==undefined){ let i=0; en=e.replace(/#/g,()=>sk[i++]); } } }
+    if(en===undefined) for(const s of this.sab){ const m=tr.match(s.re); if(!m) continue;
+      const sk=[],tx=[]; s.rusys.forEach((r,j)=>(r==="#"?sk:tx).push(m[j+1])); let a=0,b=0;
+      en=s.en.replace(/#|\{\}/g,x=>x==="#"?sk[a++]:this.vertimas(tx[b++])); break; }
+    if(en===undefined&&tr.includes(", ")){ const d=tr.split(", ").map(x=>this.vertimas(x)); if(d.join(", ")!==tr) en=d.join(", "); }   // sąrašai
+    return en===undefined?t:t.replace(tr,en);
+  },
+  mazgas(n){ if(n.nodeType!==3||(n.parentNode&&/^(SCRIPT|STYLE|TEXTAREA|CODE)$/.test(n.parentNode.nodeName))) return;
+    const v=this.vertimas(n.nodeValue); if(v!==n.nodeValue) n.nodeValue=v; },
+  atributai(e){ if(e.nodeType!==1) return; for(const a of ["placeholder","title","aria-label"]){ const v=e.getAttribute(a); if(v){ const w=this.vertimas(v); if(w!==v) e.setAttribute(a,w); } } },
+  versti(sakn){ if(!this.zod||!sakn) return;
+    if(sakn.nodeType===3){ this.mazgas(sakn); return; } if(sakn.nodeType!==1) return;
+    this.atributai(sakn); sakn.querySelectorAll("[placeholder],[title],[aria-label]").forEach(e=>this.atributai(e));
+    const w=document.createTreeWalker(sakn,NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())) this.mazgas(n); }
+};
+
 /* Sąsajos klaidos -> brezly.log (Dokumentai\Brezly), kad „Pranešti apie klaidą“ ataskaitoje jos būtų */
 const JS_KLAIDOS={n:0,matytos:new Set()};
 function uzrasytiKlaida(zinute,vieta,deklas){
@@ -997,7 +1041,8 @@ function verMaz(a,b){ const x=verSk(a),y=verSk(b); for(let i=0;i<Math.max(x.leng
 /* Šios versijos naujiena: tiksliai ši versija, o jei jos nėra - naujausia ne naujesnė už ją */
 function dabartineNaujiena(){
   const N=(INFO.naujienos||[]).filter(n=>n.punktai&&n.punktai.length);
-  return N.find(n=>!verMaz(INFO.versija,n.versija)) || null;
+  const n=N.find(n=>!verMaz(INFO.versija,n.versija)) || null;
+  return n&&INFO.kalba==="en"&&n.en ? {...n,...n.en} : n;
 }
 function kasNaujo(){
   const n=dabartineNaujiena(); if(!n) return;
@@ -1075,6 +1120,7 @@ function rodytiNustatymus(){
   $("#vidus").innerHTML=`<h1 class="ant1">Nustatymai</h1><p class="po1">Kaip tau patogiau mokytis.</p>
   <div class="nust-gr"><h3>Vaizdas</h3>
     <div class="nust-eil"><div><b>Tema</b><small>Tamsi mažiau vargina akis vakare.</small></div>${pas([["dark","☾ Tamsi"],["light","☀ Šviesi"]],t,v=>`sg('tema','${v}');taikytiTema()`)}</div>
+    <div class="nust-eil"><div><b>Kalba / Language</b><small>Brėžly sąsajos ir pamokų kalba. Language of the interface and lessons.</small></div>${pas([["lt","Lietuvių"],["en","English"]],sg("kalba")||"lt",v=>`sg('kalba','${v}');planuotiSaugojima(true);setTimeout(()=>location.reload(),300)`)}</div>
     <div class="nust-eil"><div><b>Teksto dydis</b><small>Padidina visą Brėžly langą.</small></div>${pas([["auto","Pagal ekraną"],["1","Įprastas"],["1.15","Didesnis"],["1.3","Didelis"]],dyd,v=>v==="auto"?`sg('dydis','');taikytiDydi();rodytiNustatymus()`:`sg('dydis','${v}');taikytiDydi();rodytiNustatymus()`)}</div>
   </div>
   <div class="nust-gr"><h3>Darbas su AutoCAD</h3>
@@ -1537,12 +1583,12 @@ r();<\/script></body></html>`;
 
 /* ---------- pradžia ---------- */
 (async function(){
-  await ikeltiProgresa(); taikytiTema(); taikytiDydi(); S.eq=S.eq||{...PRADINIS};
+  await ikeltiProgresa(); await I18N.ikelti(); taikytiTema(); taikytiDydi(); S.eq=S.eq||{...PRADINIS};
   const u=$("#uzsklanda"), baigti=()=>{u.classList.add("dingsta");setTimeout(()=>u.remove(),700);};
   const tvarka=["lape","katinas","peleda","robotas","drakonas","ateivis","pingvinas","meska"];
   $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:["robotas","drakonas"].includes(id)?"kepure":null,ranka:null})}</span>`).join("");
   u.onclick=baigti; setTimeout(baigti,2900);
-  INFO=await api("/api/info"); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
+  INFO=await api("/api/info?kalba="+encodeURIComponent(sg("kalba")||"lt")); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
   $("#verZyme").textContent=String(INFO.versija).split(" ")[0];
   inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200);
   rodytiPatarima(); setInterval(rodytiPatarima,20000); Robotas.pradeti();
