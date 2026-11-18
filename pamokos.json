@@ -785,20 +785,419 @@
      "p": "No - originalas lieka, atsiranda dar ir veidrodinė kopija."
     }
    ]
+  },
+  {
+   "id": "pjuviai",
+   "pavadinimas": "Pjūviai ir ketvirtinė išpjova",
+   "aprasas": "Ketvirtinė išpjova 3D detalėje, SECTIONPLANE, VIEWBASE ir VIEWSECTION - pjūvis A–A lape. Reikia pilno AutoCAD (Model Documentation).",
+   "trukme": "~20 min.",
+   "pabaiga": "Tavo detalė turi ketvirtinę išpjovą, o lape - pjūvį A–A. Taip detalės vidų rodo tikri brėžiniai.",
+   "zingsniai": [
+    {
+     "id": "pj-detale",
+     "pavadinimas": "Atsidaryk 3D detalę",
+     "xp": 5,
+     "kodel": "Pjūviai daromi iš jau sumodeliuotos detalės. Naudosime 7 pamokos detalę 100 × 60 × 60 su šešiakampe kiauryme.",
+     "zingsniai": [
+      "Atidaryk brėžinį su 7 pamokos detale (jei jo nebeturi - spausk „Parodyk man“, nubraižysiu).",
+      "Įjunk 3D Modeling darbo aplinką ir SE Isometric vaizdą.",
+      "Detalė turi būti vienas kūnas - jei ne, UNION."
+     ],
+     "komandos": [["Command:", "-VIEW"], ["Enter an option:", "SEISO"]],
+     "uzuominos": [
+      "Vienas kūnas: spustelėjus bet kurią detalės vietą pasižymi visa detalė.",
+      "Jei detalė sudaryta iš kelių dalių - UNION, pažymėk viską, Enter."
+     ],
+     "tikslas": "Viena detalė 100 × 60 × 60"
+    },
+    {
+     "id": "pj-ispjova",
+     "pavadinimas": "Ketvirtinė išpjova: BOX + SUBTRACT",
+     "xp": 15,
+     "kodel": "Ketvirtinė išpjova - iš detalės išimamas ketvirtis, kad matytųsi vidus: kiaurymė ir sienelių storis. Aksonometrijoje ji atstoja atskirą pjūvį.",
+     "zingsniai": [
+      "Nubraižyk dėžę, kuri uždengia priekinį dešinį ketvirtį - nuo detalės vidurio iki kampo, per visą aukštį.",
+      "SUBTRACT: pirma pažymi detalę (IŠ KO), Enter, tada dėžę (KĄ), Enter."
+     ],
+     "komandos": [
+      ["Command:", "BOX"],
+      ["Specify first corner:", "50,0,0"],
+      ["Specify other corner:", "100,30,0"],
+      ["Specify height:", "60"],
+      ["Command:", "SUBTRACT"],
+      ["Select solids... to subtract from:", "(detalė) Enter"],
+      ["Select solids... to subtract:", "(dėžė) Enter"]
+     ],
+     "uzuominos": [
+      "Ketvirtis prasideda detalės viduryje: x = 50 (pusė iš 100), y = 30 (pusė iš 60).",
+      "Išpjovei ne tą ketvirtį? U atšaukia, ir bandyk iš naujo."
+     ],
+     "tikslas": "Matosi šešiakampė kiaurymė, tūris ~118 927 mm³"
+    },
+    {
+     "id": "pj-plokstuma",
+     "pavadinimas": "Pjūvio plokštuma: SECTIONPLANE",
+     "xp": 10,
+     "kodel": "Pjūvio plokštuma - tarsi peilis: parodo, kur detalė perpjaunama. Iš jos AutoCAD rodo pjūvį ir 3D vaizde, ir lape.",
+     "zingsniai": [
+      "Įvesk SECTIONPLANE.",
+      "Pasirink Orthographic (O) ir Front - plokštuma eis per detalės vidurį lygiagrečiai priekiui.",
+      "Spustelėk plokštumą ir patempk rodyklę - pamatysi, kaip keičiasi pjūvis."
+     ],
+     "komandos": [
+      ["Command:", "SECTIONPLANE"],
+      ["Select face or any point to locate section line or [Draw section/Orthographic/Type]:", "O"],
+      ["Align section to: [Front/bAck/Top/Bottom/Left/Right]:", "Front"]
+     ],
+     "uzuominos": [
+      "Plokštuma atrodo kaip permatomas stačiakampis su rodykle - rodyklė rodo, į kurią pusę žiūrima.",
+      "Gyvas pjūvis: spustelėk plokštumą → dešinys pelės mygtukas → Activate live sectioning."
+     ],
+     "tikslas": "Pjūvio plokštuma per detalę"
+    },
+    {
+     "id": "pj-vaizdas",
+     "pavadinimas": "Pagrindinis vaizdas lape: VIEWBASE",
+     "xp": 15,
+     "kodel": "VIEWBASE iš 3D modelio pats nubraižo 2D vaizdus lape. Matmenys visada sutampa su modeliu, o pakeitus modelį vaizdai atsinaujina.",
+     "zingsniai": [
+      "Spustelėk lapo kortelę Layout1 apačioje.",
+      "Įvesk VIEWBASE, pasirink Model, orientaciją Front ir mastelį 1:2.",
+      "Padėk vaizdą lapo kairėje viršuje ir spausk Enter. Projekcijų dar nedėk - dar kartą Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(spustelėk lape)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "AutoCAD sako „Unknown command VIEWBASE“? Tavo AutoCAD neturi Model Documentation (pvz. AutoCAD LT) - šį ir kitus du žingsnius gali praleisti.",
+      "Vaizdą perkelti: spustelėk jį ir tempk mėlyną kvadratėlį."
+     ],
+     "tikslas": "Lape yra vaizdas iš priekio"
+    },
+    {
+     "id": "pj-pjuvis",
+     "pavadinimas": "Pjūvis A–A: VIEWSECTION",
+     "xp": 20,
+     "kodel": "Pjūvis rodo detalės vidų taip, lyg ji būtų perpjauta. Pjūvio vietą žymi linija su raidėmis A–A, o perpjauta medžiaga brūkšniuojama.",
+     "zingsniai": [
+      "Įvesk VIEWSECTION ir spustelėk pagrindinį vaizdą.",
+      "Tipas Full. Spustelėk du taškus per vaizdo vidurį - pradėk ir baik už detalės ribų.",
+      "Spausk Enter ir padėk pjūvį po vaizdu."
+     ],
+     "komandos": [
+      ["Command:", "VIEWSECTION"],
+      ["Select parent view:", "(pagrindinis vaizdas)"],
+      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
+      ["Specify start point:", "(kairėje už detalės)"],
+      ["Specify end point:", "(dešinėje už detalės) Enter"],
+      ["Specify location of section view:", "(po vaizdu)"]
+     ],
+     "uzuominos": [
+      "Vidurį pagauk su OSNAP Midpoint, tada patrauk pelę į šoną ir spustelėk už detalės.",
+      "Raidės A–A uždedamos pačios. Pakeisti - spustelėk pjūvio liniją."
+     ],
+     "tikslas": "Lape yra pjūvis A–A su brūkšniuote"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kuria komanda iš 3D modelio sukuriamas 2D vaizdas lape?",
+     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
+     "t": 0,
+     "p": "VIEWBASE sukuria pagrindinį vaizdą; nuo jo kuriami projekciniai vaizdai ir pjūviai."
+    },
+    {
+     "k": "Ketvirtinei išpjovai iš detalės atimama dėžė. Kokia komanda?",
+     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
+     "t": 2,
+     "p": "SUBTRACT: pirma IŠ KO (detalė), tada KĄ (dėžė)."
+    },
+    {
+     "k": "Kaip pjūvyje žymima perpjauta metalinė detalė?",
+     "v": ["Storesne linija", "Plonu brūkšniavimu 45° kampu", "Raudona spalva", "Taškais"],
+     "t": 1,
+     "p": "Metalas brūkšniuojamas plonomis lygiagrečiomis linijomis 45° kampu (ANSI31)."
+    }
+   ]
+  },
+  {
+   "id": "projekcijos",
+   "pavadinimas": "Projekcijos iš 3D modelio",
+   "aprasas": "Europietiškas (pirmo kampo) išdėstymas A3 lape: VIEWSTD, VIEWBASE, VIEWPROJ ir aksonometrinis vaizdas iš to paties modelio. Reikia pilno AutoCAD.",
+   "trukme": "~20 min.",
+   "pabaiga": "A3 lape - trys projekcijos ir aksonometrija, visos iš vieno modelio. Pakeisk modelį - pasikeis ir brėžinys.",
+   "zingsniai": [
+    {
+     "id": "pr-a3",
+     "pavadinimas": "A3 lapas",
+     "xp": 5,
+     "kodel": "Detalės brėžiniui su trimis projekcijomis ir aksonometrija reikia A3 lapo (420 × 297).",
+     "zingsniai": [
+      "Jei 2 pamokoje susikūrei A3 lapą - pereik į jį (kortelė apačioje).",
+      "Jei neturi - LAYOUTWIZARD: vardas A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
+     ],
+     "komandos": [["Command:", "LAYOUTWIZARD"]],
+     "uzuominos": [
+      "Brėžinyje turi būti 3D detalė iš 7 pamokos - iš jos darysime vaizdus.",
+      "Lapo popierių pakeisti: dešinys pelės mygtukas ant kortelės → Page Setup Manager → Modify."
+     ],
+     "tikslas": "A3 lapas"
+    },
+    {
+     "id": "pr-standartas",
+     "pavadinimas": "Europietiškas išdėstymas: VIEWSTD",
+     "xp": 10,
+     "kodel": "Lietuvoje ir Europoje naudojamas pirmo kampo (First angle) išdėstymas: vaizdas iš viršaus - PO priekiniu, vaizdas iš kairės - DEŠINĖJE. JAV - atvirkščiai (Third angle).",
+     "zingsniai": [
+      "Įvesk VIEWSTD.",
+      "Projection type: First angle. Thread style: Partial (ISO).",
+      "Spausk OK. Tai daryk prieš dėdamas vaizdus."
+     ],
+     "komandos": [["Command:", "VIEWSTD"]],
+     "uzuominos": [
+      "Pirmo kampo simbolis: nupjautas kūgis, kurio apskritimai - dešinėje.",
+      "Nustatymas saugomas brėžinyje - kitame faile reikės nustatyti vėl (arba įrašyk į šabloną)."
+     ]
+    },
+    {
+     "id": "pr-priekis",
+     "pavadinimas": "Vaizdas iš priekio: VIEWBASE",
+     "xp": 15,
+     "kodel": "Pagrindinis vaizdas (iš priekio) parenkamas taip, kad geriausiai rodytų detalės formą. Kiti vaizdai išsidėsto aplink jį.",
+     "zingsniai": [
+      "Būdamas A3 lape įvesk VIEWBASE → Model.",
+      "Orientacija Front, mastelis 1:2.",
+      "Padėk vaizdą kairėje viršuje, palik vietos vaizdams po juo ir dešinėje. Enter, Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(kairėje viršuje)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "Mastelį pakeisti vėliau: spustelėk vaizdą → juostelėje Scale.",
+      "Jei vaizdas per didelis - mastelis 1:2.5 arba 1:5."
+     ],
+     "tikslas": "A3 lape vaizdas iš priekio"
+    },
+    {
+     "id": "pr-projekcijos",
+     "pavadinimas": "Vaizdai iš viršaus ir kairės: VIEWPROJ",
+     "xp": 20,
+     "kodel": "Trys vaizdai kartu vienareikšmiškai aprašo detalę. Projekcinis ryšys: vaizdai sulygiuoti, todėl matmenis galima perkelti tiesiomis linijomis.",
+     "zingsniai": [
+      "Įvesk VIEWPROJ ir spustelėk vaizdą iš priekio.",
+      "Pelę patrauk žemyn ir spustelėk - vaizdas iš viršaus.",
+      "Pelę patrauk į dešinę ir spustelėk - vaizdas iš kairės. Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWPROJ"],
+      ["Select parent view:", "(vaizdas iš priekio)"],
+      ["Specify location of projected view:", "(žemyn)"],
+      ["Specify location of projected view:", "(dešinėn) Enter"]
+     ],
+     "uzuominos": [
+      "Pirmo kampo išdėstyme vaizdas iš kairės yra dešinėje - jei atsidūrė kairėje, nepadarei VIEWSTD.",
+      "Vaizdai juda tik projekcinio ryšio kryptimi - taip ir turi būti."
+     ],
+     "tikslas": "A3 lape 3 vaizdai"
+    },
+    {
+     "id": "pr-aksonometrija",
+     "pavadinimas": "Aksonometrinis vaizdas",
+     "xp": 15,
+     "kodel": "Aksonometrija padeda greitai suprasti detalės formą. Brėžinyje ji dedama dešinėje viršuje, dažnai su ketvirtine išpjova.",
+     "zingsniai": [
+      "Vėl VIEWPROJ ir spustelėk vaizdą iš priekio.",
+      "Pelę patrauk įstrižai (į dešinę viršų) ir spustelėk - atsiras izometrinis vaizdas. Enter.",
+      "Spustelėk jį ir juostelėje pasirink Shaded with visible lines - atrodys gyviau."
+     ],
+     "komandos": [
+      ["Command:", "VIEWPROJ"],
+      ["Select parent view:", "(vaizdas iš priekio)"],
+      ["Specify location of projected view:", "(įstrižai) Enter"]
+     ],
+     "uzuominos": [
+      "Aksonometrijoje nematomos linijos nerodomos.",
+      "Jei detalė turi ketvirtinę išpjovą iš 8 pamokos - ji matysis ir čia."
+     ],
+     "tikslas": "A3 lape 4 vaizdai"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Pirmo kampo (europietiškame) išdėstyme vaizdas iš viršaus yra...",
+     "v": ["Virš vaizdo iš priekio", "Po vaizdu iš priekio", "Kairėje", "Dešinėje"],
+     "t": 1,
+     "p": "Pirmo kampo išdėstymas: iš viršaus - apačioje, iš kairės - dešinėje."
+    },
+    {
+     "k": "Kuri komanda prideda projekcinius vaizdus prie esamo vaizdo?",
+     "v": ["VIEWBASE", "VIEWPROJ", "VIEWEDIT", "VIEWUPDATE"],
+     "t": 1,
+     "p": "VIEWPROJ: pažymi tėvinį vaizdą ir dedi naujus aplink jį."
+    },
+    {
+     "k": "Pakeitei 3D modelį. Kas nutinka lapo vaizdams?",
+     "v": [
+      "Nieko - reikia braižyti iš naujo",
+      "Jie atsinaujina (arba VIEWUPDATE)",
+      "Jie ištrinami",
+      "Atsiranda klaida"
+     ],
+     "t": 1,
+     "p": "Vaizdai susieti su modeliu - atsinaujina patys arba su VIEWUPDATE."
+    }
+   ]
+  },
+  {
+   "id": "aksonometrija",
+   "pavadinimas": "Aksonometrija",
+   "aprasas": "Izometrinis braižymas 2D: ISODRAFT, ISOPLANE (F5), izometrinė dėžė polinėmis koordinatėmis, izoapskritimas (ELLIPSE → Isocircle) ir matmuo su DIMEDIT Oblique.",
+   "trukme": "~20 min.",
+   "pabaiga": "Moki braižyti izometriją - kaip 6 praktikos užduotyje!",
+   "zingsniai": [
+    {
+     "id": "ax-isodraft",
+     "pavadinimas": "Įjunk izometriją: ISODRAFT",
+     "xp": 10,
+     "kodel": "Izometrijoje x ir y ašys pasuktos 30° kampu, z - vertikali. ISODRAFT pakeičia žymeklį ir Ortho taip, kad linijos savaime eitų šiomis kryptimis.",
+     "zingsniai": [
+      "Atidaryk naują brėžinį iš acadiso.dwt.",
+      "Įvesk ISODRAFT ir pasirink isoplaneTop (T).",
+      "F5 perjungia plokštumas: Top → Right → Left. Žymeklis pasikeičia."
+     ],
+     "komandos": [
+      ["Command:", "ISODRAFT"],
+      ["Enter isometric drafting option [Orthographic/isoplaneLeft/isoplaneTop/isoplaneRight]:", "T"]
+     ],
+     "uzuominos": [
+      "Senesniame AutoCAD vietoj ISODRAFT: SNAP → Style → Isometric.",
+      "Apatinėje juostoje yra izometrinio braižymo mygtukas (kubelis)."
+     ],
+     "tikslas": "Izometrinis žymeklis (SNAPSTYL = 1)"
+    },
+    {
+     "id": "ax-deze",
+     "pavadinimas": "Izometrinė dėžė 60 × 40 × 30",
+     "xp": 20,
+     "kodel": "Izometrijoje matmenys atidedami tikru dydžiu išilgai ašių - 30°, 150° ir vertikaliai. Polinės koordinatės @ilgis<kampas tai padaro tiksliai.",
+     "zingsniai": [
+      "Įvesk LINE ir rašyk taškus iš eilės - viena linija apeis apačią ir priekines briaunas.",
+      "Antra LINE nubraižo paskutinę viršaus briauną."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "100,50"],
+      ["Specify next point:", "@60<30"],
+      ["Specify next point:", "@30<90"],
+      ["Specify next point:", "@40<150"],
+      ["Specify next point:", "@60<210"],
+      ["Specify next point:", "@30<270"],
+      ["Specify next point:", "@40<330"],
+      ["Specify next point:", "@30<90"],
+      ["Specify next point:", "@60<30"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "100,80"],
+      ["Specify next point:", "@40<150"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "@60<30 reiškia: 60 mm 30° kampu nuo paskutinio taško.",
+      "Suklydai? U (Undo) LINE komandoje atšaukia tik paskutinį tašką."
+     ],
+     "tikslas": "9 briaunos: 3 × 60, 3 × 40, 3 × 30"
+    },
+    {
+     "id": "ax-apskritimas",
+     "pavadinimas": "Izoapskritimas: ELLIPSE → Isocircle",
+     "xp": 20,
+     "kodel": "Apskritimas izometrijoje matomas kaip elipsė. ELLIPSE parinktis Isocircle ją nubraižo tiksliai pagal aktyvią plokštumą.",
+     "zingsniai": [
+      "Spausk F5, kol komandų eilutėje bus <Isoplane Top>.",
+      "ELLIPSE → I (Isocircle). Centras - viršaus sienos vidurys, spindulys 10."
+     ],
+     "komandos": [
+      ["Command:", "ELLIPSE"],
+      ["Specify axis endpoint of ellipse or [Arc/Center/Isocircle]:", "I"],
+      ["Specify center of isocircle:", "108.66,105"],
+      ["Specify radius of isocircle or [Diameter]:", "10"]
+     ],
+     "uzuominos": [
+      "Isocircle parinktis atsiranda tik kai įjungta izometrija (1 žingsnis).",
+      "Centrą rasti be skaičių: Shift + dešinys pelės mygtukas → Mid Between 2 Points → du priešingi viršaus kampai."
+     ],
+     "tikslas": "Elipsė viršuje, pusašės 12,25 ir 7,07"
+    },
+    {
+     "id": "ax-matmuo",
+     "pavadinimas": "Matmuo izometrijoje: DIMALIGNED + Oblique",
+     "xp": 15,
+     "kodel": "Izometrijoje matmuo dedamas lygiagrečiai briaunai, o iškeltinės linijos pasukamos ašies kryptimi - kitaip matmuo „nukrenta“ iš plokštumos.",
+     "zingsniai": [
+      "DIMALIGNED: spustelėk du apatinės dešinės briaunos galus (60 mm) ir padėk matmenį žemiau.",
+      "DIMEDIT → Oblique: pažymėk matmenį ir įvesk 90 - iškeltinės linijos taps vertikalios."
+     ],
+     "komandos": [
+      ["Command:", "DIMALIGNED"],
+      ["Specify first extension line origin:", "(kampas 100,50)"],
+      ["Specify second extension line origin:", "(kitas briaunos galas)"],
+      ["Specify dimension line location:", "(žemiau)"],
+      ["Command:", "DIMEDIT"],
+      ["Enter type of dimension editing [Home/New/Rotate/Oblique]:", "O"],
+      ["Select objects:", "(matmuo) Enter"],
+      ["Enter obliquing angle:", "90"]
+     ],
+     "uzuominos": [
+      "Galus pagauk OSNAP Endpoint - tada matmuo bus tiksliai 60.",
+      "Matmenų tekstui izometrijoje dažnai naudojamas pasviręs ±30° teksto stilius."
+     ],
+     "tikslas": "Lygiagretus matmuo 60"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kokiu kampu izometrijoje nubrėžiamos x ir y ašys?",
+     "v": ["15°", "30°", "45°", "60°"],
+     "t": 1,
+     "p": "Izometrijoje x ir y ašys - 30° kampu nuo horizontalės, z - vertikali."
+    },
+    {
+     "k": "Kaip izometrijoje vaizduojamas apskritimas?",
+     "v": ["Apskritimu", "Elipse", "Stačiakampiu", "Lanku"],
+     "t": 1,
+     "p": "Apskritimas izometrijoje matomas kaip elipsė - ELLIPSE → Isocircle."
+    },
+    {
+     "k": "Kuris klavišas perjungia izometrinę plokštumą (Top/Right/Left)?",
+     "v": ["F3", "F5", "F8", "F12"],
+     "t": 1,
+     "p": "F5 (arba Ctrl+E) perjungia Isoplane."
+    }
+   ]
   }
  ],
  "ateityje": [
   {
-   "pavadinimas": "Pjūviai ir ketvirtinė išpjova",
-   "aprasas": "SECTIONPLANE, VIEWBASE, VIEWSECTION"
+   "pavadinimas": "Detalės darbo brėžinys",
+   "aprasas": "matmenys iš 3D, tolerancijos, šiurkštumas"
   },
   {
-   "pavadinimas": "Projekcijos iš 3D modelio",
-   "aprasas": "VIEWBASE, VIEWPROJ, A3 lape"
+   "pavadinimas": "Sriegiai ir standartinės detalės",
+   "aprasas": "sriegio vaizdavimas, varžtai, veržlės"
   },
   {
-   "pavadinimas": "Aksonometrija",
-   "aprasas": "ISODRAFT, izometrinis apskritimas"
+   "pavadinimas": "Surinkimo brėžinys",
+   "aprasas": "pozicijos, specifikacija (DATAEXTRACTION)"
   }
  ],
  "patarimai": [
@@ -993,6 +1392,62 @@
    "ka": "Veidrodinis atspindys 3D erdvėje per plokštumą.",
    "pvz": "MIRROR3D → YZ → taškas",
    "pamoka": "pirmoji-3d"
+  },
+  {
+   "k": "SECTIONPLANE",
+   "trump": "SPLANE",
+   "ka": "Pjūvio plokštuma per 3D modelį; gyvas pjūvis rodo vidų.",
+   "pvz": "SECTIONPLANE → O → Front",
+   "pamoka": "pjuviai"
+  },
+  {
+   "k": "VIEWBASE",
+   "trump": "",
+   "ka": "Iš 3D modelio sukuria 2D vaizdą lape (Model Documentation).",
+   "pvz": "VIEWBASE → Model → Front, 1:2",
+   "pamoka": "pjuviai"
+  },
+  {
+   "k": "VIEWSECTION",
+   "trump": "",
+   "ka": "Pjūvis iš lape esančio vaizdo: Full, Half, Offset, Aligned.",
+   "pvz": "VIEWSECTION → (vaizdas) → Full",
+   "pamoka": "pjuviai"
+  },
+  {
+   "k": "VIEWSTD",
+   "trump": "",
+   "ka": "Brėžinio vaizdų standartas: projekcijų išdėstymas (First angle - Europa).",
+   "pvz": "VIEWSTD → First angle",
+   "pamoka": "projekcijos"
+  },
+  {
+   "k": "VIEWPROJ",
+   "trump": "",
+   "ka": "Prideda projekcinius ir aksonometrinius vaizdus prie esamo.",
+   "pvz": "VIEWPROJ → (vaizdas) → žemyn, dešinėn",
+   "pamoka": "projekcijos"
+  },
+  {
+   "k": "ISODRAFT",
+   "trump": "",
+   "ka": "Izometrinis braižymas: žymeklis ir Ortho pagal 30° ašis.",
+   "pvz": "ISODRAFT → T (Top)",
+   "pamoka": "aksonometrija"
+  },
+  {
+   "k": "ELLIPSE",
+   "trump": "EL",
+   "ka": "Elipsė; izometrijoje parinktis Isocircle nubraižo izoapskritimą.",
+   "pvz": "ELLIPSE → I → centras → 10",
+   "pamoka": "aksonometrija"
+  },
+  {
+   "k": "DIMEDIT",
+   "trump": "DED",
+   "ka": "Keičia matmenis; Oblique pasuka iškeltines linijas.",
+   "pvz": "DIMEDIT → O → (matmuo) → 90",
+   "pamoka": "aksonometrija"
   }
  ]
 }

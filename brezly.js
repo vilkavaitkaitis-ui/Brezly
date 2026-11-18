@@ -596,7 +596,7 @@ function pabaiga(){
   $("#vidus").innerHTML=`<div class="pabaiga"><div class="taure">🏆</div><h1>Pamoka baigta!</h1>
     <p>${esc(PAM.pabaiga||"Puikiai padirbėjai!")}</p>
     <div class="statai"><div><b>${atl}/${PAM.zingsniai.length}</b><small>žingsnių</small></div><div><b>${teis}/${PAM.testas.length}</b><small>teste</small></div><div><b>${S.xp}</b><small>XP iš viso</small></div></div>
-    <p>${kita?`Kita pamoka: <b>${esc(kita.pavadinimas)}</b>`:"Baigei visas pamokas! Naujos (pjūviai, projekcijos) - kitoje versijoje."}</p>
+    <p>${kita?`Kita pamoka: <b>${esc(kita.pavadinimas)}</b>`:"Baigei visas pamokas!"+(INFO.ateityje.length?" Netrukus: "+esc(INFO.ateityje.map(a=>a.pavadinimas).join(", "))+".":"")}</p>
     <div class="eil" style="justify-content:center;margin-top:18px">${kita?`<button class="btn pagr didelis" onclick="rodytiPradzia('${kita.id}')">Kita pamoka →</button><button class="btn" onclick="rodytiPradzia()">Į pradžią</button>`:`<button class="btn pagr didelis" onclick="rodytiPradzia()">Į pradžią</button>`}
     <button class="btn" onclick="if(confirm('Ištrinti visą progresą ir XP?')){S={xp:0,atlikta:{},zenkleliai:[],dabartinis:{},eq:S.eq,dienos:[],nauji:[],vardas:S.vardas};PAM=null;saugoti();rodytiPradzia(INFO.pamokos[0].id);}">Pradėti iš naujo</button></div></div>`;
 }

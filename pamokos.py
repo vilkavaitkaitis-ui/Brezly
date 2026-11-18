@@ -27,6 +27,9 @@ V_DEZE = 100 * 60 * 20
 V_SUJUNGTA = V_DEZE + math.pi * 20 ** 2 * 40                  # 170265.5
 V_SU_SKYLE = V_SUJUNGTA - 3 * math.sqrt(3) / 2 * 10 ** 2 * 60   # 154677.0
 V_GALUTINIS = 158568.8                                        # + 2 briaunos be persidengimo su cilindru
+# Ketvirtinė išpjova (8 pamoka): atimamas ketvirtis x 50..100, y 0..30, z 0..60 =
+#   dėžės dalis 30000 + cilindro ketvirtis π·20²·40/4 + pusė briaunos už cilindro 1945.9/2 - kiaurymės ketvirtis
+V_ISPJOVA = 118926.6
 
 
 # ------------------------------------------------------------------ brėžinio skaitymas
@@ -938,6 +941,244 @@ def d_tekstas(b):
         pass
 
 
+# =====================================================================
+#  8-10 PAMOKOS: pjūviai, projekcijos iš 3D, aksonometrija
+# =====================================================================
+DETALE_MIN, DETALE_MAX = (0, 0, 0), (100, 60, 60)
+ISPJOVA_MIN, ISPJOVA_MAX = (50, 0, 0), (100, 30, 60)
+
+
+def _viena_detale(b):
+    """(kūnas, pastabos) - 7 pamokos detalė 100 × 60 × 60 (su išpjova ar be)."""
+    ks = kunai(b)
+    if not ks:
+        return None, ["Neradau 3D detalės. Atidaryk brėžinį su 7 pamokos detale arba spausk „Parodyk man“."]
+    if len(ks) > 1:
+        if rasti(ks, ISPJOVA_MIN, ISPJOVA_MAX):
+            return None, ["Dėžė jau yra, bet dar neatimta: SUBTRACT → pirma detalė, Enter, tada dėžė, Enter."]
+        return None, [f"Brėžinyje {len(ks)} kūnai, o detalė turi būti vienas kūnas. Sujunk UNION."]
+    k = ks[0]
+    if not ribos_atitinka(k, DETALE_MIN, DETALE_MAX, tol=1.0):
+        return None, ["Tai ne 7 pamokos detalė: " + kas_ne_taip(k, DETALE_MIN, DETALE_MAX) + "."]
+    return k, []
+
+
+def t_detale3d(b):
+    k, pastabos = _viena_detale(b)
+    if pastabos:
+        return pastabos
+    if not (turis_tinka(k, V_GALUTINIS) or turis_tinka(k, V_ISPJOVA)):
+        return [f"Detalės tūris {tf(round(k['turis'] or 0))} mm³, tikėtasi apie {tf(round(V_GALUTINIS))} mm³. Ar visos 7 pamokos dalys sujungtos?"]
+    return []
+
+
+def t_ispjova(b):
+    k, pastabos = _viena_detale(b)
+    if pastabos:
+        return pastabos
+    if turis_tinka(k, V_GALUTINIS):
+        return ["Ketvirtis dar neišpjautas: BOX nuo 50,0,0 iki 100,30, aukštis 60, tada SUBTRACT."]
+    if not turis_tinka(k, V_ISPJOVA):
+        return [f"Tūris {tf(round(k['turis'] or 0))} mm³, tikėtasi apie {tf(round(V_ISPJOVA))} mm³. "
+                "Patikrink dėžės kampus: 50,0,0 ir 100,30, aukštis 60."]
+    return []
+
+
+def _lapu_vaizdai(b):
+    """{lapo vardas: {"vaizdai": n, "pjuviai": n}} - Model Documentation objektai lapuose
+    (AcDbViewBorder - vaizdo rėmelis, AcDbSectionSymbol - pjūvio linija A-A)."""
+    rez = {}
+    doc = b.doc
+    for i in range(A.kartoti(lambda: doc.Layouts.Count)):
+        try:
+            L = doc.Layouts.Item(i)
+            if L.ModelType:
+                continue
+            tipai = [o["tipas"] for o in objektai(L.Block)]
+            rez[L.Name] = {"vaizdai": sum("ViewBorder" in t for t in tipai),
+                           "pjuviai": sum("SectionSymbol" in t for t in tipai)}
+        except Exception:
+            continue
+    return rez
+
+
+BE_MODEL_DOC = " Jei AutoCAD nežino komandos - tavo versija be Model Documentation (pvz. LT): žingsnį gali praleisti."
+
+
+def t_plokstuma(b):
+    if any("Section" in o["tipas"] and "Symbol" not in o["tipas"] for o in objektai(b.ms)):
+        return []
+    return ["Neradau pjūvio plokštumos modelyje: SECTIONPLANE → O → Front."]
+
+
+def t_vaizdas(b):
+    if sum(v["vaizdai"] for v in _lapu_vaizdai(b).values()) >= 1:
+        return []
+    return ["Lapuose nerandu vaizdų: spustelėk Layout1, VIEWBASE → Model → Front." + BE_MODEL_DOC]
+
+
+def t_pjuvis(b):
+    v = _lapu_vaizdai(b)
+    if sum(x["pjuviai"] for x in v.values()) >= 1:
+        return []
+    if sum(x["vaizdai"] for x in v.values()) == 0:
+        return ["Pirma reikia pagrindinio vaizdo (ankstesnis žingsnis)."]
+    return ["Pjūvio dar nėra: VIEWSECTION → spustelėk vaizdą → Full → du taškai per vidurį → padėk pjūvį."]
+
+
+def _a3_vaizdai(b, kiek, ka):
+    L = a3_lapas(b)
+    if not L:
+        return ["Neradau A3 lapo - pirmas šios pamokos žingsnis."]
+    n = _lapu_vaizdai(b).get(L.Name, {}).get("vaizdai", 0)
+    if n >= kiek:
+        return []
+    kiti = sum(v["vaizdai"] for k, v in _lapu_vaizdai(b).items() if k != L.Name)
+    if n == 0 and kiti:
+        return [f"Vaizdai yra kitame lape, o reikia lape „{L.Name}“. Pereik į jį ir pakartok."]
+    return [f"A3 lape vaizdų: {n}, reikia {kiek}. {ka}"]
+
+
+def t_pr_priekis(b):
+    return _a3_vaizdai(b, 1, "VIEWBASE → Model → Front." + BE_MODEL_DOC)
+
+
+def t_pr_projekcijos(b):
+    return _a3_vaizdai(b, 3, "VIEWPROJ → spustelėk vaizdą iš priekio → žemyn → dešinėn → Enter.")
+
+
+def t_pr_aksonometrija(b):
+    return _a3_vaizdai(b, 4, "VIEWPROJ → vaizdas iš priekio → patrauk įstrižai → Enter.")
+
+
+# ---- 10. aksonometrija (2D izometrija)
+ISO_R = 10
+ISO_DIDZ, ISO_MAZ = ISO_R * math.sqrt(1.5), ISO_R * math.sqrt(0.5)       # izoapskritimo pusašės 12.25 ir 7.07
+ISO_A = (100.0, 50.0)                                                      # dėžės priekinis apatinis kampas
+ISO_CENTRAS = (ISO_A[0] + (60 - 40) * math.cos(math.radians(30)) / 2, ISO_A[1] + 30 + (60 + 40) * 0.5 / 2)   # (108.66, 105)
+ISO_BRIAUNOS = ((60, 30), (40, 150), (30, 90))                             # (ilgis, kryptis °) po 3
+
+
+def _linijos(b):
+    rez = []
+    for o in objektai(b.ms):
+        if o["tipas"] != "AcDbLine":
+            continue
+        try:
+            p, q = tuple(o["obj"].StartPoint), tuple(o["obj"].EndPoint)
+        except Exception:
+            continue
+        ilgis = math.hypot(q[0] - p[0], q[1] - p[1])
+        kampas = math.degrees(math.atan2(q[1] - p[1], q[0] - p[0])) % 180
+        rez.append((ilgis, kampas))
+    return rez
+
+
+def _kampas_artimas(a, b, tol=0.5):
+    d = abs(a - b) % 180
+    return min(d, 180 - d) <= tol
+
+
+def t_isodraft(b):
+    if str(kintamasis(b, "SNAPSTYL")) in ("1", "1.0"):
+        return []
+    return ["Izometrija neįjungta: ISODRAFT → T (arba SNAP → Style → Isometric)."]
+
+
+def t_iso_deze(b):
+    lin = _linijos(b)
+    truksta = []
+    for ilgis, kryptis in ISO_BRIAUNOS:
+        n = sum(1 for l, k in lin if abs(l - ilgis) <= 0.2 and _kampas_artimas(k, kryptis))
+        if n < 3:
+            truksta.append(f"{ilgis} mm {kryptis}° kryptimi: {n} iš 3")
+    if truksta:
+        return ["Trūksta briaunų - " + "; ".join(truksta) + ". Rašyk taškus @ilgis<kampas tiksliai kaip komandų eilutėje."]
+    return []
+
+
+def t_iso_apskritimas(b):
+    elipses = []
+    for o in objektai(b.ms):
+        if o["tipas"] == "AcDbEllipse":
+            try:
+                c, ax = tuple(o["obj"].Center), tuple(o["obj"].MajorAxis)
+                elipses.append((c, float(o["obj"].MajorRadius), float(o["obj"].MinorRadius),
+                                math.degrees(math.atan2(ax[1], ax[0])) % 180))
+            except Exception:
+                continue
+    if not elipses:
+        if apskritimai(objektai(b.ms), ISO_R):
+            return ["Nubraižei apskritimą - izometrijoje reikia ELLIPSE → I (Isocircle)."]
+        return ["Neradau elipsės: F5 iki <Isoplane Top>, tada ELLIPSE → I → centras → 10."]
+    tinka = [e for e in elipses if abs(e[1] - ISO_DIDZ) <= 0.15 and abs(e[2] - ISO_MAZ) <= 0.15]
+    if not tinka:
+        e = elipses[0]
+        return [f"Elipsės pusašės {e[1]:.2f} ir {e[2]:.2f}, o spinduliui 10 turi būti {ISO_DIDZ:.2f} ir {ISO_MAZ:.2f}. Ar nubraižei per Isocircle su spinduliu 10?"]
+    virsuje = [e for e in tinka if _kampas_artimas(e[3], 0, 1.0)]
+    if not virsuje:
+        return ["Elipsė ne toje plokštumoje: spausk F5, kol bus <Isoplane Top>, ir nubraižyk iš naujo."]
+    if not any(artima(e[0][:2], ISO_CENTRAS, 1.5) for e in virsuje):
+        return [f"Elipsė ne viršaus sienos centre - centras turi būti {ISO_CENTRAS[0]:.2f},{ISO_CENTRAS[1]:.0f}."]
+    return []
+
+
+def t_iso_matmuo(b):
+    for o in objektai(b.ms):
+        if o["tipas"] == "AcDbAlignedDimension":
+            try:
+                if any(abs(float(o["obj"].Measurement) - m) <= 0.1 for m, _ in ISO_BRIAUNOS):
+                    return []
+            except Exception:
+                continue
+    return ["Neradau lygiagretaus matmens (DIMALIGNED) ant dėžės briaunos - galus pagauk su OSNAP Endpoint."]
+
+
+# ---- demonstracijos
+def d_detale3d(b):
+    """Nubraižo 7 pamokos detalę, jei jos nėra."""
+    if kunai(b):
+        return
+    for f in (d_deze, d_cilindras, d_sujungti, d_prizme, d_atimti, d_pleistas, d_veidrodis, d_galutinis):
+        f(b)
+
+
+def d_ispjova(b):
+    d_detale3d(b)
+    det = max(kunai(b), key=lambda k: k["turis"] or 0)["obj"]
+    deze = b.ms.AddBox(A.taskas(75, 15, 30), 50, 30, 60)
+    det.Boolean(2, deze)                       # acSubtraction
+    b.kunas = det
+
+
+def d_isodraft(b):
+    b.doc.SetVariable("SNAPSTYL", 1)
+    b.doc.SetVariable("SNAPISOPAIR", 1)        # Top
+
+
+def _iso_taskas(p, ilgis, kampas):
+    return (p[0] + ilgis * math.cos(math.radians(kampas)), p[1] + ilgis * math.sin(math.radians(kampas)))
+
+
+def d_iso_deze(b):
+    a = ISO_A
+    bb = _iso_taskas(a, 60, 30)
+    d = _iso_taskas(a, 40, 150)
+    a2, b2, d2 = (a[0], a[1] + 30), (bb[0], bb[1] + 30), (d[0], d[1] + 30)
+    c2 = _iso_taskas(b2, 40, 150)
+    for p, q in ((a, bb), (a, d), (a, a2), (bb, b2), (d, d2), (a2, b2), (a2, d2), (b2, c2), (d2, c2)):
+        b.ms.AddLine(A.taskas(*p), A.taskas(*q))
+
+
+def d_iso_apskritimas(b):
+    b.ms.AddEllipse(A.taskas(*ISO_CENTRAS), A.taskas(ISO_DIDZ, 0), ISO_MAZ / ISO_DIDZ)
+
+
+def d_iso_matmuo(b):
+    a, bb = ISO_A, _iso_taskas(ISO_A, 60, 30)
+    b.ms.AddDimAligned(A.taskas(*a), A.taskas(*bb), A.taskas(a[0] + 20, a[1] - 5))
+
+
 # ------------------------------------------------------------- pamokų turinys: pamokos.json
 # Tekstai (žingsniai, užuominos, testai, kortelės) - pamokos.json. Jį naudoja ir programėlė (app/).
 # Čia - tik kas tikrina žingsnį ir kas jį parodo AutoCAD'e: žingsnio id -> (tikrinti, demo).
@@ -988,6 +1229,23 @@ TIKRINIMAS = {
     "wedge": (t_pleistas, d_pleistas),
     "mirror": (t_veidrodis, d_veidrodis),
     "final": (t_galutinis, d_galutinis),
+    # pjuviai
+    "pj-detale": (t_detale3d, d_detale3d),
+    "pj-ispjova": (t_ispjova, d_ispjova),
+    "pj-plokstuma": (t_plokstuma, None),
+    "pj-vaizdas": (t_vaizdas, None),
+    "pj-pjuvis": (t_pjuvis, None),
+    # projekcijos
+    "pr-a3": (t_a3, d_a3),
+    "pr-standartas": (None, None),
+    "pr-priekis": (t_pr_priekis, None),
+    "pr-projekcijos": (t_pr_projekcijos, None),
+    "pr-aksonometrija": (t_pr_aksonometrija, None),
+    # aksonometrija
+    "ax-isodraft": (t_isodraft, d_isodraft),
+    "ax-deze": (t_iso_deze, d_iso_deze),
+    "ax-apskritimas": (t_iso_apskritimas, d_iso_apskritimas),
+    "ax-matmuo": (t_iso_matmuo, d_iso_matmuo),
 }
 
 PAMOKU_FAILAS = os.path.join(os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__)),

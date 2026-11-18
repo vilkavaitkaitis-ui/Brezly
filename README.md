@@ -16,7 +16,7 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 
 ## Kas viduje
 
-- 7 pamokos (38 žingsniai) – nuo failo iki pirmosios 3D detalės
+- 10 pamokų (52 žingsniai) – nuo failo iki 3D detalės, pjūvių, projekcijų ir aksonometrijos
 - 8 praktikos užduotys: 2D A4 ir 3D A3 lapuose, su automatiniu tikrinimu
 - XP, lygiai, ženkleliai ir 8 personažai
 
