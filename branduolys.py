@@ -24,8 +24,10 @@ import time
 try:
     import pythoncom
     import win32com.client
-except ImportError:         # ne Windows: sąsają ir tikrinimą galima kurti bei testuoti be AutoCAD
+    IMPORTO_KLAIDA = ""
+except ImportError as _e:   # ne Windows: sąsają ir tikrinimą galima kurti bei testuoti be AutoCAD
     pythoncom = win32com = None
+    IMPORTO_KLAIDA = str(_e) or _e.__class__.__name__   # Windows'e - sugadintas pywin32: parodoma būsenoje
 
 VERSIJA = "1.4 (2026-11-09)"
 MODELIS = "claude-sonnet-5-5"
@@ -303,19 +305,110 @@ def kartoti(f, bandymu=20, pauze=0.5):
             raise
 
 
-def prisijungti():
+def _versiju_progid():
+    """Įdiegtų AutoCAD versijų COM vardai, naujausi pirma, pvz. AutoCAD.Application.25.1 (2026), .25 (2025).
+    Bendras „AutoCAD.Application“ rodo tik į paskutinę įdiegtą versiją - jei atidaryta kita, be šių neprisijungtume."""
+    if _PROGID["sar"] is not None:
+        return _PROGID["sar"]
+    sar = []
     try:
-        acad = win32com.client.GetActiveObject("AutoCAD.Application")
+        import winreg
+        versijos = set()
+        for sakn in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
+            try:
+                with winreg.OpenKey(sakn, r"SOFTWARE\Autodesk\AutoCAD") as k:
+                    i = 0
+                    while True:
+                        try:
+                            v = winreg.EnumKey(k, i)
+                        except OSError:
+                            break
+                        i += 1
+                        try:
+                            versijos.add(tuple(int(x) for x in v.lstrip("Rr").split(".")[:2]))
+                        except ValueError:
+                            pass
+            except OSError:
+                pass
+        for maj, *mn in sorted(versijos, reverse=True):
+            for vardas in ([f"AutoCAD.Application.{maj}.{mn[0]}"] if mn and mn[0] else []) + [f"AutoCAD.Application.{maj}"]:
+                try:
+                    winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, vardas).Close()
+                    sar.append(vardas)
+                except OSError:
+                    pass
+    except ImportError:
+        pass
+    _PROGID["sar"] = sar
+    return sar
+
+
+_PROGID = {"sar": None}
+
+
+def rasti_atidaryta():
+    """Jau atidarytas AutoCAD (pats nepaleidžia). Klaida - paskutinė COM klaida (pagal ją paaiškinama priežastis)."""
+    if win32com is None:
+        raise RuntimeError("Trūksta pywin32: " + IMPORTO_KLAIDA)
+    klaida = None
+    for vardas in ["AutoCAD.Application"] + [v for v in _versiju_progid() if v != "AutoCAD.Application"]:
+        try:
+            return win32com.client.GetActiveObject(vardas)
+        except Exception as e:
+            # „Invalid class string“ (versija neįdiegta) mažiau svarbi nei „Operation unavailable“
+            if klaida is None or com_kodas(klaida) == CO_E_CLASSSTRING:
+                klaida = e
+    raise klaida
+
+
+# COM klaidų kodai, pagal kuriuos paaiškinama, kodėl neprisijungiama
+MK_E_UNAVAILABLE = -2147221021      # 0x800401E3: AutoCAD neužsiregistravęs (kraunasi arba kitos teisės)
+CO_E_CLASSSTRING = -2147221005      # 0x800401F3: AutoCAD.Application neregistruotas (LT / sugadintas diegimas)
+REGDB_E_CLASSNOTREG = -2147221164   # 0x80040154
+E_ACCESSDENIED = -2147024891        # 0x80070005
+NUTRUKO = (-2147023174, -2147417848, -2147023170)   # RPC serveris nepasiekiamas / atsijungta (AutoCAD uždarytas)
+
+
+def com_kodas(klaida):
+    """COM klaidos HRESULT (neigiamas sveikasis) arba None."""
+    a = getattr(klaida, "args", None) or ()
+    return a[0] if a and isinstance(a[0], int) else getattr(klaida, "hresult", None)
+
+
+def uztikrinti_brezini(acad):
+    """Kad būtų aktyvus brėžinys: AutoCAD pradžios (Start) lange brėžinių nėra arba nė vienas neaktyvus."""
+    n = kartoti(lambda: acad.Documents.Count)
+    if n == 0:
+        kartoti(lambda: acad.Documents.Add())
+        return
+    try:
+        acad.ActiveDocument.Name
+    except Exception as e:
+        if atmesta(e):
+            raise
+        kartoti(lambda: acad.Documents.Item(n - 1).Activate())
+
+
+def prisijungti(paleisti=True, brezinys=True):
+    """Prisijungia prie atidaryto AutoCAD; jei jo nėra ir paleisti=True - paleidžia.
+    paleisti=False, kai acad.exe jau veikia, bet nepasiekiamas (kitos teisės) - antro AutoCAD nekuriame.
+    brezinys=True - pasirūpina aktyviu brėžiniu (False - kai jį tuoj atidarysime ar sukursime patys)."""
+    if win32com is None:
+        raise RuntimeError("Trūksta pywin32 paketo (" + IMPORTO_KLAIDA + "). Įdiek Brėžly iš naujo.")
+    try:
+        acad = rasti_atidaryta()
         print("Prisijungta prie atidaryto AutoCAD.")
     except Exception:
+        if not paleisti:
+            raise
         print("AutoCAD neatidarytas, paleidžiu (gali užtrukti iki minutės)...")
         try:
             acad = win32com.client.Dispatch("AutoCAD.Application")
         except Exception:
             raise RuntimeError("Nepavyko rasti AutoCAD. Ar įdiegtas pilnas AutoCAD (ne LT)?") from None
     kartoti(lambda: setattr(acad, "Visible", True), bandymu=120)
-    if kartoti(lambda: acad.Documents.Count) == 0:
-        kartoti(lambda: acad.Documents.Add())
+    if brezinys:
+        uztikrinti_brezini(acad)
     try:
         print("AutoCAD versija:", acad.Version)
     except Exception:

@@ -73,6 +73,14 @@ jobs:
           Start-Sleep 8
           if ($p.HasExited) { Get-Content dist\Brezly\klaida.txt -ErrorAction SilentlyContinue; throw "Brezly.exe užsidarė iškart" }
           Stop-Process $p -Force
+          # ar .exe viduje veikia pywin32 (be jo Brėžly neprisijungtų prie AutoCAD)
+          $env:BREZLY_PATIKRA = "1"
+          $p = Start-Process dist\Brezly\Brezly.exe -PassThru
+          $null = $p.Handle            # kad ExitCode būtų žinomas ir greitai pasibaigus
+          if (-not $p.WaitForExit(60000)) { Stop-Process $p -Force; throw "Brezly.exe patikra neatsakė" }
+          Get-Content dist\Brezly\patikra.txt -ErrorAction SilentlyContinue
+          Remove-Item dist\Brezly\patikra.txt -ErrorAction SilentlyContinue
+          if ($p.ExitCode -ne 0) { throw "Brezly.exe viduje neveikia pywin32 (ryšys su AutoCAD)" }
 
       - name: Brezly_Setup.exe
         shell: pwsh

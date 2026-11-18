@@ -9,6 +9,7 @@ Uždarius langą (nebeateina /api/ping), programa po kelių sekundžių išsijun
 """
 
 import contextlib
+import csv
 import io
 import json
 import os
@@ -27,6 +28,7 @@ PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(s
 os.chdir(PROGRAMOS_APLANKAS)
 
 import branduolys as A          # noqa: E402
+from vertimas import tr         # noqa: E402
 
 
 class Rysys:
@@ -46,43 +48,188 @@ def zurnalas():
     return contextlib.redirect_stdout(io.StringIO())
 
 
-def braizytojas():
-    """Prisijungęs Braizytojas. Jei AutoCAD buvo uždarytas - prisijungia iš naujo."""
+def braizytojas(paleisti=True, brezinys=True):
+    """Prisijungęs Braizytojas su aktyviu brėžiniu (brezinys=False - be jo: tuoj atidarysime ar sukursime).
+    Jei AutoCAD buvo uždarytas - prisijungia iš naujo."""
     d = BUSENA["darbas"]
-    if d.b is None:
-        d.b = A.Braizytojas(A.prisijungti())
-    else:
+    if d.b is not None:
         try:                                    # ar AutoCAD vis dar gyvas
-            A.kartoti(lambda: d.b.acad.ActiveDocument.Name)
-        except Exception:
-            d.b = A.Braizytojas(A.prisijungti())
+            A.kartoti(lambda: d.b.acad.Documents.Count)
+        except Exception as e:
+            if A.atmesta(e):                    # gyvas, tik užimtas - prisijungimas iš naujo nepadėtų
+                raise RuntimeError(tr("AutoCAD užimtas - užbaik komandą arba uždaryk atidarytą langą (Esc).",
+                                      "AutoCAD is busy - finish the command or close the open dialog (Esc).")) from None
+            d.b = None
+    if d.b is None:
+        d.b = A.Braizytojas(A.prisijungti(paleisti, brezinys))
+    elif brezinys:
+        A.uztikrinti_brezini(d.b.acad)
     return d.b
+
+
+# ------------------------------------------------------------------ kodėl neprisijungia
+def dekoduoti(baitai):
+    """Windows konsolės programų (tasklist) išvestis - OEM koduote (lietuviškame Windows - ne UTF-8)."""
+    for koduote in ("oem", "mbcs"):
+        try:
+            return baitai.decode(koduote, "replace")
+        except LookupError:
+            continue
+    return baitai.decode("utf-8", "replace")
+
+
+def acad_procesai():
+    """Veikiančių acad.exe PID (ne Windows - tuščias)."""
+    if sys.platform != "win32":
+        return []
+    try:
+        isvestis = subprocess.run(["tasklist", "/fo", "csv", "/nh", "/fi", "imagename eq acad.exe"],
+                                  capture_output=True, timeout=5, creationflags=0x08000000).stdout
+    except Exception:
+        return []
+    return [int(e[1]) for e in csv.reader(io.StringIO(dekoduoti(isvestis)))
+            if len(e) > 1 and e[0].lower() == "acad.exe" and e[1].isdigit()]
+
+
+def pakeltas(pid=None):
+    """Ar procesas (None - pats Brėžly) paleistas „kaip administratorius“. None - nežinoma."""
+    if sys.platform != "win32":
+        return None
+    try:
+        import ctypes
+        from ctypes import wintypes
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        adv = ctypes.WinDLL("advapi32", use_last_error=True)
+        k32.GetCurrentProcess.restype = wintypes.HANDLE
+        k32.OpenProcess.restype = wintypes.HANDLE
+        k32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+        k32.CloseHandle.argtypes = (wintypes.HANDLE,)
+        adv.OpenProcessToken.argtypes = (wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE))
+        adv.GetTokenInformation.argtypes = (wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
+                                            ctypes.POINTER(wintypes.DWORD))
+        h = k32.GetCurrentProcess() if pid is None else k32.OpenProcess(0x1000, False, pid)   # QUERY_LIMITED_INFORMATION
+        if not h:
+            return None
+        zetonas = wintypes.HANDLE()
+        try:
+            if not adv.OpenProcessToken(h, 0x0008, ctypes.byref(zetonas)):                    # TOKEN_QUERY
+                # administratoriaus proceso žetono paprasta programa neperskaito (ERROR_ACCESS_DENIED)
+                return True if pid is not None and ctypes.get_last_error() == 5 else None
+            reiksme, ilgis = wintypes.DWORD(), wintypes.DWORD()
+            ok = adv.GetTokenInformation(zetonas, 20, ctypes.byref(reiksme), 4, ctypes.byref(ilgis))  # TokenElevation
+            return bool(reiksme.value) if ok else None
+        finally:
+            if zetonas:
+                k32.CloseHandle(zetonas)
+            if pid is not None:
+                k32.CloseHandle(h)
+    except Exception:
+        return None
+
+
+def priezastis(klaida):
+    """Kodėl nepavyko prisijungti prie AutoCAD: (kodas, techninis tekstas). Kodai:
+    pywin32, neatidarytas, uzimtas, teises_acad, teises_brezly, kraunasi, neregistruotas, kita."""
+    if A.win32com is None:
+        return "pywin32", A.IMPORTO_KLAIDA
+    k = A.com_kodas(klaida)
+    tekstas = f"{k & 0xFFFFFFFF:#010x} {klaida}" if k is not None else f"{klaida.__class__.__name__}: {klaida}"
+    pid = acad_procesai()
+    if not pid:
+        return "neatidarytas", tekstas
+    if A.atmesta(klaida):
+        return "uzimtas", tekstas
+    if k in (A.MK_E_UNAVAILABLE, A.E_ACCESSDENIED):
+        mes = pakeltas()
+        jie = [j for j in (pakeltas(p) for p in pid) if j is not None]
+        if mes is not None and jie and all(j != mes for j in jie):
+            return ("teises_brezly" if mes else "teises_acad"), tekstas
+        return "kraunasi", tekstas
+    if k in (A.CO_E_CLASSSTRING, A.REGDB_E_CLASSNOTREG):
+        return "neregistruotas", tekstas
+    return "kita", tekstas
+
+
+def paaiskinimas(kodas):
+    """Ką daryti - rodoma po būsena ir prisijungimo klaidoje."""
+    return {
+        "pywin32": tr("Trūksta Brėžly dalies, per kurią jungiamasi prie AutoCAD (pywin32). Įdiek Brėžly iš naujo.",
+                      "A part of Brėžly that connects to AutoCAD (pywin32) is missing. Reinstall Brėžly.")
+        if getattr(sys, "frozen", False) else
+        tr("Trūksta pywin32 paketo. Paleisk IDIEGTI.bat arba: python -m pip install pywin32",
+           "The pywin32 package is missing. Run IDIEGTI.bat or: python -m pip install pywin32"),
+        "neatidarytas": tr("AutoCAD neatidarytas.", "AutoCAD is not open."),
+        "uzimtas": tr("AutoCAD užimtas - užbaik komandą arba uždaryk atidarytą langą (Esc).",
+                      "AutoCAD is busy - finish the command or close the open dialog (Esc)."),
+        "teises_acad": tr("AutoCAD paleistas „kaip administratorius“, o Brėžly - ne, todėl Windows neleidžia jiems susikalbėti. "
+                          "Išsaugok brėžinį, uždaryk AutoCAD ir atidaryk jį įprastai (ne „Run as administrator“).",
+                          "AutoCAD is running as administrator and Brėžly is not, so Windows won't let them talk. "
+                          "Save your drawing, close AutoCAD and open it normally (not „Run as administrator“)."),
+        "teises_brezly": tr("Brėžly paleistas „kaip administratorius“, o AutoCAD - ne, todėl Windows neleidžia jiems susikalbėti. "
+                            "Uždaryk Brėžly ir atidaryk jį įprastai.",
+                            "Brėžly is running as administrator and AutoCAD is not, so Windows won't let them talk. "
+                            "Close Brėžly and open it normally."),
+        "kraunasi": tr("AutoCAD atidarytas, bet dar neatsiliepia. Palauk, kol jis visiškai užsikraus. "
+                       "Jei per minutę neprisijungia - uždaryk AutoCAD ir atidaryk jį įprastai (ne „kaip administratorius“).",
+                       "AutoCAD is open but not answering yet. Wait until it has fully loaded. "
+                       "If it doesn't connect within a minute, close AutoCAD and open it normally (not as administrator)."),
+        "neregistruotas": tr("Windows nežino, kaip pasiekti šį AutoCAD (gali būti AutoCAD LT arba nebaigtas diegimas). "
+                             "Pabandyk AutoCAD diegimo programoje pasirinkti „Repair“.",
+                             "Windows doesn't know how to reach this AutoCAD (it may be AutoCAD LT or an unfinished install). "
+                             "Try „Repair“ in the AutoCAD installer."),
+    }.get(kodas, tr("Nepavyko prisijungti prie AutoCAD.", "Couldn't connect to AutoCAD."))
+
+
+def brezinio_busena(b):
+    """{"brezinys": vardas} arba be_brezinio, kai AutoCAD rodo tik pradžios (Start) langą."""
+    n = A.kartoti(lambda: b.acad.Documents.Count, bandymu=2)
+    if not n:
+        return {"brezinys": tr("nėra atidaryto brėžinio", "no drawing open"), "be_brezinio": True}
+    try:
+        vardas = A.kartoti(lambda: b.acad.ActiveDocument.Name, bandymu=2)
+    except Exception as e:
+        if A.atmesta(e):
+            raise
+        vardas = A.kartoti(lambda: b.acad.Documents.Item(n - 1).Name, bandymu=2)   # aktyvus pradžios skirtukas
+    BUSENA["brezinys"] = vardas
+    return {"brezinys": vardas}
 
 
 def prisijungti(_):
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         BUSENA["darbas"].b = None
-        b = braizytojas()
-        vardas = A.kartoti(lambda: b.acad.ActiveDocument.Name)
+        try:                # AutoCAD veikia, bet nepasiekiamas - antro AutoCAD nepaleidžiame
+            b = braizytojas(paleisti=not acad_procesai())
+            vardas = brezinio_busena(b)["brezinys"]
+        except Exception as e:
+            BUSENA["darbas"].b = None
+            kodas, tekstas = priezastis(e)
+            return {"ok": False, "priezastis": kodas, "klaida": f"{paaiskinimas(kodas)} ({tekstas})", "log": buf.getvalue()}
     return {"ok": True, "brezinys": vardas, "log": buf.getvalue()}
 
 
 def busena(_):
-    """Ar prisijungta prie jau veikiančio AutoCAD (pats AutoCAD nepaleidžiamas)."""
+    """Ar prisijungta prie jau veikiančio AutoCAD (pats AutoCAD nepaleidžiamas).
+    Jei ne - priezastis (žr. priezastis()), paaiskinimas ir klaida (techninis kodas)."""
     d = BUSENA["darbas"]
-    if d.b is None:
+    klaida = None
+    for _ in range(2):                          # antras ratas - kai AutoCAD buvo perkrautas
+        if d.b is None:
+            try:
+                with zurnalas():
+                    d.b = A.Braizytojas(A.rasti_atidaryta())
+            except Exception as e:
+                klaida = e
+                break
         try:
-            with zurnalas():
-                d.b = A.Braizytojas(A.win32com.client.GetActiveObject("AutoCAD.Application"))
-        except Exception:
-            return {"ok": True, "prisijungta": False}
-    try:
-        vardas = A.kartoti(lambda: d.b.acad.ActiveDocument.Name, bandymu=2)
-        return {"ok": True, "prisijungta": True, "brezinys": vardas}
-    except Exception:
-        d.b = None
-        return {"ok": True, "prisijungta": False}
+            return {"ok": True, "prisijungta": True, **brezinio_busena(d.b)}
+        except Exception as e:
+            if A.atmesta(e):                    # atidarytas dialogas ar ilga komanda - ryšys yra
+                return {"ok": True, "prisijungta": True, "uzimtas": True, "brezinys": BUSENA.get("brezinys", "")}
+            d.b, klaida = None, e
+    kodas, tekstas = priezastis(klaida)
+    return {"ok": True, "prisijungta": False, "priezastis": kodas, "paaiskinimas": paaiskinimas(kodas), "klaida": tekstas}
 
 
 def ping(_):

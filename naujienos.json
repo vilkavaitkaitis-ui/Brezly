@@ -2,6 +2,27 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.0.1",
+   "pavadinimas": "Patikimesnis ryšys su AutoCAD",
+   "aprasas": "Brėžly prisijungia ir tada, kai AutoCAD rodo tik pradžios langą, o kai negali - pasako kodėl.",
+   "punktai": [
+    "<b>Pradžios langas:</b> atidarius AutoCAD be brėžinio būsena nebe raudona - spausk „Naujas“.",
+    "<b>Kelios AutoCAD versijos:</b> randama ta, kuri atidaryta (pvz. 2025 šalia 2026).",
+    "<b>Kodėl neprisijungia?</b> Brėžly pasako priežastį: AutoCAD dar kraunasi, užimtas ar paleistas „kaip administratorius“.",
+    "Atidarytas langas AutoCAD'e nebeatjungia Brėžly."
+   ],
+   "en": {
+    "pavadinimas": "More reliable AutoCAD connection",
+    "aprasas": "Brėžly connects even when AutoCAD only shows its start page, and when it can't, it tells you why.",
+    "punktai": [
+     "<b>Start page:</b> AutoCAD open without a drawing no longer shows red - press „New“.",
+     "<b>Several AutoCAD versions:</b> Brėžly finds the one that is open (e.g. 2025 next to 2026).",
+     "<b>Why doesn't it connect?</b> Brėžly tells you the reason: AutoCAD still loading, busy or running „as administrator“.",
+     "An open dialog in AutoCAD no longer disconnects Brėžly."
+    ]
+   }
+  },
+  {
    "versija": "1.0",
    "pavadinimas": "Trys naujos pamokos ir anglų kalba",
    "aprasas": "Didžiausias Brėžly atnaujinimas: 10 pamokų, anglų kalba ir įrankiai dėstytojui.",

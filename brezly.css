@@ -70,6 +70,7 @@ aside{width:285px;flex:none;background:var(--panel);border-right:1px solid var(-
 .taskas{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
 .busena.gerai .taskas{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}
 .busena.blogai .taskas{background:var(--err)}
+.busena.ispejimas .taskas{background:var(--accent)}
 .busena .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .busena button{margin-left:auto;background:none;border:0;color:var(--accent);font-size:12px;padding:0;white-space:nowrap}
 .tema{background:var(--card-hi);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;white-space:nowrap;align-self:flex-start}
@@ -328,7 +329,7 @@ ol.daryk li{margin:4px 0}
   #virsus .v-txt small{color:var(--muted)}
   #virsus button{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:7px 10px;font-size:13px;flex:none}
   #virsus .v-tsk{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
-  #virsus .v-tsk.gerai{background:var(--ok)} #virsus .v-tsk.blogai{background:var(--err)}
+  #virsus .v-tsk.gerai{background:var(--ok)} #virsus .v-tsk.blogai{background:var(--err)} #virsus .v-tsk.ispejimas{background:var(--accent)}
   .vidus{padding:14px 14px 40px}
   .korta{padding:18px;border-radius:16px}
   .korta-ant h1{font-size:20px}
