@@ -14,6 +14,7 @@ import hashlib
 import hmac
 import io
 import json
+import re
 import os
 import platform
 import secrets
@@ -151,6 +152,87 @@ def progresas(duom):
               "S": duom.get("S", senas.get("S")),
               "nustatymai": {**senas.get("nustatymai", {}), **(duom.get("nustatymai") or {})}}
     irasyti_atomiskai(PROGRESAS, json.dumps(naujas, ensure_ascii=False, indent=1))
+    return {"ok": True}
+
+
+def _progreso_santrauka(S):
+    S = S or {}
+    return {"vardas": S.get("vardas", ""), "xp": int(S.get("xp") or 0),
+            "zingsniai": sum(len(v) if isinstance(v, (list, dict)) else 0 for v in (S.get("atlikta") or {}).values()),
+            "praktika": len(S.get("praktika") or {}), "zenkleliai": len(S.get("zenkleliai") or [])}
+
+
+def destytojo_ataskaita(duom):
+    """{vardas, html} -> Dokumentai\\Brezly\\ataskaitos\\Brezly_destytojui_<vardas>_<data>.html, atidaroma naršyklėje."""
+    html = str(duom.get("html") or "")
+    if not html.startswith("<!doctype html>") or len(html) > 2_000_000:
+        return {"ok": False, "klaida": "Netinkama ataskaita."}
+    ap = os.path.join(_aplankas(), "ataskaitos")
+    os.makedirs(ap, exist_ok=True)
+    vardas = re.sub(r"[^\w-]+", "_", str(duom.get("vardas") or "studentas"))[:40]
+    kelias = os.path.join(ap, f"Brezly_destytojui_{vardas}_{datetime.datetime.now():%Y%m%d_%H%M}.html")
+    with open(kelias, "w", encoding="utf-8") as f:
+        f.write(html)
+    if WINDOWS:
+        try:
+            os.startfile(kelias)
+        except Exception:
+            rasyti_zurnala("Ataskaitos atidarymas: " + traceback.format_exc())
+    return {"ok": True, "kelias": kelias}
+
+
+def progresas_eksportuoti(_):
+    """Progreso kopija perkėlimui: Dokumentai\\Brezly\\perkelimas\\Brezly_progresas_<vardas>_<data>.json"""
+    try:
+        with open(PROGRESAS, encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return {"ok": False, "klaida": "Progreso dar nėra - atlik bent vieną žingsnį."}
+    ap = os.path.join(_aplankas(), "perkelimas")
+    os.makedirs(ap, exist_ok=True)
+    vardas = re.sub(r"[^\w-]+", "_", str((d.get("S") or {}).get("vardas") or "Robis"))[:30]
+    kelias = os.path.join(ap, f"Brezly_progresas_{vardas}_{datetime.datetime.now():%Y%m%d_%H%M}.json")
+    d = {"brezly_progresas": 1, "eksportuota": datetime.datetime.now().isoformat(timespec="seconds"),
+         "versija": VERSIJA_BREZLY, "S": d.get("S"), "nustatymai": d.get("nustatymai", {})}
+    with open(kelias, "w", encoding="utf-8") as f:
+        json.dump(d, f, ensure_ascii=False, indent=1)
+    if WINDOWS:
+        try:
+            subprocess.Popen(["explorer", "/select,", kelias])
+        except Exception:
+            pass
+    return {"ok": True, "kelias": kelias, "santrauka": _progreso_santrauka(d["S"])}
+
+
+def progresas_importuoti(duom):
+    """{turinys: failo tekstas, patvirtinta: bool}. Be patvirtinimo - tik santrauka palyginimui.
+    Prieš pakeičiant dabartinis progresas išsaugomas perkelimas\\pries_importa_<data>.json."""
+    try:
+        d = json.loads(duom.get("turinys") or "")
+        S = d.get("S")
+        if not isinstance(S, dict) or "xp" not in S:
+            raise ValueError
+    except (ValueError, AttributeError):
+        return {"ok": False, "klaida": "Tai ne Brėžly progreso failas."}
+    dabar = None
+    try:
+        with open(PROGRESAS, encoding="utf-8") as f:
+            dabar = json.load(f)
+    except (OSError, ValueError):
+        pass
+    if not duom.get("patvirtinta"):
+        return {"ok": True, "failas": _progreso_santrauka(S), "dabar": _progreso_santrauka((dabar or {}).get("S")),
+                "eksportuota": d.get("eksportuota", "")}
+    if dabar:
+        ap = os.path.join(_aplankas(), "perkelimas")
+        os.makedirs(ap, exist_ok=True)
+        with open(os.path.join(ap, f"pries_importa_{datetime.datetime.now():%Y%m%d_%H%M%S}.json"), "w", encoding="utf-8") as f:
+            json.dump(dabar, f, ensure_ascii=False, indent=1)
+    naujas = {"versija": VERSIJA_BREZLY, "irasyta": datetime.datetime.now().isoformat(timespec="seconds"),
+              "S": S, "nustatymai": d.get("nustatymai") or (dabar or {}).get("nustatymai", {})}
+    _aplankas()
+    irasyti_atomiskai(PROGRESAS, json.dumps(naujas, ensure_ascii=False, indent=1))
+    rasyti_zurnala(f"Progresas importuotas: {_progreso_santrauka(S)}")
     return {"ok": True}
 
 
@@ -893,7 +975,8 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/prisijungti": P.prisijungti, "/api/paleisti_autocad": paleisti_autocad, "/api/ping": P.ping,
         "/api/progresas": progresas, "/api/testas": testas_atrakinti, "/api/testas_galioja": testas_patikrinti,
         "/api/langas": langas, "/api/ivykiai": ivykiai, "/api/ataskaita": ataskaita, "/api/duomenys": atidaryti_duomenis,
-        "/api/js_klaida": js_klaida,
+        "/api/js_klaida": js_klaida, "/api/progresas_eksportuoti": progresas_eksportuoti,
+        "/api/progresas_importuoti": progresas_importuoti, "/api/destytojo_ataskaita": destytojo_ataskaita,
         "/api/atnaujinimai": atnaujinimai, "/api/atnaujinti": atnaujinti, "/api/perkrauti": perkrauti,
         "/api/praktika_atidaryti": praktika_atidaryti, "/api/praktika_pdf": praktika_pdf,
         "/api/praktika_aplankas": praktika_aplankas, "/api/praktika_tikrinti": praktika_tikrinti,

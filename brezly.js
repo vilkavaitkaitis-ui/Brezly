@@ -7,12 +7,13 @@ function sg(k,v){
   try{localStorage.setItem(k,v);}catch(e){}
   if(k!=="cadet"){ NUST[k]=String(v); planuotiSaugojima(); }
 }
+let NESAUGOTI=false;  /* importuojant progresą: neperrašyti jo senu, kol puslapis persikrauna */
 function planuotiSaugojima(dabar){
-  clearTimeout(saugojimoLaikmatis);
+  clearTimeout(saugojimoLaikmatis); if(NESAUGOTI) return;
   saugojimoLaikmatis=setTimeout(()=>api("/api/progresas",DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}).catch(()=>{}),dabar?0:500);
 }
 let DEMO_S=null;     // demo režimas: tikras progresas laikomas čia, rodomas pavyzdinis
-addEventListener("pagehide",()=>{try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
+addEventListener("pagehide",()=>{if(NESAUGOTI)return;try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
 async function api(kelias,duom){const r=await fetch(kelias,duom===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(duom)});return r.json();}
 /* Sąsajos klaidos -> brezly.log (Dokumentai\Brezly), kad „Pranešti apie klaidą“ ataskaitoje jos būtų */
 const JS_KLAIDOS={n:0,matytos:new Set()};
@@ -588,6 +589,9 @@ function pabaiga(){
   if(atl>=PAM.zingsniai.length && PAM.id==="pirmoji-3d") duotiZenkleli("detale");
   const kita=INFO.pamokos[INFO.pamokos.indexOf(PAM)+1];
   if(teis===PAM.testas.length) duotiZenkleli("testas");
+  { const siandien=dienaStr(new Date()); S.testai=S.testai||{}; S.baigta=S.baigta||{};          // ataskaitai dėstytojui
+    const sen=S.testai[PAM.id]; if(!sen||teis>=sen.t) S.testai[PAM.id]={t:teis,n:PAM.testas.length,d:siandien};
+    if(atl>=PAM.zingsniai.length&&!S.baigta[PAM.id]) S.baigta[PAM.id]=siandien; saugoti(); }
   konfeti(140);
   $("#vidus").innerHTML=`<div class="pabaiga"><div class="taure">🏆</div><h1>Pamoka baigta!</h1>
     <p>${esc(PAM.pabaiga||"Puikiai padirbėjai!")}</p>
@@ -1082,8 +1086,12 @@ function rodytiNustatymus(){
     <div class="nust-eil"><div><b>Komandos su „_“</b><small>Jei tavo AutoCAD ne anglų kalba: _LINE, _CIRCLE veikia bet kurioje kalboje.${BUS.kalba?` Tavo AutoCAD kalba: <b style="display:inline">${esc(BUS.kalba)}</b>.`:""}</small></div>${jung(sg("pabr")==="1",`sg('pabr',sg('pabr')==='1'?'0':'1');rodytiNustatymus()`,"Komandos su pabraukimu")}</div>
     <div class="nust-eil"><div><b>🤖 Robotas gidas</b><small>Parodo, kur spausti, ir padrąsina.</small></div><button class="btn" onclick="Gidas.turasIsNaujo()">❔ Turas</button>${jung(Gidas.ijungtas(),"Gidas.perjungti();rodytiNustatymus()","Robotas gidas")}</div>
   </div>
-  <div class="nust-gr"><h3>Progresas</h3><p>XP, pamokos ir daiktai saugomi faile - išliks ir perdiegus Brėžly. Norėdamas perkelti į kitą kompiuterį, nukopijuok šį failą.</p>
+  <div class="nust-gr"><h3>Progresas</h3><p>XP, pamokos ir daiktai saugomi faile - išliks ir perdiegus Brėžly.</p>
     <code class="kelias">${esc(INFO.duomenys+sep+"progresas.json")}</code>
+    <div class="nust-eil" style="margin-top:12px"><div><b>Perkelti į kitą kompiuterį</b><small>Eksportuok čia, nusikopijuok failą (USB, el. paštas, OneDrive) ir kitame kompiuteryje spausk „Importuoti“.</small></div>
+      <button class="btn" onclick="eksportuotiProgresa()">⇪ Eksportuoti</button><button class="btn" onclick="$('#importoFailas').click()">⇩ Importuoti</button>
+      <input type="file" id="importoFailas" accept=".json,application/json" hidden onchange="importuotiProgresa(this)"></div>
+    <div class="nust-eil"><div><b>Ataskaita dėstytojui</b><small>Atliktos pamokos, testai, praktikos užduotys ir XP - atsispausdink arba išsaugok PDF.</small></div><button class="btn" onclick="destytojoAtaskaita()">🎓 Ataskaita</button></div>
     <div class="eil" style="margin-top:12px"><button class="btn" onclick="api('/api/duomenys',{})">📂 Atidaryti aplanką</button></div>
   </div>
   <div class="nust-gr"><h3>Pagalba</h3>
@@ -1095,6 +1103,91 @@ function rodytiNustatymus(){
     <p>Atrakinta. Užsirakins pati po 30 min. neveiklumo.</p>
     <div class="eil"><button class="btn pagr" onclick="rodytiKureja()">🛠 Kūrėjo pultas</button><button class="btn" onclick="uzrakintiTesta()">🔒 Užrakinti</button></div>`
     :`<p>Kūrėjo įrankiai apsaugoti slaptažodžiu.</p><button class="btn" onclick="testoLangas()">🔒 Atrakinti</button>`}</div>`:""}`;
+}
+
+/* ---- ataskaita dėstytojui: spausdinamas HTML (Dokumentai\\Brezly\\ataskaitos) ---- */
+function destytojoAtaskaita(){
+  rodytiLangeli(`<h2>🎓 Ataskaita dėstytojui</h2>
+    <p>Bus sukurta ataskaita su tavo pamokomis, testais ir praktikos užduotimis. Ją atsidarysi naršyklėje ir galėsi atsispausdinti arba išsaugoti PDF (Ctrl+P).</p>
+    <label for="ataVardas">Vardas ir pavardė</label><input type="text" id="ataVardas" value="${esc(sg("studentas")||S.savininkas||"")}" maxlength="80" autocomplete="name">
+    <label for="ataGrupe" style="margin-top:10px;display:block">Grupė / kursas</label><input type="text" id="ataGrupe" value="${esc(sg("grupe")||"")}" maxlength="40" placeholder="pvz. AI26">
+    <label for="ataDalykas" style="margin-top:10px;display:block">Dalykas, dėstytojas (nebūtina)</label><input type="text" id="ataDalykas" value="${esc(sg("dalykas")||"")}" maxlength="120" placeholder="pvz. Inžinerinė grafika">
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Atšaukti</button><button class="btn pagr" onclick="kurtiDestytojoAtaskaita()">Sukurti</button></div>`);
+}
+function ataskaitosHTML(st){
+  const pam=INFO.pamokos, ts=S.testai||{}, bg=S.baigta||{}, pr=S.praktika||{};
+  const baigtos=pam.filter(p=>(S.atlikta[p.id]||[]).length>=p.zingsniai.length).length, prN=PRAKTIKA.filter(u=>pr[u.id]).length;
+  const e=esc, d=new Date();
+  const eilP=pam.map((p,i)=>{ const a=(S.atlikta[p.id]||[]).length, n=p.zingsniai.length, t=ts[p.id];
+    return `<tr class="${a>=n?"ok":""}"><td>${i+1}</td><td>${e(p.pavadinimas)}</td><td>${a}/${n}</td><td>${t?`${t.t}/${t.n}`:"-"}</td><td>${e(bg[p.id]||(a>=n?"✓":""))}</td></tr>`; }).join("");
+  const eilU=PRAKTIKA.slice().sort((a,b)=>a.nr-b.nr).map(u=>`<tr class="${pr[u.id]?"ok":""}"><td>U${u.nr}</td><td>${e(u.pav)}</td><td>${e(u.fmt)} · ${e(u.d)}</td><td>${pr[u.id]?"✓ "+e(typeof pr[u.id]==="string"?pr[u.id]:""):"-"}</td></tr>`).join("");
+  return `<!doctype html><html lang="lt"><head><meta charset="utf-8"><title>Brėžly ataskaita - ${e(st.vardas)}</title><style>
+  @page{size:A4;margin:16mm 14mm}
+  body{font:13px/1.5 "Segoe UI",system-ui,sans-serif;color:#111;max-width:780px;margin:24px auto;padding:0 16px}
+  h1{font-size:22px;margin:0}.sub{color:#555;margin:2px 0 18px}
+  .kort{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 20px}.kort div{border:1px solid #ccc;border-radius:4px;padding:8px 10px}
+  .kort b{display:block;font-size:20px}.kort small{color:#555}
+  table{width:100%;border-collapse:collapse;margin:6px 0 18px}th,td{border-bottom:1px solid #ddd;padding:5px 8px;text-align:left}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#555;border-bottom:1.5px solid #333}tr.ok td:first-child{border-left:3px solid #1a7f37}
+  h2{font-size:15px;margin:18px 0 2px}.duom{width:auto}.duom td{border:0;padding:2px 24px 2px 0}.duom td:first-child{color:#555}.pastaba{color:#555;font-size:11.5px;margin-top:22px;border-top:1px solid #ddd;padding-top:8px}
+  .spausd{margin:0 0 16px}@media print{.spausd{display:none}body{margin:0}}
+  </style></head><body>
+  <button class="spausd" onclick="print()">🖨 Spausdinti / išsaugoti PDF</button>
+  <h1>Brėžly - AutoCAD mokymosi ataskaita</h1><p class="sub">Sugeneruota ${e(dienaStr(d))} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")} · Brėžly ${e(INFO.versija)}</p>
+  <table class="duom"><tr><td>Studentas</td><td><b>${e(st.vardas||"-")}</b></td></tr><tr><td>Grupė</td><td>${e(st.grupe||"-")}</td></tr>${st.dalykas?`<tr><td>Dalykas</td><td>${e(st.dalykas)}</td></tr>`:""}</table>
+  <div class="kort"><div><b>${baigtos}/${pam.length}</b><small>pamokos baigtos</small></div><div><b>${prN}/${PRAKTIKA.length}</b><small>praktikos užduotys</small></div>
+    <div><b>${S.xp}</b><small>XP · ${e(LYGIAI[lygis(S.xp)][1])}</small></div><div><b>${(S.zenkleliai||[]).length}</b><small>ženkleliai</small></div></div>
+  <h2>Pamokos</h2><table><tr><th>Nr.</th><th>Pamoka</th><th>Žingsniai</th><th>Testas</th><th>Baigta</th></tr>${eilP}</table>
+  <h2>Praktikos užduotys</h2><table><tr><th>Nr.</th><th>Užduotis</th><th>Lapas</th><th>Priimta</th></tr>${eilU}</table>
+  <p class="pastaba">Žingsnius ir praktikos užduotis Brėžly patikrino tiesiai AutoCAD brėžinyje. Ataskaita sukurta studento kompiuteryje -
+  dėstytojas gali paprašyti parodyti brėžinius (DWG) ar atlikti užduotį auditorijoje.</p>
+  </body></html>`;
+}
+async function kurtiDestytojoAtaskaita(){
+  const st={vardas:$("#ataVardas").value.trim(), grupe:$("#ataGrupe").value.trim(), dalykas:$("#ataDalykas").value.trim()};
+  if(!st.vardas){ $("#ataVardas").focus(); pranesti("Įrašyk vardą ir pavardę."); return; }
+  sg("studentas",st.vardas); sg("grupe",st.grupe); sg("dalykas",st.dalykas);
+  const r=await api("/api/destytojo_ataskaita",{vardas:st.vardas,html:ataskaitosHTML(st)});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  rodytiLangeli(`<h2>Ataskaita sukurta</h2><p>${INFO.windows?"Atidariau ją naršyklėje - spausk „Spausdinti / išsaugoti PDF“.":"Atsidaryk ją naršyklėje ir spausdink (Ctrl+P)."}</p>
+    <code class="kelias">${esc(r.kelias)}</code>
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
+}
+
+/* ---- progreso perkėlimas tarp kompiuterių ---- */
+async function eksportuotiProgresa(){
+  if(DEMO_S){ pranesti("Išjunk demo režimą prieš eksportuodamas."); return; }
+  try{ await api("/api/progresas",{S,nustatymai:NUST}); }catch(e){}
+  const r=await api("/api/progresas_eksportuoti",{});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  rodytiLangeli(`<h2>Progresas eksportuotas</h2>
+    <p>${r.santrauka.xp} XP · ${r.santrauka.zingsniai} žingsn. · ${r.santrauka.praktika} užduot. · ${r.santrauka.zenkleliai} ženkl.</p>
+    <code class="kelias">${esc(r.kelias)}</code>
+    <p style="margin-top:10px">Nusikopijuok šį failą į kitą kompiuterį ir ten: Nustatymai › Progresas › <b>Importuoti</b>.</p>
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
+}
+async function importuotiProgresa(inp){
+  const f=inp.files&&inp.files[0]; inp.value=""; if(!f) return;
+  if(f.size>5e6){ pranesti("Per didelis failas - tai ne Brėžly progresas."); return; }
+  const turinys=await f.text();
+  const r=await api("/api/progresas_importuoti",{turinys});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  const eil=(p,a)=>`<tr><td>${p}</td><td>${a(r.dabar)}</td><td><b>${a(r.failas)}</b></td></tr>`;
+  window._importoTurinys=turinys;
+  rodytiLangeli(`<h2>Importuoti progresą?</h2>
+    <p>Dabartinis progresas bus <b>pakeistas</b> failo progresu. Jo kopija išliks aplanke „perkelimas“.</p>
+    <table class="lent-palyg"><tr><th></th><th>Dabar</th><th>Faile</th></tr>
+      ${eil("Vardas",x=>esc(x.vardas||"-"))}${eil("XP",x=>x.xp)}${eil("Žingsniai",x=>x.zingsniai)}${eil("Užduotys",x=>x.praktika)}${eil("Ženkleliai",x=>x.zenkleliai)}</table>
+    ${r.eksportuota?`<p style="margin-top:8px;opacity:.75">Failas sukurtas ${esc(r.eksportuota.replace("T"," "))}</p>`:""}
+    ${r.failas.xp<r.dabar.xp?`<p style="color:var(--err)">Faile XP mažiau nei dabar - ar tikrai tas failas?</p>`:""}
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Atšaukti</button><button class="btn pagr" onclick="patvirtintiImporta()">Importuoti</button></div>`);
+}
+async function patvirtintiImporta(){
+  NESAUGOTI=true; clearTimeout(saugojimoLaikmatis);
+  const r=await api("/api/progresas_importuoti",{turinys:window._importoTurinys,patvirtinta:true});
+  if(!r.ok){ NESAUGOTI=false; pranesti(r.klaida); return; }
+  try{ localStorage.removeItem("cadet"); }catch(e){}
+  location.reload();
 }
 
 /* ---- testavimo įrankiai: atrakinami slaptažodžiu (tikrina serveris) ---- */
