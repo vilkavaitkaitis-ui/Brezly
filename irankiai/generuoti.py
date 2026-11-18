@@ -3,6 +3,7 @@ Brėžly: failai, kurie kuriami iš vieno šaltinio (pamokos.json ir praktika/uz
 
   python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą ir sukuria svetainę
                                               isvestis/svetaine: atsisiuntimo puslapis + programele/
+  python irankiai/generuoti.py --netlify    - papildomai isvestis/Brezly_svetaine(.zip) Netlify'ui (demo registracija - Netlify Forms)
   python irankiai/generuoti.py --tikrinti   - tik patikrina, ar lisp/Brezly.lsp atnaujintas (GitHub Actions)
 
 Išbandyti: python -m http.server -d isvestis/svetaine 8000  ->  http://localhost:8000 (programėlė - /programele/)
@@ -23,7 +24,7 @@ LISP = os.path.join(SAKNIS, "lisp", "Brezly.lsp")
 APP = os.path.join(SAKNIS, "app")
 SVETAINES_SALTINIS = os.path.join(SAKNIS, "svetaine")
 SVETAINE = os.path.join(SAKNIS, "isvestis", "svetaine")          # -> gh-pages
-PROGRAMELE = os.path.join(SVETAINE, "programele")
+NETLIFY = os.path.join(SAKNIS, "isvestis", "Brezly_svetaine")    # -> Netlify (nutempti aplanką)
 
 LISP_PRADZIA = ";;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti"
 LISP_PABAIGA = ";;; </uzduotys>"
@@ -89,14 +90,15 @@ def lisp_atnaujintas(d):
 
 
 # ------------------------------------------------------------------ programėlė (PWA)
-def svetaine(d):
-    """Atsisiuntimo puslapis (svetaine/) su skaičiais iš pamokų ir užduočių + programėlė programele/."""
+def svetaine(d, kur=SVETAINE, budas="google"):
+    """Atsisiuntimo puslapis (svetaine/) su skaičiais iš pamokų ir užduočių + demo/ + programėlė programele/.
+    budas - kur demo registracija siunčia duomenis: "google" (Google Forma, forma.json) arba "netlify" (Netlify Forms)."""
     import pamokos      # be pywin32 importuojasi (AutoCAD nereikia)
-    if os.path.exists(SVETAINE):
-        shutil.rmtree(SVETAINE)
-    shutil.copytree(SVETAINES_SALTINIS, SVETAINE)
+    if os.path.exists(kur):
+        shutil.rmtree(kur)
+    shutil.copytree(SVETAINES_SALTINIS, kur)
     for ikona in ("icon-192.png", "icon-512.png"):
-        shutil.copy2(os.path.join(APP, ikona), SVETAINE)
+        shutil.copy2(os.path.join(APP, ikona), kur)
     import html
     with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
         forma = json.load(f)
@@ -105,8 +107,8 @@ def svetaine(d):
            "{{ATEITYJE}}": "\n".join(f'        <li><b>{html.escape(a["pavadinimas"])}</b><span>{html.escape(a["aprasas"])}</span></li>'
                                      for a in pamokos.ATEITYJE),
            "{{FORMA}}": forma["forma"] if forma["forma"] else "{{FORMA}}",
-           "{{LAUKAI}}": json.dumps(forma["laukai"])}
-    for sakn, _, vardai in os.walk(SVETAINE):
+           "{{LAUKAI}}": json.dumps(forma["laukai"]), "{{BUDAS}}": budas}
+    for sakn, _, vardai in os.walk(kur):
         for v in vardai:
             if v.endswith(".html"):
                 kelias = os.path.join(sakn, v)
@@ -117,9 +119,12 @@ def svetaine(d):
                         s = s.replace(k, str(reiksme))
                 with open(kelias, "w", encoding="utf-8") as f:
                     f.write(s)
-    os.remove(os.path.join(SVETAINE, "demo", "forma.json"))
-    open(os.path.join(SVETAINE, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
-    return programele(d, pamokos)
+    os.remove(os.path.join(kur, "demo", "forma.json"))
+    if budas == "netlify":
+        os.remove(os.path.join(kur, "sw.js"))       # senos programėlės valytojas reikalingas tik GitHub Pages adrese
+    else:
+        open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
+    return programele(d, pamokos, os.path.join(kur, "programele"))
 
 
 def _versija():
@@ -130,7 +135,7 @@ def _versija():
         return "naujausia"
 
 
-def programele(d, pamokos):
+def programele(d, pamokos, PROGRAMELE):
     shutil.copytree(APP, PROGRAMELE)
     with open(os.path.join(PROGRAMELE, "pamokos.json"), "w", encoding="utf-8") as f:
         json.dump(pamokos.viesai(), f, ensure_ascii=False, separators=(",", ":"))
@@ -177,7 +182,11 @@ def main():
             f.write(naujas)
         print("Atnaujinta: lisp/Brezly.lsp")
     n = svetaine(d)
-    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} (atsisiuntimo puslapis + programele/, {n} failai)")
+    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} (atsisiuntimo puslapis + demo/ + programele/, {n} failai)")
+    if "--netlify" in sys.argv:
+        svetaine(d, NETLIFY, "netlify")
+        zipas = shutil.make_archive(NETLIFY, "zip", NETLIFY)
+        print(f"Netlify: {os.path.relpath(NETLIFY, SAKNIS)} (aplankas) ir {os.path.relpath(zipas, SAKNIS)}")
 
 
 if __name__ == "__main__":

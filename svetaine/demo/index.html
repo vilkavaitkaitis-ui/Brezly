@@ -70,7 +70,9 @@
     </div>
 
     <div class="forma" id="forma">
-      <form id="registracija" novalidate>
+      <form id="registracija" name="demo" method="POST" data-netlify="true" netlify-honeypot="gudrus" novalidate>
+        <input type="hidden" name="form-name" value="demo">
+        <p hidden><label>Nepildyk šio lauko: <input name="gudrus" tabindex="-1" autocomplete="off"></label></p>
         <div style="display:flex;flex-direction:column;gap:16px">
           <h2>Registracija į demo</h2>
           <div class="du-laukai">
@@ -92,7 +94,7 @@
                 <option>Pilnas (studento)</option><option>Pilnas (darbo)</option><option>AutoCAD LT</option><option>Dar neturiu</option><option>Nežinau</option>
               </select></div>
           </div>
-          <label class="sutikimas"><input type="checkbox" id="sutikimas" required>
+          <label class="sutikimas"><input type="checkbox" id="sutikimas" name="sutikimas" value="taip" required>
             <span>Sutinku, kad mano vardas ir el. paštas būtų naudojami tik pranešti apie Brėžly demo. Bet kada galiu paprašyti juos ištrinti.</span></label>
           <div class="klaida" id="klaida" role="alert"></div>
           <button class="mygt" type="submit" id="siusti">Registruotis</button>
@@ -129,16 +131,19 @@
 </footer>
 
 <script>
-/* ===== Google Formos prijungimas =====
+/* ===== Kur siunčiama registracija =====
+   BUDAS "netlify" - Netlify Forms (svetainė Netlify'e; registracijos - Netlify -> Forms -> demo).
+   BUDAS "google"  - Google Forma:
    FORMA - formos ID iš nuorodos docs.google.com/forms/d/e/<ID>/viewform
    LAUKAI - kiekvieno klausimo „entry.“ numeris (iš „Gauti iš anksto užpildytą nuorodą“).
    Kol FORMA tuščia, registracija neveikia ir puslapis tai parašo. */
+const BUDAS = "{{BUDAS}}";
 const FORMA = "{{FORMA}}";
 const LAUKAI = {{LAUKAI}};
 
 (function () {
   const f = document.getElementById("registracija"), kl = document.getElementById("klaida"), btn = document.getElementById("siusti");
-  const ijungta = FORMA && !FORMA.startsWith("{{");
+  const ijungta = BUDAS === "netlify" || (FORMA && !FORMA.startsWith("{{"));
   try {
     const jau = localStorage.getItem("brezly_demo");
     if (jau) { document.getElementById("aciuTekstas").textContent = "Tu jau sąraše, " + jau + "!"; document.getElementById("forma").classList.add("issiusta"); }
@@ -152,12 +157,18 @@ const LAUKAI = {{LAUKAI}};
     if (!v("vardas")) return klaida("Įrašyk vardą.", "vardas");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v("pastas"))) return klaida("Patikrink el. pašto adresą.", "pastas");
     if (!document.getElementById("sutikimas").checked) return klaida("Pažymėk sutikimą - be jo negalėsime atsiųsti laiško.", "sutikimas");
-    const duom = new URLSearchParams();
-    for (const [laukas, entry] of Object.entries(LAUKAI)) duom.append(entry, v(laukas));
     btn.disabled = true; btn.textContent = "Siunčiama...";
     try {
-      // Google Forms neatsako CORS - siunčiam „no-cors“: atsakymas nematomas, bet įrašas atsiranda lentelėje
-      await fetch("https://docs.google.com/forms/d/e/" + FORMA + "/formResponse", { method: "POST", mode: "no-cors", body: duom });
+      if (BUDAS === "netlify") {
+        const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                     body: new URLSearchParams(new FormData(f)).toString() });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+      } else {
+        const duom = new URLSearchParams();
+        for (const [laukas, entry] of Object.entries(LAUKAI)) duom.append(entry, v(laukas));
+        // Google Forms neatsako CORS - siunčiam „no-cors“: atsakymas nematomas, bet įrašas atsiranda lentelėje
+        await fetch("https://docs.google.com/forms/d/e/" + FORMA + "/formResponse", { method: "POST", mode: "no-cors", body: duom });
+      }
       try { localStorage.setItem("brezly_demo", v("vardas")); } catch (e) {}
       document.getElementById("aciuTekstas").textContent = "Ačiū, " + v("vardas") + "!";
       document.getElementById("forma").classList.add("issiusta");
