@@ -20,10 +20,14 @@
   </a>
   <span class="tarpas"></span>
   <nav>
+<!--ATIDARYTA-->
     <a href="#diegimas" class="neb">Diegimas</a>
     <a href="#kitos">Kitos parinktys</a>
+<!--/ATIDARYTA-->
     <a href="demo/">Demo</a>
+<!--ATIDARYTA-->
     <a href="https://github.com/vilkavaitkaitis-ui/Brezly" class="neb">GitHub</a>
+<!--/ATIDARYTA-->
   </nav>
 </header>
 
@@ -33,14 +37,25 @@
       <div class="kick">AutoCAD mokymosi programa · nemokama</div>
       <h1>Braižai tu.<br><em>Brėžly</em> padeda.</h1>
       <p class="apras">Brėžly veda per AutoCAD žingsnis po žingsnio, pats tikrina tavo brėžinį ir paaiškina, kas ne taip. Sukurta inžinerijos studentams.</p>
+<!--ATIDARYTA-->
       <div class="veiksmai">
         <a class="mygt" id="atsisiusti" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
           Atsisiųsti Windows'ui
         </a>
         <div class="failo-info"><span>Brezly_Setup.exe</span><span id="dydis"></span><span>versija <b id="versija">{{VERSIJA}}</b></span><span id="data"></span></div>
-        <div class="ispejimas" id="neWindows">Brėžly programa veikia tik su Windows ir AutoCAD. Šiame įrenginyje gali naudoti <a href="programele/">programėlę naršyklėje</a>: pamokos, testai ir DXF tikrinimas.</div>
+        <div class="ispejimas" id="neWindows">Brėžly programa veikia tik su Windows ir AutoCAD. <!--PROGRAMELE-->Šiame įrenginyje gali naudoti <a href="programele/">programėlę naršyklėje</a>: pamokos, testai ir DXF tikrinimas.<!--/PROGRAMELE--></div>
       </div>
+<!--/ATIDARYTA-->
+<!--UZDARYTA-->
+      <div class="veiksmai">
+        <a class="mygt" href="demo/">
+          Registruotis į demo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div class="failo-info"><span>Atsisiuntimas atsidarys netrukus</span><span>užsiregistravusiems pranešime pirmiems</span></div>
+      </div>
+<!--/UZDARYTA-->
     </div>
 
     <div class="lapas" aria-hidden="true">
@@ -77,6 +92,20 @@
     </div>
   </div>
 
+  <section id="moka">
+    <div class="plotis">
+      <div class="kick pilka">Ką moka</div>
+      <h2>Mokaisi braižydamas, ne skaitydamas</h2>
+      <div class="reik">
+        <div><small>Pamokos</small><b>{{PAMOKOS}} pamokos · {{ZINGSNIAI}} žingsniai</b><span>nuo failo iki pirmosios 3D detalės</span></div>
+        <div><small>Tikrinimas</small><b>Pats tikrina brėžinį</b><span>pastebi, kai žingsnis atliktas, ir pasako, kas ne taip</span></div>
+        <div><small>Praktika</small><b>{{UZDUOTYS}} užduotys</b><span>2D A4 ir 3D A3 brėžiniai</span></div>
+        <div><small>Motyvacija</small><b>XP, lygiai, ženkleliai</b><span>ir komandų kortelės kartojimui</span></div>
+      </div>
+    </div>
+  </section>
+
+<!--ATIDARYTA-->
   <section id="diegimas">
     <div class="plotis">
       <div class="kick pilka">Diegimas</div>
@@ -89,6 +118,7 @@
       <p class="pastaba"><b>Windows rodo „Windows apsaugojo jūsų kompiuterį“?</b> Spausk <b>Daugiau informacijos → Vis tiek paleisti</b>. Taip būna su visomis naujomis programomis, kurios dar neturi mokamo parašo. Jei Windows visai neleidžia paleisti (Smart App Control) - naudok <a href="#kitos">AutoCAD priedą</a>.</p>
     </div>
   </section>
+<!--/ATIDARYTA-->
 
   <section>
     <div class="plotis">
@@ -103,6 +133,7 @@
     </div>
   </section>
 
+<!--ATIDARYTA-->
   <section id="kitos">
     <div class="plotis">
       <div class="kick pilka">Kitos parinktys</div>
@@ -126,6 +157,7 @@
             <a class="mygt antr" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly.txt">Brezly.txt</a>
           </div>
         </div>
+<!--PROGRAMELE-->
         <div class="eil">
           <div>
             <h3>Programėlė naršyklėje</h3>
@@ -133,6 +165,7 @@
           </div>
           <div class="mygtai"><a class="mygt antr" href="programele/">Atidaryti programėlę</a></div>
         </div>
+<!--/PROGRAMELE-->
         <div class="eil">
           <div>
             <h3>Visos versijos</h3>
@@ -151,15 +184,19 @@
       <div class="naujiena"><span class="data" id="nData"></span><p id="nTekstas"></p></div>
     </div>
   </section>
+<!--/ATIDARYTA-->
 </main>
 
 <footer>
   <div class="plotis">
     <span>Brėžly - nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</span>
+<!--ATIDARYTA-->
     <a href="https://github.com/vilkavaitkaitis-ui/Brezly">Šaltinio kodas</a>
+<!--/ATIDARYTA-->
   </div>
 </footer>
 
+<!--ATIDARYTA-->
 <script>
 (function () {
   // Ne Windows įrenginys - pasiūlom programėlę
@@ -187,5 +224,6 @@
     .catch(function () {});
 })();
 </script>
+<!--/ATIDARYTA-->
 </body>
 </html>

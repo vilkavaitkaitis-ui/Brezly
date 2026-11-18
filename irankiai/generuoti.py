@@ -108,22 +108,31 @@ def svetaine(d, kur=SVETAINE, budas="google"):
                                      for a in pamokos.ATEITYJE),
            "{{FORMA}}": forma["forma"] if forma["forma"] else "{{FORMA}}",
            "{{LAUKAI}}": json.dumps(forma["laukai"]), "{{BUDAS}}": budas}
+    with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
+        nust = json.load(f)
+    # <!--ZYME-->...<!--/ZYME--> blokai: paliekami arba išmetami pagal nustatymai.json
+    blokai = {"ATIDARYTA": nust["atsisiuntimas"], "UZDARYTA": not nust["atsisiuntimas"], "PROGRAMELE": nust["programele"]}
     for sakn, _, vardai in os.walk(kur):
         for v in vardai:
             if v.endswith(".html"):
                 kelias = os.path.join(sakn, v)
                 with open(kelias, encoding="utf-8") as f:
                     s = f.read()
+                for zyme, rodyti in blokai.items():
+                    s = re.sub(rf"<!--{zyme}-->\n?(.*?)<!--/{zyme}-->\n?", (lambda m: m.group(1)) if rodyti else "", s, flags=re.S)
                 for k, reiksme in zym.items():
                     if k != "{{FORMA}}" or reiksme != k:
                         s = s.replace(k, str(reiksme))
                 with open(kelias, "w", encoding="utf-8") as f:
                     f.write(s)
     os.remove(os.path.join(kur, "demo", "forma.json"))
+    os.remove(os.path.join(kur, "nustatymai.json"))
     if budas == "netlify":
         os.remove(os.path.join(kur, "sw.js"))       # senos programėlės valytojas reikalingas tik GitHub Pages adrese
     else:
         open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
+    if not nust["programele"]:
+        return 0
     return programele(d, pamokos, os.path.join(kur, "programele"))
 
 
@@ -182,7 +191,10 @@ def main():
             f.write(naujas)
         print("Atnaujinta: lisp/Brezly.lsp")
     n = svetaine(d)
-    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} (atsisiuntimo puslapis + demo/ + programele/, {n} failai)")
+    with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
+        nust = json.load(f)
+    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} - atsisiuntimas {'atidarytas' if nust['atsisiuntimas'] else 'UŽDARYTAS'}, "
+          f"programėlė {'yra' if nust['programele'] else 'NEĮDĖTA'} ({n} programėlės failai)")
     if "--netlify" in sys.argv:
         svetaine(d, NETLIFY, "netlify")
         zipas = shutil.make_archive(NETLIFY, "zip", NETLIFY)
