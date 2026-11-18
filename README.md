@@ -16,7 +16,7 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 
 ## Kas viduje
 
-- 7 pamokos (38 žingsniai) – nuo failo iki pirmosios 3D detalės
+- 10 pamokų (52 žingsniai) – nuo failo iki 3D detalės, pjūvių, projekcijų ir aksonometrijos
 - 8 praktikos užduotys: 2D A4 ir 3D A3 lapuose, su automatiniu tikrinimu
 - XP, lygiai, ženkleliai ir 8 personažai
 
@@ -46,9 +46,12 @@ ir AutoCAD komandų eilutėje įrašyk `(load (getfiled "Brezly" "" "txt" 0))` �
 |---|---|
 | Programa (Windows) | `brezly.py` – veiksmai, `serveris.py` – vietinis serveris, langas, ryšys su AutoCAD (bendras su Pilotu) |
 | Sąsaja | `brezly.html` + `brezly.css` + `brezly.js` |
-| Pamokų tekstai | `pamokos.json` (naudoja ir programa, ir programėlė) |
+| Pamokų tekstai | `pamokos.json` (naudoja ir programa, ir programėlė); anglų kalba - `pamokos_en.json` |
 | Pamokų tikrinimas AutoCAD'e | `pamokos.py` – žodynas `TIKRINIMAS`: žingsnio id → (tikrinti, parodyti) |
-| Praktikos užduotys ir taisyklės | `praktika/uzduotys.json` (naudoja programa, programėlė ir AutoCAD priedas) |
+| Praktikos užduotys ir taisyklės | `praktika/uzduotys.json` (naudoja programa, programėlė ir AutoCAD priedas; anglų tekstai - laukas `en`) |
+| Kalba | `vertimas.py` - `tr("lietuviškai", "English")` tikrinimo pastaboms; `sasaja_en.json` - sąsajos žodynas |
+| Versija ir „Kas naujo“ | `naujienos.json` - naujausia viršuje; iš jos ir AutoCAD priedo versija, ir Release aprašas |
+| Pavyzdiniai DXF | `irankiai/pavyzdziai.py` (reikia `pip install ezdxf`) |
 | Programėlė (PWA) | `app/` – šaltinis; skelbiama automatiškai į `gh-pages` |
 | AutoCAD priedas | `lisp/Brezly.lsp` – užduočių blokas generuojamas |
 | Brėžly Pilotas (sena programa) | `programa.py`, `ui.html`, `meniu.py`, `kalba.py`, `langas.py` |
@@ -62,6 +65,8 @@ python -m unittest discover -s testai -v     # testai (AutoCAD nereikia; veikia 
 
 Programėlę galima išbandyti: `python -m http.server -d isvestis/programele 8000` → http://localhost:8000.
 Sąsają be AutoCAD: `python brezly.py` (ne Windows – be AutoCAD ryšio, bet visi langai veikia).
+
+**Prieš išleidžiant** - `PATIKRA.md` (15 min. su AutoCAD).
 
 **Išleidimas.** Actions → „Brėžly diegimo programa“ → Run workflow su versija (pvz. `1.0`):
 testai → `Brezly_Setup.exe`, `Brezly_programa.zip`, `Brezly.lsp` → Release, įdiegtos programos pasiūlo atnaujinti.

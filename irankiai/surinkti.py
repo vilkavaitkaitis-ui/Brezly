@@ -17,12 +17,12 @@ SAKNIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ISVESTIS = os.path.join(SAKNIS, "isvestis")
 
 # Failai šalia programos (sąsaja, turinys). Aplankas praktika/ - visas.
-DUOMENYS = ["brezly.html", "brezly.css", "brezly.js", "brezly.ico", "pamokos.json"]
+DUOMENYS = ["brezly.html", "brezly.css", "brezly.js", "brezly.ico", "pamokos.json", "pamokos_en.json", "sasaja_en.json", "naujienos.json"]
 APLANKAI = ["praktika"]
 # Įrašomi tik GitHub surinkime (versija ir atnaujinimų adresas)
 NEBUTINI = ["versija.txt", "atnaujinimai_url.txt"]
 # Python moduliai (.exe juos randa pats; ZIP atnaujinimui reikia išvardyti)
-MODULIAI = ["brezly.py", "serveris.py", "branduolys.py", "pamokos.py", "praktika.py", "kalba.py"]
+MODULIAI = ["brezly.py", "serveris.py", "branduolys.py", "pamokos.py", "praktika.py", "kalba.py", "vertimas.py"]
 
 
 def _kelias(v):

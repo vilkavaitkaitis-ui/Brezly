@@ -1,0 +1,1090 @@
+{
+ "_aprasas": "Brėžly lessons in English. Overlay on pamokos.json by lesson and step id: only the texts. Ids, XP, checks and correct test answers (t) come from pamokos.json.",
+ "pamokos": {
+  "failas": {
+   "pavadinimas": "File and formats",
+   "aprasas": "A new drawing from acadiso.dwt, units, saving as DWG and PDF - every job starts here.",
+   "trukme": "~10 min.",
+   "pabaiga": "You can start a drawing correctly and save it as DWG and PDF.",
+   "zingsniai": {
+    "naujas": {
+     "pavadinimas": "New drawing from acadiso.dwt",
+     "kodel": "acadiso.dwt is the metric template: everything in millimetres. acad.dwt uses inches, so the dimensions in your drawing would be wrong.",
+     "zingsniai": ["Top left, click A (Application) → New → Drawing.", "Pick acadiso.dwt in the list → Open."],
+     "uzuominos": [
+      "If it opens without a dialog, type STARTUP → 0 and try again.",
+      "The template folder opens automatically - look for acadiso.dwt, not acad.dwt."
+     ],
+     "tikslas": "Metric drawing (mm)"
+    },
+    "vienetai": {
+     "pavadinimas": "Units: UNITS",
+     "kodel": "Units say what the number 100 means. In our drawings it is 100 millimetres, with no unnecessary decimals.",
+     "zingsniai": ["Type UNITS and set:"],
+     "uzuominos": ["Precision 0 means whole numbers - enough for these drawings."],
+     "tikslas": "Decimal · 0 · Millimeters"
+    },
+    "dwg": {
+     "pavadinimas": "Save as DWG",
+     "kodel": "DWG is AutoCAD's native format. A meaningful file name helps you find your work a week later.",
+     "zingsniai": ["Press Ctrl+Shift+S (SAVEAS).", "Choose a folder, type the name My_first_part → Save."],
+     "komandos": [
+      ["Command:", "SAVEAS"],
+      ["File name:", "My_first_part"],
+      ["Files of type:", "AutoCAD 2018 Drawing (*.dwg)"]
+     ],
+     "uzuominos": [
+      "For an older AutoCAD (e.g. at school) choose AutoCAD 2013 Drawing.",
+      "Later, Ctrl+S simply saves your changes."
+     ],
+     "tikslas": "A .dwg file with your name"
+    },
+    "pdf": {
+     "pavadinimas": "Plot to PDF",
+     "kodel": "Assignments are often handed in as PDF. The DWG To PDF printer creates a file instead of paper.",
+     "zingsniai": ["Type PLOT (or Ctrl+P).", "Printer: DWG To PDF.pc3, Plot area: Extents, Fit to paper → OK → Save."],
+     "uzuominos": [
+      "Save the PDF in the same folder as the DWG - easier to find.",
+      "If the PDF is empty, the drawing has nothing in it yet - that's fine at this step."
+     ],
+     "tikslas": "A new PDF file"
+    }
+   },
+   "testas": [
+    {
+     "k": "Which template should you use for drawings in millimetres?",
+     "v": ["acad.dwt", "acadiso.dwt", "acadiso3D.dwt for 2D only", "Doesn't matter"],
+     "p": "acadiso.dwt is metric (ISO). acad.dwt uses inches."
+    },
+    {
+     "k": "What is the DXF format used for?",
+     "v": ["Printing", "Opening a drawing in other CAD programs", "3D models only", "Photos"],
+     "p": "DXF is an exchange format that most CAD programs can open."
+    },
+    {
+     "k": "An old AutoCAD at school won't open your file. What do you do?",
+     "v": ["Save as PDF", "SAVEAS → an older DWG version, e.g. 2013", "Rename the file", "Nothing"],
+     "p": "Newer DWG versions don't open in older programs - save in an older format."
+    }
+   ]
+  },
+  "lapas": {
+   "pavadinimas": "A3 sheet and title block",
+   "aprasas": "LAYOUTWIZARD, A3 paper, a border and the title block - the sheet you will put all your drawings on.",
+   "trukme": "~15 min.",
+   "pabaiga": "You can prepare an A3 sheet with a border and a title block as required.",
+   "zingsniai": {
+    "a3": {
+     "pavadinimas": "A3 sheet: LAYOUTWIZARD",
+     "kodel": "In Model space you draw at real size, while the sheet (Layout / PAPER) is the paper you will print. A3 = 420 × 297 mm.",
+     "zingsniai": ["Type LAYOUTWIZARD and go through the pages:"],
+     "uzuominos": [
+      "A tab called „A3“ appears at the bottom - that is your sheet.",
+      "If A3 is not in the paper list, first choose the DWG To PDF printer."
+     ],
+     "tikslas": "A3 sheet (420 × 297)"
+    },
+    "remelis": {
+     "pavadinimas": "Border",
+     "kodel": "By the standard the border is 20 mm from the left edge (for binding) and 5 mm on the other sides.",
+     "zingsniai": ["On the A3 sheet (not Model!), on layer KONTURAS (outline), type:"],
+     "uzuominos": ["Check that the A3 tab is active at the bottom, not Model.", "420 - 5 = 415, 297 - 5 = 292."],
+     "tikslas": "Border from (20,5) to (415,292)"
+    },
+    "kampinis": {
+     "pavadinimas": "Title block table",
+     "kodel": "The title block is the drawing's „passport“: who drew it, who checked it, the scale. It always sits in the bottom right corner of the border, 185 × 40.",
+     "zingsniai": ["Draw the outline of the table:", "Draw the inner lines with LINE following the example."],
+     "uzuominos": ["415 - 185 = 230, 5 + 40 = 45.", "Turn on OSNAP (F3) - lines will snap to corners."],
+     "tikslas": "185 × 40 table in the corner"
+    },
+    "uzpildyk": {
+     "pavadinimas": "Fill in the title block",
+     "kodel": "An empty title block is the first thing your tutor will notice.",
+     "zingsniai": ["Type the drawing title (height 5) and your name (height 2.5) into the table cells."],
+     "komandos": [
+      ["Command:", "TEXT"],
+      ["Specify start point:", "(click inside a cell)"],
+      ["Specify height:", "5"],
+      ["Enter text:", "Part"]
+     ],
+     "uzuominos": ["Enter twice ends the TEXT command.", "You can move text with MOVE."],
+     "tikslas": "At least 2 texts in the table"
+    }
+   },
+   "testas": [
+    {
+     "k": "How far is the border from the left edge of the sheet?",
+     "v": ["5", "10", "20", "25"],
+     "p": "20 mm on the left for binding, 5 mm elsewhere."
+    },
+    {
+     "k": "Where does the title block go?",
+     "v": ["Top left", "Bottom right", "Centre", "Anywhere"],
+     "p": "Always in the bottom right corner of the border."
+    },
+    {
+     "k": "What size is an A3 sheet?",
+     "v": ["297 × 210", "420 × 297", "594 × 420", "500 × 300"],
+     "p": "A3 = 420 × 297 mm, A4 = 210 × 297 mm."
+    }
+   ]
+  },
+  "2d": {
+   "pavadinimas": "2D drawing",
+   "aprasas": "Layers, RECTANG, CIRCLE, centre lines and FILLET - you will draw a plate with holes.",
+   "trukme": "~20 min.",
+   "pabaiga": "You drew a 2D plate with holes, centre lines and rounded corners.",
+   "zingsniai": {
+    "sluoksniai2d": {
+     "pavadinimas": "Create layers",
+     "kodel": "Outline, centre lines and dimensions go on different layers with different line types, as the standard requires.",
+     "zingsniai": [
+      "LAYER → New Layer: KONTURAS (outline, colour 7), ASYS (centre lines, colour 1, linetype CENTER), MATMENYS (dimensions, colour 3).",
+      "Double-click KONTURAS - it becomes current."
+     ],
+     "uzuominos": ["Load the CENTER linetype via Load...", "The colour number is shown at the bottom of the dialog."]
+    },
+    "plokste": {
+     "pavadinimas": "Plate outline: RECTANG",
+     "kodel": "We start at 0,0 - the easiest way to work out the other coordinates.",
+     "zingsniai": ["On layer KONTURAS type:"],
+     "uzuominos": [
+      "Type coordinates with a comma and no spaces.",
+      "Double-click the mouse wheel to see the whole drawing."
+     ],
+     "tikslas": "Rectangle 100 × 60"
+    },
+    "centras": {
+     "pavadinimas": "Centre hole: CIRCLE",
+     "kodel": "The centre hole is ø30. CIRCLE asks for the radius, so we enter half the diameter - 15.",
+     "zingsniai": ["Type:"],
+     "uzuominos": ["To enter the diameter instead, press D and type 30."],
+     "tikslas": "Circle ø30 in the centre"
+    },
+    "skyles": {
+     "pavadinimas": "4 mounting holes",
+     "kodel": "Holes ø10 in the corners, 15 mm from the edges.",
+     "zingsniai": ["Draw 4 circles with radius 5:"],
+     "uzuominos": ["An empty Enter (or Space) repeats the last command.", "You can draw one and copy it with COPY."],
+     "tikslas": "4 holes ø10",
+     "komandos": [["Command:", "CIRCLE"], ["Center:", "15,15"], ["Radius:", "5"], ["", "also 85,15 · 15,45 · 85,45"]]
+    },
+    "asys": {
+     "pavadinimas": "Centre lines",
+     "kodel": "Centre lines show symmetry and hole centres. They are thin dash-dot lines that extend beyond the outline.",
+     "zingsniai": ["Make layer ASYS current and draw two lines:"],
+     "uzuominos": ["If the line looks continuous - LTSCALE → 0.5.", "Centre lines extend 5 mm beyond the outline."],
+     "tikslas": "Horizontal and vertical centre line"
+    },
+    "fillet": {
+     "pavadinimas": "Round the corners: FILLET",
+     "kodel": "Sharp corners are dangerous and look bad. FILLET with the Polyline option rounds all 4 corners at once.",
+     "zingsniai": ["On layer KONTURAS type:"],
+     "komandos": [
+      ["Command:", "FILLET"],
+      ["Select first object or [Radius/Polyline]:", "R"],
+      ["Specify fillet radius:", "10"],
+      ["Select first object or [Radius/Polyline]:", "P"],
+      ["Select 2D polyline:", "(click the outline)"]
+     ],
+     "uzuominos": ["Only one corner rounded? You forgot P (Polyline). Undo: U.", "Radius 10 - corners rounded R10."],
+     "tikslas": "4 corners R10"
+    }
+   },
+   "testas": [
+    {
+     "k": "Which number do you enter in CIRCLE for a ø30 hole?",
+     "v": ["30", "15", "60", "7.5"],
+     "p": "CIRCLE asks for the radius - half the diameter."
+    },
+    {
+     "k": "Which layer are centre lines drawn on?",
+     "v": ["KONTURAS", "MATMENYS", "ASYS", "0"],
+     "p": "Centre lines go on their own layer with the CENTER linetype."
+    },
+    {
+     "k": "How do you round all corners of a rectangle with FILLET at once?",
+     "v": ["Click 4 times", "Option P (Polyline)", "Option T (Trim)", "Impossible"],
+     "p": "The Polyline option rounds every corner of the polyline."
+    }
+   ]
+  },
+  "schema": {
+   "pavadinimas": "Electrical diagram with blocks",
+   "aprasas": "A symbol, attributes (ATTDEF), a block (BLOCK), inserting (INSERT) and a parts list (DATAEXTRACTION).",
+   "trukme": "~25 min.",
+   "pabaiga": "You can create blocks with attributes and build a parts list - the basis of diagram work.",
+   "zingsniai": {
+    "naujas_sch": {
+     "pavadinimas": "New drawing for the diagram",
+     "kodel": "We draw the diagram in a clean drawing so it doesn't mix with the plate.",
+     "zingsniai": ["Create a new drawing from acadiso.dwt (as in lesson 1)."],
+     "uzuominos": ["Ctrl+N - a quick new drawing."]
+    },
+    "zenklas": {
+     "pavadinimas": "Resistor symbol",
+     "kodel": "All diagram symbols have the same length - 20 mm. Resistor: a 10 × 4 rectangle and two leads.",
+     "zingsniai": ["Draw:"],
+     "uzuominos": ["The symbol is 20 long: 5 + 10 + 5."],
+     "tikslas": "Symbol 20 × 4"
+    },
+    "attdef": {
+     "pavadinimas": "Attributes: ATTDEF",
+     "kodel": "An attribute is a field inside a block. POZ (R1, R2...) is visible on the diagram, NUORODA (1 kΩ) is invisible but goes into the parts list.",
+     "zingsniai": ["Run ATTDEF twice:"],
+     "komandos": [
+      ["ATTDEF 1:", "Tag: POZ · Prompt: Reference designator · Default: R · point 7,4"],
+      ["ATTDEF 2:", "tick Invisible · Tag: NUORODA · point 7,-7"]
+     ],
+     "uzuominos": [
+      "The tag becomes the column name in the parts list. Keep the tags POZ and NUORODA - Brėžly checks them.",
+      "The Invisible tick box is on the left of the dialog (Mode)."
+     ],
+     "tikslas": "Attributes POZ and NUORODA"
+    },
+    "block": {
+     "pavadinimas": "Block: BLOCK",
+     "kodel": "A block is a symbol you draw once and insert as many times as you like. Change the block and all copies change.",
+     "zingsniai": ["Type BLOCK:"],
+     "komandos": [
+      ["Command:", "BLOCK"],
+      ["Name:", "REZISTORIUS"],
+      ["Base point:", "0,0"],
+      ["Objects:", "(select the symbol and both attributes)"],
+      ["", "Delete → OK"]
+     ],
+     "uzuominos": [
+      "Base point 0,0 is the left lead - you will „drag“ the block by it.",
+      "Delete - the symbol disappears but the block stays in memory."
+     ],
+     "tikslas": "Block REZISTORIUS with attributes"
+    },
+    "insert": {
+     "pavadinimas": "Insert 3 resistors: INSERT",
+     "kodel": "Every time you insert the block, AutoCAD asks for the attribute values.",
+     "zingsniai": ["INSERT → REZISTORIUS → place it 3 times:"],
+     "komandos": [
+      ["Command:", "INSERT"],
+      ["Name:", "REZISTORIUS"],
+      ["Reference designator:", "R1 (R2, R3)"],
+      ["Value:", "1 kΩ"]
+     ],
+     "uzuominos": ["If it doesn't ask for attributes - ATTREQ → 1.", "Fix a wrong value by double-clicking the block."],
+     "tikslas": "R1, R2, R3"
+    },
+    "lentele": {
+     "pavadinimas": "Parts list: DATAEXTRACTION",
+     "kodel": "The parts list is built automatically from the block attributes - nothing to retype by hand.",
+     "zingsniai": ["Type DATAEXTRACTION and go through the wizard:"],
+     "komandos": [
+      ["Command:", "DATAEXTRACTION"],
+      ["", "Create new → save the .dxe"],
+      ["Objects:", "only REZISTORIUS"],
+      ["Properties:", "Attribute (POZ, NUORODA)"],
+      ["Output:", "Insert data extraction table"]
+     ],
+     "uzuominos": ["The Count column shows how many of each part there are.", "Place the table next to the diagram."],
+     "tikslas": "A table with the resistors"
+    }
+   },
+   "testas": [
+    {
+     "k": "Why is the NUORODA (value) attribute set to Invisible?",
+     "v": [
+      "So it takes no space on the diagram but is in the table",
+      "So it is nowhere",
+      "So it is red",
+      "It's faster"
+     ],
+     "p": "Invisible on the diagram, but DATAEXTRACTION puts it into the parts list."
+    },
+    {
+     "k": "What does the Delete option of BLOCK do?",
+     "v": [
+      "Deletes the block",
+      "Deletes the original objects, the block stays in memory",
+      "Deletes the attributes",
+      "Nothing"
+     ],
+     "p": "The objects disappear from the drawing, the block stays - you insert it with INSERT."
+    },
+    {
+     "k": "How long are the diagram symbols in this lesson?",
+     "v": ["10 mm", "15 mm", "20 mm", "50 mm"],
+     "p": "Equal length makes the wires easy to connect."
+    }
+   ]
+  },
+  "matmenys": {
+   "pavadinimas": "Dimensions to the standard",
+   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER - you will dimension the plate on layer MATMENYS (dimensions).",
+   "trukme": "~15 min.",
+   "pabaiga": "You can create a dimension style and dimension lengths and diameters.",
+   "zingsniai": {
+    "plokste_m": {
+     "pavadinimas": "Open the plate",
+     "kodel": "We will dimension the plate from lesson 3.",
+     "zingsniai": ["Open the drawing with the plate (OPEN) or click „Show me“ - I will draw it."],
+     "uzuominos": ["The plate: 100 × 60, ø30 in the centre."]
+    },
+    "dimstyle": {
+     "pavadinimas": "Dimension style: DIMSTYLE",
+     "kodel": "A dimension style sets text height, arrows and gaps. The requirement is 3.5 mm text.",
+     "zingsniai": ["DIMSTYLE → New → name ISO_MATMENYS → Continue:"],
+     "uzuominos": ["Set Current - so new dimensions use this style.", "The text style can be ISO_LT (lesson 6)."],
+     "tikslas": "ISO_MATMENYS current"
+    },
+    "ilgis": {
+     "pavadinimas": "Length: DIMLINEAR 100",
+     "kodel": "A linear dimension is the horizontal or vertical distance between two points.",
+     "zingsniai": ["Make layer MATMENYS current. Type:"],
+     "komandos": [
+      ["Command:", "DIMLINEAR"],
+      ["First extension line origin:", "(bottom left corner)"],
+      ["Second:", "(bottom right corner)"],
+      ["Dimension line location:", "(drag down ~15)"]
+     ],
+     "uzuominos": [
+      "Turn on OSNAP (F3) - points will snap to corners.",
+      "For rounded corners use Endpoint on the arc ends, or type 0,0 and 100,0."
+     ],
+     "tikslas": "Dimension 100"
+    },
+    "aukstis": {
+     "pavadinimas": "Height: DIMLINEAR 60",
+     "kodel": "The same DIMLINEAR - just drag the mouse sideways and the dimension becomes vertical.",
+     "zingsniai": ["Run DIMLINEAR again for the left edge:"],
+     "komandos": [["Command:", "DIMLINEAR"], ["Points:", "0,0 → 0,60"], ["Location:", "(drag left ~15)"]],
+     "uzuominos": ["Space repeats the last command."],
+     "tikslas": "Dimension 60"
+    },
+    "skersmuo": {
+     "pavadinimas": "Diameter: DIMDIAMETER",
+     "kodel": "A diameter dimension adds the ø sign automatically.",
+     "zingsniai": ["Type:"],
+     "komandos": [
+      ["Command:", "DIMDIAMETER"],
+      ["Select arc or circle:", "(click the ø30 circle)"],
+      ["Location:", "(place the text)"]
+     ],
+     "uzuominos": ["For the small holes write 4x: DIMDIAMETER → M (Mtext) → 4x<>."],
+     "tikslas": "Dimension ø30"
+    }
+   },
+   "testas": [
+    {
+     "k": "What dimension text height is used in these drawings?",
+     "v": ["2", "3.5", "7", "10"],
+     "p": "3.5 mm is the standard dimension text height."
+    },
+    {
+     "k": "Which command dimensions a vertical length?",
+     "v": ["DIMDIAMETER", "DIMLINEAR", "DIMRADIUS", "LINE"],
+     "p": "DIMLINEAR - both horizontal and vertical dimensions."
+    },
+    {
+     "k": "Which layer should dimensions be on?",
+     "v": ["KONTURAS", "ASYS", "MATMENYS", "0"],
+     "p": "A separate layer - you can turn it off or change its colour."
+    }
+   ]
+  },
+  "sriftai": {
+   "pavadinimas": "Fonts and text",
+   "aprasas": "ISO 3098 text styles: isocp.shx and ISOCPEUR with Lithuanian letters.",
+   "trukme": "~10 min.",
+   "pabaiga": "You can create ISO text styles and write in a drawing with Lithuanian letters.",
+   "zingsniai": {
+    "iso": {
+     "pavadinimas": "Text style ISO",
+     "kodel": "Drawings use the standard engineering font (ISO 3098), not Arial.",
+     "zingsniai": ["Type STYLE → New → ISO:"],
+     "uzuominos": ["Leave Height at 0 - you choose the height when writing."],
+     "tikslas": "Style ISO (isocp.shx)"
+    },
+    "isolt": {
+     "pavadinimas": "Style ISO_LT with Lithuanian letters",
+     "kodel": "isocp.shx has no ąčęėįšųūž. ISOCPEUR is the same ISO font but with Lithuanian (and other European) letters.",
+     "zingsniai": ["STYLE → New → ISO_LT:"],
+     "uzuominos": [
+      "Oblique 15° - the slanted ISO type B font.",
+      "ISOCPEUR is installed with AutoCAD - look for „isocpeur“ in the list."
+     ],
+     "tikslas": "Style ISO_LT (ISOCPEUR, 15°)"
+    },
+    "tekstas": {
+     "pavadinimas": "Write „Brėžinys“",
+     "kodel": "Let's check that special letters display correctly. „Brėžinys“ is Lithuanian for „drawing“. Standard heights: 2.5, 3.5, 5, 7, 10.",
+     "zingsniai": ["With ISO_LT current, type:"],
+     "uzuominos": ["Question marks instead of letters? The style is not ISO_LT.", "Enter twice ends TEXT."],
+     "tikslas": "„Brėžinys“, height 5, ISO_LT"
+    }
+   },
+   "testas": [
+    {
+     "k": "Why is isocp.shx not suitable for Lithuanian text?",
+     "v": ["Too small", "It has no ąčęėįšųūž", "Too slow", "It is fine"],
+     "p": "Use ISOCPEUR - it has the Lithuanian letters."
+    },
+    {
+     "k": "Which height is NOT standard?",
+     "v": ["3.5", "5", "6", "7"],
+     "p": "Standard: 2.5, 3.5, 5, 7, 10, 14."
+    },
+    {
+     "k": "At what angle is the ISO type B font slanted?",
+     "v": ["0°", "15°", "30°", "45°"],
+     "p": "Oblique angle 15°."
+    }
+   ]
+  },
+  "pirmoji-3d": {
+   "pavadinimas": "First 3D part",
+   "aprasas": "BOX, CYLINDER, UNION, POLYGON, EXTRUDE, SUBTRACT, WEDGE, MIRROR3D - every command from the practical work „3D part model“.",
+   "trukme": "~25 min.",
+   "pabaiga": "You made your first real 3D part - just like in the practical work!",
+   "zingsniai": {
+    "pasiruosimas": {
+     "pavadinimas": "Prepare your workspace",
+     "kodel": "AutoCAD has a separate workspace with 3D tools for modelling. The isometric view shows the part from three sides at once.",
+     "zingsniai": [
+      "Open a new drawing from the acadiso.dwt template (millimetres).",
+      "Bottom right, click the gear ⚙ and choose „3D Modeling“.",
+      "At the top: View → 3D Views → SE Isometric (or a ViewCube corner)."
+     ],
+     "uzuominos": [
+      "The gear is called „Workspace Switching“ - it is in the status bar.",
+      "For the view you can type: -VIEW → SEISO"
+     ]
+    },
+    "sluoksniai": {
+     "pavadinimas": "Create layers",
+     "kodel": "Layers are like transparent sheets on top of each other. Outline, centre lines and dimensions have different colours and lines, so the drawing is tidy and meets the standard.",
+     "zingsniai": [
+      "Type LAYER and press Enter - Layer Properties Manager opens.",
+      "With „New Layer“ create: KONTURAS (outline, colour 7 - white), ASYS (centre lines, 1 - red), MATMENYS (dimensions, 3 - green).",
+      "For layer ASYS click „Continuous“ → Load... → CENTER → OK.",
+      "Double-click KONTURAS to make it current (green tick)."
+     ],
+     "uzuominos": [
+      "The colour number is shown after clicking the colour square - „Color: 7“ at the bottom of the dialog.",
+      "If CENTER is not in the list - click Load..., find CENTER, select it, OK."
+     ]
+    },
+    "box": {
+     "pavadinimas": "Base: BOX",
+     "kodel": "Every part starts with a main body. Starting at 0,0,0 makes all the other coordinates easy to work out.",
+     "zingsniai": ["Make sure layer KONTURAS is current.", "Type BOX and answer the prompts in the command line:"],
+     "uzuominos": [
+      "Type coordinates with commas and no spaces: 100,60,0",
+      "If you click in the drawing instead of typing, the box ends up in the wrong place. Then ERASE and start again."
+     ],
+     "tikslas": "Box from (0,0,0) to (100,60,20)"
+    },
+    "cylinder": {
+     "pavadinimas": "Cylinder: CYLINDER",
+     "kodel": "The cylinder stands on top of the box, so its centre height is z = 20 - the height of the box.",
+     "zingsniai": ["Type CYLINDER:"],
+     "uzuominos": ["Centre 50,30 is the middle of the box (100/2 = 50, 60/2 = 30).", "Radius 20 means diameter ø40."],
+     "tikslas": "Cylinder ø40 from z=20 to z=60"
+    },
+    "union": {
+     "pavadinimas": "Join: UNION",
+     "kodel": "For now these are two separate bodies. UNION turns them into one part - like gluing them.",
+     "zingsniai": ["Type UNION, select the box and the cylinder, press Enter."],
+     "komandos": [
+      ["Command:", "UNION"],
+      ["Select objects:", "(click the box and the cylinder)"],
+      ["Select objects:", "Enter"]
+     ],
+     "uzuominos": ["After joining, hovering highlights the whole part as one object."],
+     "tikslas": "One body, height 60"
+    },
+    "polygon": {
+     "pavadinimas": "Hexagonal prism: POLYGON + EXTRUDE",
+     "kodel": "For the hexagonal hole we draw a hexagonal prism and later „cut“ it out. POLYGON draws a flat shape, EXTRUDE pulls it into the third dimension.",
+     "zingsniai": ["Draw a hexagon:", "Then extrude it to a height of 60:"],
+     "komandos": [
+      ["Command:", "POLYGON"],
+      ["Enter number of sides:", "6"],
+      ["Specify center of polygon:", "50,30,0"],
+      ["Enter an option [Inscribed/Circumscribed]:", "I"],
+      ["Specify radius of circle:", "10"],
+      ["Command:", "EXTRUDE"],
+      ["Select objects to extrude:", "(click the hexagon) Enter"],
+      ["Specify height of extrusion:", "60"]
+     ],
+     "uzuominos": [
+      "Inscribed = the hexagon's corners lie on the circle (radius 10 to a corner).",
+      "If the hexagon didn't extrude, check that you selected it in EXTRUDE, not the part."
+     ],
+     "tikslas": "Prism at 50,30, height 60"
+    },
+    "subtract": {
+     "pavadinimas": "Cut out: SUBTRACT",
+     "kodel": "SUBTRACT removes the second object from the first. The order matters: first WHAT FROM, then WHAT.",
+     "zingsniai": ["Type SUBTRACT. Select the part first (Enter), then the prism (Enter)."],
+     "komandos": [
+      ["Command:", "SUBTRACT"],
+      ["Select solids... to subtract from:", "(the part) Enter"],
+      ["Select solids... to subtract:", "(the prism) Enter"]
+     ],
+     "uzuominos": [
+      "If the part disappeared and the prism is left, you swapped the order. Undo: U.",
+      "Rotate the view (Shift + middle mouse button) - you should see through the hole."
+     ],
+     "tikslas": "One part with a hexagonal through-hole"
+    },
+    "wedge": {
+     "pavadinimas": "Stiffening rib: WEDGE",
+     "kodel": "The rib strengthens the joint between the cylinder and the base. WEDGE is tallest at the first corner and slopes down towards the second corner.",
+     "zingsniai": ["Type WEDGE:"],
+     "uzuominos": [
+      "The rib is 8 thick: y from 26 to 34 (30 - 4 and 30 + 4).",
+      "x = 65 - the rib goes slightly into the cylinder so they join well."
+     ],
+     "tikslas": "Wedge from (65,26,20) to (90,34,50)"
+    },
+    "mirror": {
+     "pavadinimas": "Second rib: MIRROR3D",
+     "kodel": "Instead of drawing the second rib again, we mirror the first one through the middle of the part. The mirror plane is YZ through x = 50.",
+     "zingsniai": ["Type MIRROR3D:"],
+     "komandos": [
+      ["Command:", "MIRROR3D"],
+      ["Select objects:", "(the rib) Enter"],
+      ["Specify first point of mirror plane [... YZ ...]:", "YZ"],
+      ["Specify point on YZ-plane:", "50,30,0"],
+      ["Delete source objects? [Yes/No]:", "N"]
+     ],
+     "uzuominos": [
+      "The YZ plane is vertical and perpendicular to the X axis - exactly what we need to mirror to the left.",
+      "Answer N (No) so the original rib stays."
+     ],
+     "tikslas": "Two ribs: right and left"
+    },
+    "final": {
+     "pavadinimas": "Final UNION",
+     "kodel": "The last step is to join the ribs to the part. Then the part is ready for sheets and sections.",
+     "zingsniai": ["Type UNION, select everything with a window, Enter.", "Look at the result: VSCURRENT → Conceptual."],
+     "komandos": [["Command:", "UNION"], ["Select objects:", "(select everything) Enter"]],
+     "uzuominos": ["Drag the window from left to right - it selects everything fully inside it."],
+     "tikslas": "One part 100 × 60 × 60"
+    }
+   },
+   "testas": [
+    {
+     "k": "Which command cuts one body out of another?",
+     "v": ["UNION", "SUBTRACT", "INTERSECT", "EXTRUDE"],
+     "p": "SUBTRACT: first select WHAT FROM, then WHAT."
+    },
+    {
+     "k": "What does the POLYGON option „Inscribed in circle“ mean?",
+     "v": [
+      "The polygon's corners lie on the circle",
+      "The circle touches the polygon's sides",
+      "The polygon is rotated 45°",
+      "The polygon becomes 3D"
+     ],
+     "p": "Inscribed: corners on the circle. Circumscribed: sides touch the circle."
+    },
+    {
+     "k": "Why was the cylinder centre 50,30,20 and not 50,30,0?",
+     "v": [
+      "It looks nicer",
+      "So the cylinder stands on top of the box (box height 20)",
+      "AutoCAD doesn't allow z = 0",
+      "To make it ø40"
+     ],
+     "p": "The third coordinate is the height Z. The top of the box is at z = 20."
+    },
+    {
+     "k": "MIRROR3D asks „Delete source objects?“. What do you answer to keep both ribs?",
+     "v": ["Yes", "No"],
+     "p": "No - the original stays and a mirrored copy is added."
+    }
+   ]
+  },
+  "pjuviai": {
+   "pavadinimas": "Sections and quarter cut-out",
+   "aprasas": "A quarter cut-out in the 3D part, SECTIONPLANE, VIEWBASE and VIEWSECTION - section A–A on a sheet. Needs full AutoCAD (Model Documentation).",
+   "trukme": "~20 min.",
+   "pabaiga": "Your part has a quarter cut-out and the sheet has section A–A - this is how real drawings show the inside of a part.",
+   "zingsniai": {
+    "pj-detale": {
+     "pavadinimas": "Open the 3D part",
+     "kodel": "Sections are made from a finished model. We use the lesson 7 part, 100 × 60 × 60 with a hexagonal hole.",
+     "zingsniai": [
+      "Open the drawing with the lesson 7 part (if you no longer have it, click „Show me“ and I will draw it).",
+      "Switch to the 3D Modeling workspace and the SE Isometric view.",
+      "The part must be a single body - if not, UNION."
+     ],
+     "uzuominos": [
+      "One body: clicking anywhere on the part selects the whole part.",
+      "If the part is made of several pieces - UNION, select everything, Enter."
+     ],
+     "tikslas": "One part 100 × 60 × 60"
+    },
+    "pj-ispjova": {
+     "pavadinimas": "Quarter cut-out: BOX + SUBTRACT",
+     "kodel": "A quarter cut-out removes a quarter of the part so the inside is visible: the hole and the wall thickness. In an isometric view it replaces a separate section.",
+     "zingsniai": [
+      "Draw a box covering the front right quarter - from the middle of the part to the corner, through the full height.",
+      "SUBTRACT: select the part first (WHAT FROM), Enter, then the box (WHAT), Enter."
+     ],
+     "komandos": [
+      ["Command:", "BOX"],
+      ["Specify first corner:", "50,0,0"],
+      ["Specify other corner:", "100,30,0"],
+      ["Specify height:", "60"],
+      ["Command:", "SUBTRACT"],
+      ["Select solids... to subtract from:", "(the part) Enter"],
+      ["Select solids... to subtract:", "(the box) Enter"]
+     ],
+     "uzuominos": [
+      "The quarter starts in the middle of the part: x = 50 (half of 100), y = 30 (half of 60).",
+      "Cut the wrong quarter? U undoes it - try again."
+     ],
+     "tikslas": "The hexagonal hole is visible, volume ~118 927 mm³"
+    },
+    "pj-plokstuma": {
+     "pavadinimas": "Section plane: SECTIONPLANE",
+     "kodel": "A section plane is like a knife: it shows where the part is cut. AutoCAD shows the section both in 3D and on the sheet.",
+     "zingsniai": [
+      "Type SECTIONPLANE.",
+      "Choose Orthographic (O) and Front - the plane goes through the middle of the part, parallel to the front.",
+      "Click the plane and drag the arrow - watch the section change."
+     ],
+     "uzuominos": [
+      "The plane looks like a transparent rectangle with an arrow - the arrow shows the viewing direction.",
+      "Live section: click the plane → right-click → Activate live sectioning."
+     ],
+     "tikslas": "A section plane through the part"
+    },
+    "pj-vaizdas": {
+     "pavadinimas": "Base view on a sheet: VIEWBASE",
+     "kodel": "VIEWBASE draws 2D views on a sheet from the 3D model. Dimensions always match the model, and the views update when the model changes.",
+     "zingsniai": [
+      "Click the Layout1 tab at the bottom.",
+      "Type VIEWBASE, choose Model, orientation Front and scale 1:2.",
+      "Place the view top left and press Enter. Don't add projected views yet - press Enter again."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option [... Orientation ... Scale ...]:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(click on the sheet)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "AutoCAD says „Unknown command VIEWBASE“? Your AutoCAD has no Model Documentation (e.g. AutoCAD LT) - you can skip this and the next two steps.",
+      "To move a view: click it and drag the blue square."
+     ],
+     "tikslas": "A front view on the sheet"
+    },
+    "pj-pjuvis": {
+     "pavadinimas": "Section A–A: VIEWSECTION",
+     "kodel": "A section shows the inside of the part as if it were cut. The cut is marked by a line with the letters A–A, and the cut material is hatched.",
+     "zingsniai": [
+      "Type VIEWSECTION and click the base view.",
+      "Type Full. Click two points across the middle of the view - start and end outside the part.",
+      "Press Enter and place the section below the view."
+     ],
+     "komandos": [
+      ["Command:", "VIEWSECTION"],
+      ["Select parent view:", "(the base view)"],
+      ["Select type [Full/Half/OFFset/Aligned/Object] <Full>:", "F"],
+      ["Specify start point:", "(left, outside the part)"],
+      ["Specify end point:", "(right, outside the part) Enter"],
+      ["Specify location of section view:", "(below the view)"]
+     ],
+     "uzuominos": [
+      "Pick the middle with OSNAP Midpoint, then move the mouse sideways and click outside the part.",
+      "The letters A–A are added automatically. To change them, click the section line."
+     ],
+     "tikslas": "Section A–A with hatching on the sheet"
+    }
+   },
+   "testas": [
+    {
+     "k": "Which command creates a 2D view on a sheet from a 3D model?",
+     "v": ["VIEWBASE", "VPORTS", "FLATSHOT", "MVIEW"],
+     "p": "VIEWBASE creates the base view; projected views and sections are made from it."
+    },
+    {
+     "k": "For a quarter cut-out a box is removed from the part. Which command?",
+     "v": ["UNION", "INTERSECT", "SUBTRACT", "SLICE"],
+     "p": "SUBTRACT: first WHAT FROM (the part), then WHAT (the box)."
+    },
+    {
+     "k": "How is cut metal shown in a section?",
+     "v": ["A thicker line", "Thin hatching at 45°", "Red colour", "Dots"],
+     "p": "Metal is hatched with thin parallel lines at 45° (ANSI31)."
+    }
+   ]
+  },
+  "projekcijos": {
+   "pavadinimas": "Projections from a 3D model",
+   "aprasas": "European (first angle) arrangement on an A3 sheet: VIEWSTD, VIEWBASE, VIEWPROJ and an isometric view of the same model. Needs full AutoCAD.",
+   "trukme": "~20 min.",
+   "pabaiga": "An A3 sheet with three projections and an isometric view, all from one model. Change the model - the drawing changes too.",
+   "zingsniai": {
+    "pr-a3": {
+     "pavadinimas": "A3 sheet",
+     "kodel": "A part drawing with three projections and an isometric view needs an A3 sheet (420 × 297).",
+     "zingsniai": [
+      "If you created an A3 sheet in lesson 2 - switch to it (tab at the bottom).",
+      "If not - LAYOUTWIZARD: name A3, DWG To PDF.pc3, ISO full bleed A3 (420 x 297), Landscape."
+     ],
+     "uzuominos": [
+      "The drawing must contain the 3D part from lesson 7 - we make the views from it.",
+      "To change the paper: right-click the tab → Page Setup Manager → Modify."
+     ],
+     "tikslas": "A3 sheet"
+    },
+    "pr-standartas": {
+     "pavadinimas": "European arrangement: VIEWSTD",
+     "kodel": "Lithuania and Europe use first angle projection: the top view goes BELOW the front view, the left view goes on the RIGHT. The USA uses the opposite (third angle).",
+     "zingsniai": [
+      "Type VIEWSTD.",
+      "Projection type: First angle. Thread style: Partial (ISO).",
+      "Click OK. Do this before placing views."
+     ],
+     "uzuominos": [
+      "The first angle symbol: a truncated cone with the circles on the right.",
+      "The setting is saved in the drawing - set it again in other files (or put it in your template)."
+     ]
+    },
+    "pr-priekis": {
+     "pavadinimas": "Front view: VIEWBASE",
+     "kodel": "The base (front) view is chosen to show the part's shape best. The other views are arranged around it.",
+     "zingsniai": [
+      "On the A3 sheet type VIEWBASE → Model.",
+      "Orientation Front, scale 1:2.",
+      "Place the view top left, leaving room below and to the right. Enter, Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWBASE"],
+      ["Select type [Model/File] <Model>:", "M"],
+      ["Select option:", "O → Front, S → 1:2"],
+      ["Specify location of base view:", "(top left)"],
+      ["Select option:", "Enter"],
+      ["Specify location of projected view:", "Enter"]
+     ],
+     "uzuominos": [
+      "To change the scale later: click the view → Scale on the ribbon.",
+      "If the view is too big - scale 1:2.5 or 1:5."
+     ],
+     "tikslas": "A front view on the A3 sheet"
+    },
+    "pr-projekcijos": {
+     "pavadinimas": "Top and left views: VIEWPROJ",
+     "kodel": "Three views together describe the part unambiguously. They stay aligned, so dimensions can be carried across in straight lines.",
+     "zingsniai": [
+      "Type VIEWPROJ and click the front view.",
+      "Move the mouse down and click - the top view.",
+      "Move the mouse to the right and click - the left view. Enter."
+     ],
+     "komandos": [
+      ["Command:", "VIEWPROJ"],
+      ["Select parent view:", "(the front view)"],
+      ["Specify location of projected view:", "(down)"],
+      ["Specify location of projected view:", "(right) Enter"]
+     ],
+     "uzuominos": [
+      "In first angle the left view is on the right - if it ended up on the left, you skipped VIEWSTD.",
+      "Views only move along their alignment - that's how it should be."
+     ],
+     "tikslas": "3 views on the A3 sheet"
+    },
+    "pr-aksonometrija": {
+     "pavadinimas": "Isometric view",
+     "kodel": "An isometric view helps to understand the shape quickly. It goes top right on the drawing, often with a quarter cut-out.",
+     "zingsniai": [
+      "VIEWPROJ again and click the front view.",
+      "Move the mouse diagonally (up and right) and click - an isometric view appears. Enter.",
+      "Click it and choose Shaded with visible lines on the ribbon - it looks more alive."
+     ],
+     "komandos": [
+      ["Command:", "VIEWPROJ"],
+      ["Select parent view:", "(the front view)"],
+      ["Specify location of projected view:", "(diagonally) Enter"]
+     ],
+     "uzuominos": [
+      "Hidden lines are not shown in the isometric view.",
+      "If the part has the quarter cut-out from lesson 8 - it shows here too."
+     ],
+     "tikslas": "4 views on the A3 sheet"
+    }
+   },
+   "testas": [
+    {
+     "k": "In first angle (European) projection the top view is...",
+     "v": ["Above the front view", "Below the front view", "On the left", "On the right"],
+     "p": "First angle: top view below, left view on the right."
+    },
+    {
+     "k": "Which command adds projected views to an existing view?",
+     "v": ["VIEWBASE", "VIEWPROJ", "VIEWEDIT", "VIEWUPDATE"],
+     "p": "VIEWPROJ: select the parent view and place new ones around it."
+    },
+    {
+     "k": "You changed the 3D model. What happens to the views on the sheet?",
+     "v": ["Nothing - redraw them", "They update (or use VIEWUPDATE)", "They are deleted", "An error appears"],
+     "p": "The views are linked to the model - they update themselves or with VIEWUPDATE."
+    }
+   ]
+  },
+  "aksonometrija": {
+   "pavadinimas": "Isometric drawing",
+   "aprasas": "2D isometric drafting: ISODRAFT, ISOPLANE (F5), an isometric box with polar coordinates, an isocircle (ELLIPSE → Isocircle) and a dimension with DIMEDIT Oblique.",
+   "trukme": "~20 min.",
+   "pabaiga": "You can draw isometric views by hand - just like in practice task 6!",
+   "zingsniai": {
+    "ax-isodraft": {
+     "pavadinimas": "Turn on isometric: ISODRAFT",
+     "kodel": "In isometric the x and y axes are rotated 30°, z is vertical. ISODRAFT changes the cursor and Ortho so lines follow these directions.",
+     "zingsniai": [
+      "Open a new drawing from acadiso.dwt.",
+      "Type ISODRAFT and choose isoplaneTop (T).",
+      "F5 switches planes: Top → Right → Left. The cursor changes."
+     ],
+     "uzuominos": [
+      "In older AutoCAD instead of ISODRAFT: SNAP → Style → Isometric.",
+      "The status bar has an isometric drafting button (a small cube)."
+     ],
+     "tikslas": "Isometric cursor (SNAPSTYL = 1)"
+    },
+    "ax-deze": {
+     "pavadinimas": "Isometric box 60 × 40 × 30",
+     "kodel": "In isometric, sizes are measured true length along the axes - 30°, 150° and vertically. Polar coordinates @length<angle do this exactly.",
+     "zingsniai": [
+      "Type LINE and enter the points in order - one line goes round the bottom and the front edges.",
+      "A second LINE draws the last top edge."
+     ],
+     "uzuominos": [
+      "@60<30 means: 60 mm at 30° from the last point.",
+      "Made a mistake? U (Undo) inside LINE undoes only the last point."
+     ],
+     "tikslas": "9 edges: 3 × 60, 3 × 40, 3 × 30"
+    },
+    "ax-apskritimas": {
+     "pavadinimas": "Isocircle: ELLIPSE → Isocircle",
+     "kodel": "A circle in isometric is seen as an ellipse. The ELLIPSE Isocircle option draws it exactly in the current plane.",
+     "zingsniai": [
+      "Press F5 until the command line shows <Isoplane Top>.",
+      "ELLIPSE → I (Isocircle). Centre - the middle of the top face, radius 10."
+     ],
+     "uzuominos": [
+      "The Isocircle option appears only when isometric drafting is on (step 1).",
+      "Find the centre without numbers: Shift + right-click → Mid Between 2 Points → two opposite top corners."
+     ],
+     "tikslas": "Ellipse on top, semi-axes 12.25 and 7.07"
+    },
+    "ax-matmuo": {
+     "pavadinimas": "Isometric dimension: DIMALIGNED + Oblique",
+     "kodel": "In isometric a dimension is placed parallel to the edge, and the extension lines are turned along an axis - otherwise the dimension „falls out“ of the plane.",
+     "zingsniai": [
+      "DIMALIGNED: click both ends of the bottom right edge (60 mm) and place the dimension below.",
+      "DIMEDIT → Oblique: select the dimension and type 90 - the extension lines become vertical."
+     ],
+     "komandos": [
+      ["Command:", "DIMALIGNED"],
+      ["Specify first extension line origin:", "(corner 100,50)"],
+      ["Specify second extension line origin:", "(the other end of the edge)"],
+      ["Specify dimension line location:", "(below)"],
+      ["Command:", "DIMEDIT"],
+      ["Enter type of dimension editing [Home/New/Rotate/Oblique]:", "O"],
+      ["Select objects:", "(the dimension) Enter"],
+      ["Enter obliquing angle:", "90"]
+     ],
+     "uzuominos": [
+      "Pick the ends with OSNAP Endpoint - then the dimension is exactly 60.",
+      "Isometric dimension text often uses a text style slanted ±30°."
+     ],
+     "tikslas": "Aligned dimension 60"
+    }
+   },
+   "testas": [
+    {
+     "k": "At what angle are the x and y axes drawn in isometric?",
+     "v": ["15°", "30°", "45°", "60°"],
+     "p": "In isometric x and y are at 30° to the horizontal, z is vertical."
+    },
+    {
+     "k": "How is a circle shown in isometric?",
+     "v": ["As a circle", "As an ellipse", "As a rectangle", "As an arc"],
+     "p": "A circle in isometric is seen as an ellipse - ELLIPSE → Isocircle."
+    },
+    {
+     "k": "Which key switches the isometric plane (Top/Right/Left)?",
+     "v": ["F3", "F5", "F8", "F12"],
+     "p": "F5 (or Ctrl+E) switches the isoplane."
+    }
+   ]
+  }
+ },
+ "patarimai": [
+  "In AutoCAD the Space bar works like Enter - and an empty Space repeats the last command.",
+  "Esc cancels any command. Stuck? Press Esc twice.",
+  "U undoes the last action. Your best friend while learning!",
+  "F8 turns on ORTHO - lines only horizontal and vertical.",
+  "Shift + middle mouse button rotates the 3D view (orbit).",
+  "Double-click the mouse wheel - ZOOM Extents: shows the whole drawing.",
+  "The first letters are enough in the command line: L = LINE, C = CIRCLE, EXT = EXTRUDE.",
+  "VSCURRENT → C (Conceptual) shows the part in colour and nicely lit."
+ ],
+ "korteles": {
+  "NEW": {
+   "ka": "A new drawing from a template. For our drawings - acadiso.dwt (millimetres).",
+   "pvz": "NEW → acadiso.dwt"
+  },
+  "UNITS": {
+   "ka": "Drawing units and precision.",
+   "pvz": "UNITS → Decimal · 0 · Millimeters"
+  },
+  "SAVEAS": {
+   "ka": "Saves the drawing under a new name or in another format (DWG, DXF, older version).",
+   "pvz": "SAVEAS → My_first_part.dwg"
+  },
+  "PLOT": {
+   "ka": "Prints. With DWG To PDF.pc3 it creates a PDF file.",
+   "pvz": "PLOT → DWG To PDF.pc3 → Extents"
+  },
+  "LAYOUTWIZARD": {
+   "ka": "Wizard for a new sheet (Layout): printer, paper, orientation.",
+   "pvz": "LAYOUTWIZARD → A3 → Landscape"
+  },
+  "RECTANG": {
+   "ka": "A rectangle from two opposite corners.",
+   "pvz": "RECTANG → 0,0 → 100,60"
+  },
+  "LAYER": {
+   "ka": "Layer management: outline, centre lines, dimensions - different lines and colours.",
+   "pvz": "LAYER → New → KONTURAS"
+  },
+  "LINE": {
+   "ka": "A line segment between points. Enter ends it.",
+   "pvz": "LINE → -5,30 → 105,30"
+  },
+  "CIRCLE": {
+   "ka": "A circle: centre and radius (D - diameter).",
+   "pvz": "CIRCLE → 50,30 → 15"
+  },
+  "FILLET": {
+   "ka": "Rounds a corner. P (Polyline) - all corners of a polyline.",
+   "pvz": "FILLET → R → 10 → P"
+  },
+  "COPY": {
+   "ka": "Copies objects from one point to another.",
+   "pvz": "COPY → object → base point → new point"
+  },
+  "ATTDEF": {
+   "ka": "Attribute definition - a field in a block (e.g. POZ, NUORODA).",
+   "pvz": "ATTDEF → Tag: POZ"
+  },
+  "BLOCK": {
+   "ka": "Creates a block from objects - a symbol you can insert many times.",
+   "pvz": "BLOCK → REZISTORIUS → 0,0"
+  },
+  "INSERT": {
+   "ka": "Inserts a block and asks for the attribute values.",
+   "pvz": "INSERT → REZISTORIUS → R1"
+  },
+  "DATAEXTRACTION": {
+   "ka": "Extracts block attributes into a table - the parts list.",
+   "pvz": "DATAEXTRACTION → Insert table"
+  },
+  "DIMSTYLE": {
+   "ka": "Dimension style: text height, arrows, precision.",
+   "pvz": "DIMSTYLE → ISO_MATMENYS → 3.5"
+  },
+  "DIMLINEAR": {
+   "ka": "A horizontal or vertical linear dimension.",
+   "pvz": "DIMLINEAR → 0,0 → 100,0"
+  },
+  "DIMDIAMETER": {
+   "ka": "A diameter dimension with the ø sign.",
+   "pvz": "DIMDIAMETER → circle"
+  },
+  "STYLE": {
+   "ka": "Text style: font (isocp.shx, ISOCPEUR), oblique angle.",
+   "pvz": "STYLE → ISO_LT → ISOCPEUR → 15°"
+  },
+  "TEXT": {
+   "ka": "Single-line text: point, height, angle.",
+   "pvz": "TEXT → 0,80 → 5 → 0 → Brėžinys"
+  },
+  "BOX": {
+   "ka": "A 3D rectangular box.",
+   "pvz": "BOX → 0,0,0 → 100,60,0 → 20"
+  },
+  "CYLINDER": {
+   "ka": "A 3D cylinder: base centre, radius, height.",
+   "pvz": "CYLINDER → 50,30,0 → 15 → 40"
+  },
+  "UNION": {
+   "ka": "Joins several 3D bodies into one.",
+   "pvz": "UNION → select the bodies → Enter"
+  },
+  "SUBTRACT": {
+   "ka": "Removes one body from another (holes, grooves).",
+   "pvz": "SUBTRACT → from what → what to remove"
+  },
+  "EXTRUDE": {
+   "ka": "Pulls a 2D profile into a 3D body.",
+   "pvz": "EXTRUDE → profile → height"
+  },
+  "MIRROR3D": {
+   "ka": "A mirror copy in 3D space across a plane.",
+   "pvz": "MIRROR3D → YZ → point"
+  },
+  "SECTIONPLANE": {
+   "ka": "A section plane through a 3D model; live section shows the inside.",
+   "pvz": "SECTIONPLANE → O → Front"
+  },
+  "VIEWBASE": {
+   "ka": "Creates a 2D view on a sheet from a 3D model (Model Documentation).",
+   "pvz": "VIEWBASE → Model → Front, 1:2"
+  },
+  "VIEWSECTION": {
+   "ka": "A section from a view on the sheet: Full, Half, Offset, Aligned.",
+   "pvz": "VIEWSECTION → (view) → Full"
+  },
+  "VIEWSTD": {
+   "ka": "Drawing view standard: projection arrangement (First angle - Europe).",
+   "pvz": "VIEWSTD → First angle"
+  },
+  "VIEWPROJ": {
+   "ka": "Adds projected and isometric views to an existing view.",
+   "pvz": "VIEWPROJ → (view) → down, right"
+  },
+  "ISODRAFT": {
+   "ka": "Isometric drafting: cursor and Ortho along the 30° axes.",
+   "pvz": "ISODRAFT → T (Top)"
+  },
+  "ELLIPSE": {
+   "ka": "An ellipse; in isometric the Isocircle option draws an isocircle.",
+   "pvz": "ELLIPSE → I → centre → 10"
+  },
+  "DIMEDIT": {
+   "ka": "Edits dimensions; Oblique turns the extension lines.",
+   "pvz": "DIMEDIT → O → (dimension) → 90"
+  }
+ },
+ "ateityje": [
+  {
+   "pavadinimas": "Part working drawing",
+   "aprasas": "dimensions from 3D, tolerances, surface roughness"
+  },
+  {
+   "pavadinimas": "Threads and standard parts",
+   "aprasas": "thread representation, bolts, nuts"
+  },
+  {
+   "pavadinimas": "Assembly drawing",
+   "aprasas": "item balloons, parts list (DATAEXTRACTION)"
+  }
+ ]
+}

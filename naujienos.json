@@ -1,0 +1,49 @@
+{
+ "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
+ "versijos": [
+  {
+   "versija": "1.0",
+   "pavadinimas": "Trys naujos pamokos ir anglų kalba",
+   "aprasas": "Didžiausias Brėžly atnaujinimas: 10 pamokų, anglų kalba ir įrankiai dėstytojui.",
+   "punktai": [
+    "<b>Naujos pamokos:</b> pjūviai ir ketvirtinė išpjova, projekcijos iš 3D modelio, aksonometrija.",
+    "<b>English:</b> Nustatymai › Kalba / Language - pamokos, užduotys ir patarimai angliškai.",
+    "<b>Ataskaita dėstytojui:</b> pamokos, testai ir užduotys vienoje spausdinamoje ataskaitoje.",
+    "<b>Progreso perkėlimas:</b> eksportuok kolegijoje, importuok namuose.",
+    "Praktikos pavyzdžiai U4, U6, U7 dabar su tikra brūkšniuote, elipse ir blokais."
+   ],
+   "en": {
+    "pavadinimas": "Three new lessons and English",
+    "aprasas": "The biggest Brėžly update: 10 lessons, English and tools for tutors.",
+    "punktai": [
+     "<b>New lessons:</b> sections and quarter cut-out, projections from a 3D model, isometric drawing.",
+     "<b>English:</b> Settings › Kalba / Language - lessons, tasks and tips in English.",
+     "<b>Report for the tutor:</b> lessons, tests and tasks in one printable report.",
+     "<b>Move your progress:</b> export at college, import at home.",
+     "Practice examples U4, U6, U7 now have real hatching, ellipses and blocks."
+    ]
+   }
+  },
+  {
+   "versija": "0.9",
+   "pavadinimas": "Naujas inžinerinis dizainas",
+   "aprasas": "Brėžly dabar atrodo kaip tikra CAD programa - ramiau akims ir rimčiau prie studijų darbų.",
+   "punktai": [
+    "<b>Grafito spalvos ir plonos linijos</b> - mažiau blaškymo, daugiau dėmesio brėžiniui.",
+    "<b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.",
+    "<b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.",
+    "Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas."
+   ],
+   "en": {
+    "pavadinimas": "New engineering design",
+    "aprasas": "Brėžly now looks like a real CAD program - easier on the eyes and more serious for coursework.",
+    "punktai": [
+     "<b>Graphite colours and thin lines</b> - less distraction, more focus on the drawing.",
+     "<b>Numbers and commands</b> - a monospaced font, coordinates are easier to read.",
+     "<b>Colour only for meaning:</b> orange - action, green - accepted, red - fix it, blue - information.",
+     "Everything else stays: lessons, practice, checking, XP and your progress."
+    ]
+   }
+  }
+ ]
+}

@@ -617,3 +617,8 @@ h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color
 #mini{border-radius:0}
 .mi-kom code{border-radius:3px}
 .mi-veiks .btn{border-radius:5px}
+
+/* progreso importas: palyginimo lentelė */
+.lent-palyg{border-collapse:collapse;margin-top:10px;width:100%;font-size:14px}
+.lent-palyg th,.lent-palyg td{border-bottom:1px solid var(--line,#283241);padding:6px 10px;text-align:left}
+.lent-palyg th{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.7}

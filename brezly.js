@@ -7,13 +7,72 @@ function sg(k,v){
   try{localStorage.setItem(k,v);}catch(e){}
   if(k!=="cadet"){ NUST[k]=String(v); planuotiSaugojima(); }
 }
+let NESAUGOTI=false;  /* importuojant progresą: neperrašyti jo senu, kol puslapis persikrauna */
 function planuotiSaugojima(dabar){
-  clearTimeout(saugojimoLaikmatis);
+  clearTimeout(saugojimoLaikmatis); if(NESAUGOTI) return;
   saugojimoLaikmatis=setTimeout(()=>api("/api/progresas",DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}).catch(()=>{}),dabar?0:500);
 }
 let DEMO_S=null;     // demo režimas: tikras progresas laikomas čia, rodomas pavyzdinis
-addEventListener("pagehide",()=>{try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
+addEventListener("pagehide",()=>{if(NESAUGOTI)return;try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
 async function api(kelias,duom){const r=await fetch(kelias,duom===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(duom)});return r.json();}
+/* ===== Kalba. Pamokos, užduotys ir tikrinimo pastabos ateina iš serverio jau išverstos;
+   sąsajos tekstai verčiami žodynu sasaja_en.json (# - skaičius, {} - tekstas). Neišversti lieka lietuviški. ===== */
+const I18N={zod:null,sk:new Map(),sab:[],NUM:/\d+(?:[.,]\d+)?/g,
+  async ikelti(){
+    if(sg("kalba")!=="en") return;
+    try{ const d=await (await fetch("/sasaja_en.json")).json(); this.paruosti(d.tekstai); }catch(e){ return; }
+    document.documentElement.lang="en"; this.versti(document.body);
+    new MutationObserver(ms=>{ for(const m of ms){
+      if(m.type==="characterData") this.mazgas(m.target);
+      else if(m.type==="attributes") this.atributai(m.target);
+      else m.addedNodes.forEach(n=>this.versti(n)); } })
+      .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["placeholder","title","aria-label"]});
+    const c=window.confirm.bind(window); window.confirm=t=>c(this.vertimas(String(t)));
+  },
+  paruosti(t){
+    this.zod=new Map(); const er=x=>x.replace(/[.*+?^$()|[\]\\]/g,"\\$&");
+    for(const [lt,en] of Object.entries(t)){
+      if(lt.includes("{}")){ const rusys=[...lt.matchAll(/#|\{\}/g)].map(m=>m[0]);
+        const re=new RegExp("^"+lt.split(/(#|\{\})/).map(x=>x==="#"?"(\\d+(?:[.,]\\d+)?)":x==="{}"?"(.+?)":er(x)).join("")+"$");
+        this.sab.push({re,rusys,en}); }
+      else if(lt.includes("#")) this.sk.set(lt,en);
+      else this.zod.set(lt,en);
+    }
+  },
+  vertimas(t){
+    if(!this.zod) return t;
+    const tr=t.trim(); if(!tr||!/[A-Za-zĄ-ž]/.test(tr)) return t;
+    let en=this.zod.get(tr);
+    if(en===undefined){ const sk=tr.match(this.NUM); if(sk){ const e=this.sk.get(tr.replace(this.NUM,"#")); if(e!==undefined){ let i=0; en=e.replace(/#/g,()=>sk[i++]); } } }
+    if(en===undefined) for(const s of this.sab){ const m=tr.match(s.re); if(!m) continue;
+      const sk=[],tx=[]; s.rusys.forEach((r,j)=>(r==="#"?sk:tx).push(m[j+1])); let a=0,b=0;
+      en=s.en.replace(/#|\{\}/g,x=>x==="#"?sk[a++]:this.vertimas(tx[b++])); break; }
+    if(en===undefined&&tr.includes(", ")){ const d=tr.split(", ").map(x=>this.vertimas(x)); if(d.join(", ")!==tr) en=d.join(", "); }   // sąrašai
+    return en===undefined?t:t.replace(tr,en);
+  },
+  mazgas(n){ if(n.nodeType!==3||(n.parentNode&&/^(SCRIPT|STYLE|TEXTAREA|CODE)$/.test(n.parentNode.nodeName))) return;
+    const v=this.vertimas(n.nodeValue); if(v!==n.nodeValue) n.nodeValue=v; },
+  atributai(e){ if(e.nodeType!==1) return; for(const a of ["placeholder","title","aria-label"]){ const v=e.getAttribute(a); if(v){ const w=this.vertimas(v); if(w!==v) e.setAttribute(a,w); } } },
+  versti(sakn){ if(!this.zod||!sakn) return;
+    if(sakn.nodeType===3){ this.mazgas(sakn); return; } if(sakn.nodeType!==1) return;
+    this.atributai(sakn); sakn.querySelectorAll("[placeholder],[title],[aria-label]").forEach(e=>this.atributai(e));
+    const w=document.createTreeWalker(sakn,NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())) this.mazgas(n); }
+};
+
+/* Sąsajos klaidos -> brezly.log (Dokumentai\Brezly), kad „Pranešti apie klaidą“ ataskaitoje jos būtų */
+const JS_KLAIDOS={n:0,matytos:new Set()};
+function uzrasytiKlaida(zinute,vieta,deklas){
+  try{
+    const raktas=String(zinute).slice(0,200)+"|"+vieta;
+    if(JS_KLAIDOS.n>=20||JS_KLAIDOS.matytos.has(raktas)) return;
+    JS_KLAIDOS.n++; JS_KLAIDOS.matytos.add(raktas);
+    fetch("/api/js_klaida",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({zinute:String(zinute).slice(0,500),vieta:String(vieta||"").slice(0,200),
+        deklas:String(deklas||"").slice(0,1500),rodinys:typeof rodinys!=="undefined"?rodinys:""})}).catch(()=>{});
+  }catch(e){}
+}
+window.addEventListener("error",e=>uzrasytiKlaida(e.message,(e.filename||"").split("/").pop()+":"+e.lineno+":"+e.colno,e.error&&e.error.stack));
+window.addEventListener("unhandledrejection",e=>uzrasytiKlaida("Promise: "+((e.reason&&e.reason.message)||e.reason),"",e.reason&&e.reason.stack));
 function pranesti(t){const p=$("#pranesimas");p.textContent=t;p.classList.add("rodo");clearTimeout(p._t);p._t=setTimeout(()=>p.classList.remove("rodo"),2600);}
 
 const LYGIAI=[[0,"Naujokas"],[100,"Kadetas"],[250,"Braižytojas"],[450,"Konstruktorius"],[700,"Inžinierius"]];
@@ -574,11 +633,14 @@ function pabaiga(){
   if(atl>=PAM.zingsniai.length && PAM.id==="pirmoji-3d") duotiZenkleli("detale");
   const kita=INFO.pamokos[INFO.pamokos.indexOf(PAM)+1];
   if(teis===PAM.testas.length) duotiZenkleli("testas");
+  { const siandien=dienaStr(new Date()); S.testai=S.testai||{}; S.baigta=S.baigta||{};          // ataskaitai dėstytojui
+    const sen=S.testai[PAM.id]; if(!sen||teis>=sen.t) S.testai[PAM.id]={t:teis,n:PAM.testas.length,d:siandien};
+    if(atl>=PAM.zingsniai.length&&!S.baigta[PAM.id]) S.baigta[PAM.id]=siandien; saugoti(); }
   konfeti(140);
   $("#vidus").innerHTML=`<div class="pabaiga"><div class="taure">🏆</div><h1>Pamoka baigta!</h1>
     <p>${esc(PAM.pabaiga||"Puikiai padirbėjai!")}</p>
     <div class="statai"><div><b>${atl}/${PAM.zingsniai.length}</b><small>žingsnių</small></div><div><b>${teis}/${PAM.testas.length}</b><small>teste</small></div><div><b>${S.xp}</b><small>XP iš viso</small></div></div>
-    <p>${kita?`Kita pamoka: <b>${esc(kita.pavadinimas)}</b>`:"Baigei visas pamokas! Naujos (pjūviai, projekcijos) - kitoje versijoje."}</p>
+    <p>${kita?`Kita pamoka: <b>${esc(kita.pavadinimas)}</b>`:"Baigei visas pamokas!"+(INFO.ateityje.length?" Netrukus: "+esc(INFO.ateityje.map(a=>a.pavadinimas).join(", "))+".":"")}</p>
     <div class="eil" style="justify-content:center;margin-top:18px">${kita?`<button class="btn pagr didelis" onclick="rodytiPradzia('${kita.id}')">Kita pamoka →</button><button class="btn" onclick="rodytiPradzia()">Į pradžią</button>`:`<button class="btn pagr didelis" onclick="rodytiPradzia()">Į pradžią</button>`}
     <button class="btn" onclick="if(confirm('Ištrinti visą progresą ir XP?')){S={xp:0,atlikta:{},zenkleliai:[],dabartinis:{},eq:S.eq,dienos:[],nauji:[],vardas:S.vardas};PAM=null;saugoti();rodytiPradzia(INFO.pamokos[0].id);}">Pradėti iš naujo</button></div></div>`;
 }
@@ -973,18 +1035,22 @@ async function prTikrinti(id){
   }
 }
 
-/* =================== KAS NAUJO 0.9 =================== */
+/* =================== KAS NAUJO (naujienos.json) =================== */
+function verSk(v){ return String(v||"0").split(/[^0-9.]/)[0].split(".").map(x=>parseInt(x)||0); }
+function verMaz(a,b){ const x=verSk(a),y=verSk(b); for(let i=0;i<Math.max(x.length,y.length);i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)<(y[i]||0); } return false; }
+/* Šios versijos naujiena: tiksliai ši versija, o jei jos nėra - naujausia ne naujesnė už ją */
+function dabartineNaujiena(){
+  const N=(INFO.naujienos||[]).filter(n=>n.punktai&&n.punktai.length);
+  const n=N.find(n=>!verMaz(INFO.versija,n.versija)) || null;
+  return n&&INFO.kalba==="en"&&n.en ? {...n,...n.en} : n;
+}
 function kasNaujo(){
-  sg("matyta_versija","0.9");
-  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA 0.9</span></div>
-    <h2 style="font:600 24px var(--font);letter-spacing:-.01em;text-transform:none;color:var(--text);margin:8px 0 4px">Naujas inžinerinis dizainas</h2>
-    <p>Brėžly dabar atrodo kaip tikra CAD programa - ramiau akims ir rimčiau prie studijų darbų.</p>
-    <ul class="kas-sar">
-      <li><b>Grafito spalvos ir plonos linijos</b> - mažiau blaškymo, daugiau dėmesio brėžiniui.</li>
-      <li><b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.</li>
-      <li><b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.</li>
-      <li>Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas.</li>
-    </ul>
+  const n=dabartineNaujiena(); if(!n) return;
+  sg("matyta_versija",n.versija);
+  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA ${esc(n.versija)}</span></div>
+    <h2 style="font:600 24px var(--font);letter-spacing:-.01em;text-transform:none;color:var(--text);margin:8px 0 4px">${esc(n.pavadinimas)}</h2>
+    <p>${esc(n.aprasas||"")}</p>
+    <ul class="kas-sar">${n.punktai.map(x=>`<li>${x}</li>`).join("")}</ul>
     <div class="eil" style="margin-top:16px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
 }
 
@@ -1054,6 +1120,7 @@ function rodytiNustatymus(){
   $("#vidus").innerHTML=`<h1 class="ant1">Nustatymai</h1><p class="po1">Kaip tau patogiau mokytis.</p>
   <div class="nust-gr"><h3>Vaizdas</h3>
     <div class="nust-eil"><div><b>Tema</b><small>Tamsi mažiau vargina akis vakare.</small></div>${pas([["dark","☾ Tamsi"],["light","☀ Šviesi"]],t,v=>`sg('tema','${v}');taikytiTema()`)}</div>
+    <div class="nust-eil"><div><b>Kalba / Language</b><small>Brėžly sąsajos ir pamokų kalba. Language of the interface and lessons.</small></div>${pas([["lt","Lietuvių"],["en","English"]],sg("kalba")||"lt",v=>`sg('kalba','${v}');planuotiSaugojima(true);setTimeout(()=>location.reload(),300)`)}</div>
     <div class="nust-eil"><div><b>Teksto dydis</b><small>Padidina visą Brėžly langą.</small></div>${pas([["auto","Pagal ekraną"],["1","Įprastas"],["1.15","Didesnis"],["1.3","Didelis"]],dyd,v=>v==="auto"?`sg('dydis','');taikytiDydi();rodytiNustatymus()`:`sg('dydis','${v}');taikytiDydi();rodytiNustatymus()`)}</div>
   </div>
   <div class="nust-gr"><h3>Darbas su AutoCAD</h3>
@@ -1065,8 +1132,12 @@ function rodytiNustatymus(){
     <div class="nust-eil"><div><b>Komandos su „_“</b><small>Jei tavo AutoCAD ne anglų kalba: _LINE, _CIRCLE veikia bet kurioje kalboje.${BUS.kalba?` Tavo AutoCAD kalba: <b style="display:inline">${esc(BUS.kalba)}</b>.`:""}</small></div>${jung(sg("pabr")==="1",`sg('pabr',sg('pabr')==='1'?'0':'1');rodytiNustatymus()`,"Komandos su pabraukimu")}</div>
     <div class="nust-eil"><div><b>🤖 Robotas gidas</b><small>Parodo, kur spausti, ir padrąsina.</small></div><button class="btn" onclick="Gidas.turasIsNaujo()">❔ Turas</button>${jung(Gidas.ijungtas(),"Gidas.perjungti();rodytiNustatymus()","Robotas gidas")}</div>
   </div>
-  <div class="nust-gr"><h3>Progresas</h3><p>XP, pamokos ir daiktai saugomi faile - išliks ir perdiegus Brėžly. Norėdamas perkelti į kitą kompiuterį, nukopijuok šį failą.</p>
+  <div class="nust-gr"><h3>Progresas</h3><p>XP, pamokos ir daiktai saugomi faile - išliks ir perdiegus Brėžly.</p>
     <code class="kelias">${esc(INFO.duomenys+sep+"progresas.json")}</code>
+    <div class="nust-eil" style="margin-top:12px"><div><b>Perkelti į kitą kompiuterį</b><small>Eksportuok čia, nusikopijuok failą (USB, el. paštas, OneDrive) ir kitame kompiuteryje spausk „Importuoti“.</small></div>
+      <button class="btn" onclick="eksportuotiProgresa()">⇪ Eksportuoti</button><button class="btn" onclick="$('#importoFailas').click()">⇩ Importuoti</button>
+      <input type="file" id="importoFailas" accept=".json,application/json" hidden onchange="importuotiProgresa(this)"></div>
+    <div class="nust-eil"><div><b>Ataskaita dėstytojui</b><small>Atliktos pamokos, testai, praktikos užduotys ir XP - atsispausdink arba išsaugok PDF.</small></div><button class="btn" onclick="destytojoAtaskaita()">🎓 Ataskaita</button></div>
     <div class="eil" style="margin-top:12px"><button class="btn" onclick="api('/api/duomenys',{})">📂 Atidaryti aplanką</button></div>
   </div>
   <div class="nust-gr"><h3>Pagalba</h3>
@@ -1078,6 +1149,91 @@ function rodytiNustatymus(){
     <p>Atrakinta. Užsirakins pati po 30 min. neveiklumo.</p>
     <div class="eil"><button class="btn pagr" onclick="rodytiKureja()">🛠 Kūrėjo pultas</button><button class="btn" onclick="uzrakintiTesta()">🔒 Užrakinti</button></div>`
     :`<p>Kūrėjo įrankiai apsaugoti slaptažodžiu.</p><button class="btn" onclick="testoLangas()">🔒 Atrakinti</button>`}</div>`:""}`;
+}
+
+/* ---- ataskaita dėstytojui: spausdinamas HTML (Dokumentai\\Brezly\\ataskaitos) ---- */
+function destytojoAtaskaita(){
+  rodytiLangeli(`<h2>🎓 Ataskaita dėstytojui</h2>
+    <p>Bus sukurta ataskaita su tavo pamokomis, testais ir praktikos užduotimis. Ją atsidarysi naršyklėje ir galėsi atsispausdinti arba išsaugoti PDF (Ctrl+P).</p>
+    <label for="ataVardas">Vardas ir pavardė</label><input type="text" id="ataVardas" value="${esc(sg("studentas")||S.savininkas||"")}" maxlength="80" autocomplete="name">
+    <label for="ataGrupe" style="margin-top:10px;display:block">Grupė / kursas</label><input type="text" id="ataGrupe" value="${esc(sg("grupe")||"")}" maxlength="40" placeholder="pvz. AI26">
+    <label for="ataDalykas" style="margin-top:10px;display:block">Dalykas, dėstytojas (nebūtina)</label><input type="text" id="ataDalykas" value="${esc(sg("dalykas")||"")}" maxlength="120" placeholder="pvz. Inžinerinė grafika">
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Atšaukti</button><button class="btn pagr" onclick="kurtiDestytojoAtaskaita()">Sukurti</button></div>`);
+}
+function ataskaitosHTML(st){
+  const pam=INFO.pamokos, ts=S.testai||{}, bg=S.baigta||{}, pr=S.praktika||{};
+  const baigtos=pam.filter(p=>(S.atlikta[p.id]||[]).length>=p.zingsniai.length).length, prN=PRAKTIKA.filter(u=>pr[u.id]).length;
+  const e=esc, d=new Date();
+  const eilP=pam.map((p,i)=>{ const a=(S.atlikta[p.id]||[]).length, n=p.zingsniai.length, t=ts[p.id];
+    return `<tr class="${a>=n?"ok":""}"><td>${i+1}</td><td>${e(p.pavadinimas)}</td><td>${a}/${n}</td><td>${t?`${t.t}/${t.n}`:"-"}</td><td>${e(bg[p.id]||(a>=n?"✓":""))}</td></tr>`; }).join("");
+  const eilU=PRAKTIKA.slice().sort((a,b)=>a.nr-b.nr).map(u=>`<tr class="${pr[u.id]?"ok":""}"><td>U${u.nr}</td><td>${e(u.pav)}</td><td>${e(u.fmt)} · ${e(u.d)}</td><td>${pr[u.id]?"✓ "+e(typeof pr[u.id]==="string"?pr[u.id]:""):"-"}</td></tr>`).join("");
+  return `<!doctype html><html lang="lt"><head><meta charset="utf-8"><title>Brėžly ataskaita - ${e(st.vardas)}</title><style>
+  @page{size:A4;margin:16mm 14mm}
+  body{font:13px/1.5 "Segoe UI",system-ui,sans-serif;color:#111;max-width:780px;margin:24px auto;padding:0 16px}
+  h1{font-size:22px;margin:0}.sub{color:#555;margin:2px 0 18px}
+  .kort{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 20px}.kort div{border:1px solid #ccc;border-radius:4px;padding:8px 10px}
+  .kort b{display:block;font-size:20px}.kort small{color:#555}
+  table{width:100%;border-collapse:collapse;margin:6px 0 18px}th,td{border-bottom:1px solid #ddd;padding:5px 8px;text-align:left}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#555;border-bottom:1.5px solid #333}tr.ok td:first-child{border-left:3px solid #1a7f37}
+  h2{font-size:15px;margin:18px 0 2px}.duom{width:auto}.duom td{border:0;padding:2px 24px 2px 0}.duom td:first-child{color:#555}.pastaba{color:#555;font-size:11.5px;margin-top:22px;border-top:1px solid #ddd;padding-top:8px}
+  .spausd{margin:0 0 16px}@media print{.spausd{display:none}body{margin:0}}
+  </style></head><body>
+  <button class="spausd" onclick="print()">🖨 Spausdinti / išsaugoti PDF</button>
+  <h1>Brėžly - AutoCAD mokymosi ataskaita</h1><p class="sub">Sugeneruota ${e(dienaStr(d))} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")} · Brėžly ${e(INFO.versija)}</p>
+  <table class="duom"><tr><td>Studentas</td><td><b>${e(st.vardas||"-")}</b></td></tr><tr><td>Grupė</td><td>${e(st.grupe||"-")}</td></tr>${st.dalykas?`<tr><td>Dalykas</td><td>${e(st.dalykas)}</td></tr>`:""}</table>
+  <div class="kort"><div><b>${baigtos}/${pam.length}</b><small>pamokos baigtos</small></div><div><b>${prN}/${PRAKTIKA.length}</b><small>praktikos užduotys</small></div>
+    <div><b>${S.xp}</b><small>XP · ${e(LYGIAI[lygis(S.xp)][1])}</small></div><div><b>${(S.zenkleliai||[]).length}</b><small>ženkleliai</small></div></div>
+  <h2>Pamokos</h2><table><tr><th>Nr.</th><th>Pamoka</th><th>Žingsniai</th><th>Testas</th><th>Baigta</th></tr>${eilP}</table>
+  <h2>Praktikos užduotys</h2><table><tr><th>Nr.</th><th>Užduotis</th><th>Lapas</th><th>Priimta</th></tr>${eilU}</table>
+  <p class="pastaba">Žingsnius ir praktikos užduotis Brėžly patikrino tiesiai AutoCAD brėžinyje. Ataskaita sukurta studento kompiuteryje -
+  dėstytojas gali paprašyti parodyti brėžinius (DWG) ar atlikti užduotį auditorijoje.</p>
+  </body></html>`;
+}
+async function kurtiDestytojoAtaskaita(){
+  const st={vardas:$("#ataVardas").value.trim(), grupe:$("#ataGrupe").value.trim(), dalykas:$("#ataDalykas").value.trim()};
+  if(!st.vardas){ $("#ataVardas").focus(); pranesti("Įrašyk vardą ir pavardę."); return; }
+  sg("studentas",st.vardas); sg("grupe",st.grupe); sg("dalykas",st.dalykas);
+  const r=await api("/api/destytojo_ataskaita",{vardas:st.vardas,html:ataskaitosHTML(st)});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  rodytiLangeli(`<h2>Ataskaita sukurta</h2><p>${INFO.windows?"Atidariau ją naršyklėje - spausk „Spausdinti / išsaugoti PDF“.":"Atsidaryk ją naršyklėje ir spausdink (Ctrl+P)."}</p>
+    <code class="kelias">${esc(r.kelias)}</code>
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
+}
+
+/* ---- progreso perkėlimas tarp kompiuterių ---- */
+async function eksportuotiProgresa(){
+  if(DEMO_S){ pranesti("Išjunk demo režimą prieš eksportuodamas."); return; }
+  try{ await api("/api/progresas",{S,nustatymai:NUST}); }catch(e){}
+  const r=await api("/api/progresas_eksportuoti",{});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  rodytiLangeli(`<h2>Progresas eksportuotas</h2>
+    <p>${r.santrauka.xp} XP · ${r.santrauka.zingsniai} žingsn. · ${r.santrauka.praktika} užduot. · ${r.santrauka.zenkleliai} ženkl.</p>
+    <code class="kelias">${esc(r.kelias)}</code>
+    <p style="margin-top:10px">Nusikopijuok šį failą į kitą kompiuterį ir ten: Nustatymai › Progresas › <b>Importuoti</b>.</p>
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
+}
+async function importuotiProgresa(inp){
+  const f=inp.files&&inp.files[0]; inp.value=""; if(!f) return;
+  if(f.size>5e6){ pranesti("Per didelis failas - tai ne Brėžly progresas."); return; }
+  const turinys=await f.text();
+  const r=await api("/api/progresas_importuoti",{turinys});
+  if(!r.ok){ pranesti(r.klaida); return; }
+  const eil=(p,a)=>`<tr><td>${p}</td><td>${a(r.dabar)}</td><td><b>${a(r.failas)}</b></td></tr>`;
+  window._importoTurinys=turinys;
+  rodytiLangeli(`<h2>Importuoti progresą?</h2>
+    <p>Dabartinis progresas bus <b>pakeistas</b> failo progresu. Jo kopija išliks aplanke „perkelimas“.</p>
+    <table class="lent-palyg"><tr><th></th><th>Dabar</th><th>Faile</th></tr>
+      ${eil("Vardas",x=>esc(x.vardas||"-"))}${eil("XP",x=>x.xp)}${eil("Žingsniai",x=>x.zingsniai)}${eil("Užduotys",x=>x.praktika)}${eil("Ženkleliai",x=>x.zenkleliai)}</table>
+    ${r.eksportuota?`<p style="margin-top:8px;opacity:.75">Failas sukurtas ${esc(r.eksportuota.replace("T"," "))}</p>`:""}
+    ${r.failas.xp<r.dabar.xp?`<p style="color:var(--err)">Faile XP mažiau nei dabar - ar tikrai tas failas?</p>`:""}
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Atšaukti</button><button class="btn pagr" onclick="patvirtintiImporta()">Importuoti</button></div>`);
+}
+async function patvirtintiImporta(){
+  NESAUGOTI=true; clearTimeout(saugojimoLaikmatis);
+  const r=await api("/api/progresas_importuoti",{turinys:window._importoTurinys,patvirtinta:true});
+  if(!r.ok){ NESAUGOTI=false; pranesti(r.klaida); return; }
+  try{ localStorage.removeItem("cadet"); }catch(e){}
+  location.reload();
 }
 
 /* ---- testavimo įrankiai: atrakinami slaptažodžiu (tikrina serveris) ---- */
@@ -1427,12 +1583,12 @@ r();<\/script></body></html>`;
 
 /* ---------- pradžia ---------- */
 (async function(){
-  await ikeltiProgresa(); taikytiTema(); taikytiDydi(); S.eq=S.eq||{...PRADINIS};
+  await ikeltiProgresa(); await I18N.ikelti(); taikytiTema(); taikytiDydi(); S.eq=S.eq||{...PRADINIS};
   const u=$("#uzsklanda"), baigti=()=>{u.classList.add("dingsta");setTimeout(()=>u.remove(),700);};
   const tvarka=["lape","katinas","peleda","robotas","drakonas","ateivis","pingvinas","meska"];
   $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:["robotas","drakonas"].includes(id)?"kepure":null,ranka:null})}</span>`).join("");
   u.onclick=baigti; setTimeout(baigti,2900);
-  INFO=await api("/api/info"); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
+  INFO=await api("/api/info?kalba="+encodeURIComponent(sg("kalba")||"lt")); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
   $("#verZyme").textContent=String(INFO.versija).split(" ")[0];
   inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200);
   rodytiPatarima(); setInterval(rodytiPatarima,20000); Robotas.pradeti();
@@ -1440,8 +1596,10 @@ r();<\/script></body></html>`;
   setInterval(()=>{if(!tikrina)api("/api/ping",{}).catch(()=>{});},3000);
   setInterval(()=>{if(!tikrina)tikrintiBusena();},BUS.prisijungta?8000:5000);
   setInterval(()=>auto.tikrinti(),4000);
-  if(!sg("vedlys")){ sg("matyta_versija","0.9"); setTimeout(()=>Vedlys.pradeti(),3000); }
-  else if(sg("matyta_versija")!=="0.9") setTimeout(kasNaujo,3300);
+  { const n=dabartineNaujiena();
+    if(!sg("vedlys")){ if(n) sg("matyta_versija",n.versija); setTimeout(()=>Vedlys.pradeti(),3000); }
+    else if(n && sg("matyta_versija")!==n.versija) setTimeout(kasNaujo,3300);
+    if(n){ const u=$("#uNauja"); if(u){ u.textContent="Nauja "+n.versija+" · "+n.pavadinimas; u.hidden=false; } } }
   if(!sg("praktika_matyta")) $("#praktikosTaskelis").classList.remove("hidden");
   { const lr=langoRez(), ekr=INFO.ekranas||[0,0,1920,1040];
     if(sg("langas_rez")===null&&sg("kompakt")===null&&INFO.windows&&ekr[2]<1700){     // mažas ekranas - pirmą kartą pats

@@ -14,6 +14,7 @@ import hashlib
 import hmac
 import io
 import json
+import re
 import os
 import platform
 import secrets
@@ -32,12 +33,26 @@ os.chdir(PROGRAMOS_APLANKAS)
 
 import serveris as P            # noqa: E402  (serveris, langas, ryšys su AutoCAD)
 import pamokos                  # noqa: E402
+import vertimas                 # noqa: E402
+from vertimas import tr         # noqa: E402
 import praktika                 # noqa: E402
 
 
 
+def _naujienos():
+    """naujienos.json: versijų naujienos (naujausia pirma) - langui „Kas naujo“."""
+    try:
+        with open(os.path.join(PROGRAMOS_APLANKAS, "naujienos.json"), encoding="utf-8") as f:
+            return json.load(f)["versijos"]
+    except (OSError, ValueError, KeyError):
+        return []
+
+
+NAUJIENOS = _naujienos()
+
+
 def _versija():
-    """versija.txt įrašo GitHub surinkimas pagal žymą (pvz. v0.9 -> 0.9). Be jo - numatytoji."""
+    """versija.txt įrašo GitHub surinkimas pagal žymą (pvz. v0.9 -> 0.9). Be jo - naujausia iš naujienos.json + beta."""
     try:
         with open(os.path.join(PROGRAMOS_APLANKAS, "versija.txt"), encoding="utf-8") as f:
             v = f.read().strip().lstrip("vV")
@@ -45,7 +60,7 @@ def _versija():
             return v if " " in v else v + " beta"
     except OSError:
         pass
-    return "0.9 beta"
+    return (NAUJIENOS[0]["versija"] if NAUJIENOS else "0") + " beta"
 
 
 VERSIJA_BREZLY = _versija()
@@ -139,6 +154,87 @@ def progresas(duom):
               "S": duom.get("S", senas.get("S")),
               "nustatymai": {**senas.get("nustatymai", {}), **(duom.get("nustatymai") or {})}}
     irasyti_atomiskai(PROGRESAS, json.dumps(naujas, ensure_ascii=False, indent=1))
+    return {"ok": True}
+
+
+def _progreso_santrauka(S):
+    S = S or {}
+    return {"vardas": S.get("vardas", ""), "xp": int(S.get("xp") or 0),
+            "zingsniai": sum(len(v) if isinstance(v, (list, dict)) else 0 for v in (S.get("atlikta") or {}).values()),
+            "praktika": len(S.get("praktika") or {}), "zenkleliai": len(S.get("zenkleliai") or [])}
+
+
+def destytojo_ataskaita(duom):
+    """{vardas, html} -> Dokumentai\\Brezly\\ataskaitos\\Brezly_destytojui_<vardas>_<data>.html, atidaroma naršyklėje."""
+    html = str(duom.get("html") or "")
+    if not html.startswith("<!doctype html>") or len(html) > 2_000_000:
+        return {"ok": False, "klaida": "Netinkama ataskaita."}
+    ap = os.path.join(_aplankas(), "ataskaitos")
+    os.makedirs(ap, exist_ok=True)
+    vardas = re.sub(r"[^\w-]+", "_", str(duom.get("vardas") or "studentas"))[:40]
+    kelias = os.path.join(ap, f"Brezly_destytojui_{vardas}_{datetime.datetime.now():%Y%m%d_%H%M}.html")
+    with open(kelias, "w", encoding="utf-8") as f:
+        f.write(html)
+    if WINDOWS:
+        try:
+            os.startfile(kelias)
+        except Exception:
+            rasyti_zurnala("Ataskaitos atidarymas: " + traceback.format_exc())
+    return {"ok": True, "kelias": kelias}
+
+
+def progresas_eksportuoti(_):
+    """Progreso kopija perkėlimui: Dokumentai\\Brezly\\perkelimas\\Brezly_progresas_<vardas>_<data>.json"""
+    try:
+        with open(PROGRESAS, encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return {"ok": False, "klaida": tr("Progreso dar nėra - atlik bent vieną žingsnį.", "No progress yet - complete at least one step.")}
+    ap = os.path.join(_aplankas(), "perkelimas")
+    os.makedirs(ap, exist_ok=True)
+    vardas = re.sub(r"[^\w-]+", "_", str((d.get("S") or {}).get("vardas") or "Robis"))[:30]
+    kelias = os.path.join(ap, f"Brezly_progresas_{vardas}_{datetime.datetime.now():%Y%m%d_%H%M}.json")
+    d = {"brezly_progresas": 1, "eksportuota": datetime.datetime.now().isoformat(timespec="seconds"),
+         "versija": VERSIJA_BREZLY, "S": d.get("S"), "nustatymai": d.get("nustatymai", {})}
+    with open(kelias, "w", encoding="utf-8") as f:
+        json.dump(d, f, ensure_ascii=False, indent=1)
+    if WINDOWS:
+        try:
+            subprocess.Popen(["explorer", "/select,", kelias])
+        except Exception:
+            pass
+    return {"ok": True, "kelias": kelias, "santrauka": _progreso_santrauka(d["S"])}
+
+
+def progresas_importuoti(duom):
+    """{turinys: failo tekstas, patvirtinta: bool}. Be patvirtinimo - tik santrauka palyginimui.
+    Prieš pakeičiant dabartinis progresas išsaugomas perkelimas\\pries_importa_<data>.json."""
+    try:
+        d = json.loads(duom.get("turinys") or "")
+        S = d.get("S")
+        if not isinstance(S, dict) or "xp" not in S:
+            raise ValueError
+    except (ValueError, AttributeError):
+        return {"ok": False, "klaida": tr("Tai ne Brėžly progreso failas.", "This is not a Brėžly progress file.")}
+    dabar = None
+    try:
+        with open(PROGRESAS, encoding="utf-8") as f:
+            dabar = json.load(f)
+    except (OSError, ValueError):
+        pass
+    if not duom.get("patvirtinta"):
+        return {"ok": True, "failas": _progreso_santrauka(S), "dabar": _progreso_santrauka((dabar or {}).get("S")),
+                "eksportuota": d.get("eksportuota", "")}
+    if dabar:
+        ap = os.path.join(_aplankas(), "perkelimas")
+        os.makedirs(ap, exist_ok=True)
+        with open(os.path.join(ap, f"pries_importa_{datetime.datetime.now():%Y%m%d_%H%M%S}.json"), "w", encoding="utf-8") as f:
+            json.dump(dabar, f, ensure_ascii=False, indent=1)
+    naujas = {"versija": VERSIJA_BREZLY, "irasyta": datetime.datetime.now().isoformat(timespec="seconds"),
+              "S": S, "nustatymai": d.get("nustatymai") or (dabar or {}).get("nustatymai", {})}
+    _aplankas()
+    irasyti_atomiskai(PROGRESAS, json.dumps(naujas, ensure_ascii=False, indent=1))
+    rasyti_zurnala(f"Progresas importuotas: {_progreso_santrauka(S)}")
     return {"ok": True}
 
 
@@ -290,7 +386,7 @@ def paleisti_autocad(_):
         return {"ok": True, "vyksta": True}
     a = aplinka()
     if not a["pilnas_idiegtas"] and a["lt_idiegtas"]:
-        return {"ok": False, "lt": True, "klaida": "Įdiegtas tik AutoCAD LT - jo programos valdyti negali."}
+        return {"ok": False, "lt": True, "klaida": tr("Įdiegtas tik AutoCAD LT - jo programos valdyti negali.", "Only AutoCAD LT is installed - programs cannot control it.")}
 
     def darbas():
         _PALEIDIMAS.update(vyksta=True, klaida="")
@@ -312,12 +408,13 @@ def paleisti_autocad(_):
 
 
 # ================================================================== pamokos
-def info(_):
-    return {"ok": True, "versija": VERSIJA_BREZLY, "testavimas": _testavimo_nustatymai() is not None,
+def info(duom):
+    kalba = vertimas.nustatyti((duom or {}).get("kalba") or "lt")
+    return {"ok": True, "versija": VERSIJA_BREZLY, "kalba": kalba, "testavimas": _testavimo_nustatymai() is not None,
             "funkcijos": funkcijos(),
             "langas": dict(P.LANGAS), "klavisai": KLAVISAI, "ekranas": P.darbo_sritis(),
             "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS,
-            "praktika": praktika.SARASAS} | pamokos.viesai()
+            "praktika": praktika.sarasas(kalba), "naujienos": NAUJIENOS} | pamokos.viesai(kalba)
 
 
 def _zingsnis(duom):
@@ -347,7 +444,7 @@ def tikrinti(duom):
     except Exception as e:
         if duom.get("tyliai"):
             return {"ok": True, "laukia": True}
-        pastabos = [f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc."]
+        pastabos = [tr(f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc.", f"Couldn't read the drawing: {e}. Is another command running in AutoCAD? Press Esc.")]
     return {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
 
 
@@ -356,7 +453,7 @@ def parodyti(duom):
     if KUREJAS["imitacija"]:
         return {"ok": True, "log": "(imitacija - AutoCAD nenaudojamas)"}
     if z["demo"] is None:
-        return {"ok": False, "klaida": "Šiam žingsniui demonstracijos nėra - padaryk pagal aprašą."}
+        return {"ok": False, "klaida": tr("Šiam žingsniui demonstracijos nėra - padaryk pagal aprašą.", "There is no demonstration for this step - follow the description.")}
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         b = P.braizytojas()
@@ -437,7 +534,7 @@ def langas(duom):
     import win32gui
     h = _rasti_langa()
     if not h:
-        return {"ok": False, "klaida": "Neradau Brėžly lango."}
+        return {"ok": False, "klaida": tr("Neradau Brėžly lango.", "Brėžly window not found.")}
     mon = win32api.GetMonitorInfo(win32api.MonitorFromWindow(h, win32con.MONITOR_DEFAULTTONEAREST))
     x0, y0, x1, y1 = mon["Work"]
     W, H = x1 - x0, y1 - y0
@@ -548,6 +645,13 @@ def ataskaita(duom):
     return {"ok": True, "kelias": kelias}
 
 
+def js_klaida(duom):
+    """Sąsajos (JavaScript) klaida -> brezly.log. Sąsaja siunčia ne daugiau kaip 20 skirtingų per paleidimą."""
+    tekstas = " | ".join(str(duom.get(k, ""))[:1500] for k in ("zinute", "vieta", "rodinys", "deklas") if duom.get(k))
+    rasyti_zurnala("Sąsajos klaida: " + tekstas.replace("\n", " ⏎ "))
+    return {"ok": True}
+
+
 def atidaryti_duomenis(_):
     _aplankas()
     if WINDOWS:
@@ -579,7 +683,7 @@ def _atsisiusti(url, kelias, sha256=""):
             h.update(b); f.write(b)
     if sha256 and h.hexdigest().lower() != sha256.lower():
         os.remove(kelias)
-        raise ValueError("Atsisiųstas failas sugadintas (nesutampa kontrolinė suma). Bandyk dar kartą vėliau.")
+        raise ValueError(tr("Atsisiųstas failas sugadintas (nesutampa kontrolinė suma). Bandyk dar kartą vėliau.", "The downloaded file is damaged (checksum mismatch). Try again later."))
 
 
 def atnaujinimai(_):
@@ -588,7 +692,7 @@ def atnaujinimai(_):
     try:
         d = _aprasas()
     except Exception as e:
-        return {"ok": False, "klaida": f"Nepavyko patikrinti atnaujinimų ({e.__class__.__name__}). Ar yra internetas?"}
+        return {"ok": False, "klaida": tr(f"Nepavyko patikrinti atnaujinimų ({e.__class__.__name__}). Ar yra internetas?", f"Couldn't check for updates ({e.__class__.__name__}). Are you online?")}
     yra = _versija_sk(d["versija"]) > _versija_sk(VERSIJA_BREZLY)
     return {"ok": True, "yra": yra, "versija": d["versija"], "pastabos": d.get("pastabos", ""), "dabartine": VERSIJA_BREZLY}
 
@@ -598,7 +702,7 @@ def atnaujinti(_):
     d = _aprasas()
     if getattr(sys, "frozen", False):
         if not d.get("setup"):
-            return {"ok": False, "klaida": "Naujoje versijoje nėra diegimo programos."}
+            return {"ok": False, "klaida": tr("Naujoje versijoje nėra diegimo programos.", "The new version has no installer.")}
         kelias = os.path.join(tempfile.gettempdir(), "Brezly_Setup_naujas.exe")
         _atsisiusti(d["setup"], kelias, d.get("setup_sha256", ""))
         # /SILENT - rodoma tik eigos juosta; po diegimo Brėžly pasileidžia pats ([Run] skipifnotsilent)
@@ -606,7 +710,7 @@ def atnaujinti(_):
         P.BUSENA["veikia"] = False
         return {"ok": True, "budas": "setup"}
     if not d.get("zip"):
-        return {"ok": False, "klaida": "Šiai versijai reikia įdiegti iš naujo - atsisiųsk Brezly_Setup.exe."}
+        return {"ok": False, "klaida": tr("Šiai versijai reikia įdiegti iš naujo - atsisiųsk Brezly_Setup.exe.", "This version needs a fresh install - download Brezly_Setup.exe.")}
     kelias = os.path.join(tempfile.gettempdir(), "brezly_atnaujinimas.zip")
     _atsisiusti(d["zip"], kelias, d.get("zip_sha256", ""))
     with zipfile.ZipFile(kelias) as z:
@@ -674,7 +778,7 @@ def praktika_tikrinti(duom):
     try:
         pastabos = praktika.tikrinti(uid, b, P.A.kartoti)
     except Exception as e:
-        pastabos = [f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc."]
+        pastabos = [tr(f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc.", f"Couldn't read the drawing: {e}. Is another command running in AutoCAD? Press Esc.")]
     return {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
 
 
@@ -697,8 +801,8 @@ def funkcijos():
 def _imituotas_tikrinimas():
     if KUREJAS["imitacija"] == "gerai":
         return {"ok": True, "teisingai": True, "pastabos": []}
-    return {"ok": True, "teisingai": False, "pastabos": ["(Imitacija) Taip atrodo klaidos pranešimas: trūksta apskritimo ø40.",
-                                                         "Patarimas: CIRCLE prašo spindulio, ne skersmens."]}
+    return {"ok": True, "teisingai": False, "pastabos": [tr("(Imitacija) Taip atrodo klaidos pranešimas: trūksta apskritimo ø40.", "(Simulation) This is what an error message looks like: circle ø40 is missing."),
+                                                         tr("Patarimas: CIRCLE prašo spindulio, ne skersmens.", "Tip: CIRCLE asks for the radius, not the diameter.")]}
 
 
 def _kurejui(f):
@@ -816,7 +920,7 @@ def k_nuotrauka(_):
         pass
     h = _rasti_langa()
     if not h:
-        return {"ok": False, "klaida": "Neradau Brėžly lango."}
+        return {"ok": False, "klaida": tr("Neradau Brėžly lango.", "Brėžly window not found.")}
     x0, y0, x1, y1 = win32gui.GetWindowRect(h)
     ap = os.path.join(_aplankas(), "Nuotraukos")
     os.makedirs(ap, exist_ok=True)
@@ -856,7 +960,7 @@ def _su_zurnalu(f):
 class BrezlyTvarkykle(P.Tvarkykle):
     HTML = "brezly.html"
     IKONA = "brezly.ico"
-    FAILAI = ("brezly.css", "brezly.js")
+    FAILAI = ("brezly.css", "brezly.js", "sasaja_en.json")
 
     def do_GET(self):
         if self.path.startswith("/praktika/"):          # praktikos brėžinių peržiūra (SVG/PDF)
@@ -874,6 +978,8 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/prisijungti": P.prisijungti, "/api/paleisti_autocad": paleisti_autocad, "/api/ping": P.ping,
         "/api/progresas": progresas, "/api/testas": testas_atrakinti, "/api/testas_galioja": testas_patikrinti,
         "/api/langas": langas, "/api/ivykiai": ivykiai, "/api/ataskaita": ataskaita, "/api/duomenys": atidaryti_duomenis,
+        "/api/js_klaida": js_klaida, "/api/progresas_eksportuoti": progresas_eksportuoti,
+        "/api/progresas_importuoti": progresas_importuoti, "/api/destytojo_ataskaita": destytojo_ataskaita,
         "/api/atnaujinimai": atnaujinimai, "/api/atnaujinti": atnaujinti, "/api/perkrauti": perkrauti,
         "/api/praktika_atidaryti": praktika_atidaryti, "/api/praktika_pdf": praktika_pdf,
         "/api/praktika_aplankas": praktika_aplankas, "/api/praktika_tikrinti": praktika_tikrinti,

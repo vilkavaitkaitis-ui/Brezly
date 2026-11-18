@@ -23,8 +23,15 @@ LISP = os.path.join(SAKNIS, "lisp", "Brezly.lsp")
 APP = os.path.join(SAKNIS, "app")
 PROGRAMELE = os.path.join(SAKNIS, "isvestis", "programele")
 
+NAUJIENOS = os.path.join(SAKNIS, "naujienos.json")
 LISP_PRADZIA = ";;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti"
 LISP_PABAIGA = ";;; </uzduotys>"
+
+
+def versija():
+    """Naujausia versija iš naujienos.json - ji įrašoma į AutoCAD priedą."""
+    with open(NAUJIENOS, encoding="utf-8") as f:
+        return json.load(f)["versijos"][0]["versija"]
 
 
 def uzduotys():
@@ -82,7 +89,11 @@ def lisp_atnaujintas(d):
     m = re.search(re.escape(LISP_PRADZIA) + r".*?" + re.escape(LISP_PABAIGA), tekstas, re.S)
     if not m:
         raise ValueError(f"lisp/Brezly.lsp nerasta žymė „{LISP_PRADZIA[:14]}...“")
-    naujas = (tekstas[:m.start()] + lisp_blokas(d) + tekstas[m.end():]).replace("\n", nl)
+    tekstas = tekstas[:m.start()] + lisp_blokas(d) + tekstas[m.end():]
+    v = versija()
+    tekstas = re.sub(r'^(;;;\s+Versija ).*$', lambda m_: m_.group(1) + v, tekstas, count=1, flags=re.M)
+    tekstas = re.sub(r'\(setq \*br:ver\* "[^"]*"\)', f'(setq *br:ver* "{v}")', tekstas, count=1)
+    naujas = tekstas.replace("\n", nl)
     return naujas, naujas != senas
 
 

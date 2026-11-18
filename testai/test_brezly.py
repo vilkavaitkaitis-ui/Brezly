@@ -95,6 +95,22 @@ class Praktika(unittest.TestCase):
         self.assertFalse(pasikeite, "lisp/Brezly.lsp pasenęs - paleisk: python irankiai/generuoti.py")
 
 
+class Naujienos(unittest.TestCase):
+    def test_versijos_nuo_naujausios(self):
+        with open(os.path.join(SAKNIS, "naujienos.json"), encoding="utf-8") as f:
+            v = json.load(f)["versijos"]
+        sk = [tuple(int(x) for x in n["versija"].split(".")) for n in v]
+        self.assertEqual(sk, sorted(sk, reverse=True), "naujienos.json: naujausia versija turi būti pirma")
+        for n in v:
+            for k in ("versija", "pavadinimas", "punktai"):
+                self.assertIn(k, n)
+
+    def test_release_aprasas(self):
+        import naujienos
+        self.assertIn("Naujas inžinerinis dizainas", naujienos.tekstas("0.9"))
+        self.assertEqual(naujienos.tekstas("99.9"), "")
+
+
 class Serveris(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -134,6 +150,36 @@ class Serveris(unittest.TestCase):
         for k in ("/brezly.py", "/../brezly.py", "/testavimas.json", "/praktika/../brezly.py"):
             with self.assertRaises(urllib.error.HTTPError, msg=k):
                 self.gauti(k)
+
+
+class ProgresoPerkelimas(unittest.TestCase):
+    def setUp(self):
+        import brezly
+        self.b = brezly
+        self.b.progresas({"S": {"xp": 120, "atlikta": {"failas": ["a", "b"]}, "praktika": {"U1_Tarpine": "2026-11-10"},
+                                "zenkleliai": ["pirmas"], "vardas": "Robis"}, "nustatymai": {"tema": "dark"}})
+
+    def test_eksportas_ir_importas(self):
+        r = self.b.progresas_eksportuoti({})
+        self.assertTrue(r["ok"])
+        self.assertEqual(r["santrauka"]["xp"], 120)
+        with open(r["kelias"], encoding="utf-8") as f:
+            turinys = f.read()
+        self.b.progresas({"S": {"xp": 5, "atlikta": {}, "praktika": {}}})
+        perziura = self.b.progresas_importuoti({"turinys": turinys})
+        self.assertEqual((perziura["dabar"]["xp"], perziura["failas"]["xp"]), (5, 120))
+        self.assertEqual(self.b.progresas({})["S"]["xp"], 5, "be patvirtinimo nieko nekeičia")
+        self.assertTrue(self.b.progresas_importuoti({"turinys": turinys, "patvirtinta": True})["ok"])
+        self.assertEqual(self.b.progresas({})["S"]["xp"], 120)
+
+    def test_svetimas_failas(self):
+        for t in ("", "nesąmonė", '{"a": 1}', '{"S": {"be_xp": 1}}'):
+            self.assertFalse(self.b.progresas_importuoti({"turinys": t})["ok"], t)
+
+    def test_destytojo_ataskaita(self):
+        r = self.b.destytojo_ataskaita({"vardas": "Vardenis Pavardenis", "html": "<!doctype html><p>x</p>"})
+        self.assertTrue(r["ok"] and os.path.exists(r["kelias"]))
+        self.assertFalse(self.b.destytojo_ataskaita({"html": "<script>"})["ok"])
 
 
 class Surinkimas(unittest.TestCase):
