@@ -93,6 +93,11 @@ jobs:
           $u = "https://github.com/${{ github.repository }}/releases/latest/download"
           $pastabos = "$env:PASTABOS_IVESTOS"
           if ("${{ github.ref_type }}" -eq "tag") { $pastabos = (git tag -l --format='%(contents)' "${{ github.ref_name }}" | Out-String) }
+          if (-not $pastabos.Trim()) {                                    # iš naujienos.json
+            python irankiai/naujienos.py "$env:VERSIJA" isvestis\naujiena.txt
+            $pastabos = Get-Content isvestis\naujiena.txt -Raw -Encoding utf8
+            if ($null -eq $pastabos) { $pastabos = "" }
+          }
           $pastabos = $pastabos.Trim(); if (-not $pastabos) { $pastabos = "Nauja Brėžly versija $env:VERSIJA" }
           if ($pastabos.Length -gt 400) { $pastabos = $pastabos.Substring(0, 400) + "…" }
           [ordered]@{

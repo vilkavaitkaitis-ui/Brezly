@@ -36,8 +36,20 @@ import praktika                 # noqa: E402
 
 
 
+def _naujienos():
+    """naujienos.json: versijų naujienos (naujausia pirma) - langui „Kas naujo“."""
+    try:
+        with open(os.path.join(PROGRAMOS_APLANKAS, "naujienos.json"), encoding="utf-8") as f:
+            return json.load(f)["versijos"]
+    except (OSError, ValueError, KeyError):
+        return []
+
+
+NAUJIENOS = _naujienos()
+
+
 def _versija():
-    """versija.txt įrašo GitHub surinkimas pagal žymą (pvz. v0.9 -> 0.9). Be jo - numatytoji."""
+    """versija.txt įrašo GitHub surinkimas pagal žymą (pvz. v0.9 -> 0.9). Be jo - naujausia iš naujienos.json + beta."""
     try:
         with open(os.path.join(PROGRAMOS_APLANKAS, "versija.txt"), encoding="utf-8") as f:
             v = f.read().strip().lstrip("vV")
@@ -45,7 +57,7 @@ def _versija():
             return v if " " in v else v + " beta"
     except OSError:
         pass
-    return "0.9 beta"
+    return (NAUJIENOS[0]["versija"] if NAUJIENOS else "0") + " beta"
 
 
 VERSIJA_BREZLY = _versija()
@@ -317,7 +329,7 @@ def info(_):
             "funkcijos": funkcijos(),
             "langas": dict(P.LANGAS), "klavisai": KLAVISAI, "ekranas": P.darbo_sritis(),
             "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS,
-            "praktika": praktika.SARASAS} | pamokos.viesai()
+            "praktika": praktika.SARASAS, "naujienos": NAUJIENOS} | pamokos.viesai()
 
 
 def _zingsnis(duom):

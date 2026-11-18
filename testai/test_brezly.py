@@ -95,6 +95,22 @@ class Praktika(unittest.TestCase):
         self.assertFalse(pasikeite, "lisp/Brezly.lsp pasenęs - paleisk: python irankiai/generuoti.py")
 
 
+class Naujienos(unittest.TestCase):
+    def test_versijos_nuo_naujausios(self):
+        with open(os.path.join(SAKNIS, "naujienos.json"), encoding="utf-8") as f:
+            v = json.load(f)["versijos"]
+        sk = [tuple(int(x) for x in n["versija"].split(".")) for n in v]
+        self.assertEqual(sk, sorted(sk, reverse=True), "naujienos.json: naujausia versija turi būti pirma")
+        for n in v:
+            for k in ("versija", "pavadinimas", "punktai"):
+                self.assertIn(k, n)
+
+    def test_release_aprasas(self):
+        import naujienos
+        self.assertIn("Naujas inžinerinis dizainas", naujienos.tekstas("0.9"))
+        self.assertEqual(naujienos.tekstas("99.9"), "")
+
+
 class Serveris(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

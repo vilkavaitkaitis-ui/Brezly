@@ -17,7 +17,7 @@ SAKNIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ISVESTIS = os.path.join(SAKNIS, "isvestis")
 
 # Failai šalia programos (sąsaja, turinys). Aplankas praktika/ - visas.
-DUOMENYS = ["brezly.html", "brezly.css", "brezly.js", "brezly.ico", "pamokos.json"]
+DUOMENYS = ["brezly.html", "brezly.css", "brezly.js", "brezly.ico", "pamokos.json", "naujienos.json"]
 APLANKAI = ["praktika"]
 # Įrašomi tik GitHub surinkime (versija ir atnaujinimų adresas)
 NEBUTINI = ["versija.txt", "atnaujinimai_url.txt"]

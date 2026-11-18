@@ -973,18 +973,21 @@ async function prTikrinti(id){
   }
 }
 
-/* =================== KAS NAUJO 0.9 =================== */
+/* =================== KAS NAUJO (naujienos.json) =================== */
+function verSk(v){ return String(v||"0").split(/[^0-9.]/)[0].split(".").map(x=>parseInt(x)||0); }
+function verMaz(a,b){ const x=verSk(a),y=verSk(b); for(let i=0;i<Math.max(x.length,y.length);i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)<(y[i]||0); } return false; }
+/* Šios versijos naujiena: tiksliai ši versija, o jei jos nėra - naujausia ne naujesnė už ją */
+function dabartineNaujiena(){
+  const N=(INFO.naujienos||[]).filter(n=>n.punktai&&n.punktai.length);
+  return N.find(n=>!verMaz(INFO.versija,n.versija)) || null;
+}
 function kasNaujo(){
-  sg("matyta_versija","0.9");
-  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA 0.9</span></div>
-    <h2 style="font:600 24px var(--font);letter-spacing:-.01em;text-transform:none;color:var(--text);margin:8px 0 4px">Naujas inžinerinis dizainas</h2>
-    <p>Brėžly dabar atrodo kaip tikra CAD programa - ramiau akims ir rimčiau prie studijų darbų.</p>
-    <ul class="kas-sar">
-      <li><b>Grafito spalvos ir plonos linijos</b> - mažiau blaškymo, daugiau dėmesio brėžiniui.</li>
-      <li><b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.</li>
-      <li><b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.</li>
-      <li>Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas.</li>
-    </ul>
+  const n=dabartineNaujiena(); if(!n) return;
+  sg("matyta_versija",n.versija);
+  rodytiLangeli(`<div class="v-naujiena"><span class="v-zyme" style="top:0;margin:0">NAUJA ${esc(n.versija)}</span></div>
+    <h2 style="font:600 24px var(--font);letter-spacing:-.01em;text-transform:none;color:var(--text);margin:8px 0 4px">${esc(n.pavadinimas)}</h2>
+    <p>${esc(n.aprasas||"")}</p>
+    <ul class="kas-sar">${n.punktai.map(x=>`<li>${x}</li>`).join("")}</ul>
     <div class="eil" style="margin-top:16px"><span class="tarpas"></span><button class="btn pagr" onclick="uzdarytiLangeli()">Gerai</button></div>`);
 }
 
@@ -1440,8 +1443,10 @@ r();<\/script></body></html>`;
   setInterval(()=>{if(!tikrina)api("/api/ping",{}).catch(()=>{});},3000);
   setInterval(()=>{if(!tikrina)tikrintiBusena();},BUS.prisijungta?8000:5000);
   setInterval(()=>auto.tikrinti(),4000);
-  if(!sg("vedlys")){ sg("matyta_versija","0.9"); setTimeout(()=>Vedlys.pradeti(),3000); }
-  else if(sg("matyta_versija")!=="0.9") setTimeout(kasNaujo,3300);
+  { const n=dabartineNaujiena();
+    if(!sg("vedlys")){ if(n) sg("matyta_versija",n.versija); setTimeout(()=>Vedlys.pradeti(),3000); }
+    else if(n && sg("matyta_versija")!==n.versija) setTimeout(kasNaujo,3300);
+    if(n){ const u=$("#uNauja"); if(u){ u.textContent="Nauja "+n.versija+" · "+n.pavadinimas; u.hidden=false; } } }
   if(!sg("praktika_matyta")) $("#praktikosTaskelis").classList.remove("hidden");
   { const lr=langoRez(), ekr=INFO.ekranas||[0,0,1920,1040];
     if(sg("langas_rez")===null&&sg("kompakt")===null&&INFO.windows&&ekr[2]<1700){     // mažas ekranas - pirmą kartą pats

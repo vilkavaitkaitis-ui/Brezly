@@ -1,0 +1,22 @@
+{
+ "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
+ "versijos": [
+  {
+   "versija": "1.0",
+   "pavadinimas": "Brėžly 1.0",
+   "aprasas": "Ruošiama.",
+   "punktai": []
+  },
+  {
+   "versija": "0.9",
+   "pavadinimas": "Naujas inžinerinis dizainas",
+   "aprasas": "Brėžly dabar atrodo kaip tikra CAD programa - ramiau akims ir rimčiau prie studijų darbų.",
+   "punktai": [
+    "<b>Grafito spalvos ir plonos linijos</b> - mažiau blaškymo, daugiau dėmesio brėžiniui.",
+    "<b>Skaičiai ir komandos</b> - lygiaplotis šriftas, lengviau perskaityti koordinates.",
+    "<b>Spalva tik prasmei:</b> oranžinė - veiksmas, žalia - priimta, raudona - taisyti, mėlyna - informacija.",
+    "Viskas kita liko: pamokos, praktika, tikrinimas, XP ir tavo progresas."
+   ]
+  }
+ ]
+}
