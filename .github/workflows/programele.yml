@@ -11,6 +11,9 @@ on:
       - "pamokos.json"
       - "praktika/**"
       - "irankiai/generuoti.py"
+      - "mokymas.js"
+      - "zinynas.json"
+      - "paveiksleliai/**"
       - ".github/workflows/programele.yml"
   workflow_dispatch:
 

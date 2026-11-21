@@ -18,6 +18,8 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 
 - 11 pamokų (56 žingsniai) – nuo kampinio įrašo iki 3D detalės, projekcijų, pjūvių ir A3 lapo
 - 8 praktikos užduotys: 2D A4 ir 3D A3 lapuose, su automatiniu tikrinimu
+- Egzamino režimas su laikmačiu, „Mano silpnos vietos“, komandų eilutės treniruoklis
+- Žinynas: inžinerinės grafikos terminai LT–EN ir standartų atmintinė; 2D žingsniuose – paveikslėlis „taip turi atrodyti“
 - XP, lygiai, ženkleliai ir 8 personažai
 
 Reikia: Windows 10/11 ir AutoCAD (pilna versija). Progresas saugomas `Dokumentai\Brezly`.
@@ -56,12 +58,15 @@ ir AutoCAD komandų eilutėje įrašyk `(load (getfiled "Brezly" "" "txt" 0))` �
 | Versija ir „Kas naujo“ | `naujienos.json` - naujausia viršuje; iš jos ir AutoCAD priedo versija, ir Release aprašas |
 | Pavyzdiniai DXF | `irankiai/pavyzdziai.py` (reikia `pip install ezdxf`) |
 | Programėlė (PWA) | `app/` – šaltinis; skelbiama automatiškai į `gh-pages` |
+| Žinynas ir komandų treniruoklis | `zinynas.json` + `mokymas.js` (bendri programai ir programėlei) |
+| Tikslo paveikslėliai | `paveiksleliai/` – generuoja `python irankiai/paveiksleliai.py` iš „Parodyk man“ demonstracijų |
 | AutoCAD priedas | `lisp/Brezly.lsp` – užduočių blokas generuojamas |
 | Brėžly Pilotas (sena programa) | `programa.py`, `ui.html`, `meniu.py`, `kalba.py`, `langas.py` |
 
 **Pakeitei pamoką ar užduotį?** Redaguok `pamokos.json` arba `praktika/uzduotys.json`, tada:
 
 ```
+python irankiai/paveiksleliai.py             # tikslo paveikslėliai (jei keitei 2D žingsnius)
 python irankiai/generuoti.py                 # atnaujina lisp/Brezly.lsp ir sukuria isvestis/programele
 python -m unittest discover -s testai -v     # testai (AutoCAD nereikia; veikia ir ne Windows)
 ```
@@ -73,5 +78,5 @@ Sąsają be AutoCAD: `python brezly.py` (ne Windows – be AutoCAD ryšio, bet v
 
 **Išleidimas.** Actions → „Brėžly diegimo programa“ → Run workflow su versija (pvz. `1.0`):
 testai → `Brezly_Setup.exe`, `Brezly_programa.zip`, `Brezly.lsp` → Release, įdiegtos programos pasiūlo atnaujinti.
-Programėlė į https://vilkavaitkaitis-ui.github.io/Brezly/ pasiskelbia pati („Brėžly programėlė“), kai `main` šakoje pasikeičia `app/`, `pamokos.json` ar `praktika/`.
+Programėlė į https://vilkavaitkaitis-ui.github.io/Brezly/ pasiskelbia pati („Brėžly programėlė“), kai `main` šakoje pasikeičia `app/`, `pamokos.json`, `praktika/`, `mokymas.js`, `zinynas.json` ar `paveiksleliai/`.
 Į surinkimą įtraukiami failai išvardyti vienoje vietoje – `irankiai/surinkti.py`.

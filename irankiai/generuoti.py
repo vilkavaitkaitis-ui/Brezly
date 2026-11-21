@@ -104,6 +104,9 @@ def programele(d):
         shutil.rmtree(PROGRAMELE)
     shutil.copytree(APP, PROGRAMELE)
     shutil.copytree(os.path.join(SAKNIS, "sriftai"), os.path.join(PROGRAMELE, "sriftai"))     # šriftai be Google Fonts
+    shutil.copytree(os.path.join(SAKNIS, "paveiksleliai"), os.path.join(PROGRAMELE, "paveiksleliai"))   # tikslo paveikslėliai
+    for f in ("mokymas.js", "zinynas.json"):          # žinynas ir komandų treniruoklis - bendri su programa
+        shutil.copy2(os.path.join(SAKNIS, f), PROGRAMELE)
     with open(os.path.join(PROGRAMELE, "pamokos.json"), "w", encoding="utf-8") as f:
         json.dump(pamokos.viesai(), f, ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(PROGRAMELE, "uzduotys.js"), "w", encoding="utf-8") as f:

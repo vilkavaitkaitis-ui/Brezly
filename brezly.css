@@ -7,6 +7,7 @@
   --font:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
   --mono:"Cascadia Mono","Consolas","DejaVu Sans Mono",monospace;
 }
+:root{--mk-kortele:var(--card);--mk-linija:var(--line);--mk-blankus:var(--muted);--mk-akcentas:var(--accent);--mk-tekstas:var(--text);--mk-kodas:var(--cmd);--mk-gerai:var(--ok);--mk-klaida:var(--err);--mk-mono:var(--mono)}
 :root[data-theme="light"]{--bg:#f3f5fa;--panel:#fff;--card:#fff;--card-hi:#f6f8fc;--line:#dde4ef;--text:#141d2e;--muted:#5c6a82}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
@@ -630,3 +631,33 @@ h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color
 .kart-diena{max-width:640px;margin:18px auto 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .kart-diena h3{margin:6px 0 14px;font-size:19px;line-height:1.35}.kart-kl{margin:12px 0 0;color:var(--muted)}
 .kart-var button{font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600}
+
+/* tikslo paveikslėlis: „taip turi atrodyti“ */
+.tikslo-pav{margin:12px 0 0;padding:12px 14px 8px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.tikslo-pav img{display:block;width:100%;max-height:240px;object-fit:contain}
+.tikslo-pav figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--muted)}
+.tikslo-pav .tp-n,.tikslo-pav .tp-s{display:inline-block;width:16px;height:3px;border-radius:2px;background:#f59e0b}
+.tikslo-pav .tp-s{background:#8b95a7;margin-left:10px}
+
+/* egzamino režimas */
+.egz-juosta{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));background:var(--card);border-radius:14px;padding:14px 16px;margin:0 0 16px}
+.egz-juosta p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.egz-ist{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.egz-ist span{font:600 12px var(--mono);padding:3px 8px;border-radius:6px;border:1px solid var(--line)}
+.egz-ist .ok{color:var(--ok)}.egz-ist .ne{color:var(--err)}
+.egz-lauk,.lang .egz-lauk{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:12px 0 0;font-weight:600;font-size:13.5px;text-transform:none;letter-spacing:0}
+.egz-lauk select{border:1px solid var(--line);background:var(--card-hi);border-radius:10px;padding:9px 10px;font:inherit;font-weight:400;color:var(--text)}
+.egz-virsus{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.egz-laikas{font:700 40px/1 var(--mono);color:var(--accent);padding:8px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-variant-numeric:tabular-nums}
+.egz-laikas.mazai,.egz-zyme.mazai{color:var(--err);border-color:var(--err)}
+.egz-zyme{position:fixed;right:16px;bottom:16px;z-index:40;font:700 15px var(--mono);color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;box-shadow:0 6px 24px #0006}
+.egz-rez{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:20px 22px;max-width:760px}
+.egz-rez h1{margin:4px 0 6px;font-size:30px}
+.egz-rez.gerai h1{color:var(--ok)}.egz-rez.blogai h1{color:var(--err)}
+.egz-rez ul{color:var(--muted)}
+/* silpnos vietos */
+.silp-ant{margin:18px 0 8px;font-size:15px}
+.silp-sar{display:flex;flex-direction:column;gap:8px}
+.silp-k{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px}
+.silp-k b{display:block;margin:1px 0 6px}
+.silp-pr,.silp-kom,.silp-m{display:flex;gap:6px;flex-wrap:wrap}
