@@ -476,6 +476,7 @@ def tikrinti(duom):
             pirstas = _brezinio_pirstas(b)
         except Exception:
             return LAUKIA           # AutoCAD užimtas arba nėra aktyvaus brėžinio
+        _isiminti_pradzia((raktas[0], int(raktas[1] or 0)), str(pirstas[0]), pirstas[1])
         if (_AUTO["raktas"] == raktas and _AUTO["pirstas"] == pirstas and _AUTO["rez"] is not None
                 and time.time() - _AUTO["laikas"] < AUTO_PILNAS):
             return {**_AUTO["rez"], "nepasikeite": True}
@@ -512,6 +513,99 @@ def parodyti(duom):
         except Exception:
             pass
     return {"ok": True, "log": buf.getvalue()}
+
+
+# ------------------------------------------------------------------ „Kur klaida?“
+# Žingsnio pradžioje įsimenam HANDSEED (kitą laisvą objekto numerį): viskas, kas nubraižyta šiame
+# žingsnyje, turi didesnį numerį - nepavykus tikrinimui tai ir parodom AutoCAD'e.
+_ZINGSNIO_PRADZIA = {}
+AC_PAPER = 0                        # doc.ActiveSpace: 0 - lapas (Paper), 1 - Model
+
+
+def _seed(b):
+    return P.A.kartoti(lambda: b.acad.ActiveDocument.GetVariable("HANDSEED"), bandymu=2)
+
+
+def _isiminti_pradzia(raktas, vardas, seed):
+    """Pirmą kartą (ar kitame brėžinyje) - įsimenam; grįžus prie to paties žingsnio tame pačiame brėžinyje -
+    paliekam seną, kad „Kur klaida?“ rodytų ir anksčiau nubraižytą."""
+    if _ZINGSNIO_PRADZIA.get(raktas, (None,))[0] != vardas:
+        _ZINGSNIO_PRADZIA[raktas] = (vardas, seed)
+
+
+def zingsnio_pradzia(duom):
+    """Atidarius žingsnį - įsimenam, nuo kurio objekto prasideda šio žingsnio braižymas."""
+    if KUREJAS["imitacija"] or not P.BUSENA["darbas"].b:
+        return {"ok": True}
+    raktas = (duom.get("pamoka"), int(duom.get("zingsnis", 0)))
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            b = P.braizytojas(greitai=True)
+        _isiminti_pradzia(raktas, str(b.acad.ActiveDocument.Name), _seed(b))
+    except Exception:
+        pass                        # AutoCAD užimtas - įsiminsim per pirmą tikrinimą
+    return {"ok": True}
+
+
+def _naujesni(talpa, seed):
+    """Objektai, kurių numeris (Handle) ne mažesnis už seed: [(obj, min, max)]."""
+    riba, rez = int(seed, 16), []
+    for i in range(P.A.kartoti(lambda: talpa.Count)):
+        try:
+            o = P.A.kartoti(lambda: talpa.Item(i))
+            if int(o.Handle, 16) >= riba:
+                mn, mx = o.GetBoundingBox()
+                rez.append((o, tuple(mn), tuple(mx)))
+        except Exception:
+            continue
+    return rez
+
+
+def kur_klaida(duom):
+    """Priartina ir paryškina AutoCAD'e tai, kas nubraižyta šiame žingsnyje (klaida greičiausiai ten)."""
+    if KUREJAS["imitacija"]:
+        return {"ok": True, "kiek": 0, "pranesimas": "(imitacija)"}
+    raktas = (duom.get("pamoka"), int(duom.get("zingsnis", 0)))
+    with contextlib.redirect_stdout(io.StringIO()):
+        b = P.braizytojas(bandymu=4)
+    doc = P.A.kartoti(lambda: b.acad.ActiveDocument)
+    vardas, seed = _ZINGSNIO_PRADZIA.get(raktas, (None, None))
+    if seed is None or vardas != str(doc.Name):
+        return {"ok": True, "kiek": 0, "pranesimas": tr(
+            "Nežinau, kada pradėjai šį žingsnį šiame brėžinyje. Atidaryk žingsnį iš naujo (← Pamoka → Tęsti) ir nubraižyk dar kartą.",
+            "I don't know when you started this step in this drawing. Reopen the step (← Lesson → Continue) and draw it again.")}
+    lape = P.A.kartoti(lambda: doc.ActiveSpace) == AC_PAPER
+    cia = _naujesni(doc.PaperSpace if lape else doc.ModelSpace, seed)
+    if not cia:
+        kitur = _naujesni(doc.ModelSpace if lape else doc.PaperSpace, seed)
+        if kitur:
+            return {"ok": True, "kiek": 0, "pranesimas": tr(
+                f"Šiame žingsnyje nubraižei {len(kitur)} objekt(-us), bet jie {'Model erdvėje' if lape else 'lape'} - ar ne ten braižei?",
+                f"You drew {len(kitur)} object(s) in this step, but they are {'in Model space' if lape else 'on the sheet'} - wrong space?")}
+        return {"ok": True, "kiek": 0, "pranesimas": tr(
+            "Šiame žingsnyje AutoCAD'e dar nieko nenubraižei - pradėk nuo komandos, parodytos žingsnyje.",
+            "You haven't drawn anything in AutoCAD in this step yet - start with the command shown in the step.")}
+    x0, y0 = min(m[0] for _, m, _ in cia), min(m[1] for _, m, _ in cia)
+    x1, y1 = max(m[0] for _, _, m in cia), max(m[1] for _, _, m in cia)
+    pad = max(10.0, 0.15 * max(x1 - x0, y1 - y0))
+    P.A.kartoti(lambda: b.acad.ZoomWindow(P.A.taskas(x0 - pad, y0 - pad), P.A.taskas(x1 + pad, y1 + pad)))
+    for o, _, _ in cia:
+        try:
+            o.Highlight(True)
+        except Exception:
+            pass
+    return {"ok": True, "kiek": len(cia)}
+
+
+def mirkteleti(_):
+    """Brėžly mirkteli užduočių juostoje (kai žingsnis atliktas, o langas už AutoCAD)."""
+    if not WINDOWS:
+        return {"ok": False}
+    import win32gui
+    h = _rasti_langa()
+    if h:
+        win32gui.FlashWindowEx(h, 2 | 12, 0, 0)     # FLASHW_TRAY | FLASHW_TIMERNOFG - kol langas neatsidurs priekyje
+    return {"ok": bool(h)}
 
 
 def naujas_brezinys(_):
@@ -1017,12 +1111,14 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/info", "/api/ping", "/api/progresas", "/api/testas", "/api/testas_galioja", "/api/testas_uzrakinti",
         "/api/ivykiai", "/api/ataskaita", "/api/duomenys", "/api/js_klaida", "/api/progresas_eksportuoti",
         "/api/progresas_importuoti", "/api/destytojo_ataskaita", "/api/atnaujinimai", "/api/aplinka",
-        "/api/langas", "/api/praktika_aplankas", "/api/paleisti_autocad"})
+        "/api/langas", "/api/praktika_aplankas", "/api/paleisti_autocad", "/api/mirkteleti"})
     LYGIAGRETUS = frozenset({"/api/ping", "/api/ivykiai", "/api/atnaujinimai", "/api/js_klaida"})
 
     def nelaukti(self, kelias, duom):
         if kelias == "/api/tikrinti" and duom.get("tyliai"):
             return LAUKIA               # automatinis tikrinimas neužsistovi eilėje
+        if kelias == "/api/zingsnio_pradzia":
+            return {"ok": True}         # įsiminsim per pirmą tikrinimą
         return super().nelaukti(kelias, duom)
 
     def do_GET(self):
@@ -1044,6 +1140,7 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/js_klaida": js_klaida, "/api/progresas_eksportuoti": progresas_eksportuoti,
         "/api/progresas_importuoti": progresas_importuoti, "/api/destytojo_ataskaita": destytojo_ataskaita,
         "/api/atnaujinimai": atnaujinimai, "/api/atnaujinti": atnaujinti, "/api/perkrauti": perkrauti,
+        "/api/zingsnio_pradzia": zingsnio_pradzia, "/api/kur_klaida": kur_klaida, "/api/mirkteleti": mirkteleti,
         "/api/praktika_atidaryti": praktika_atidaryti, "/api/praktika_pdf": praktika_pdf,
         "/api/praktika_aplankas": praktika_aplankas, "/api/praktika_tikrinti": praktika_tikrinti,
         "/api/testas_uzrakinti": testas_uzrakinti,

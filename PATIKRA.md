@@ -58,3 +58,9 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] Nustatymai › Tikrinti atnaujinimus → „Brėžly atnaujina Microsoft Store“.
 - [ ] Progresas tas pats kaip įprastoje versijoje (`Dokumentai\Brezly`).
 - [ ] Šalinimas: Parametrai › Programos › Brėžly → Šalinti.
+
+## 9. „Kur klaida?“, garsas, dienos kartojimas
+- [ ] Pamokoje nubraižyk ką nors ne taip (pvz. RECTANG 230,5 → 400,45) → „Patikrinti“ → „🔍 Kur klaida?“ → AutoCAD priartina ir paryškina tik šiame žingsnyje nubraižytą stačiakampį.
+- [ ] „Kur klaida?“, kai žingsnyje nieko nenubraižyta → aiškus pranešimas; kai braižyta lape, o žiūri į Model - pasako, kad kita erdvė.
+- [ ] Dirbant AutoCAD'e (Brėžly už jo), automatiškai priimtas žingsnis → „dzin“ ir Brėžly mirksi užduočių juostoje; Nustatymuose garsą galima išjungti.
+- [ ] Pradžios ekrane - „🧠 Dienos kartojimas“; 5 klausimai → +XP; tą pačią dieną juosta dingsta, rytoj grįžta.
