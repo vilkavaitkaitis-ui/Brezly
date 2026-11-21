@@ -17,6 +17,8 @@
   --akcentas:#f28c28; --akc-tamsus:#1a0e02; --matmenu:#56c2e6; --priimta:#3fb950; --priimta-sv:#7ee39a; --taisyti:#f47067;
   --sans:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif; --kond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
+  --mk-kortele:var(--panele); --mk-linija:var(--linija); --mk-blankus:var(--blankus); --mk-akcentas:var(--akcentas); --mk-tekstas:var(--tekstas);
+  --mk-kodas:var(--kodas); --mk-gerai:var(--priimta); --mk-klaida:var(--taisyti); --mk-mono:var(--mono);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -188,12 +190,15 @@ input.lauk.platus{width:100%;max-width:420px;font-family:var(--sans)}
 .prane{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13261a;border:1px solid #2e6b40;color:#d6f5de;padding:10px 16px;border-radius:6px;font-weight:600;box-shadow:0 8px 30px #0008;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
 .prane.rodo{opacity:1}
 .tab{display:none}
+.kom-sk{display:flex;gap:6px;flex-wrap:wrap}
+.kom-sk a{border:1px solid var(--linija);background:var(--panele);color:var(--vidutinis);border-radius:6px;padding:9px 16px;text-decoration:none;font-weight:600}
+.kom-sk a[aria-selected="true"]{border-color:var(--akcentas);color:var(--tekstas);box-shadow:inset 0 -2px 0 var(--akcentas)}
 
 @media (max-width:1020px){.du{grid-template-columns:minmax(0,1fr)}.statai{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){
   .apvalkalas{grid-template-columns:minmax(0,1fr)}
   .nav{display:none}
-  .tab{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--linija);background:var(--panele2);padding-bottom:env(safe-area-inset-bottom)}
+  .tab{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--linija);background:var(--panele2);padding-bottom:env(safe-area-inset-bottom)}
   .tab a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;color:var(--blankus);text-decoration:none;font-size:11px}
   .tab a[aria-current="page"]{color:var(--akcentas)}
   .tab svg{width:20px;height:20px}
@@ -207,6 +212,9 @@ input.lauk.platus{width:100%;max-width:420px;font-family:var(--sans)}
   .prane{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 }
 @media (prefers-reduced-motion:reduce){.prane,.xp .juosta i{transition:none}.turinys{scroll-behavior:auto}}
+.tikslo-pav{margin:12px 0 0}.tikslo-pav img{display:block;width:100%;max-height:220px;object-fit:contain}
+.tikslo-pav figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--vidutinis)}
+.tikslo-pav i{display:inline-block;width:16px;height:3px;border-radius:2px}.tikslo-pav i+i{margin-left:8px}
 </style>
 </head>
 <body>
@@ -228,11 +236,13 @@ input.lauk.platus{width:100%;max-width:420px;font-family:var(--sans)}
 
 <script src="uzduotys.js"></script>
 <script src="tikrinimas.js"></script>
+<script src="mokymas.js"></script>
 <script>
 const PRAKTIKA=window.BREZLY_UZDUOTYS.uzduotys.slice();      /* iš praktika/uzduotys.json (uzduotys.js sukuria irankiai/generuoti.py) */
 PRAKTIKA.sort((a,b)=>a.nr-b.nr);
 const LYGIAI=[[0,"Naujokas"],[100,"Kadetas"],[250,"Braižytojas"],[450,"Konstruktorius"],[700,"Inžinierius"]];
 const XP_KLAUSIMAS = 5;
+const XP_TRENIRUOTE = 2;      // komandų eilutės treniruoklis: žingsnis be klaidų (vieną kartą)
 
 const T = window.BrTikrinimas;
 const $ = s => document.querySelector(s);
@@ -254,6 +264,7 @@ function xpViso(){
   for (const p of D.pamokos) for (const z of p.zingsniai) if (S.zingsniai[p.id+"/"+z.id]) x += z.xp;
   for (const k in S.testai) x += Object.keys(S.testai[k] || {}).length * XP_KLAUSIMAS;
   for (const u of PRAKTIKA) if (S.praktika[u.id]) x += u.xp;
+  x += Object.keys(S.tren || {}).length * XP_TRENIRUOTE;
   return x;
 }
 const lygisNr = x => { let i=0; LYGIAI.forEach((l,j)=>{ if (x>=l[0]) i=j; }); return i; };
@@ -281,15 +292,16 @@ const IK = {
   pamokos:'<path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3Z"/><path d="M8 9h6M8 13h6"/>',
   praktika:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M4 16h16M12 16v5"/><circle cx="12" cy="9" r="3"/>',
   korteles:'<rect x="3" y="6" width="14" height="14" rx="1"/><path d="M7 3h14v14"/>',
-  progresas:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
+  progresas:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  zinynas:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 7h7M9 11h5"/>'
 };
-const MENIU = [["pradzia","Pradžia"],["pamokos","Pamokos"],["praktika","Praktika"],["korteles","Komandos"],["progresas","Progresas"]];
+const MENIU = [["pradzia","Pradžia"],["pamokos","Pamokos"],["praktika","Praktika"],["korteles","Komandos"],["zinynas","Žinynas"],["progresas","Progresas"]];
 const svg = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IK[k]}</svg>`;
 function rodytiNav(skyrius){
   const nuor = ([k,v]) => `<a href="#/${k}" ${k===skyrius?'aria-current="page"':""}>${svg(k)}<span>${v}</span></a>`;
   $("#nav").innerHTML = MENIU.map(nuor).join("") + `<div class="apac">
     <button class="mygt" id="idiegtiBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Įdiegti</button>
-    <small>Brėžly programėlė · v1.0</small></div>`;
+    <small>Brėžly programėlė · v1.1</small></div>`;
   $("#tab").innerHTML = MENIU.map(nuor).join("");
   $("#idiegtiBtn").hidden = !idiegimas;
   $("#idiegtiBtn").onclick = idiegti;
@@ -298,12 +310,14 @@ function rodytiNav(skyrius){
 function marsrutas(){
   const d = (location.hash.replace(/^#\/?/,"") || "pradzia").split("/").map(decodeURIComponent);
   const sk = d[0];
-  rodytiNav(sk === "pamoka" ? "pamokos" : sk);
+  rodytiNav(sk === "pamoka" ? "pamokos" : sk === "treniruoklis" ? "korteles" : sk);
   const v = $("#turinys");
   if (sk === "pamokos") v.innerHTML = vPamokos();
   else if (sk === "pamoka") { v.innerHTML = vPamoka(d[1], d[2]); poPamokos(d[1], d[2]); }
   else if (sk === "praktika") { v.innerHTML = d[1] ? vUzduotis(d[1]) : vPraktika(); if (d[1]) poUzduoties(d[1]); }
   else if (sk === "korteles") { v.innerHTML = vKorteles(); poKorteliu(); }
+  else if (sk === "treniruoklis") { v.innerHTML = vTreniruoklis(); poTreniruoklio(); }
+  else if (sk === "zinynas") { v.innerHTML = vZinynas(); poZinyno(); }
   else if (sk === "progresas") { v.innerHTML = vProgresas(); poProgreso(); }
   else { v.innerHTML = vPradzia(); }
   v.scrollTop = 0;
@@ -340,6 +354,7 @@ function vPradzia(){
     </div>
     ${k ? `<div class="testi"><div><p class="kick">TĘSK PAMOKĄ</p><h2>${esc(k.p.pavadinimas)} · ${esc(k.p.zingsniai[k.i].pavadinimas)}</h2><p>Žingsnis ${k.i+1} iš ${k.p.zingsniai.length} · ${esc(k.p.trukme||"")}</p></div><a class="mygt" href="#/pamoka/${k.p.id}/${k.i}">Tęsti →</a></div>` : ""}
     ${kp ? `<div class="testi"><div><p class="kick">PRAKTIKA</p><h2>${String(kp.nr).padStart(2,"0")} · ${esc(kp.pav)}</h2><p>${kp.fmt} · ${kp.d} · ~${kp.min} min · ${kp.xp} XP</p></div><a class="mygt antr" href="#/praktika/${kp.id}">Atidaryti</a></div>` : ""}
+    <div class="testi"><div><p class="kick">KOMANDOS BE AUTOCAD</p><h2>Komandų eilutės treniruoklis</h2><p>Įvesk komandas ir koordinates kaip AutoCAD'e - telefone, autobuse, bet kur.</p></div><a class="mygt antr" href="#/treniruoklis">Treniruotis</a></div>
     ${pat ? `<div class="patarimas">${svgInfo}<span><b style="color:var(--tekstas)">Dienos patarimas.</b> ${esc(pat)}</span></div>` : ""}
   </div>`;
 }
@@ -387,7 +402,7 @@ function vPamoka(pid, zs){
       </div>
       <div class="stulp">
         ${z.komandos?.length ? `<div class="blokas"><h3>KOMANDŲ EILUTĖ</h3><div class="komeil">${z.komandos.map(([a,b])=>`<div><span>${esc(a)}</span><button title="Kopijuoti" data-kop="${esc(b)}">${esc(b)}</button></div>`).join("")}</div><p style="font-size:12.5px;color:var(--blankus)">Spustelėk reikšmę - nukopijuos, AutoCAD'e įklijuok Ctrl+V.</p></div>`:""}
-        ${z.tikslas ? `<div class="blokas"><h3>REZULTATAS</h3><div class="tikslas"><span>Turi gautis:</span><b>${esc(z.tikslas)}</b></div></div>`:""}
+        ${z.tikslas ? `<div class="blokas"><h3>REZULTATAS</h3><div class="tikslas"><span>Turi gautis:</span><b>${esc(z.tikslas)}</b></div>${z.pav ? `<figure class="tikslo-pav"><img src="${esc(z.pav)}" alt="${esc(z.pavadinimas)}" loading="lazy" onerror="this.parentNode.remove()"><figcaption><i style="background:#f59e0b"></i>šis žingsnis <i style="background:#8b95a7"></i>jau nubraižyta</figcaption></figure>`:""}</div>`:""}
         <div class="blokas"><h3>ŽINGSNIS</h3>
           <p style="font-size:14px;color:var(--vidutinis)">${atl ? "Šis žingsnis atliktas." : `Padaręs AutoCAD'e, pažymėk - gausi <b style="color:var(--tekstas)">+${z.xp} XP</b>.`}</p>
           <div class="veiksmai"><button class="mygt ${atl?"antr":"zalias"}" id="atlikau">${atl?"Atlikta ✓ - kitas →":"Atlikau →"}</button></div>
@@ -550,10 +565,15 @@ async function tikrinti(u){
 }
 
 /* ---------------- KOMANDŲ KORTELĖS ---------------- */
+function komSkirtukai(k){
+  return `<div class="kom-sk" role="tablist">${[["treniruoklis","⌨ Treniruoklis"],["korteles","📇 Kortelės"]].map(([id,v]) =>
+    `<a href="#/${id}" role="tab" aria-selected="${k===id}">${v}</a>`).join("")}</div>`;
+}
 function vKorteles(){
   return `<div class="plotis">
     <div class="galva"><p class="kick">KOMANDOS</p><h1 class="ant">Komandų žinynas</h1>
       <p class="apras">Visos pamokose naudojamos komandos su trumpiniais ir pavyzdžiais. Spustelėk pavyzdį - nukopijuos.</p></div>
+    ${komSkirtukai("korteles")}
     <input class="lauk platus" id="paieska" type="search" placeholder="Ieškoti: CIRCLE, sluoksnis, 3D…" aria-label="Ieškoti komandos">
     <div class="korteles" id="korteles"></div></div>`;
 }
@@ -571,6 +591,29 @@ function poKorteliu(){
   };
   $("#paieska").oninput = piesti; piesti();
 }
+
+/* ---------------- KOMANDŲ EILUTĖS TRENIRUOKLIS (mokymas.js) ---------------- */
+function vTreniruoklis(){
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">KOMANDOS</p><h1 class="ant">Komandų eilutės treniruoklis</h1>
+      <p class="apras">Įvesk komandas ir atsakymus taip, kaip AutoCAD komandų eilutėje - be AutoCAD. Už kiekvieną žingsnį be klaidų - ${XP_TRENIRUOTE} XP.</p></div>
+    ${komSkirtukai("treniruoklis")}<div id="trenVieta"></div></div>`;
+}
+function poTreniruoklio(){
+  const pradetos = D.pamokos.filter(p => p.zingsniai.some(z => S.zingsniai[p.id+"/"+z.id])).map(p => p.id);
+  Mokymas.treniruoklis($("#trenVieta"), { pamokos: D.pamokos, korteles: D.korteles, pradetos,
+    onZingsnis: ({ raktas, beKlaidu }) => { if (!beKlaidu) return; S.tren = S.tren || {};
+      if (!S.tren[raktas]) { S.tren[raktas] = 1; saugoti(); rodytiXP(); pranesti(`+${XP_TRENIRUOTE} XP`); } } });
+}
+
+/* ---------------- ŽINYNAS (mokymas.js) ---------------- */
+function vZinynas(){
+  return `<div class="plotis">
+    <div class="galva"><p class="kick">ŽINYNAS</p><h1 class="ant">Terminai ir standartai</h1>
+      <p class="apras">Inžinerinės grafikos terminai lietuviškai ir angliškai bei standartų atmintinė: formatai, linijos, masteliai, šriftai, matmenys.</p></div>
+    <div id="zinVieta"></div></div>`;
+}
+function poZinyno(){ Mokymas.zinynas($("#zinVieta"), { url: "zinynas.json", onKomanda: k => kopijuoti(k) }); }
 
 /* ---------------- PROGRESAS ---------------- */
 function vProgresas(){
