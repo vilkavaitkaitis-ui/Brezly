@@ -2,6 +2,31 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.0.4",
+   "pavadinimas": "Greitesnis ir neužstringa",
+   "aprasas": "Brėžly nebeužšąla, kai AutoCAD užimtas, ir greičiau pastebi atliktą žingsnį.",
+   "punktai": [
+    "<b>Neužstringa:</b> kai AutoCAD'e atidarytas langas ar vyksta komanda, Brėžly mygtukai ir pamokos veikia iškart (anksčiau - iki 10 s laukimo).",
+    "<b>Greitesnis tikrinimas:</b> atliktą žingsnį pastebi per ~2 s, o nepasikeitusio brėžinio AutoCAD'e be reikalo neskaito.",
+    "<b>„Patikrinti“</b> užimtam AutoCAD iškart pasako, ką daryti, užuot laukęs 10 s.",
+    "<b>Greitesnis paleidimas:</b> pradžios užsklanda ilgiau rodoma tik pirmą kartą per dieną; praleisti galima bet kuriuo klavišu.",
+    "<b>Klavišai Brėžly lange:</b> Enter - patikrinti arba toliau, H - užuomina.",
+    "Sumažintas Brėžly AutoCAD'o netrukdo - tikrinimas tada sustoja."
+   ],
+   "en": {
+    "pavadinimas": "Faster and no more freezing",
+    "aprasas": "Brėžly no longer freezes when AutoCAD is busy and notices a finished step sooner.",
+    "punktai": [
+     "<b>No freezing:</b> when a dialog is open or a command is running in AutoCAD, Brėžly's buttons and lessons respond at once (before: up to 10 s wait).",
+     "<b>Faster checking:</b> a finished step is noticed in ~2 s, and an unchanged drawing is not re-read from AutoCAD.",
+     "<b>„Check“</b> tells you right away what to do when AutoCAD is busy instead of waiting 10 s.",
+     "<b>Faster start:</b> the long splash shows only once a day; any key skips it.",
+     "<b>Keys in the Brėžly window:</b> Enter - check or continue, H - hint.",
+     "A minimized Brėžly doesn't disturb AutoCAD - checking pauses."
+    ]
+   }
+  },
+  {
    "versija": "1.0.3",
    "pavadinimas": "Pirmas brėžinys - kampinis įrašas, A3 lapas - pabaigoje",
    "aprasas": "Braižyti pradedi nuo kampinio įrašo lentelės, o paskutinėje pamokoje ją perkeli į A3 lapą su rėmeliu.",

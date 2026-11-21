@@ -13,6 +13,7 @@ import csv
 import io
 import json
 import os
+import queue
 import shutil
 import socket
 import subprocess
@@ -21,7 +22,7 @@ import threading
 import time
 import traceback
 import webbrowser
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 PROGRAMOS_APLANKAS = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
@@ -60,26 +61,76 @@ class Rysys:
 BUSENA = {"darbas": Rysys(), "paskutinis_ping": time.time(), "buvo_ping": False, "veikia": True}
 
 
+class ComGija:
+    """Visi AutoCAD (COM) darbai - vienoje atskiroje gijoje.
+
+    COM objektai priklauso gijai, kurioje sukurti, todėl AutoCAD kalbinamas tik čia, po vieną darbą.
+    Kitos užklausos (failai, progresas, langas) atsakomos savo gijose iškart - sąsaja nebeužstringa,
+    kai AutoCAD užimtas (atidarytas dialogas, ilga komanda)."""
+
+    def __init__(self):
+        self.eile = queue.Queue()
+        self.dabar = None                       # vykdomas darbas arba None
+        self.gija = threading.Thread(target=self._ciklas, name="AutoCAD", daemon=True)
+        self.gija.start()
+
+    def _ciklas(self):
+        if A.pythoncom is not None:
+            A.pythoncom.CoInitialize()
+        while True:
+            darbas = self.eile.get()
+            self.dabar = darbas
+            try:
+                darbas["rez"] = darbas["f"]()
+            except BaseException as e:          # perduodama laukiančiai užklausai
+                darbas["klaida"] = e
+            finally:
+                self.dabar = None
+                darbas["ivykis"].set()
+
+    def uzimta(self):
+        return self.dabar is not None or not self.eile.empty()
+
+    def vykdyti(self, f):
+        """Įvykdo f() AutoCAD gijoje ir grąžina rezultatą (klaidą iškelia čia)."""
+        if threading.current_thread() is self.gija:
+            return f()
+        darbas = {"f": f, "ivykis": threading.Event()}
+        self.eile.put(darbas)
+        darbas["ivykis"].wait()
+        if "klaida" in darbas:
+            raise darbas["klaida"]
+        return darbas["rez"]
+
+
+COM = ComGija()
+GREITU_UZRAKTAS = threading.Lock()   # greitos (be AutoCAD) užklausos - po vieną, kad nesusimaišytų failų įrašai
+
+
 # ------------------------------------------------------------------ AutoCAD ryšys
 def zurnalas():
     """Kontekstas, surenkantis print() tekstą į eilutę."""
     return contextlib.redirect_stdout(io.StringIO())
 
 
-def braizytojas(paleisti=True, brezinys=True):
+def braizytojas(paleisti=True, brezinys=True, greitai=False, bandymu=20):
     """Prisijungęs Braizytojas su aktyviu brėžiniu (brezinys=False - be jo: tuoj atidarysime ar sukursime).
-    Jei AutoCAD buvo uždarytas - prisijungia iš naujo."""
+    Jei AutoCAD buvo uždarytas - prisijungia iš naujo. greitai=True (automatinis tikrinimas): nelaukia
+    užimto AutoCAD (iškart klaida) ir nieko nekuria - nei AutoCAD, nei brėžinio.
+    bandymu - kiek kartų (kas 0,5 s) bandyti, kol užimtas AutoCAD atsilaisvins."""
     d = BUSENA["darbas"]
+    if greitai:
+        paleisti = brezinys = False
     if d.b is not None:
         try:                                    # ar AutoCAD vis dar gyvas
-            A.kartoti(lambda: d.b.acad.Documents.Count)
+            A.kartoti(lambda: d.b.acad.Documents.Count, bandymu=1 if greitai else bandymu)
         except Exception as e:
             if A.atmesta(e):                    # gyvas, tik užimtas - prisijungimas iš naujo nepadėtų
                 raise RuntimeError(tr("AutoCAD užimtas - užbaik komandą arba uždaryk atidarytą langą (Esc).",
                                       "AutoCAD is busy - finish the command or close the open dialog (Esc).")) from None
             d.b = None
     if d.b is None:
-        d.b = A.Braizytojas(A.prisijungti(paleisti, brezinys))
+        d.b = A.Braizytojas(A.rasti_atidaryta() if greitai else A.prisijungti(paleisti, brezinys))
     elif brezinys:
         A.uztikrinti_brezini(d.b.acad)
     return d.b
@@ -96,10 +147,20 @@ def dekoduoti(baitai):
     return baitai.decode("utf-8", "replace")
 
 
+_PROCESAI = {"laikas": 0.0, "pid": []}
+
+
 def acad_procesai():
-    """Veikiančių acad.exe PID (ne Windows - tuščias)."""
+    """Veikiančių acad.exe PID (ne Windows - tuščias). tasklist lėtokas - 4 s atmintis."""
     if sys.platform != "win32":
         return []
+    if time.time() - _PROCESAI["laikas"] < 4:
+        return _PROCESAI["pid"]
+    _PROCESAI.update(laikas=time.time(), pid=_acad_procesai())
+    return _PROCESAI["pid"]
+
+
+def _acad_procesai():
     try:
         isvestis = subprocess.run(["tasklist", "/fo", "csv", "/nh", "/fi", "imagename eq acad.exe"],
                                   capture_output=True, timeout=5, creationflags=0x08000000).stdout
@@ -268,6 +329,10 @@ class Tvarkykle(BaseHTTPRequestHandler):
     IKONA = "ikona.ico"
     FAILAI = ()                 # papildomi statiniai failai šalia programos, pvz. ("brezly.css", "brezly.js")
     VEIKSMAI = {"/api/prisijungti": prisijungti, "/api/busena": busena, "/api/ping": ping}
+    # Be AutoCAD: atsakomos iškart, ne AutoCAD eilėje. LYGIAGRETUS - net nelaukia kitų greitų (tinklas, ping).
+    GREITI = frozenset({"/api/ping"})
+    LYGIAGRETUS = frozenset({"/api/ping"})
+    KESAS = {}                  # paskutinė /api/busena - rodoma, kol AutoCAD gija užimta kitu darbu
 
     def log_message(self, *a):
         pass
@@ -308,7 +373,7 @@ class Tvarkykle(BaseHTTPRequestHandler):
                 return self._failas(os.path.join(SRIFTAI, vardas))
         if u.path in self.VEIKSMAI:
             q = {k: v[0] for k, v in parse_qs(u.query).items()}
-            return self._atsakyti(self.VEIKSMAI[u.path], q)
+            return self._atsakyti(u.path, q)
         self._siusti(404, {"ok": False, "klaida": "Nėra"})
 
     def do_POST(self):
@@ -321,11 +386,31 @@ class Tvarkykle(BaseHTTPRequestHandler):
             duom = json.loads(self.rfile.read(ilgis) or b"{}")
         except Exception:
             duom = {}
-        self._atsakyti(self.VEIKSMAI[u.path], duom)
+        self._atsakyti(u.path, duom)
 
-    def _atsakyti(self, f, duom):
+    def nelaukti(self, kelias, duom):
+        """Ką atsakyti iškart, kai AutoCAD gija užimta kitu darbu. None - stoti į eilę ir laukti."""
+        if kelias == "/api/busena":
+            return self.KESAS.get(kelias)
+        return None
+
+    def _vykdyti(self, kelias, duom):
+        f = self.VEIKSMAI[kelias]
+        if kelias in self.LYGIAGRETUS:
+            return f(duom)
+        if kelias in self.GREITI:
+            with GREITU_UZRAKTAS:
+                return f(duom)
+        rez = self.nelaukti(kelias, duom) if COM.uzimta() else None
+        if rez is None:
+            rez = COM.vykdyti(lambda: f(duom))
+            if kelias == "/api/busena":
+                self.KESAS[kelias] = rez
+        return rez
+
+    def _atsakyti(self, kelias, duom):
         try:
-            rez = f(duom)
+            rez = self._vykdyti(kelias, duom)
         except Exception as e:
             rez = {"ok": False, "klaida": str(e) or e.__class__.__name__,
                    "log": traceback.format_exc(limit=2) if os.environ.get("BREZLY_DEBUG") else ""}
@@ -454,7 +539,8 @@ def atidaryti_langa(url):
 def main(tvarkykle, pageidaujamas):
     """Paleidžia serverį ir langą; grįžta, kai langas uždarytas (12 s be /api/ping) arba BUSENA["veikia"] = False."""
     prievadas = laisvas_prievadas(pageidaujamas)
-    serveris = HTTPServer(("127.0.0.1", prievadas), tvarkykle)
+    serveris = ThreadingHTTPServer(("127.0.0.1", prievadas), tvarkykle)     # kiekviena užklausa - savo gijoje
+    serveris.daemon_threads = True
     serveris.timeout = 1.0
     url = f"http://127.0.0.1:{prievadas}/"
     if not os.environ.get("BREZLY_BE_LANGO"):
