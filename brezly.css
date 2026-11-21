@@ -623,3 +623,10 @@ h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color
 .lent-palyg{border-collapse:collapse;margin-top:10px;width:100%;font-size:14px}
 .lent-palyg th,.lent-palyg td{border-bottom:1px solid var(--line,#283241);padding:6px 10px;text-align:left}
 .lent-palyg th{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+
+/* dienos kartojimas */
+.kart-juosta{display:flex;align-items:center;gap:14px;margin:18px 0 4px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.kart-juosta>span{font-size:24px}.kart-juosta>div{flex:1;display:flex;flex-direction:column}.kart-juosta small{color:var(--muted)}
+.kart-diena{max-width:640px;margin:18px auto 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.kart-diena h3{margin:6px 0 14px;font-size:19px;line-height:1.35}.kart-kl{margin:12px 0 0;color:var(--muted)}
+.kart-var button{font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600}

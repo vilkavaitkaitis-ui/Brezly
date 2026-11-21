@@ -2,6 +2,25 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.0.5",
+   "pavadinimas": "„Kur klaida?“, garsas ir dienos kartojimas",
+   "aprasas": "Brėžly parodo klaidą AutoCAD'e, praneša apie atliktą žingsnį ir kasdien padeda pakartoti komandas.",
+   "punktai": [
+    "<b>🔍 Kur klaida?</b> Nepavykus patikrinimui, Brėžly AutoCAD'e priartina ir paryškina, ką nubraižei šiame žingsnyje.",
+    "<b>Garsas ir mirktelėjimas:</b> kai dirbi AutoCAD'e ir žingsnis priimamas, išgirsi „dzin“, o Brėžly mirktels užduočių juostoje (Nustatymai - galima išjungti).",
+    "<b>🧠 Dienos kartojimas:</b> kasdien 5 komandos per ~2 min. Pamirštas Brėžly klausia dažniau, gerai žinomas - rečiau. +XP."
+   ],
+   "en": {
+    "pavadinimas": "„Where's the mistake?“, sound and daily review",
+    "aprasas": "Brėžly shows the mistake in AutoCAD, tells you when a step is done and helps you review commands every day.",
+    "punktai": [
+     "<b>🔍 Where's the mistake?</b> When a check fails, Brėžly zooms to and highlights in AutoCAD what you drew in this step.",
+     "<b>Sound and flash:</b> while you work in AutoCAD and a step is accepted, you hear a „ding“ and Brėžly flashes in the taskbar (can be turned off in Settings).",
+     "<b>🧠 Daily review:</b> 5 commands a day in ~2 min. Forgotten ones come back sooner, well-known ones later. +XP."
+    ]
+   }
+  },
+  {
    "versija": "1.0.4",
    "pavadinimas": "Greitesnis ir neužstringa",
    "aprasas": "Brėžly nebeužšąla, kai AutoCAD užimtas, ir greičiau pastebi atliktą žingsnį.",

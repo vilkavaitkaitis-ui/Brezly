@@ -511,6 +511,8 @@ function rodytiPradzia(pid){
       <button class="btn" id="naujasBtn" onclick="naujasBrezinys()">Naujas brėžinys (acadiso.dwt)</button>
     </div></div>
     <svg viewBox="0 0 120 120"><use href="#maskotas"/></svg></div>
+  ${(()=>{ const n=Object.values(S.atlikta).some(a=>a.length)?Kartojimas.likoSiandien():0;
+    return n?`<div class="kart-juosta"><span aria-hidden="true">🧠</span><div><b>Dienos kartojimas</b><small>${n} kom. · ~2 min · iki +${n*2+5} XP</small></div><button class="btn" onclick="kartTab='diena';kartSesija=null;rodytiKartojima()">Pradėti</button></div>`:""; })()}
   <h2>Ką išmoksi</h2>
   <div class="planas">${PAM.zingsniai.map((z,i)=>`<div class="${atl.includes(z.id)?"atl":""}"><span>${atl.includes(z.id)?"✓":i+1}</span>${esc(z.pavadinimas)}</div>`).join("")}<div><span>?</span>Trumpas testas</div></div>
   <h2>Kaip tai veikia</h2>
@@ -531,6 +533,7 @@ function rodytiZingsni(nr){
   $("#vPam").textContent=`${INFO.pamokos.indexOf(PAM)+1}. ${PAM.pavadinimas} · ${nr+1}/${PAM.zingsniai.length}`;
   Gidas.slepti(); piestiZingsni(); $("main").scrollTop=0;
   Gidas.zingsnioPradzia(nr);
+  if(BUS.prisijungta) api("/api/zingsnio_pradzia",{pamoka:PAM.id,zingsnis:nr}).catch(()=>{});   // „Kur klaida?“ - nuo čia
 }
 function piestiZingsni(){
   const nr=S.dabartinis[PAM.id], z=PAM.zingsniai[nr], atl=S.atlikta[PAM.id]||[], jau=atl.includes(z.id);
@@ -589,6 +592,7 @@ async function tikrinti(automatinis){
       ${bandymai===1&&!uzuominuRodyta&&!demo?"Iš pirmo karto ir be užuominų. ":""}${demo?"Šį kartą parodžiau aš - kitą kartą pabandyk pats. ":""}
       <div class="eil" style="margin-top:12px"><button class="btn zalias" id="kitasBtn" onclick="toliau()">${nr<PAM.zingsniai.length-1?"Kitas žingsnis →":"Į testą →"}</button></div></div>`;
     piestiZingsni(); piestiSonine(); rodytiAtsaka();
+    if(automatinis){ Garsas.dzin(); if(!document.hasFocus()) api("/api/mirkteleti",{}).catch(()=>{}); }
     if(xp) pridetiXP(xp,$("#atsakas"));
     Gidas.pavyko(); pazymetiDiena();
     if(naujai && atl.length>=PAM.zingsniai.length) tikrintiAtlygiusVeliau();
@@ -597,12 +601,86 @@ async function tikrinti(automatinis){
     if((S._beUz||0)>=5) duotiZenkleli("be_uzuominu");
   } else {
     Robotas.reaguoti("liud",2600);
-    paskutinisAtsakas=`<div class="atsakas blogai"><b>Dar ne visai ${bandymai>2?"- nepasiduok! Gali paimti užuominą 💡":""}</b><ul>${r.pastabos.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
+    paskutinisAtsakas=`<div class="atsakas blogai"><b>Dar ne visai ${bandymai>2?"- nepasiduok! Gali paimti užuominą 💡":""}</b><ul>${r.pastabos.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+      ${z.tikrinama&&BUS.prisijungta?`<div class="eil" style="margin-top:10px"><button class="btn" id="kurKlaidaBtn" onclick="kurKlaida()">🔍 Kur klaida? Parodyk AutoCAD'e</button></div>`:""}</div>`;
     piestiZingsni();
     Gidas.nepavyko(z);
   }
 }
 function toliau(){ const nr=S.dabartinis[PAM.id]; if(nr<PAM.zingsniai.length-1) rodytiZingsni(nr+1); else rodytiTesta(); }
+async function kurKlaida(){
+  const btn=$("#kurKlaidaBtn"); if(btn) btn.disabled=true;
+  let r; try{ r=await api("/api/kur_klaida",{pamoka:PAM.id,zingsnis:S.dabartinis[PAM.id]}); }catch(e){ r={ok:false,klaida:"Brėžly neatsako"}; }
+  if(btn) btn.disabled=false;
+  if(!r.ok){ pranesti("Nepavyko: "+r.klaida); return; }
+  pranesti(r.kiek?`🔍 AutoCAD'e paryškinau, ką nubraižei šiame žingsnyje (${r.kiek}) - klaida greičiausiai ten.`:r.pranesimas);
+}
+
+/* ---------- garsas, kai žingsnis atliktas (be failų - WebAudio) ---------- */
+const Garsas={
+  ctx:null,
+  ijungtas(){ return sg("garsas")!=="0"; },
+  paruosti(){ // naršyklė leidžia garsą tik po naudotojo veiksmo - kontekstą kuriam per pirmą spragtelėjimą
+    if(!this.ctx){ try{ this.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; } }
+    if(this.ctx.state==="suspended") this.ctx.resume().catch(()=>{});
+  },
+  dzin(){
+    if(!this.ijungtas()||!this.ctx) return;
+    try{ const c=this.ctx, t=c.currentTime;
+      [[880,0],[1318.5,0.11]].forEach(([f,d])=>{ const o=c.createOscillator(), g=c.createGain(); o.type="sine"; o.frequency.value=f;
+        g.gain.setValueAtTime(0.0001,t+d); g.gain.exponentialRampToValueAtTime(0.12,t+d+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+d+0.35);
+        o.connect(g); g.connect(c.destination); o.start(t+d); o.stop(t+d+0.4); });
+    }catch(e){}
+  },
+  perjungti(){ sg("garsas",this.ijungtas()?"0":"1"); if(this.ijungtas()){ this.paruosti(); this.dzin(); } if(rodinys==="nustatymai") rodytiNustatymus(); }
+};
+["pointerdown","keydown"].forEach(ev=>addEventListener(ev,()=>Garsas.paruosti(),{passive:true}));
+
+/* ---------- dienos kartojimas: 5 komandos, dažniau tos, kurias pamiršti (Leitnerio dėžutės) ---------- */
+const Kartojimas={
+  INTERVALAI:[1,2,4,8,16],        // dienos iki kito kartojimo pagal dėžutę 1-5
+  diena(d=new Date()){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; },
+  po(diena,n){ const d=new Date(diena+"T12:00:00"); d.setDate(d.getDate()+n); return this.diena(d); },
+  B(){ return S.kart||(S.kart={dez:{},diena:""}); },
+  baseinas(){       // pradėtų pamokų komandos; kol jų mažai - pirmųjų pamokų
+    const eile=INFO.pamokos.map(p=>p.id), prad=new Set(eile.filter(id=>(S.atlikta[id]||[]).length));
+    let k=INFO.korteles.filter(x=>prad.has(x.pamoka));
+    if(k.length<8) k=[...INFO.korteles].sort((a,b)=>eile.indexOf(a.pamoka)-eile.indexOf(b.pamoka)).slice(0,8);
+    return k;
+  },
+  laukia(diena=this.diena()){ const D=this.B().dez;
+    return this.baseinas().filter(k=>!(D[k.k]&&D[k.k].kada>diena))
+      .sort((a,b)=>((D[a.k]||{}).d||0)-((D[b.k]||{}).d||0)||String((D[a.k]||{}).kada||"").localeCompare(String((D[b.k]||{}).kada||""))); },
+  likoSiandien(){ return this.B().diena===this.diena()?0:Math.min(5,this.laukia().length); },
+  sudaryti(){ return this.laukia().slice(0,5).map(k=>({k,v:mesk([k,...mesk(INFO.korteles.filter(x=>x.k!==k.k)).slice(0,3)]),ats:null})); },
+  atsakyti(j){
+    const ses=kartSesija, q=ses.kl[ses.i]; if(q.ats!==null) return; q.ats=j;
+    const teis=q.v[j].k===q.k.k, D=this.B().dez, buvo=(D[q.k.k]||{}).d||1, d=teis?Math.min(5,buvo+1):1;   // nauja + teisingai - po 2 d.
+    D[q.k.k]={d,kada:this.po(this.diena(),this.INTERVALAI[d-1])};
+    if(teis&&this.B().diena!==this.diena()) ses.xp+=2;
+    saugoti(); rodytiKartojima();
+  },
+  toliau(){
+    const ses=kartSesija; ses.i++;
+    if(ses.i>=ses.kl.length){ const pirmas=this.B().diena!==this.diena(); this.B().diena=this.diena();
+      const xp=pirmas?ses.xp+5:0; saugoti(); rodytiKartojima(); if(xp) pridetiXP(xp,$("#kartRez")); return; }
+    rodytiKartojima();
+  },
+  html(){
+    const ses=kartSesija||(kartSesija={kl:this.sudaryti(),i:0,xp:0});
+    if(!ses.kl.length) return `<div class="kart-diena"><h3>Šiandien kartoti nėra ko ✓</h3><p>Visos komandos dar atmintyje. Grįžk rytoj - parinksiu tas, kurias laikas pakartoti.</p></div>`;
+    if(ses.i>=ses.kl.length){ const teis=ses.kl.filter(q=>q.v[q.ats].k===q.k.k).length, rytoj=Math.min(5,this.laukia(this.po(this.diena(),1)).length);
+      return `<div class="kart-diena" id="kartRez"><h3>✓ Šiandien pakartota: ${teis} iš ${ses.kl.length}</h3><p>Rytoj laukia ${rytoj} kom. Ką suklydai - paklausiu dar kartą jau rytoj.</p>
+        <div class="eil"><button class="btn" onclick="kartTab='korteles';rodytiKartojima()">Visos kortelės</button></div></div>`; }
+    const q=ses.kl[ses.i], a=q.ats;
+    return `<div class="kart-diena"><div class="eil"><small style="color:var(--muted)">Dienos kartojimas</small><span class="tarpas"></span><small style="color:var(--muted)">${ses.i+1} / ${ses.kl.length}</small></div>
+      <p class="kart-kl">Kuri komanda tai daro?</p><h3>${esc(q.k.ka)}</h3>
+      <div class="variantai kart-var">${q.v.map((v,j)=>{const kl=a===null?"":v.k===q.k.k?"teis":j===a?"neteis":"";return `<button class="${kl}" ${a!==null?"disabled":""} onclick="Kartojimas.atsakyti(${j})">${esc(v.k)}</button>`;}).join("")}</div>
+      ${a!==null?`<div class="paaisk">${q.v[a].k===q.k.k?"✓ Teisingai!":`✗ Teisingas atsakymas - <b>${esc(q.k.k)}</b>`}${q.k.trump?` · trumpinys ${esc(q.k.trump)}`:""}<br><code>${esc(q.k.pvz)}</code></div>
+        <div class="eil" style="margin-top:12px"><button class="btn pagr" onclick="Kartojimas.toliau()">${ses.i<ses.kl.length-1?"Toliau →":"Baigti"}</button></div>`:""}</div>`;
+  }
+};
+let kartSesija=null;
 
 /* ---------- testas ---------- */
 let testoAts=[];
@@ -1151,6 +1229,7 @@ function rodytiNustatymus(){
     <div class="nust-eil"><div><b>Spartieji klavišai</b><small>Veikia ir kai dirbi AutoCAD'e: <b style="display:inline">Ctrl+Alt+T</b> - patikrinti, <b style="display:inline">Ctrl+Alt+M</b> - mini / šalia, <b style="display:inline">Ctrl+Alt+B</b> - parodyti Brėžly. <span>Brėžly lange:</span> <b style="display:inline">Enter</b> - patikrinti arba toliau, <b style="display:inline">H</b> - užuomina.${(INFO.klavisai&&INFO.klavisai.nepavyko.length)?` Užimti kitos programos: ${esc(INFO.klavisai.nepavyko.join(", "))}.`:""}</small></div></div>
     <div class="nust-eil"><div><b>Gyvas robotukas</b><small>Mirksi, seka pelę akimis, džiaugiasi ir nuliūsta kartu su tavimi.</small></div>${jung(Robotas.jungtas(),`sg('judesys',Robotas.jungtas()?'0':'1');Robotas.taikyti();rodytiNustatymus()`,"Gyvas robotukas")}</div>
     <div class="nust-eil"><div><b>Automatinis tikrinimas</b><small>Kas kelias sekundes pažiūriu į brėžinį ir pats pastebiu atliktą žingsnį.</small></div>${jung(auto.ijungtas(),"auto.perjungti()","Automatinis tikrinimas")}</div>
+    <div class="nust-eil"><div><b>Garsas, kai žingsnis atliktas</b><small>Trumpas „dzin“ ir Brėžly mirktelėjimas užduočių juostoje, kai dirbi AutoCAD'e.</small></div>${jung(Garsas.ijungtas(),"Garsas.perjungti()","Garsas")}</div>
     <div class="nust-eil"><div><b>Komandos su „_“</b><small>Jei tavo AutoCAD ne anglų kalba: _LINE, _CIRCLE veikia bet kurioje kalboje.${BUS.kalba?` Tavo AutoCAD kalba: <b style="display:inline">${esc(BUS.kalba)}</b>.`:""}</small></div>${jung(sg("pabr")==="1",`sg('pabr',sg('pabr')==='1'?'0':'1');rodytiNustatymus()`,"Komandos su pabraukimu")}</div>
     <div class="nust-eil"><div><b>🤖 Robotas gidas</b><small>Parodo, kur spausti, ir padrąsina.</small></div><button class="btn" onclick="Gidas.turasIsNaujo()">❔ Turas</button>${jung(Gidas.ijungtas(),"Gidas.perjungti();rodytiNustatymus()","Robotas gidas")}</div>
   </div>
@@ -1542,7 +1621,7 @@ async function atnaujinti(){
 }
 
 /* =================== KARTOJIMAS BE AUTOCAD =================== */
-let kartTab="korteles", kortNr=0, kortTvarka=null, kartTestas=null;
+let kartTab="diena", kortNr=0, kortTvarka=null, kartTestas=null;
 function naujasKartTestas(){
   const vis=[]; INFO.pamokos.forEach(p=>p.testas.forEach((q,i)=>vis.push({...q,id:p.id+"/"+i,pam:p.pavadinimas})));
   kartTestas={kl:mesk(vis).slice(0,8),ats:[]};
@@ -1551,9 +1630,10 @@ function rodytiKartojima(){
   nustatytiRodini("kartoti");
   if(!kortTvarka) kortTvarka=mesk(INFO.korteles.map((_,i)=>i));
   if(!kartTestas) naujasKartTestas();
-  const sk=`<div class="skirt" role="tablist"><button class="${kartTab==="korteles"?"akt":""}" onclick="kartTab='korteles';rodytiKartojima()">Komandų kortelės</button><button class="${kartTab==="testas"?"akt":""}" onclick="kartTab='testas';rodytiKartojima()">Testas iš visų pamokų</button></div>`;
+  const sk=`<div class="skirt" role="tablist"><button class="${kartTab==="diena"?"akt":""}" onclick="kartTab='diena';rodytiKartojima()">🧠 Dienos kartojimas</button><button class="${kartTab==="korteles"?"akt":""}" onclick="kartTab='korteles';rodytiKartojima()">Komandų kortelės</button><button class="${kartTab==="testas"?"akt":""}" onclick="kartTab='testas';rodytiKartojima()">Testas iš visų pamokų</button></div>`;
   let t="";
-  if(kartTab==="korteles"){
+  if(kartTab==="diena") t=Kartojimas.html();
+  else if(kartTab==="korteles"){
     const n=kortTvarka.length, k=INFO.korteles[kortTvarka[((kortNr%n)+n)%n]], pam=pamokaPagalId(k.pamoka);
     t=`<div class="kort-viet"><button class="kortele" id="kortele" onclick="this.classList.toggle('apversta')" aria-label="Apversti kortelę">
       <div class="pr"><small style="color:var(--muted)">Ką daro ši komanda?</small><b>${esc(k.k)}</b>${k.trump?`<small style="color:var(--muted)">trumpinys: ${esc(k.trump)}</small>`:""}<small style="color:var(--muted);margin-top:8px">Spausk - apversk</small></div>

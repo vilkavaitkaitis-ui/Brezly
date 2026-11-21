@@ -329,6 +329,24 @@
   "Pradėsim nuo pamokos „2D brėžinys“. Prie pirmųjų dviejų galėsi grįžti bet kada.": "We'll start with the lesson „2D drawing“. You can go back to the first two any time.",
   "Brėžly lange:": "In the Brėžly window:",
   "- patikrinti arba toliau,": "- check or continue,",
-  "- užuomina.": "- hint."
+  "- užuomina.": "- hint.",
+  "🔍 Kur klaida? Parodyk AutoCAD'e": "🔍 Where's the mistake? Show me in AutoCAD",
+  "🔍 AutoCAD'e paryškinau, ką nubraižei šiame žingsnyje (#) - klaida greičiausiai ten.": "🔍 I highlighted in AutoCAD what you drew in this step (#) - the mistake is most likely there.",
+  "Garsas, kai žingsnis atliktas": "Sound when a step is done",
+  "Trumpas „dzin“ ir Brėžly mirktelėjimas užduočių juostoje, kai dirbi AutoCAD'e.": "A short „ding“ and Brėžly flashing in the taskbar while you work in AutoCAD.",
+  "🧠 Dienos kartojimas": "🧠 Daily review",
+  "Dienos kartojimas": "Daily review",
+  "# kom. · ~# min · iki +# XP": "# commands · ~# min · up to +# XP",
+  "Šiandien kartoti nėra ko ✓": "Nothing to review today ✓",
+  "Visos komandos dar atmintyje. Grįžk rytoj - parinksiu tas, kurias laikas pakartoti.": "All commands are still fresh. Come back tomorrow - I'll pick the ones due for review.",
+  "✓ Šiandien pakartota: # iš #": "✓ Reviewed today: # of #",
+  "Rytoj laukia # kom. Ką suklydai - paklausiu dar kartą jau rytoj.": "# commands are due tomorrow. Anything you got wrong - I'll ask again tomorrow.",
+  "Visos kortelės": "All cards",
+  "Kuri komanda tai daro?": "Which command does this?",
+  "✓ Teisingai!": "✓ Correct!",
+  "· trumpinys {}": "· shortcut {}",
+  "Pradėti": "Start",
+  "Baigti": "Finish",
+  "✗ Teisingas atsakymas -": "✗ The answer is"
  }
 }
