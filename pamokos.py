@@ -832,8 +832,8 @@ def d_blokas(b):
     blk.AddLine(A.taskas(15, 0), A.taskas(20, 0))
     blk.AddAttribute(3.5, 0, "Pozicinis žymuo", A.taskas(7, 4), "POZ", "R")
     blk.AddAttribute(3.5, 1, "Nuoroda (parametrai)", A.taskas(7, -7), "NUORODA", "")
-    for o in objektai(b.ms):        # ištrinam laisvą ženklą (kaip „Delete“ kuriant bloką)
-        if o["max"][0] <= 21 and o["min"][1] >= -8 and o["max"][1] <= 8 and o["tipas"] != "AcDbBlockReference":
+    for o in objektai(b.ms):        # ištrinam laisvą ženklą ir atributus (kaip „Delete“ kuriant bloką)
+        if -1 <= o["min"][0] <= 21 and o["min"][1] >= -8 and o["max"][1] <= 8 and o["tipas"] != "AcDbBlockReference":
             try:
                 o["obj"].Delete()
             except Exception:
@@ -1398,6 +1398,17 @@ def _isversta(p, en):
     return q
 
 
+PAVEIKSLELIAI = os.path.join(os.path.dirname(PAMOKU_FAILAS), "paveiksleliai")
+
+
+def _paveikslelis(zid, kalba):
+    """Tikslo paveikslėlis „taip turi atrodyti“ (irankiai/paveiksleliai.py) - kelias arba None."""
+    for kel in ([f"en/{zid}.svg"] if kalba == "en" else []) + [f"{zid}.svg"]:
+        if os.path.exists(os.path.join(PAVEIKSLELIAI, kel)):
+            return "paveiksleliai/" + kel
+    return None
+
+
 def viesai(kalba="lt"):
     """Pamokos be Python funkcijų - siuntimui į sąsają (ir programėlei). kalba "en" - anglų tekstai."""
     rez = []
@@ -1410,7 +1421,8 @@ def viesai(kalba="lt"):
         korteles = [{**k, **en.get("korteles", {}).get(k["k"], {})} for k in KORTELES]
     for p in pamokos:
         z = [{k: v for k, v in s.items() if k not in ("tikrinti", "demo")} |
-             {"tikrinama": s["tikrinti"] is not None, "demonstruojama": s["demo"] is not None}
+             {"tikrinama": s["tikrinti"] is not None, "demonstruojama": s["demo"] is not None} |
+             ({"pav": _paveikslelis(s["id"], kalba)} if _paveikslelis(s["id"], kalba) else {})
              for s in p["zingsniai"]]
         rez.append({k: v for k, v in p.items() if k != "zingsniai"} | {"zingsniai": z})
     return {"pamokos": rez, "ateityje": ateityje, "patarimai": patarimai, "korteles": korteles}

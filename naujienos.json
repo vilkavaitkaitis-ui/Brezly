@@ -2,6 +2,29 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.1",
+   "pavadinimas": "Mokytis lengviau: paveikslėliai, egzaminas, treniruoklis ir žinynas",
+   "aprasas": "Matai, kaip turi atrodyti rezultatas, gali pasitikrinti su laikmačiu, o komandas ir terminus kartoti ir be AutoCAD.",
+   "punktai": [
+    "<b>🎯 Taip turi atrodyti:</b> 2D žingsniuose - paveikslėlis su rezultatu. Oranžinė - ką braižai dabar, pilka - kas jau nubraižyta.",
+    "<b>⏱ Egzamino režimas</b> (Praktika): užduotis su laikmačiu, be užuominų, komandų ir pavyzdžio. Pabaigoje - „Įskaityta“ arba pastabos ir sugaištas laikas.",
+    "<b>🎯 Mano silpnos vietos</b> (Kartoti): žingsniai, kur reikėjo užuominų ar „Parodyk man“, komandos, kurias painioji, ir testai, kuriuos verta perlaikyti - su mygtuku „Kartoti“.",
+    "<b>⌨ Komandų eilutės treniruoklis</b> (Kartoti ir programėlėje telefone): įvesk komandas, koordinates ir parinktis kaip AutoCAD'e - Brėžly patikrina iškart.",
+    "<b>📖 Žinynas:</b> 57 inžinerinės grafikos terminai lietuviškai ir angliškai bei standartų atmintinė - formatai, linijos, masteliai, šriftai, matmenys (galima atsispausdinti)."
+   ],
+   "en": {
+    "pavadinimas": "Easier learning: pictures, exam mode, trainer and glossary",
+    "aprasas": "See what the result should look like, test yourself against the clock and review commands and terms even without AutoCAD.",
+    "punktai": [
+     "<b>🎯 What it should look like:</b> 2D steps show a picture of the result. Orange - what you draw now, grey - what's already there.",
+     "<b>⏱ Exam mode</b> (Practice): a task with a timer, no hints, commands or sample. At the end - “Passed” or remarks and the time taken.",
+     "<b>🎯 My weak spots</b> (Review): steps where you needed hints or “Show me”, commands you mix up and tests worth retaking - with a “Repeat” button.",
+     "<b>⌨ Command-line trainer</b> (Review and the phone app): type commands, coordinates and options as in AutoCAD - Brėžly checks right away.",
+     "<b>📖 Glossary:</b> 57 engineering graphics terms in Lithuanian and English plus a standards cheat sheet - sheet sizes, lines, scales, lettering, dimensions (printable)."
+    ]
+   }
+  },
+  {
    "versija": "1.0.5",
    "pavadinimas": "„Kur klaida?“, garsas ir dienos kartojimas",
    "aprasas": "Brėžly parodo klaidą AutoCAD'e, praneša apie atliktą žingsnį ir kasdien padeda pakartoti komandas.",

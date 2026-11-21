@@ -64,3 +64,12 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] „Kur klaida?“, kai žingsnyje nieko nenubraižyta → aiškus pranešimas; kai braižyta lape, o žiūri į Model - pasako, kad kita erdvė.
 - [ ] Dirbant AutoCAD'e (Brėžly už jo), automatiškai priimtas žingsnis → „dzin“ ir Brėžly mirksi užduočių juostoje; Nustatymuose garsą galima išjungti.
 - [ ] Pradžios ekrane - „🧠 Dienos kartojimas“; 5 klausimai → +XP; tą pačią dieną juosta dingsta, rytoj grįžta.
+
+## 10. 1.1: paveikslėliai, egzaminas, silpnos vietos, treniruoklis, žinynas
+- [ ] 2D pamokos žingsnis (pvz. „2D brėžinys“ → „Plokštės kontūras“) - po tikslu matosi paveikslėlis (oranžinė - šis žingsnis, pilka - jau nubraižyta). Angliškai „Title block“ teksto žingsnyje paveikslėlyje - „Part“.
+- [ ] Praktika → „⏱ Egzamino režimas“ → „Pradėti egzaminą“ → pasirink užduotį ir laiką → AutoCAD'e atsidaro tuščias lapas, laikmatis eina; pereik į kitą langą - dešinėje apačioje laikrodis.
+- [ ] Nubraižyk ir „✔ Baigti ir patikrinti“ → „Įskaityta“ arba pastabos su laiku; rezultatas matosi juostoje „Egzamino režimas“. Uždaryk ir vėl atidaryk Brėžly egzamino metu - laikmatis tęsiasi.
+- [ ] Pamokoje paimk užuominą, „Parodyk man“, nepavykęs „Patikrinti“ → Kartoti → „🎯 Silpnos vietos“ - tas žingsnis sąraše; „Kartoti žingsnį →“ atidaro jį.
+- [ ] Kartoti → „⌨ Komandų eilutė“: įvesk LINE / L, koordinates, Enter (tuščias) - priima; klaida → „Ne visai“, antra klaida → parodo atsakymą. Žingsnis be klaidų → +2 XP (vieną kartą).
+- [ ] Meniu „Žinynas“: paieška be lietuviškų raidžių („pjuvis“) randa „pjūvis“; „Standartų atmintinė“ → „🖨 Spausdinti“.
+- [ ] Programėlė telefone: Komandos → „⌨ Treniruoklis“, meniu „Žinynas“; po atnaujinimo apačioje - v1.1.

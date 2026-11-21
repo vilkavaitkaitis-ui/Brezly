@@ -50,9 +50,9 @@ const I18N={zod:null,sk:new Map(),sab:[],NUM:/\d+(?:[.,]\d+)?/g,
     if(en===undefined&&tr.includes(", ")){ const d=tr.split(", ").map(x=>this.vertimas(x)); if(d.join(", ")!==tr) en=d.join(", "); }   // sąrašai
     return en===undefined?t:t.replace(tr,en);
   },
-  mazgas(n){ if(n.nodeType!==3||(n.parentNode&&/^(SCRIPT|STYLE|TEXTAREA|CODE)$/.test(n.parentNode.nodeName))) return;
+  mazgas(n){ if(n.nodeType!==3||(n.parentNode&&(/^(SCRIPT|STYLE|TEXTAREA|CODE)$/.test(n.parentNode.nodeName)||n.parentNode.closest?.('[translate="no"]')))) return;
     const v=this.vertimas(n.nodeValue); if(v!==n.nodeValue) n.nodeValue=v; },
-  atributai(e){ if(e.nodeType!==1) return; for(const a of ["placeholder","title","aria-label"]){ const v=e.getAttribute(a); if(v){ const w=this.vertimas(v); if(w!==v) e.setAttribute(a,w); } } },
+  atributai(e){ if(e.nodeType!==1||e.closest('[translate="no"]')) return; for(const a of ["placeholder","title","aria-label"]){ const v=e.getAttribute(a); if(v){ const w=this.vertimas(v); if(w!==v) e.setAttribute(a,w); } } },
   versti(sakn){ if(!this.zod||!sakn) return;
     if(sakn.nodeType===3){ this.mazgas(sakn); return; } if(sakn.nodeType!==1) return;
     this.atributai(sakn); sakn.querySelectorAll("[placeholder],[title],[aria-label]").forEach(e=>this.atributai(e));
@@ -337,7 +337,7 @@ function testSerija(){ if(!testasAtrakintas)return; S.dienos=S.dienos||[]; const
 /* =================== RODINIAI: SPINTA, LYGIAI, PROFILIS =================== */
 let rodinys="pradzia", spintosSkirtukas="galva";
 function nustatytiRodini(v){ rodinys=v; document.body.classList.remove("meniu"); if(v!=="pamoka") auto.reset(); document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("akt",b.dataset.v===v)); Gidas.slepti(); clearTimeout(Gidas.nuobodu); $("main").scrollTop=0; if(miniIjungtas()) setTimeout(miniPiesti,0); }
-function atnaujintiRodini(){ const f={kurejas:rodytiKureja,praktika:()=>prDabar?rodytiUzduoti(prDabar):rodytiPraktika(),spinta:rodytiSpinta,lygiai:rodytiLygius,profilis:rodytiProfili,nustatymai:rodytiNustatymus}[rodinys]; if(f) f(); }
+function atnaujintiRodini(){ const f={kurejas:rodytiKureja,praktika:()=>prDabar?rodytiUzduoti(prDabar):rodytiPraktika(),spinta:rodytiSpinta,lygiai:rodytiLygius,profilis:rodytiProfili,nustatymai:rodytiNustatymus,zinynas:rodytiZinyna}[rodinys]; if(f) f(); }
 function kitasAtlygis(){
   const b=busenaAtrakinimui(), i=lygis(S.xp), kitas=LYGIAI[i+1];
   if(!kitas) return null;
@@ -549,6 +549,8 @@ function piestiZingsni(){
     ${z.komandos.length?`<div class="komandos" id="komandos"><div class="ant"><i></i><i></i><i></i><span>AutoCAD komandų eilutė - įvesk geltonus atsakymus</span></div>
       ${z.komandos.map(([pr,iv0])=>{const iv=komandosTekstas(pr,iv0),pele=iv.startsWith("(")||iv==="Enter";return `<div class="kl"><span class="pr">${esc(pr)}</span><span class="iv ${pele?"pele":""}">${esc(iv)}</span>${pele?"":`<button onclick="kopijuoti('${esc(iv)}')">Kopijuoti</button>`}</div>`;}).join("")}</div>`:""}
     ${z.tikslas?`<div class="tikslas" id="tikslas">🎯 Tikslas: <b>${esc(z.tikslas)}</b></div>`:""}
+    ${z.pav?`<figure class="tikslo-pav"><img src="/${esc(z.pav)}" alt="${esc(z.pavadinimas)}" loading="lazy" onerror="this.parentNode.remove()">
+      <figcaption><span class="tp-n"></span>šis žingsnis <span class="tp-s"></span>jau nubraižyta</figcaption></figure>`:""}
     <div class="eil" id="veiksmai">
       <button class="btn pagr didelis" id="tikrinti" onclick="tikrinti()">${z.tikrinama?"✓ Patikrinti":"✓ Atlikau"}</button>
       <button class="btn" id="uzuominaBtn" onclick="uzuomina()" ${uzuominuRodyta>=z.uzuominos.length?"disabled":""}>💡 Užuomina (${uzuominuRodyta}/${z.uzuominos.length})</button>
@@ -566,13 +568,13 @@ function piestiZingsni(){
 }
 function uzdirbtiXP(z){ if(demo) return 0; return Math.max(Math.round(z.xp*(1-0.25*uzuominuRodyta)), Math.round(z.xp*0.25)); }
 function kopijuoti(t){ navigator.clipboard?.writeText(t).then(()=>pranesti(`Nukopijuota: ${t} - įklijuok AutoCAD'e (Ctrl+V)`),()=>pranesti(t)); }
-function uzuomina(){ uzuominuRodyta++; Gidas.slepti(); piestiZingsni(); }
+function uzuomina(){ uzuominuRodyta++; Silpnos.pazymeti("u"); Gidas.slepti(); piestiZingsni(); }
 async function parodyti(){
   if(!confirm("Brėžly pats atliks šį žingsnį AutoCAD'e. Už jį XP negausi, bet galėsi pažiūrėti ir tęsti. Rodyti?"))return;
   const z=PAM.zingsniai[S.dabartinis[PAM.id]];
   const r=await api("/api/parodyti",{pamoka:PAM.id,zingsnis:S.dabartinis[PAM.id]});
   if(!r.ok){pranesti(r.klaida);return;}
-  demo=true; pranesti("Pažiūrėk į AutoCAD - žingsnis atliktas. Dabar spausk „Patikrinti“.");
+  demo=true; Silpnos.pazymeti("d"); pranesti("Pažiūrėk į AutoCAD - žingsnis atliktas. Dabar spausk „Patikrinti“.");
   piestiZingsni();
 }
 async function tikrinti(automatinis){
@@ -598,9 +600,10 @@ async function tikrinti(automatinis){
     if(naujai && atl.length>=PAM.zingsniai.length) tikrintiAtlygiusVeliau();
     if(naujai&&atl.length===1) duotiZenkleli("pirmas");
     if(naujai&&!uzuominuRodyta&&!demo) S._beUz=(S._beUz||0)+1;
+    if(bandymai<=1&&!uzuominuRodyta&&!demo) Silpnos.pazymeti("g");      // pavyko švariai - silpna vieta taisosi
     if((S._beUz||0)>=5) duotiZenkleli("be_uzuominu");
   } else {
-    Robotas.reaguoti("liud",2600);
+    Robotas.reaguoti("liud",2600); if(!automatinis) Silpnos.pazymeti("b");
     paskutinisAtsakas=`<div class="atsakas blogai"><b>Dar ne visai ${bandymai>2?"- nepasiduok! Gali paimti užuominą 💡":""}</b><ul>${r.pastabos.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
       ${z.tikrinama&&BUS.prisijungta?`<div class="eil" style="margin-top:10px"><button class="btn" id="kurKlaidaBtn" onclick="kurKlaida()">🔍 Kur klaida? Parodyk AutoCAD'e</button></div>`:""}</div>`;
     piestiZingsni();
@@ -613,6 +616,7 @@ async function kurKlaida(){
   let r; try{ r=await api("/api/kur_klaida",{pamoka:PAM.id,zingsnis:S.dabartinis[PAM.id]}); }catch(e){ r={ok:false,klaida:"Brėžly neatsako"}; }
   if(btn) btn.disabled=false;
   if(!r.ok){ pranesti("Nepavyko: "+r.klaida); return; }
+  Silpnos.pazymeti("k");
   pranesti(r.kiek?`🔍 AutoCAD'e paryškinau, ką nubraižei šiame žingsnyje (${r.kiek}) - klaida greičiausiai ten.`:r.pranesimas);
 }
 
@@ -1069,18 +1073,21 @@ let prFiltras="visos", prDabar=null, prPaskutinis={};
 function prAtlikta(id){ return !!(S.praktika||{})[id]; }
 function prZvaigzd(n){ return "★".repeat(n)+"☆".repeat(3-n); }
 function rodytiPraktika(){
+  if(Egzaminas.dabar()) return Egzaminas.rodyti();
   nustatytiRodini("praktika"); prDabar=null; $("#vPam").textContent="Praktika";
   if(!sg("praktika_matyta")){ sg("praktika_matyta","1"); $("#praktikosTaskelis").classList.add("hidden"); }
   const sar=PRAKTIKA.filter(u=>prFiltras==="visos"||u.fmt===prFiltras), atl=PRAKTIKA.filter(u=>prAtlikta(u.id)).length;
   $("#vidus").innerHTML=`<h1 class="ant1">Praktika</h1><p class="po1">Tikri brėžiniai su rėmeliu: 2D - A4 lapas, 3D - A3 lapas. Atidaryk tuščią lapą AutoCAD'e, nubraižyk ir aš patikrinsiu.</p>
   <div class="pr-filtr">${[["visos","Visos"],["A4","2D · A4"],["A3","3D · A3"]].map(([v,t])=>`<button aria-pressed="${prFiltras===v}" onclick="prFiltras='${v}';rodytiPraktika()">${t}</button>`).join("")}
     <div class="pr-eiga"><span>Atlikta ${atl} iš ${PRAKTIKA.length}</span><div class="juosta"><i style="width:${atl/PRAKTIKA.length*100}%"></i></div></div></div>
+  ${Egzaminas.juostaHTML()}
   <div class="pr-tink">${sar.map(u=>`<button class="pr-k" onclick="rodytiUzduoti('${u.id}')" aria-label="${u.nr}. ${esc(u.pav)}, ${u.fmt}${prAtlikta(u.id)?", atlikta":""}">
     <div class="pr-lap"><img src="/praktika/${u.id}.svg" alt="" loading="lazy"></div>
     <span class="pr-fmt ${u.fmt==="A3"?"a3":""}">${u.d} · ${u.fmt}</span>${prAtlikta(u.id)?'<span class="pr-ok">✓</span>':""}
     <b>${u.nr}. ${esc(u.pav)}</b><small>${prZvaigzd(u.lyg)} · ~${u.min} min · +${u.xp} XP</small></button>`).join("")}</div>`;
 }
 function rodytiUzduoti(id){
+  if(Egzaminas.dabar()) return Egzaminas.rodyti();
   const u=PRAKTIKA.find(x=>x.id===id); if(!u) return rodytiPraktika();
   nustatytiRodini("praktika"); prDabar=id; $("#vPam").textContent=`Praktika ${u.nr}. ${u.pav}`;
   const i=PRAKTIKA.indexOf(u), kitas=PRAKTIKA[i+1], ats=prPaskutinis[id];
@@ -1097,6 +1104,7 @@ function rodytiUzduoti(id){
         <button class="btn" id="prTikr" onclick="prTikrinti('${id}')">✔ Patikrinti mano brėžinį</button>
         <div class="eil"><button class="btn" onclick="prAtidaryti('${id}','pavyzdys')" title="Atidaro atsakymą atskirame faile">👁 Pavyzdys AutoCAD'e</button>
           <button class="btn" onclick="prPDF('${id}')">🖨 Spausdinti (PDF)</button></div>
+        <button class="btn" onclick="Egzaminas.pasirinkti('${id}')" title="Su laikmačiu, be užuominų ir pavyzdžio">⏱ Daryti kaip egzaminą</button>
       </div>
       <div id="prAts">${ats?prAtsHTML(ats):""}</div>
       ${kitas?`<button class="btn" style="align-self:flex-start" onclick="rodytiUzduoti('${kitas.id}')">Kita: ${kitas.nr}. ${esc(kitas.pav)} →</button>`:""}
@@ -1133,6 +1141,159 @@ async function prTikrinti(id){
     if(n>=4) duotiZenkleli("praktikas");
     saugoti(); setTimeout(()=>{ if(prDabar===id&&rodinys==="praktika") rodytiUzduoti(id); },1600);
   }
+}
+
+/* =================== EGZAMINO REŽIMAS =================== */
+/* Praktikos užduotis su laikmačiu: be „Kaip daryti“, komandų, pavyzdžio. Pabaigoje - tas pats tikrinimas. Būsena S.egz išlieka perkrovus. */
+const Egzaminas={
+  t:null,
+  B(){ return S.egz||(S.egz={ist:[]}); },
+  dabar(){ return (S.egz&&S.egz.dab)||null; },
+  liko(){ const d=this.dabar(); return d?d.pradzia+d.min*60000-Date.now():0; },
+  laikas(ms){ const s=Math.max(0,Math.round(ms/1000)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; },
+  rekom(u){ return Math.max(10,Math.ceil(u.min*1.5/5)*5); },
+  juostaHTML(){
+    const ist=this.B().ist.slice(0,5);
+    return `<div class="egz-juosta"><div><b>⏱ Egzamino režimas</b><p>Užduotis su laikmačiu - be užuominų, komandų ir pavyzdžio. Kaip per tikrą atsiskaitymą.</p>
+      ${ist.length?`<div class="egz-ist">${ist.map(r=>{const u=PRAKTIKA.find(x=>x.id===r.id);return `<span class="${r.iskaityta?"ok":"ne"}" title="${esc(u?u.pav:r.id)} · ${r.data}">${r.iskaityta?"✓":"✗"} ${u?u.nr:"?"}. ${this.laikas(r.sek*1000)} / ${r.min} min</span>`;}).join("")}</div>`:""}</div>
+      <button class="btn pagr" onclick="Egzaminas.pasirinkti()">Pradėti egzaminą</button></div>`;
+  },
+  pasirinkti(id){
+    if(this.dabar()){ pranesti("Egzaminas jau vyksta - pirmiausia jį baik arba nutrauk."); return this.rodyti(); }
+    const u0=PRAKTIKA.find(x=>x.id===id);
+    rodytiLangeli(`<h2 style="margin-top:0">⏱ Egzaminas</h2><p style="color:var(--muted);margin-top:0">Laikmatis prasidės, kai atidarysiu tuščią lapą AutoCAD'e. Užuominų, komandų ir pavyzdžio nebus - tik užduoties brėžinys. Baigęs spausk „Baigti ir patikrinti“.</p>
+      <label class="egz-lauk">Užduotis<select id="egzUzd" onchange="Egzaminas.atnLaika()"><option value="">🎲 Atsitiktinė</option>${PRAKTIKA.map(u=>`<option value="${u.id}" ${u0&&u0.id===u.id?"selected":""}>${u.nr}. ${esc(u.pav)} · ${u.fmt}</option>`).join("")}</select></label>
+      <label class="egz-lauk">Laikas<select id="egzMin"></select></label>
+      <div class="eil" style="margin-top:16px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Atšaukti</button><button class="btn pagr" onclick="Egzaminas.pradeti()">▶ Pradėti</button></div>`);
+    this.atnLaika();
+  },
+  atnLaika(){
+    const u=PRAKTIKA.find(x=>x.id===$("#egzUzd").value), r=u?this.rekom(u):null;
+    $("#egzMin").innerHTML=(r?`<option value="${r}">Rekomenduojama: ${r} min</option>`:`<option value="0">Pagal užduotį (~1,5 × numatyto)</option>`)+[15,30,45,60,90].map(m=>`<option value="${m}">${m} min</option>`).join("");
+  },
+  async pradeti(){
+    if(!BUS.prisijungta){ pranesti("Pirmiausia prisijunk prie AutoCAD (mygtukas apačioje kairėje)."); return; }
+    let id=$("#egzUzd").value; if(!id){ const ne=PRAKTIKA.filter(u=>!prAtlikta(u.id)); id=mesk(ne.length?ne:PRAKTIKA)[0].id; }
+    const u=PRAKTIKA.find(x=>x.id===id), min=parseInt($("#egzMin").value)||this.rekom(u);
+    uzdarytiLangeli(); pranesti("Atidarau tuščią lapą...");
+    let r; try{ r=await api("/api/praktika_atidaryti",{id,kas:"ruosinys"}); }catch(e){ r={ok:false}; }
+    if(!r.ok){ pranesti(r.klaida||"Nepavyko atidaryti AutoCAD'e"); return; }
+    this.B().dab={id,pradzia:Date.now(),min}; saugoti();
+    pranesti(`Egzaminas prasidėjo: ${min} min. Sėkmės!`); Robotas.reaguoti("moja",1500);
+    this.rodyti(); this.ciklas();
+  },
+  rodyti(){
+    const d=this.dabar(); if(!d) return rodytiPraktika();
+    const u=PRAKTIKA.find(x=>x.id===d.id); if(!u){ delete this.B().dab; saugoti(); return rodytiPraktika(); }
+    nustatytiRodini("praktika"); prDabar=null; $("#vPam").textContent="Egzaminas";
+    $("#vidus").innerHTML=`<div class="egz-virsus"><div><small style="color:var(--muted)">Egzaminas · ${u.d} · ${u.fmt}</small><h1 class="ant1" style="font-size:26px;margin:2px 0 0">${u.nr}. ${esc(u.pav)}</h1></div>
+      <span class="tarpas"></span><div class="egz-laikas" id="egzLaikas" role="timer" aria-label="Liko laiko">${this.laikas(this.liko())}</div></div>
+      <div class="pr-det egz-det"><div class="pr-lap" onclick="prDidinti('${u.id}')" title="Spausk - padidinsiu"><img src="/praktika/${u.id}.svg" alt="Užduoties ${u.nr} brėžinys ${u.fmt} formatu"></div>
+      <div class="pr-info"><p style="margin:0">${esc(u.uzd)}</p>
+        <div class="pr-mygt"><button class="btn pagr didelis" id="egzBaigti" onclick="Egzaminas.baigti()">✔ Baigti ir patikrinti</button>
+          <div class="eil"><button class="btn" onclick="prAtidaryti('${u.id}','ruosinys')">↻ Atidaryti lapą dar kartą</button><button class="btn" onclick="Egzaminas.nutraukti()">✕ Nutraukti</button></div></div>
+        <p style="color:var(--muted);font-size:13px;margin:0">Laikas: ${d.min} min. Galima pereiti į kitus langus - laikmatis eis toliau.</p></div></div>`;
+    this.ciklas();
+  },
+  ciklas(){
+    clearInterval(this.t);
+    const zenkl=()=>{ let z=$("#egzZyme"); const d=this.dabar();
+      if(!d){ if(z) z.remove(); return; }
+      if(!z){ z=document.createElement("button"); z.id="egzZyme"; z.className="egz-zyme"; z.onclick=()=>Egzaminas.rodyti(); document.body.appendChild(z); }
+      const ms=this.liko(); z.textContent=`⏱ ${this.laikas(ms)}`; z.classList.toggle("mazai",ms<5*60000);
+      const l=$("#egzLaikas"); if(l){ l.textContent=this.laikas(ms); l.classList.toggle("mazai",ms<5*60000); }
+      z.classList.toggle("hidden",!!l);
+      if(ms<=0){ if(!BUS.prisijungta&&(this.lauke=(this.lauke||0)+1)<15) return;    // ką tik paleista - palaukiam ryšio su AutoCAD
+        clearInterval(this.t); this.lauke=0; this.baigti(true); } };
+    zenkl(); if(this.dabar()) this.t=setInterval(zenkl,1000);
+  },
+  async baigti(laikasBaigesi){
+    const d=this.dabar(); if(!d||this.tikrina) return;
+    if(!laikasBaigesi&&!confirm("Baigti egzaminą ir patikrinti brėžinį?")) return;
+    const btn=$("#egzBaigti"); if(btn){ btn.disabled=true; btn.innerHTML='<span class="sukasi"></span>Tikrinu...'; }
+    this.tikrina=true;
+    let r; if(BUS.prisijungta){ try{ r=await api("/api/praktika_tikrinti",{id:d.id}); }catch(e){ r={ok:false,klaida:"Ryšio klaida"}; } }
+    else r={ok:false,klaida:"AutoCAD neprijungtas."};
+    this.tikrina=false;
+    if(!r.ok&&!laikasBaigesi){ pranesti((r.klaida||"Nepavyko patikrinti")+" Laikmatis eina - pabandyk dar kartą."); if(btn){ btn.disabled=false; btn.textContent="✔ Baigti ir patikrinti"; } return; }
+    const sek=Math.min(Math.round((Date.now()-d.pradzia)/1000),d.min*60), u=PRAKTIKA.find(x=>x.id===d.id);
+    const ir={id:d.id,data:Kartojimas.diena(),sek,min:d.min,iskaityta:!!(r.ok&&r.teisingai),
+      pastabos:r.ok?r.pastabos:[r.klaida,"Laikas baigėsi, o brėžinio patikrinti nepavyko."],baigesi:!!laikasBaigesi};
+    const B=this.B(); B.ist.unshift(ir); B.ist=B.ist.slice(0,30); delete B.dab; clearInterval(this.t); this.ciklas();
+    pazymetiDiena();
+    let xp=0; if(ir.iskaityta&&u&&!prAtlikta(u.id)){ S.praktika={...(S.praktika||{}),[u.id]:ir.data}; xp=u.xp; if(PRAKTIKA.filter(x=>prAtlikta(x.id)).length>=4) duotiZenkleli("praktikas"); }
+    saugoti(); this.rezultatas(ir);
+    if(ir.iskaityta){ Robotas.reaguoti("dziaug",1500); konfeti(70); if(xp) pridetiXP(xp,$("#egzRez")); } else Robotas.reaguoti("liud",1400);
+  },
+  nutraukti(){ if(!confirm("Nutraukti egzaminą? Rezultatas nebus įrašytas.")) return; delete this.B().dab; saugoti(); clearInterval(this.t); this.ciklas(); rodytiPraktika(); },
+  rezultatas(ir){
+    const u=PRAKTIKA.find(x=>x.id===ir.id)||{nr:"?",pav:ir.id};
+    nustatytiRodini("praktika"); prDabar=null; $("#vPam").textContent="Egzaminas";
+    $("#vidus").innerHTML=`<div class="egz-rez ${ir.iskaityta?"gerai":"blogai"}" id="egzRez"><small>Egzaminas · ${u.nr}. ${esc(u.pav)}</small>
+      <h1>${ir.iskaityta?"✓ Įskaityta":"✗ Neįskaityta"}</h1>
+      <p>Užtrukai <b>${this.laikas(ir.sek*1000)}</b> iš ${ir.min} min${ir.baigesi?" - laikas baigėsi":""}.</p>
+      ${ir.pastabos.length?`<b>Pastabos (${ir.pastabos.length}):</b><ul>${ir.pastabos.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:"<p>Brėžinys atitinka užduotį - nė vienos pastabos. 🎉</p>"}
+      <div class="eil" style="margin-top:14px"><button class="btn pagr" onclick="Egzaminas.pasirinkti('${ir.id}')">↻ Dar kartą</button><button class="btn" onclick="rodytiUzduoti('${ir.id}')">Užduotis su užuominomis</button><button class="btn" onclick="rodytiPraktika()">Visos užduotys</button></div></div>`;
+  }
+};
+
+/* =================== MANO SILPNOS VIETOS =================== */
+/* Pagal tai, kur reikėjo pagalbos: nepavykę tikrinimai, užuominos, „Parodyk man“, „Kur klaida?“, klaidos komandų eilutėje, dienos kartojimas, testai. */
+const Silpnos={
+  st(raktas){ S.stat=S.stat||{}; return S.stat[raktas]||(S.stat[raktas]={b:0,u:0,d:0,k:0,g:0}); },
+  pazymeti(lauk){ if(!PAM) return; const z=PAM.zingsniai[S.dabartinis[PAM.id]]; if(!z) return; this.st(PAM.id+"/"+z.id)[lauk]++; saugoti(); },
+  balas(s,tr){ return (s.b||0)+1.5*(s.u||0)+3*(s.d||0)+(s.k||0)+0.75*(tr||0)-3*(s.g||0); },
+  zingsniai(){
+    const r=[], st=S.stat||{}, tk=S.trenKl||{}, tusc={b:0,u:0,d:0,k:0,g:0};
+    INFO.pamokos.forEach((p,pi)=>p.zingsniai.forEach((z,zi)=>{ const k=p.id+"/"+z.id, s=st[k]||tusc, bal=this.balas(s,tk[k]);
+      if(bal>=2) r.push({p,pi,z,zi,k,s,tr:tk[k]||0,bal}); }));
+    return r.sort((a,b)=>b.bal-a.bal).slice(0,8);
+  },
+  komandos(){ const D=(S.kart&&S.kart.dez)||{}; return INFO.korteles.filter(k=>D[k.k]&&D[k.k].d===1); },
+  testai(){ const ts=S.testai||{}; return INFO.pamokos.map((p,pi)=>({p,pi,t:ts[p.id]})).filter(x=>x.t&&x.t.n&&x.t.t/x.t.n<0.8); },
+  html(){
+    const zs=this.zingsniai(), ks=this.komandos(), ts=this.testai();
+    if(!zs.length&&!ks.length&&!ts.length) return `<div class="kart-diena"><h3>Silpnų vietų kol kas nerasta ✓</h3><p>Braižyk pamokas, kartok komandas - pastebėsiu, kur reikėjo daugiau pagalbos, ir surinksiu tai čia.</p></div>`;
+    const priez=x=>[x.s.b?`<span class="zyme">✗ Nepavykę tikrinimai: ${x.s.b}</span>`:"",x.s.u?`<span class="zyme">💡 Užuominos: ${x.s.u}</span>`:"",
+      x.s.d?`<span class="zyme">👀 „Parodyk man“: ${x.s.d}</span>`:"",x.s.k?`<span class="zyme">🔍 „Kur klaida?“: ${x.s.k}</span>`:"",x.tr?`<span class="zyme">⌨ Klaidos komandų eilutėje: ${x.tr}</span>`:""].join("");
+    const turiKom=x=>(x.z.komandos||[]).length>0;
+    return `<p class="po1" style="margin-top:0">Čia - kur tau reikėjo daugiausia pagalbos. Pakartok šiuos žingsnius ir komandas: kai pavyks iš pirmo karto, jie dings iš sąrašo.</p>
+    ${zs.length?`<h3 class="silp-ant">Žingsniai AutoCAD'e</h3><div class="silp-sar">${zs.map(x=>`<div class="silp-k"><div><small style="color:var(--muted)">${x.pi+1}. ${esc(x.p.pavadinimas)}</small><b>${esc(x.z.pavadinimas)}</b><div class="silp-pr">${priez(x)}</div></div>
+      <div class="silp-m"><button class="btn pagr" onclick="Silpnos.atidaryti('${x.p.id}',${x.zi})">Kartoti žingsnį →</button>${turiKom(x)?`<button class="btn" onclick="Silpnos.treniruoti(['${x.k}'])">⌨ Komandos</button>`:""}</div></div>`).join("")}</div>
+      ${zs.some(turiKom)?`<div class="eil" style="margin:10px 0 0"><button class="btn" onclick="Silpnos.treniruoti(${esc(JSON.stringify(zs.filter(turiKom).map(x=>x.k)))})">⌨ Treniruoti visų šių žingsnių komandas</button></div>`:""}`:""}
+    ${ks.length?`<h3 class="silp-ant">Komandos, kurias dar painioji</h3><div class="silp-kom">${ks.map(k=>`<span class="zyme" title="${esc(k.ka)}">${esc(k.k)}</span>`).join("")}</div>
+      <div class="eil" style="margin-top:10px"><button class="btn" onclick="kartTab='diena';rodytiKartojima()">🧠 Dienos kartojimas</button></div>`:""}
+    ${ts.length?`<h3 class="silp-ant">Testai, kuriuos verta perlaikyti</h3><div class="silp-sar">${ts.map(x=>`<div class="silp-k"><div><small style="color:var(--muted)">${x.pi+1} pamoka</small><b>${esc(x.p.pavadinimas)}</b><div class="silp-pr"><span class="zyme">Geriausias: ${x.t.t}/${x.t.n}</span></div></div>
+      <div class="silp-m"><button class="btn" onclick="rodytiPradzia('${x.p.id}');rodytiTesta()">Perlaikyti testą →</button></div></div>`).join("")}</div>`:""}`;
+  },
+  atidaryti(pid,zi){ rodytiPradzia(pid); rodytiZingsni(zi); },
+  treniruoti(raktai){ trenRinkinys=raktai; kartTab="treniruoklis"; rodytiKartojima(); }
+};
+
+/* =================== KOMANDŲ EILUTĖS TRENIRUOKLIS (mokymas.js) =================== */
+let trenRinkinys=null;
+function trenPaleisti(){
+  const el=$("#trenVieta"); if(!el||!window.Mokymas) return;
+  el.setAttribute("translate","no");
+  Mokymas.treniruoklis(el,{pamokos:INFO.pamokos,korteles:INFO.korteles,kalba:INFO.kalba,
+    pradetos:INFO.pamokos.filter(p=>(S.atlikta[p.id]||[]).length).map(p=>p.id),
+    rinkinys:trenRinkinys, rinkinioVardas:INFO.kalba==="en"?"🎯 My weak spots":"🎯 Mano silpnos vietos",
+    onKlaida:({raktas})=>{ S.trenKl=S.trenKl||{}; S.trenKl[raktas]=(S.trenKl[raktas]||0)+1; saugoti(); },
+    onZingsnis:({raktas,beKlaidu,el})=>{
+      if(!beKlaidu) return;
+      if(S.trenKl&&S.trenKl[raktas]) S.trenKl[raktas]=Math.max(0,S.trenKl[raktas]-2);     // pavyko be klaidų - silpna vieta taisosi
+      S.trenAtl=S.trenAtl||[]; const xp=!S.trenAtl.includes(raktas); if(xp) S.trenAtl.push(raktas);
+      saugoti(); if(xp) pridetiXP(2,el.querySelector("#mkZin")||el);
+    },
+    onBaigta:()=>pazymetiDiena()});
+  trenRinkinys=null;
+}
+
+/* =================== ŽINYNAS (terminai LT-EN, standartų atmintinė - mokymas.js) =================== */
+function rodytiZinyna(){
+  nustatytiRodini("zinynas"); $("#vPam").textContent="Žinynas";
+  $("#vidus").innerHTML=`<h1 class="ant1">Žinynas</h1><p class="po1">Inžinerinės grafikos terminai lietuviškai ir angliškai bei standartų atmintinė: formatai, linijos, masteliai, šriftai, matmenys.</p><div id="zinVieta" translate="no"></div>`;
+  if(window.Mokymas) Mokymas.zinynas($("#zinVieta"),{url:"/zinynas.json",kalba:INFO.kalba,onKomanda:k=>kopijuoti(k)});
 }
 
 /* =================== KAS NAUJO (naujienos.json) =================== */
@@ -1630,9 +1791,12 @@ function rodytiKartojima(){
   nustatytiRodini("kartoti");
   if(!kortTvarka) kortTvarka=mesk(INFO.korteles.map((_,i)=>i));
   if(!kartTestas) naujasKartTestas();
-  const sk=`<div class="skirt" role="tablist"><button class="${kartTab==="diena"?"akt":""}" onclick="kartTab='diena';rodytiKartojima()">🧠 Dienos kartojimas</button><button class="${kartTab==="korteles"?"akt":""}" onclick="kartTab='korteles';rodytiKartojima()">Komandų kortelės</button><button class="${kartTab==="testas"?"akt":""}" onclick="kartTab='testas';rodytiKartojima()">Testas iš visų pamokų</button></div>`;
+  const sk=`<div class="skirt" role="tablist">${[["diena","🧠 Dienos kartojimas"],["treniruoklis","⌨ Komandų eilutė"],["silpnos","🎯 Silpnos vietos"],["korteles","Komandų kortelės"],["testas","Testas iš visų pamokų"]]
+    .map(([k,v])=>`<button class="${kartTab===k?"akt":""}" onclick="kartTab='${k}';rodytiKartojima()">${v}</button>`).join("")}</div>`;
   let t="";
   if(kartTab==="diena") t=Kartojimas.html();
+  else if(kartTab==="treniruoklis") t=`<p class="po1" style="margin-top:0">Įvesk komandas ir atsakymus taip, kaip AutoCAD komandų eilutėje - be AutoCAD. Taip greičiau įsimeni, ką rašyti.</p><div id="trenVieta"></div>`;
+  else if(kartTab==="silpnos") t=Silpnos.html();
   else if(kartTab==="korteles"){
     const n=kortTvarka.length, k=INFO.korteles[kortTvarka[((kortNr%n)+n)%n]], pam=pamokaPagalId(k.pamoka);
     t=`<div class="kort-viet"><button class="kortele" id="kortele" onclick="this.classList.toggle('apversta')" aria-label="Apversti kortelę">
@@ -1649,6 +1813,7 @@ function rodytiKartojima(){
   $("#vidus").innerHTML=`<h1 class="ant1">Kartok be AutoCAD</h1><p class="po1">Pasikartok komandas ir teoriją, kai AutoCAD po ranka nėra.</p>${sk}${t}
     <div class="nust-gr" style="margin-top:22px"><h3>📱 Kortelės telefone</h3><p>Atsisiųsk vieną failą su visomis kortelėmis ir testu. Nusiųsk jį sau į telefoną - atsidaro naršyklėje net be interneto.</p>
     <button class="btn" onclick="atsisiustiTelefonui()">Atsisiųsti failą telefonui</button></div>`;
+  if(kartTab==="treniruoklis") trenPaleisti();
 }
 function kartAtsakyti(i,j,el){
   const q=kartTestas.kl[i]; kartTestas.ats[i]=j; S.kartTeis=S.kartTeis||[];
@@ -1694,7 +1859,7 @@ r();<\/script></body></html>`;
   u.onclick=baigti; addEventListener("keydown",baigti,{once:true}); setTimeout(baigti,pirmasKartas?2200:700);
   INFO=await api("/api/info?kalba="+encodeURIComponent(sg("kalba")||"lt")); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
   $("#verZyme").textContent=String(INFO.versija).split(" ")[0];
-  inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200);
+  inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200); Egzaminas.ciklas();
   rodytiPatarima(); setInterval(rodytiPatarima,20000); Robotas.pradeti();
   rodytiPradzia(); tikrintiBusena(); Gidas.pradzia();
   setInterval(()=>{if(!tikrina)api("/api/ping",{}).catch(()=>{});},3000);

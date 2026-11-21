@@ -156,9 +156,15 @@ BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
     👋 Pirmo paleidimo vedlys - vardas, ar moki pagrindus (tada pradedama
                         nuo pamokos „2D brėžinys“), tema ir šrifto dydis.
     🔠 Šrifto dydis    - Įprastas / Didesnis / Didelis (Nustatymai).
-    🃏 Kartoti         - komandų kortelės ir testas iš visų pamokų be AutoCAD;
+    🃏 Kartoti         - be AutoCAD: dienos kartojimas, komandų eilutės
+                        treniruoklis (įvesk komandas kaip AutoCAD'e), „Mano
+                        silpnos vietos“, komandų kortelės ir testas iš visų pamokų;
                         „Atsisiųsti failą telefonui“ - vienas HTML failas,
                         veikia telefone be interneto.
+    📖 Žinynas         - terminai lietuviškai ir angliškai, standartų atmintinė
+                        (formatai, linijos, masteliai, šriftai, matmenys).
+    ⏱ Egzaminas       - Praktikoje: užduotis su laikmačiu, be užuominų ir pavyzdžio.
+    🎯 Paveikslėliai   - 2D žingsniuose matosi, kaip turi atrodyti rezultatas.
     🐞 Pranešti apie klaidą - Nustatymai: sukuria ZIP su informacija
                         (Dokumentai\Brezly\ataskaitos) - atsiųsk jį kūrėjui.
     ↻ Atnaujinimai     - jei šalia programos yra atnaujinimai_url.txt (adresas

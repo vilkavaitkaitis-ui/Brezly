@@ -860,11 +860,12 @@ def atnaujinti(_):
     with zipfile.ZipFile(kelias) as z:
         for n in z.namelist():                     # plokšti failai + praktika/<failas>, sriftai/<failas>
             ap, _, vardas = n.partition("/")
-            gilus = ap in ("praktika", "sriftai") and vardas and "/" not in vardas and ".." not in n
+            gilus = (ap in ("praktika", "sriftai", "paveiksleliai") and vardas and ".." not in n
+                     and vardas.count("/") <= (1 if ap == "paveiksleliai" else 0))   # paveiksleliai/en/<failas>
             if (("/" in n and not gilus) or "\\" in n or n.startswith(".") or n in ("testavimas.json",)):
                 continue
             if gilus:
-                os.makedirs(os.path.join(PROGRAMOS_APLANKAS, ap), exist_ok=True)
+                os.makedirs(os.path.dirname(os.path.join(PROGRAMOS_APLANKAS, n)), exist_ok=True)
             with z.open(n) as src, open(os.path.join(PROGRAMOS_APLANKAS, n + ".naujas"), "wb") as dst:
                 shutil.copyfileobj(src, dst)
         for n in z.namelist():
@@ -1105,7 +1106,7 @@ def _su_zurnalu(f):
 class BrezlyTvarkykle(P.Tvarkykle):
     HTML = "brezly.html"
     IKONA = "brezly.ico"
-    FAILAI = ("brezly.css", "brezly.js", "sasaja_en.json")
+    FAILAI = ("brezly.css", "brezly.js", "sasaja_en.json", "mokymas.js", "zinynas.json")
     # Be AutoCAD - atsakoma iškart, net kai AutoCAD užimtas (kitos užklausos eina per AutoCAD eilę)
     GREITI = frozenset({
         "/api/info", "/api/ping", "/api/progresas", "/api/testas", "/api/testas_galioja", "/api/testas_uzrakinti",
