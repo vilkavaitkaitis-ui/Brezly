@@ -9,6 +9,9 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] Pirmą kartą po atnaujinimo parodomas „Kas naujo“ langas (iš `naujienos.json`).
 
 ## 2. Ryšys su AutoCAD
+- [ ] **Greitis:** AutoCAD'e atidaryk OPTIONS langą ir Brėžly'je vaikščiok po pamokas, nustatymus - viskas atsidaro iškart (anksčiau stigo ~10 s).
+- [ ] Nubraižius žingsnį, automatinis tikrinimas jį pastebi per ~2 s; UNITS pakeitimą - per ~6 s.
+- [ ] Brėžly lange pamokoje: H - užuomina, Enter - patikrinti / kitas žingsnis.
 - [ ] Atidarius AutoCAD būsena tampa žalia („AutoCAD · Drawing1.dwg“).
 - [ ] AutoCAD tik su pradžios (Start) langu, be brėžinio → oranžinė „AutoCAD · nėra brėžinio“; „Naujas“ sukuria brėžinį iš acadiso.dwt.
 - [ ] AutoCAD'e atidarytas langas (pvz. OPTIONS) → „AutoCAD užimtas (Esc)“, uždarius - vėl žalia, ryšys nenutrūksta.

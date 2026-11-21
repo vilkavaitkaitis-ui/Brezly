@@ -869,6 +869,15 @@ function rodytiLangeli(html,uzdaromas=true){
 }
 function uzdarytiLangeli(){ const l=$("#langelis"); l.classList.add("hidden"); l.innerHTML=""; }
 addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("#langelis").classList.contains("hidden") && $("#langelis").onclick) uzdarytiLangeli(); });
+// Pamokoje Brėžly lange: Enter - patikrinti arba eiti toliau, H - užuomina (ne rašant į laukelį ir ne ant mygtuko)
+addEventListener("keydown",e=>{
+  if(e.ctrlKey||e.altKey||e.metaKey||e.repeat||rodinys!=="pamoka"||!document.querySelector("#korta")) return;
+  const t=e.target; if(t&&(["INPUT","TEXTAREA","SELECT","BUTTON","A"].includes(t.tagName)||t.isContentEditable)) return;
+  if(!$("#langelis").classList.contains("hidden")||!$("#atlygis").classList.contains("hidden")) return;
+  const spausti=id=>{ const b=$(id); if(b&&!b.disabled){ e.preventDefault(); b.click(); return true; } return false; };
+  if(e.key==="Enter") spausti("#kitasBtn")||spausti("#tikrinti");
+  else if(e.key==="h"||e.key==="H") spausti("#uzuominaBtn");
+});
 
 /* =================== AUTOMATINIS TIKRINIMAS =================== */
 /* Įskaito tik tada, kai pirma matė „dar ne“, o paskui „taip“ - kad žingsnis nebūtų įskaitytas vien todėl, kad brėžinyje jau kažkas yra. */
@@ -1139,7 +1148,7 @@ function rodytiNustatymus(){
   <div class="nust-gr"><h3>Darbas su AutoCAD</h3>
     <div class="nust-eil"><div><b>Brėžly langas</b><small>Nešiojamam kompiuteriui: „Šalia AutoCAD“ padalina ekraną, „Mini“ - maža kortelė virš AutoCAD.</small></div>${pas([["iprastas","⇱ Didelis"],["kompaktiskas","📌 Šalia AutoCAD"],["mini","▫ Mini"]],lrez,v=>`langoRezimas('${v}')`)}</div>
     <div class="nust-eil"><div><b>Sutvarkyti AutoCAD langą</b><small>„Šalia AutoCAD“ režime AutoCAD sumažinamas iki likusios vietos, kad Brėžly neuždengtų brėžinio.</small></div>${jung(sg("acad_isd")!=="0",`sg('acad_isd',sg('acad_isd')==='0'?'1':'0');rodytiNustatymus()`,"Sutvarkyti AutoCAD langą")}</div>
-    <div class="nust-eil"><div><b>Spartieji klavišai</b><small>Veikia ir kai dirbi AutoCAD'e: <b style="display:inline">Ctrl+Alt+T</b> - patikrinti, <b style="display:inline">Ctrl+Alt+M</b> - mini / šalia, <b style="display:inline">Ctrl+Alt+B</b> - parodyti Brėžly.${(INFO.klavisai&&INFO.klavisai.nepavyko.length)?` Užimti kitos programos: ${esc(INFO.klavisai.nepavyko.join(", "))}.`:""}</small></div></div>
+    <div class="nust-eil"><div><b>Spartieji klavišai</b><small>Veikia ir kai dirbi AutoCAD'e: <b style="display:inline">Ctrl+Alt+T</b> - patikrinti, <b style="display:inline">Ctrl+Alt+M</b> - mini / šalia, <b style="display:inline">Ctrl+Alt+B</b> - parodyti Brėžly. <span>Brėžly lange:</span> <b style="display:inline">Enter</b> - patikrinti arba toliau, <b style="display:inline">H</b> - užuomina.${(INFO.klavisai&&INFO.klavisai.nepavyko.length)?` Užimti kitos programos: ${esc(INFO.klavisai.nepavyko.join(", "))}.`:""}</small></div></div>
     <div class="nust-eil"><div><b>Gyvas robotukas</b><small>Mirksi, seka pelę akimis, džiaugiasi ir nuliūsta kartu su tavimi.</small></div>${jung(Robotas.jungtas(),`sg('judesys',Robotas.jungtas()?'0':'1');Robotas.taikyti();rodytiNustatymus()`,"Gyvas robotukas")}</div>
     <div class="nust-eil"><div><b>Automatinis tikrinimas</b><small>Kas kelias sekundes pažiūriu į brėžinį ir pats pastebiu atliktą žingsnį.</small></div>${jung(auto.ijungtas(),"auto.perjungti()","Automatinis tikrinimas")}</div>
     <div class="nust-eil"><div><b>Komandos su „_“</b><small>Jei tavo AutoCAD ne anglų kalba: _LINE, _CIRCLE veikia bet kurioje kalboje.${BUS.kalba?` Tavo AutoCAD kalba: <b style="display:inline">${esc(BUS.kalba)}</b>.`:""}</small></div>${jung(sg("pabr")==="1",`sg('pabr',sg('pabr')==='1'?'0':'1');rodytiNustatymus()`,"Komandos su pabraukimu")}</div>
@@ -1600,15 +1609,20 @@ r();<\/script></body></html>`;
   const u=$("#uzsklanda"), baigti=()=>{u.classList.add("dingsta");setTimeout(()=>u.remove(),700);};
   const tvarka=["lape","katinas","peleda","robotas","drakonas","ateivis","pingvinas","meska"];
   $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:["robotas","drakonas"].includes(id)?"kepure":null,ranka:null})}</span>`).join("");
-  u.onclick=baigti; setTimeout(baigti,2900);
+  // užsklanda: pirmą kartą per dieną - visa animacija, vėliau - trumpai; spragtelėjimas ar klavišas praleidžia
+  const siandien=new Date().toISOString().slice(0,10), pirmasKartas=sg("uzsklanda_diena")!==siandien; sg("uzsklanda_diena",siandien);
+  u.onclick=baigti; addEventListener("keydown",baigti,{once:true}); setTimeout(baigti,pirmasKartas?2200:700);
   INFO=await api("/api/info?kalba="+encodeURIComponent(sg("kalba")||"lt")); PRAKTIKA=INFO.praktika||[]; $("#ver").textContent=INFO.versija;
   $("#verZyme").textContent=String(INFO.versija).split(" ")[0];
   inicializuotiDaiktus(); piestiZaideja(); setTimeout(tikrintiAtlygius,3200);
   rodytiPatarima(); setInterval(rodytiPatarima,20000); Robotas.pradeti();
   rodytiPradzia(); tikrintiBusena(); Gidas.pradzia();
   setInterval(()=>{if(!tikrina)api("/api/ping",{}).catch(()=>{});},3000);
-  setInterval(()=>{if(!tikrina)tikrintiBusena();},BUS.prisijungta?8000:5000);
-  setInterval(()=>auto.tikrinti(),4000);
+  // būsena ir automatinis tikrinimas: dažnai, kai langas matomas; sumažintas langas AutoCAD netrukdo
+  (function busenosCiklas(){ setTimeout(async()=>{ if(!tikrina&&!document.hidden) await tikrintiBusena().catch(()=>{}); busenosCiklas(); },
+    document.hidden?20000:(BUS.prisijungta?6000:4000)); })();
+  setInterval(()=>{ if(!document.hidden) auto.tikrinti(); },2000);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ tikrintiBusena(); auto.tikrinti(); } });
   { const n=dabartineNaujiena();
     if(!sg("vedlys")){ if(n) sg("matyta_versija",n.versija); setTimeout(()=>Vedlys.pradeti(),3000); }
     else if(n && sg("matyta_versija")!==n.versija) setTimeout(kasNaujo,3300);

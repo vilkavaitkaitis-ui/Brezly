@@ -366,6 +366,7 @@ def aplinka(_=None):
 
 
 _RYSIO_PRIEZASTIS = {"kodas": ""}
+_LOKALE = {"b": None, "kalba": ""}
 
 
 def busena(duom):
@@ -378,10 +379,14 @@ def busena(duom):
         if kodas not in ("", "neatidarytas"):
             rasyti_zurnala(f"AutoCAD ryšys: {kodas} - {r.get('klaida', '')}")
     if r.get("prisijungta"):
+        if r.get("uzimtas") or r.get("be_brezinio"):
+            return r                # užimtam AutoCAD daugiau klausimų neužduodam
         try:
             b = P.BUSENA["darbas"].b
-            r["kalba"] = str(P.A.kartoti(lambda: b.doc.GetVariable("LOCALE"), bandymu=2))
-            r["laisvas"] = bool(P.A.kartoti(lambda: b.acad.GetAcadState().IsQuiescent, bandymu=2))
+            if _LOKALE.get("b") is not b:           # AutoCAD kalba nesikeičia - klausiam kartą per prisijungimą
+                _LOKALE.update(b=b, kalba=str(P.A.kartoti(lambda: b.doc.GetVariable("LOCALE"), bandymu=1)))
+            r["kalba"] = _LOKALE["kalba"]
+            r["laisvas"] = bool(P.A.kartoti(lambda: b.acad.GetAcadState().IsQuiescent, bandymu=1))
         except Exception:
             pass
         return r
@@ -437,29 +442,58 @@ def _zingsnis(duom):
     return pam["zingsniai"][nr]
 
 
+# Automatinis tikrinimas kas 2 s: jei brėžinys nepasikeitė (tas pats „pirštų atspaudas“), viso brėžinio
+# per AutoCAD neperskaitom - tik kas AUTO_PILNAS s (pakeitimai be naujų objektų, pvz. UNITS ar MOVE).
+AUTO_PILNAS = 6.0
+_AUTO = {"raktas": None, "pirstas": None, "laikas": 0.0, "rez": None}
+LAUKIA = {"ok": True, "laukia": True}
+
+
+def _brezinio_pirstas(b):
+    """Pigus „ar kas pasikeitė“: keli COM kvietimai vietoj viso brėžinio. HANDSEED didėja su kiekvienu
+    nauju objektu (linija, sluoksniu, stiliumi, lapu)."""
+    doc = P.A.kartoti(lambda: b.acad.ActiveDocument, bandymu=1)
+    return (doc.Name, doc.GetVariable("HANDSEED"), doc.ModelSpace.Count, doc.ActiveLayout.Name)
+
+
 def tikrinti(duom):
     z = _zingsnis(duom)
     if KUREJAS["imitacija"]:
         return _imituotas_tikrinimas()
     if z["tikrinti"] is None:
         return {"ok": True, "teisingai": True, "pastabos": []}
-    with contextlib.redirect_stdout(io.StringIO()):
-        b = P.braizytojas()
-    if duom.get("tyliai"):          # automatinis tikrinimas: netrukdom, kai AutoCAD'e vyksta komanda
+    tyliai = bool(duom.get("tyliai"))
+    raktas = (duom.get("pamoka"), duom.get("zingsnis"))
+    if tyliai:                      # automatinis: niekada nelaukia užimto AutoCAD ir nieko nekuria
         try:
-            if not P.A.kartoti(lambda: b.acad.GetAcadState().IsQuiescent, bandymu=2):
-                return {"ok": True, "laukia": True}
-        except AttributeError:
-            pass                    # senas AutoCAD be GetAcadState - tikrinam vis tiek
+            with contextlib.redirect_stdout(io.StringIO()):
+                b = P.braizytojas(greitai=True)
+            try:
+                if not P.A.kartoti(lambda: b.acad.GetAcadState().IsQuiescent, bandymu=1):
+                    return LAUKIA   # vyksta komanda - netrukdom
+            except AttributeError:
+                pass                # senas AutoCAD be GetAcadState
+            pirstas = _brezinio_pirstas(b)
         except Exception:
-            return {"ok": True, "laukia": True}     # AutoCAD užimtas (vykdoma komanda)
+            return LAUKIA           # AutoCAD užimtas arba nėra aktyvaus brėžinio
+        if (_AUTO["raktas"] == raktas and _AUTO["pirstas"] == pirstas and _AUTO["rez"] is not None
+                and time.time() - _AUTO["laikas"] < AUTO_PILNAS):
+            return {**_AUTO["rez"], "nepasikeite": True}
+    else:                           # „Patikrinti“: užimto AutoCAD laukiam ~2 s, ne 10 s - tada paaiškinam
+        with contextlib.redirect_stdout(io.StringIO()):
+            b = P.braizytojas(bandymu=4)
     try:
         pastabos = z["tikrinti"](b)
     except Exception as e:
-        if duom.get("tyliai"):
-            return {"ok": True, "laukia": True}
+        if tyliai:
+            return LAUKIA
         pastabos = [tr(f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc.", f"Couldn't read the drawing: {e}. Is another command running in AutoCAD? Press Esc.")]
-    return {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
+    rez = {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
+    if tyliai:
+        _AUTO.update(raktas=raktas, pirstas=pirstas, laikas=time.time(), rez=rez)
+    else:
+        _AUTO["rez"] = None         # po rankinio tikrinimo automatinis vėl perskaito brėžinį
+    return rez
 
 
 def parodyti(duom):
@@ -978,6 +1012,18 @@ class BrezlyTvarkykle(P.Tvarkykle):
     HTML = "brezly.html"
     IKONA = "brezly.ico"
     FAILAI = ("brezly.css", "brezly.js", "sasaja_en.json")
+    # Be AutoCAD - atsakoma iškart, net kai AutoCAD užimtas (kitos užklausos eina per AutoCAD eilę)
+    GREITI = frozenset({
+        "/api/info", "/api/ping", "/api/progresas", "/api/testas", "/api/testas_galioja", "/api/testas_uzrakinti",
+        "/api/ivykiai", "/api/ataskaita", "/api/duomenys", "/api/js_klaida", "/api/progresas_eksportuoti",
+        "/api/progresas_importuoti", "/api/destytojo_ataskaita", "/api/atnaujinimai", "/api/aplinka",
+        "/api/langas", "/api/praktika_aplankas", "/api/paleisti_autocad"})
+    LYGIAGRETUS = frozenset({"/api/ping", "/api/ivykiai", "/api/atnaujinimai", "/api/js_klaida"})
+
+    def nelaukti(self, kelias, duom):
+        if kelias == "/api/tikrinti" and duom.get("tyliai"):
+            return LAUKIA               # automatinis tikrinimas neužsistovi eilėje
+        return super().nelaukti(kelias, duom)
 
     def do_GET(self):
         if self.path.startswith("/praktika/"):          # praktikos brėžinių peržiūra (SVG/PDF)
