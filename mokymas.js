@@ -161,8 +161,10 @@ function zinynas(el, o = {}){
 const TRUMPINIAI = { LINE:["L"], CIRCLE:["C"], RECTANG:["REC","RECTANGLE"], TEXT:["DT","DTEXT"], DIMLINEAR:["DLI"], DIMDIAMETER:["DDI"],
   DIMALIGNED:["DAL"], DIMEDIT:["DED"], FILLET:["F"], LAYER:["LA"], STYLE:["ST"], EXTRUDE:["EXT"], UNION:["UNI"], SUBTRACT:["SU"],
   POLYGON:["POL"], CYLINDER:["CYL"], MIRROR3D:["3DMIRROR"], ELLIPSE:["EL"], INSERT:["I"], BLOCK:["B"], ATTDEF:["ATT"], UNITS:["UN"],
-  PLOT:["PRINT"], WEDGE:["WE"], HATCH:["H"], OPEN:[], SAVEAS:[], NEW:[], BOX:[] };
-const EILUTES_PRASYMAS = /^(Command|Specify|Select|Enter|Center|Radius|Rotation|Name|Base point|Delete source|Align)\b/i;
+  PLOT:["PRINT"], WEDGE:["WE"], HATCH:["H"], OPEN:[], SAVEAS:[], NEW:[], BOX:[], ZOOM:["Z"], OSNAP:["OS"], AREA:["AA"],
+  DIST:["DI"], MOVE:["M"], COPY:["CO","CP"], CHAMFER:["CHA"], TRIM:["TR"], EXTEND:["EX"], MIRROR:["MI"], OFFSET:["O"], ROTATE:["RO"],
+  MATCHPROP:["MA"], PLINE:["PL"], DIMRADIUS:["DRA"] };
+const EILUTES_PRASYMAS = /^(Command|Specify|Select|Enter|Center|Radius|Rotation|Name|Base point|Delete source|Erase source|Create|Align)\b/i;
 
 function rusis(pr, iv){
   const s = String(iv).trim();

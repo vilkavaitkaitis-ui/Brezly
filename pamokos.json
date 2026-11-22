@@ -198,6 +198,183 @@
    ]
   },
   {
+   "id": "tikslumas",
+   "pavadinimas": "Tikslus braižymas",
+   "trukme": "~20 min.",
+   "aprasas": "Naršymas (ZOOM, PAN), objekto pritraukimas (OSNAP), sekimas (OTRACK, POLAR) ir matavimas (AREA) - braižysi tiksliai, ne iš akies.",
+   "pabaiga": "Dabar braižai tiksliai: pritraukimas, sekimas, polinis kampas ir matavimas - tai pagrindas visiems kitiems brėžiniams.",
+   "zingsniai": [
+    {
+     "id": "tk-naujas",
+     "pavadinimas": "Naujas brėžinys ir naršymas",
+     "xp": 10,
+     "kodel": "Brėžinys didelis, ekranas mažas - reikia greitai priartinti, pastumti ir pamatyti viską. Tam užtenka pelės ratuko.",
+     "zingsniai": [
+      "NEW → acadiso.dwt (milimetrai).",
+      "Pasuk pelės ratuką - vaizdas artėja ten, kur yra žymeklis.",
+      "Laikyk ratuką nuspaustą ir vilk - vaizdas slenka (PAN).",
+      "Dukart spustelėk ratuką - pamatysi visą brėžinį (ZOOM Extents). Tas pats: Z → E."
+     ],
+     "komandos": [
+      ["Command:", "NEW"],
+      ["Select template:", "acadiso.dwt"],
+      ["Command:", "ZOOM"],
+      [
+       "Specify corner of window or [All/Center/Dynamic/Extents/Previous/Scale/Window/Object] <real time>:",
+       "E"
+      ]
+     ],
+     "uzuominos": [
+      "Pasiklydai brėžinyje? Dukart ratuku - ir vėl viską matai.",
+      "Ratukas artina per stipriai? Tiesiog pasuk dar kartą atgal."
+     ],
+     "tikslas": "Naujas brėžinys milimetrais"
+    },
+    {
+     "id": "tk-osnap",
+     "pavadinimas": "Objekto pritraukimas: OSNAP",
+     "xp": 10,
+     "kodel": "Be pritraukimo spustelėjimas pataiko tik „maždaug“. Su OSNAP žymeklis prilimpa tiksliai prie galo, vidurio ar centro - tai svarbiausias tikslumo įrankis.",
+     "zingsniai": [
+      "Įvesk OSNAP - atsidarys langas Drafting Settings.",
+      "Skirtuke Object Snap pažymėk: Endpoint, Midpoint, Center, Quadrant, Intersection.",
+      "Viršuje turi būti pažymėta Object Snap On (F3) → OK."
+     ],
+     "komandos": [
+      ["Command:", "OSNAP"],
+      ["Object Snap:", "Endpoint · Midpoint · Center · Quadrant · Intersection"],
+      ["Object Snap On:", "F3"]
+     ],
+     "uzuominos": [
+      "Nežymėk visų pritraukimų - per daug ženklų tik trukdo. Užtenka šių penkių.",
+      "F3 įjungia ir išjungia pritraukimą. Žymeklis nebelimpa? Spausk F3."
+     ],
+     "tikslas": "Įjungti 5 pritraukimai"
+    },
+    {
+     "id": "tk-rombas",
+     "pavadinimas": "Rombas per vidurius: Midpoint",
+     "xp": 15,
+     "kodel": "Kraštinės vidurio iš akies tiksliai nerasi. Midpoint pritraukimas randa jį pats - užvesk žymeklį ant linijos, ir atsiras trikampis.",
+     "zingsniai": [
+      "Nubraižyk stačiakampį 80 × 50.",
+      "LINE ir spustelėk apatinės kraštinės vidurį (atsiras trikampis ▲), tada dešinės, viršutinės ir kairės kraštinių vidurius.",
+      "Užbaik C (Close) - linija grįš į pradžią."
+     ],
+     "komandos": [
+      ["Command:", "RECTANG"],
+      ["Specify first corner point:", "0,0"],
+      ["Specify other corner point:", "@80,50"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "(apatinės kraštinės vidurys ▲)"],
+      ["Specify next point:", "(dešinės kraštinės vidurys ▲)"],
+      ["Specify next point:", "(viršutinės kraštinės vidurys ▲)"],
+      ["Specify next point:", "(kairės kraštinės vidurys ▲)"],
+      ["Specify next point or [Close/Undo]:", "C"]
+     ],
+     "uzuominos": [
+      "Trikampis nepasirodo? Patikrink, ar įjungtas F3 ir pažymėtas Midpoint.",
+      "Rombo viršūnės: 40,0 · 80,25 · 40,50 · 0,25."
+     ],
+     "tikslas": "Stačiakampis 80 × 50 ir rombas per kraštinių vidurius"
+    },
+    {
+     "id": "tk-centras",
+     "pavadinimas": "Centras su sekimu: OTRACK",
+     "xp": 15,
+     "kodel": "Kartais taškas niekur nepažymėtas - pvz. rombo centras. Objekto sekimas (OTRACK) nutiesia punktyrines linijas nuo kitų taškų, o jų susikirtimas ir yra ieškomas taškas.",
+     "zingsniai": [
+      "Įjunk sekimą: F11 (apačioje užsidegs Object Snap Tracking).",
+      "CIRCLE. Užvesk žymeklį ant viršutinės kraštinės vidurio ir palaikyk sekundę (nespausk!) - atsiras mažas pliusas.",
+      "Tą patį padaryk su kairės kraštinės viduriu, tada vesk žymeklį į stačiakampio vidurį - susikirs dvi punktyrinės linijos. Spustelėk.",
+      "Spindulys 10."
+     ],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "(susikirtimas - sekimas nuo dviejų vidurių)"],
+      ["Specify radius of circle:", "10"]
+     ],
+     "uzuominos": [
+      "Punktyrinės linijos neatsiranda? Spausk F11 ir palaikyk žymeklį ant vidurio ilgiau.",
+      "Centras turi būti 40,25. Pabandyk su sekimu - koordinatės ne visada žinomos."
+     ],
+     "tikslas": "Apskritimas R10 rombo centre"
+    },
+    {
+     "id": "tk-polar",
+     "pavadinimas": "Polinis sekimas: POLAR 30°",
+     "xp": 15,
+     "kodel": "ORTHO (F8) leidžia braižyti tik horizontaliai ir vertikaliai, o POLAR (F10) - pasirinktu kampu, pvz. kas 30°. Nuvedi žymeklį kryptimi, įvedi ilgį - ir linija tiksli.",
+     "zingsniai": [
+      "Dešiniu pelės mygtuku spustelėk POLAR mygtuką apačioje → pasirink 30. Įjunk F10.",
+      "LINE ir spustelėk stačiakampio viršutinį dešinį kampą (Endpoint).",
+      "Vesk žymeklį į viršų dešinėn, kol atsiras punktyras ir užrašas 30°. Įvesk 40 → Enter → Enter."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "(kampas 80,50 - Endpoint ■)"],
+      ["Specify next point:", "40"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "Įvedi tik skaičių, o kryptį rodo žymeklis - tai „direct distance entry“.",
+      "Tas pats be sekimo: @40<30."
+     ],
+     "tikslas": "40 mm linija 30° kampu nuo kampo 80,50"
+    },
+    {
+     "id": "tk-plotas",
+     "pavadinimas": "Išmatuok: AREA",
+     "xp": 15,
+     "kodel": "Dažnai reikia sužinoti ilgį ar plotą - pvz. medžiagos kiekiui. AutoCAD išmatuoja tiksliai: DIST - atstumą, AREA - plotą.",
+     "zingsniai": [
+      "AREA ir spustelėk 4 rombo viršūnes (Endpoint) → Enter.",
+      "Komandų eilutėje bus Area = ... Tą skaičių įrašyk TEXT šalia stačiakampio, pvz. S = ... (aukštis 3.5)."
+     ],
+     "komandos": [
+      ["Command:", "AREA"],
+      ["Specify first corner point:", "(4 rombo viršūnės)"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "TEXT"],
+      ["Specify start point of text:", "(šalia stačiakampio)"],
+      ["Specify height:", "3.5"],
+      ["Specify rotation angle of text:", "0"],
+      ["Enter text:", "(S = plotas)"]
+     ],
+     "uzuominos": [
+      "Rombo plotas - pusė stačiakampio ploto.",
+      "DIST išmatuoja atstumą tarp dviejų taškų - patikrink 30° liniją: turi būti 40."
+     ],
+     "tikslas": "Tekstas su rombo plotu"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Ką daro F3?",
+     "v": [
+      "Įjungia ORTHO",
+      "Įjungia ir išjungia objekto pritraukimą (OSNAP)",
+      "Atidaro sluoksnius",
+      "Įjungia polinį sekimą"
+     ],
+     "t": 1,
+     "p": "F3 - OSNAP, F8 - ORTHO, F10 - POLAR, F11 - OTRACK."
+    },
+    {
+     "k": "Kaip greitai pamatyti visą brėžinį?",
+     "v": ["Spausti Esc", "F8", "Dukart spustelėti pelės ratuką (ZOOM Extents)", "REGEN"],
+     "t": 2,
+     "p": "Dukart ratuku arba Z → E parodo visus brėžinio objektus."
+    },
+    {
+     "k": "Su POLAR 30° nuvedei žymeklį 30° kryptimi ir įvedei 40. Kas nubraižoma?",
+     "v": ["40 mm linija 30° kampu", "Linija iki taško 40,30", "30 mm linija 40° kampu", "Nieko"],
+     "t": 0,
+     "p": "Įvedus tik skaičių, linija eina žymeklio kryptimi tokio ilgio."
+    }
+   ]
+  },
+  {
    "id": "2d",
    "pavadinimas": "2D brėžinys",
    "trukme": "~20 min.",
@@ -308,6 +485,488 @@
    ]
   },
   {
+   "id": "redagavimas",
+   "pavadinimas": "Redagavimas: COPY, CHAMFER, TRIM, MIRROR",
+   "trukme": "~25 min.",
+   "aprasas": "Plokštė su dviem pailgomis skylėmis: nuosklembos (CHAMFER), kopija (COPY), liestinės (Quadrant), karpymas (TRIM) ir veidrodinis atspindys (MIRROR).",
+   "pabaiga": "Mokai redaguoti: kopijuoti, nusklembti, karpyti ir atspindėti. Taip braižoma dauguma tikrų detalių - ne viskas iš naujo, o iš to, kas jau nubraižyta.",
+   "zingsniai": [
+    {
+     "id": "rd-sluoksniai",
+     "pavadinimas": "Naujas brėžinys ir sluoksniai",
+     "xp": 10,
+     "kodel": "Kiekvienam darbui - naujas brėžinys su tais pačiais sluoksniais. Taip daro ir inžinieriai: pradeda nuo šablono.",
+     "zingsniai": [
+      "NEW → acadiso.dwt.",
+      "LAYER → sukurk KONTURAS (7), ASYS (1, linija CENTER), MATMENYS (3) - kaip pamokoje „2D brėžinys“.",
+      "Padaryk KONTURAS aktyvų."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": [
+      "Patarimas: išsaugok tokį tuščią brėžinį kaip šabloną (SAVEAS → AutoCAD Drawing Template .dwt) - kitą kartą sluoksnių kurti nereikės.",
+      "Niekada nebraižyk sluoksnyje 0 - jis skirtas blokams."
+     ]
+    },
+    {
+     "id": "rd-plokste",
+     "pavadinimas": "Plokštė 120 × 80",
+     "xp": 10,
+     "kodel": "Pagrindas - stačiakampis. Kiti žingsniai jį redaguos, o ne braižys iš naujo.",
+     "zingsniai": ["Sluoksnyje KONTURAS:"],
+     "komandos": [
+      ["Command:", "RECTANG"],
+      ["Specify first corner point:", "0,0"],
+      ["Specify other corner point:", "@120,80"]
+     ],
+     "uzuominos": ["@ reiškia „nuo paskutinio taško“: @120,80 - 120 į dešinę ir 80 į viršų."],
+     "tikslas": "Stačiakampis 120 × 80"
+    },
+    {
+     "id": "rd-chamfer",
+     "pavadinimas": "Nuosklembos: CHAMFER",
+     "xp": 15,
+     "kodel": "Nuosklemba - nupjautas kampas, kaip FILLET, tik tiesiai. D (Distance) nustato, kiek nupjauti, P (Polyline) - nusklembia visus kampus iš karto.",
+     "zingsniai": ["Įvesk:"],
+     "komandos": [
+      ["Command:", "CHAMFER"],
+      ["Select first line or [Undo/Polyline/Distance/Angle/Trim/mEthod/Multiple]:", "D"],
+      ["Specify first chamfer distance:", "10"],
+      ["Specify second chamfer distance:", "10"],
+      ["Select first line or [Undo/Polyline/Distance/Angle/Trim/mEthod/Multiple]:", "P"],
+      ["Select 2D polyline:", "(spustelėk plokštę)"]
+     ],
+     "uzuominos": [
+      "Nusklembė tik vieną kampą? Pamiršai P (Polyline). U ir iš naujo.",
+      "Brėžinyje tokia nuosklemba žymima 10×45°."
+     ],
+     "tikslas": "4 nuosklembos 10 × 10"
+    },
+    {
+     "id": "rd-kopija",
+     "pavadinimas": "Skylės pradžia: CIRCLE ir COPY",
+     "xp": 15,
+     "kodel": "Kai reikia antro tokio pat objekto, jo nebraižyk iš naujo. COPY: pažymi, nurodai bazinį tašką ir kur dėti. MOVE veikia lygiai taip pat, tik nepalieka originalo.",
+     "zingsniai": ["Apskritimas R6 taške 25,40.", "COPY: pažymėk jį → Enter → bazinis taškas - centras → @30,0 → Enter."],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "25,40"],
+      ["Specify radius of circle:", "6"],
+      ["Command:", "COPY"],
+      ["Select objects:", "(spustelėk apskritimą)"],
+      ["Select objects:", "Enter"],
+      ["Specify base point:", "(centras - Center ○)"],
+      ["Specify second point:", "@30,0"],
+      ["Specify second point:", "Enter"]
+     ],
+     "uzuominos": [
+      "Pažymėti galima ir prieš komandą: spustelėk objektą, tada COPY.",
+      "Centro pritraukimui užvesk žymeklį ant apskritimo linijos - atsiras centro ženklas."
+     ],
+     "tikslas": "Du apskritimai R6: 25,40 ir 55,40"
+    },
+    {
+     "id": "rd-liestines",
+     "pavadinimas": "Liestinės: Quadrant",
+     "xp": 15,
+     "kodel": "Pailgą skylę sudaro du pusapskritimiai ir dvi tiesios linijos per jų viršų ir apačią. Quadrant pritraukimas randa tiksliai viršutinį ir apatinį apskritimo tašką.",
+     "zingsniai": [
+      "LINE → įvesk QUA → spustelėk kairiojo apskritimo viršų → QUA → dešiniojo apskritimo viršų → Enter.",
+      "Taip pat ir apačioje."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "QUA"],
+      ["Specify first point:", "(kairiojo apskritimo viršus ◇)"],
+      ["Specify next point:", "QUA"],
+      ["Specify next point:", "(dešiniojo apskritimo viršus ◇)"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "QUA - vienkartinis pritraukimas, veikia tik kitam spustelėjimui. Tas pats: Shift + dešinysis pelės mygtukas → Quadrant.",
+      "Linijos: 25,46 → 55,46 ir 25,34 → 55,34."
+     ],
+     "tikslas": "Dvi liestinės: y = 46 ir y = 34"
+    },
+    {
+     "id": "rd-trim",
+     "pavadinimas": "Apkarpyk: TRIM",
+     "xp": 20,
+     "kodel": "TRIM nukerpa objekto dalį iki kitų objektų. Vidinės apskritimų pusės nereikalingos - jas nukirpus lieka tikra pailga skylė.",
+     "zingsniai": [
+      "TRIM → spustelėk kairiojo apskritimo dešinę pusę (tarp linijų) ir dešiniojo apskritimo kairę pusę → Enter."
+     ],
+     "komandos": [
+      ["Command:", "TRIM"],
+      ["Select object to trim or shift-select to extend:", "(vidinė kairiojo apskritimo pusė)"],
+      ["Select object to trim or shift-select to extend:", "(vidinė dešiniojo apskritimo pusė)"],
+      ["Select object to trim or shift-select to extend:", "Enter"]
+     ],
+     "uzuominos": [
+      "Naujame AutoCAD TRIM pats kerpa iki artimiausių linijų - užtenka spustelėti, ką nukirpti.",
+      "Nukirpai ne tą? U atšaukia paskutinį kirpimą, komandos nenutraukiant.",
+      "Laikydamas Shift, TRIM pratęsia liniją iki ribos (kaip EXTEND)."
+     ],
+     "tikslas": "Pailga skylė 42 × 12"
+    },
+    {
+     "id": "rd-mirror",
+     "pavadinimas": "Antra skylė: MIRROR",
+     "xp": 20,
+     "kodel": "Simetriškos detalės pusė braižoma, o kita - atspindima. Atspindžio ašis eina per plokštės vidurį, o pažymėti padeda rėmelis.",
+     "zingsniai": [
+      "MIRROR. Pažymėk skylę rėmeliu iš kairės į dešinę (mėlynas): spustelėk kairėje virš skylės, tada dešinėje po ja → Enter.",
+      "Atspindžio ašis: viršutinės kraštinės vidurys → apatinės kraštinės vidurys (Midpoint).",
+      "Erase source objects? → N."
+     ],
+     "komandos": [
+      ["Command:", "MIRROR"],
+      ["Select objects:", "(rėmelis iš kairės į dešinę aplink skylę)"],
+      ["Select objects:", "Enter"],
+      ["Specify first point of mirror line:", "(viršutinės kraštinės vidurys ▲)"],
+      ["Specify second point of mirror line:", "(apatinės kraštinės vidurys ▲)"],
+      ["Erase source objects? [Yes/No] <No>:", "N"]
+     ],
+     "uzuominos": [
+      "Rėmelis iš kairės į dešinę (mėlynas) pažymi tik tai, kas visa jame telpa. Iš dešinės į kairę (žalias) - viską, ką paliečia.",
+      "Ašis eina per x = 60 - plokštės vidurį."
+     ],
+     "tikslas": "Dvi simetriškos pailgos skylės"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Nuosklemba 10×45°: kokius atstumus įvesti CHAMFER?",
+     "v": ["10 ir 45", "10 ir 10", "45 ir 45", "5 ir 5"],
+     "t": 1,
+     "p": "45° kampas gaunasi, kai abu atstumai vienodi."
+    },
+    {
+     "k": "Kuo COPY skiriasi nuo MOVE?",
+     "v": ["Niekuo", "MOVE veikia tik linijoms", "COPY palieka originalą, MOVE - ne", "COPY neturi bazinio taško"],
+     "t": 2,
+     "p": "Abi komandos klausia bazinio taško ir kur dėti, tik COPY palieka originalą vietoje."
+    },
+    {
+     "k": "Rėmelis iš kairės į dešinę (mėlynas) pažymi...",
+     "v": [
+      "tik objektus, kurie visi telpa rėmelyje",
+      "visus, kuriuos rėmelis paliečia",
+      "tik linijas",
+      "viską brėžinyje"
+     ],
+     "t": 0,
+     "p": "Iš dešinės į kairę (žalias) rėmelis pažymi ir tai, ką tik paliečia."
+    }
+   ]
+  },
+  {
+   "id": "masyvai",
+   "pavadinimas": "Masyvai: OFFSET, ARRAYPOLAR, ROTATE",
+   "trukme": "~25 min.",
+   "aprasas": "Flanšas su 6 skylėmis: lygiagreti kopija (OFFSET), sluoksnio pakeitimas, apskritiminis masyvas (ARRAYPOLAR), pasukimas (ROTATE) ir ašys.",
+   "pabaiga": "Nubraižei flanšą: OFFSET, sluoksnio keitimas, apskritiminis masyvas ir pasukimas. Masyvai sutaupo daugiausia laiko - 6 ar 60 skylių nubraižoma vienodai greitai.",
+   "zingsniai": [
+    {
+     "id": "ms-sluoksniai",
+     "pavadinimas": "Naujas brėžinys ir sluoksniai",
+     "xp": 10,
+     "kodel": "Naujas darbas - naujas brėžinys. Jei išsaugojai šabloną su sluoksniais, pradėk nuo jo.",
+     "zingsniai": [
+      "NEW → acadiso.dwt (arba tavo šablonas).",
+      "Sluoksniai KONTURAS (7), ASYS (1, CENTER), MATMENYS (3); aktyvus KONTURAS."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": ["Jau turi šabloną su sluoksniais? NEW → pasirink jį - sluoksniai jau bus."]
+    },
+    {
+     "id": "ms-offset",
+     "pavadinimas": "Flanšas ir kiaurymė: OFFSET",
+     "xp": 15,
+     "kodel": "OFFSET nubraižo lygiagrečią kopiją nurodytu atstumu - linijai, apskritimui ar polilinijai. Apskritimui tai koncentrinis apskritimas.",
+     "zingsniai": [
+      "Apskritimas ⌀100: CIRCLE → 0,0 → 50.",
+      "OFFSET → 30 → spustelėk apskritimą → spustelėk jo viduje → Enter. Gausis ⌀40 kiaurymė."
+     ],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "0,0"],
+      ["Specify radius of circle:", "50"],
+      ["Command:", "OFFSET"],
+      ["Specify offset distance:", "30"],
+      ["Select object to offset:", "(spustelėk apskritimą)"],
+      ["Specify point on side to offset:", "(spustelėk viduje)"],
+      ["Select object to offset:", "Enter"]
+     ],
+     "uzuominos": [
+      "Atstumas atimamas iš spindulio: 50 − 30 = 20, todėl gaunasi R20 (⌀40).",
+      "OFFSET lieka įjungtas - gali kopijuoti dar kartą tuo pačiu atstumu."
+     ],
+     "tikslas": "Apskritimai ⌀100 ir ⌀40"
+    },
+    {
+     "id": "ms-pcd",
+     "pavadinimas": "Centrų apskritimas ir sluoksnis",
+     "xp": 15,
+     "kodel": "Skylių centrai brėžinyje žymimi plona ašine linija - centrų apskritimu. Nubraižysi jį OFFSET ir perkelsi į sluoksnį ASYS: taip keičiamas bet kurio objekto sluoksnis.",
+     "zingsniai": [
+      "OFFSET → 15 → spustelėk ⌀100 apskritimą → spustelėk viduje → Enter. Gausis ⌀70.",
+      "Spustelėk naująjį apskritimą be jokios komandos - jis pasižymės.",
+      "Home → Layers sąraše pasirink ASYS → Esc."
+     ],
+     "komandos": [
+      ["Command:", "OFFSET"],
+      ["Specify offset distance:", "15"],
+      ["Select object to offset:", "(⌀100 apskritimas)"],
+      ["Specify point on side to offset:", "(viduje)"],
+      ["Select object to offset:", "Enter"],
+      ["(pažymėk ⌀70):", "Layers → ASYS"]
+     ],
+     "uzuominos": [
+      "Kitas būdas: pažymėk objektą ir spausk Ctrl+1 - Properties lange Layer → ASYS.",
+      "MATCHPROP (MA) nukopijuoja sluoksnį ir kitas savybes nuo vieno objekto kitiems."
+     ],
+     "tikslas": "Centrų apskritimas ⌀70 sluoksnyje ASYS"
+    },
+    {
+     "id": "ms-skyle",
+     "pavadinimas": "Pirmoji skylė: Quadrant",
+     "xp": 10,
+     "kodel": "Pirmoji skylė - centrų apskritimo viršuje. Kitas penkias sukurs masyvas.",
+     "zingsniai": ["Patikrink, ar aktyvus KONTURAS.", "CIRCLE → spustelėk ⌀70 apskritimo viršų (Quadrant ◇) → 5."],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "(⌀70 viršus - Quadrant ◇)"],
+      ["Specify radius of circle:", "5"]
+     ],
+     "uzuominos": ["Centras turi būti 0,35.", "Skylė atsirado sluoksnyje ASYS? Pažymėk ją ir pasirink KONTURAS."],
+     "tikslas": "Skylė ⌀10 taške 0,35"
+    },
+    {
+     "id": "ms-masyvas",
+     "pavadinimas": "6 skylės: ARRAYPOLAR",
+     "xp": 20,
+     "kodel": "Apskritiminis masyvas išdėsto kopijas tolygiai aplink centrą. Nurodai centrą ir kiekį - kampus AutoCAD apskaičiuoja pats.",
+     "zingsniai": [
+      "ARRAYPOLAR → spustelėk skylę → Enter → centras 0,0.",
+      "Įvesk AS → N (kad skylės būtų atskiri apskritimai), tada I → 6 → Enter."
+     ],
+     "komandos": [
+      ["Command:", "ARRAYPOLAR"],
+      ["Select objects:", "(skylė)"],
+      ["Select objects:", "Enter"],
+      ["Specify center point of array or [Base point/Axis of rotation]:", "0,0"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "AS"
+      ],
+      ["Create associative array [Yes/No] <Yes>:", "N"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "I"
+      ],
+      ["Enter number of items in array:", "6"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "Enter"
+      ]
+     ],
+     "uzuominos": [
+      "Susietas (Associative) masyvas - vienas objektas: patogu keisti, bet skylės nebe atskiros. Šiai pamokai - AS → N.",
+      "Stačiakampiam tinkleliui yra ARRAYRECT: eilutės ir stulpeliai."
+     ],
+     "tikslas": "6 skylės ⌀10 ant ⌀70"
+    },
+    {
+     "id": "ms-rotate",
+     "pavadinimas": "Pasuk: ROTATE 30°",
+     "xp": 15,
+     "kodel": "Brėžinyje skylės turi būti ant ašių - taip lengviau sužymėti matmenis. ROTATE pasuka pažymėtus objektus aplink bazinį tašką.",
+     "zingsniai": ["ROTATE → spustelėk visas 6 skyles → Enter.", "Bazinis taškas 0,0 → kampas 30."],
+     "komandos": [
+      ["Command:", "ROTATE"],
+      ["Select objects:", "(6 skylės)"],
+      ["Select objects:", "Enter"],
+      ["Specify base point:", "0,0"],
+      ["Specify rotation angle:", "30"]
+     ],
+     "uzuominos": [
+      "Teigiamas kampas suka prieš laikrodžio rodyklę.",
+      "Po pasukimo dvi skylės bus ant horizontalios ašies: 35,0 ir -35,0."
+     ],
+     "tikslas": "Skylės ties 0°, 60°, 120°..."
+    },
+    {
+     "id": "ms-asys",
+     "pavadinimas": "Ašys",
+     "xp": 10,
+     "kodel": "Kiekviena apvali detalė turi dvi statmenas ašis per centrą - jos išeina 2-5 mm už kontūro.",
+     "zingsniai": ["Padaryk aktyvų ASYS.", "LINE → -55,0 → 55,0 ir LINE → 0,-55 → 0,55.", "Grąžink aktyvų KONTURAS."],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "-55,0"],
+      ["Specify next point:", "55,0"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,-55"],
+      ["Specify next point:", "0,55"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "Ašinė linija atrodo ištisinė? LTSCALE → 0.5 arba 1.",
+      "Ašys - plona linija, todėl jos atskirame sluoksnyje ASYS."
+     ],
+     "tikslas": "Dvi ašys per centrą"
+    }
+   ],
+   "testas": [
+    {
+     "k": "OFFSET 30 nuo apskritimo R50 į vidų - koks bus spindulys?",
+     "v": ["80", "50", "30", "20"],
+     "t": 3,
+     "p": "Atstumas atimamas iš spindulio: 50 − 30 = 20."
+    },
+    {
+     "k": "Kodėl su ARRAYPOLAR renkamės AS → N?",
+     "v": [
+      "Kad skylės būtų atskiri apskritimai",
+      "Kad masyvas būtų didesnis",
+      "Kad skylės būtų užpildytos",
+      "Kitaip neveikia"
+     ],
+     "t": 0,
+     "p": "Susietas masyvas yra vienas objektas, nesusietas - atskiri apskritimai."
+    },
+    {
+     "k": "Kaip pakeisti jau nubraižyto objekto sluoksnį?",
+     "v": [
+      "Tik ištrinti ir braižyti iš naujo",
+      "Pažymėti jį ir sąraše Layers pasirinkti kitą",
+      "LAYER → New",
+      "F8"
+     ],
+     "t": 1,
+     "p": "Arba Ctrl+1 (Properties) → Layer."
+    }
+   ]
+  },
+  {
+   "id": "bruksniavimas",
+   "pavadinimas": "2D pjūvis: PLINE ir HATCH",
+   "trukme": "~15 min.",
+   "aprasas": "Įvorės pjūvis: polilinija (PLINE), kiaurymės linijos, brūkšniavimas ANSI31 (HATCH) sluoksnyje BRUKSNIAI ir ašis.",
+   "pabaiga": "Nubraižei įvorės pjūvį su brūkšniavimu - taip vaizduojamos visos tuščiavidurės detalės: vamzdžiai, įvorės, korpusai.",
+   "zingsniai": [
+    {
+     "id": "bk-sluoksniai",
+     "pavadinimas": "Sluoksniai su BRUKSNIAI",
+     "xp": 10,
+     "kodel": "Brūkšniavimas braižomas plona linija, todėl jam - atskiras sluoksnis. Tada spausdinant linijų storiai bus teisingi.",
+     "zingsniai": [
+      "NEW → acadiso.dwt.",
+      "LAYER → KONTURAS (7), ASYS (1, CENTER), MATMENYS (3) ir naujas BRUKSNIAI (8).",
+      "Aktyvus KONTURAS."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": ["Spalva 8 - pilka: brūkšniavimas neužgožia kontūro."]
+    },
+    {
+     "id": "bk-konturas",
+     "pavadinimas": "Kontūras: PLINE",
+     "xp": 15,
+     "kodel": "PLINE nubraižo vieną sujungtą objektą iš kelių atkarpų - jį lengviau pažymėti, OFFSET'inti ir brūkšniuoti nei atskiras LINE linijas.",
+     "zingsniai": [
+      "Įvorė ⌀40 × 50: PLINE → 0,-20 → @50,0 → @0,40 → @-50,0 → C.",
+      "Kiaurymė ⌀20 pjūvyje matosi kaip dvi linijos: LINE → 0,10 → @50,0 ir LINE → 0,-10 → @50,0."
+     ],
+     "komandos": [
+      ["Command:", "PLINE"],
+      ["Specify start point:", "0,-20"],
+      ["Specify next point or [Arc/Halfwidth/Length/Undo/Width]:", "@50,0"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "@0,40"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "@-50,0"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "C"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,10"],
+      ["Specify next point:", "@50,0"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,-10"],
+      ["Specify next point:", "@50,0"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "Spustelėk kontūrą: jei pasižymi visas iš karto - tai polilinija.",
+      "Pjūvyje viršuje ir apačioje - sienelės (medžiaga), viduryje - tuščia kiaurymė."
+     ],
+     "tikslas": "Kontūras 50 × 40 ir kiaurymės linijos"
+    },
+    {
+     "id": "bk-hatch",
+     "pavadinimas": "Brūkšniavimas: HATCH",
+     "xp": 20,
+     "kodel": "Pjūvyje brūkšniuojama tik ten, kur pjovimo plokštuma kerta medžiagą - sieneles. Kiaurymė lieka nebrūkšniuota. Standartas: plonos linijos 45° kampu (ANSI31).",
+     "zingsniai": [
+      "Padaryk aktyvų BRUKSNIAI.",
+      "HATCH → juostoje Pattern pasirink ANSI31, Scale 1.",
+      "Spustelėk viršutinės sienelės vidų, tada apatinės → Enter.",
+      "Grąžink aktyvų KONTURAS."
+     ],
+     "komandos": [
+      ["Command:", "HATCH"],
+      ["Pattern:", "ANSI31"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "(viršutinės sienelės vidus)"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "(apatinės sienelės vidus)"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "Enter"]
+     ],
+     "uzuominos": [
+      "Užbrūkšniavo visą stačiakampį? Spustelėjai kiaurymėje - U ir spustelėk sienelėse.",
+      "Per tankus ar per retas? Pažymėk brūkšniavimą ir pakeisk Scale (pvz. 0.5 arba 2)."
+     ],
+     "tikslas": "Užbrūkšniuotos dvi sienelės"
+    },
+    {
+     "id": "bk-asis",
+     "pavadinimas": "Ašis",
+     "xp": 10,
+     "kodel": "Sukinio detalė (įvorė, velenas) visada turi ašį - ji išeina 2-5 mm už kontūro.",
+     "zingsniai": ["Aktyvus ASYS: LINE → -5,0 → 55,0."],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "-5,0"],
+      ["Specify next point:", "55,0"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": ["Ašis eina per kiaurymės vidurį - ten, kur nebrūkšniuota."],
+     "tikslas": "Ašis per įvorės vidurį"
+    }
+   ],
+   "testas": [
+    {
+     "k": "Kokiu kampu brūkšniuojamas pjūvis?",
+     "v": ["30°", "90°", "45°", "60°"],
+     "t": 2,
+     "p": "Plonos lygiagrečios linijos 45° kampu - ANSI31."
+    },
+    {
+     "k": "Kurios vietos pjūvyje brūkšniuojamos?",
+     "v": ["Visa detalė su kiaurymėmis", "Tik ten, kur plokštuma kerta medžiagą", "Tik kiaurymė", "Ašys"],
+     "t": 1,
+     "p": "Kiaurymės ir tuštumos lieka nebrūkšniuotos."
+    },
+    {
+     "k": "Kuo PLINE skiriasi nuo LINE?",
+     "v": [
+      "PLINE - vienas sujungtas objektas",
+      "PLINE braižo tik apskritimus",
+      "Niekuo",
+      "LINE negali būti uždara"
+     ],
+     "t": 0,
+     "p": "LINE sukuria atskiras atkarpas, PLINE - vieną objektą."
+    }
+   ]
+  },
+  {
    "id": "sriftai",
    "pavadinimas": "Šriftai ir tekstas",
    "trukme": "~10 min.",
@@ -379,7 +1038,7 @@
    "id": "matmenys",
    "pavadinimas": "Matmenys pagal standartą",
    "trukme": "~15 min.",
-   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER - sužymėsi plokštės matmenis sluoksnyje MATMENYS.",
+   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER, DIMRADIUS - sužymėsi plokštės matmenis sluoksnyje MATMENYS.",
    "pabaiga": "Moki sukurti matmenų stilių ir sužymėti ilgius bei skersmenis.",
    "zingsniai": [
     {
@@ -450,6 +1109,23 @@
      ],
      "uzuominos": ["Mažoms skylėms parašyk 4x: DIMDIAMETER → M (Mtext) → 4x<>."],
      "tikslas": "Matmuo ø30"
+    },
+    {
+     "id": "spindulys",
+     "pavadinimas": "Spindulys: DIMRADIUS",
+     "xp": 15,
+     "kodel": "Suapvalinimai ir lankai žymimi spinduliu - prieš skaičių automatiškai atsiranda R.",
+     "zingsniai": ["Įvesk:"],
+     "komandos": [
+      ["Command:", "DIMRADIUS"],
+      ["Select arc or circle:", "(spustelėk suapvalintą kampą)"],
+      ["Specify dimension line location:", "(padėk tekstą)"]
+     ],
+     "uzuominos": [
+      "Apskritimams - skersmuo (⌀), lankams ir suapvalinimams - spindulys (R).",
+      "Nekeisk matmens skaičiaus ranka: jei rodo ne tą, taisyk brėžinį."
+     ],
+     "tikslas": "Matmuo R10"
     }
    ],
    "testas": [
@@ -1327,7 +2003,13 @@
   "Shift + vidurinis pelės mygtukas suka 3D vaizdą (orbit).",
   "Dukart spustelėk pelės ratuką - ZOOM Extents: parodo visą brėžinį.",
   "Komandų eilutėje užtenka pirmų raidžių: L = LINE, C = CIRCLE, EXT = EXTRUDE.",
-  "VSCURRENT → C (Conceptual) parodo detalę spalvotą ir gražiai apšviestą."
+  "VSCURRENT → C (Conceptual) parodo detalę spalvotą ir gražiai apšviestą.",
+  "Niekada nebraižyk sluoksnyje 0 - jis skirtas blokams. Ir nieko nedėk į Defpoints: tas sluoksnis nespausdinamas.",
+  "Braižyk 1:1 tikrais milimetrais. Mastelis nustatomas tik lape, spausdinant.",
+  "Nekeisk matmens skaičiaus ranka: jei rodo ne tą, brėžinys netikslus - taisyk brėžinį.",
+  "Neišskaidyk (EXPLODE) matmenų ir blokų - jie praranda savybes ir juos sunku pataisyti.",
+  "Ctrl+S - dažnai! AutoCAD kartais užstringa, o neišsaugotas darbas dingsta.",
+  "Rėmelis iš kairės į dešinę pažymi tik tai, kas visa jame telpa, iš dešinės į kairę - viską, ką paliečia."
  ],
  "korteles": [
   {
@@ -1405,7 +2087,7 @@
    "trump": "CO",
    "ka": "Nukopijuoja objektus iš vieno taško į kitą.",
    "pvz": "COPY → objektas → bazinis taškas → naujas",
-   "pamoka": "2d"
+   "pamoka": "redagavimas"
   },
   {
    "k": "ATTDEF",
@@ -1567,6 +2249,125 @@
    "ka": "Keičia matmenis; Oblique pasuka iškeltines linijas.",
    "pvz": "DIMEDIT → O → (matmuo) → 90",
    "pamoka": "aksonometrija"
+  },
+  {
+   "k": "ZOOM",
+   "trump": "Z",
+   "ka": "Artina ir tolina. E (Extents) parodo visą brėžinį - tą patį daro dukart spustelėtas ratukas.",
+   "pvz": "Z → E",
+   "pamoka": "tikslumas"
+  },
+  {
+   "k": "OSNAP",
+   "trump": "OS",
+   "ka": "Objekto pritraukimo nustatymai: Endpoint, Midpoint, Center... F3 - įjungti ir išjungti.",
+   "pvz": "OSNAP → Object Snap → OK",
+   "pamoka": "tikslumas"
+  },
+  {
+   "k": "AREA",
+   "trump": "AA",
+   "ka": "Išmatuoja plotą ir perimetrą pagal spustelėtus taškus.",
+   "pvz": "AREA → taškai → Enter",
+   "pamoka": "tikslumas"
+  },
+  {
+   "k": "DIST",
+   "trump": "DI",
+   "ka": "Išmatuoja atstumą ir kampą tarp dviejų taškų.",
+   "pvz": "DIST → 2 taškai",
+   "pamoka": "tikslumas"
+  },
+  {
+   "k": "MOVE",
+   "trump": "M",
+   "ka": "Perkelia objektus: bazinis taškas → nauja vieta.",
+   "pvz": "MOVE → objektai → Enter → taškas → @50,0",
+   "pamoka": "redagavimas"
+  },
+  {
+   "k": "CHAMFER",
+   "trump": "CHA",
+   "ka": "Nusklembia kampą. D (Distance) - atstumai, P (Polyline) - visi kampai.",
+   "pvz": "CHAMFER → D → 10 → 10 → P",
+   "pamoka": "redagavimas"
+  },
+  {
+   "k": "TRIM",
+   "trump": "TR",
+   "ka": "Nukerpa objekto dalį iki kitų objektų. Su Shift - pratęsia (EXTEND).",
+   "pvz": "TRIM → spustelėk, ką nukirpti → Enter",
+   "pamoka": "redagavimas"
+  },
+  {
+   "k": "EXTEND",
+   "trump": "EX",
+   "ka": "Pratęsia liniją iki kito objekto (ribos).",
+   "pvz": "EXTEND → spustelėk linijos galą → Enter",
+   "pamoka": "redagavimas"
+  },
+  {
+   "k": "MIRROR",
+   "trump": "MI",
+   "ka": "Veidrodinė kopija per ašį. N - palikti originalą.",
+   "pvz": "MIRROR → objektai → 2 ašies taškai → N",
+   "pamoka": "redagavimas"
+  },
+  {
+   "k": "OFFSET",
+   "trump": "O",
+   "ka": "Lygiagreti kopija nurodytu atstumu: linijai, apskritimui, polilinijai.",
+   "pvz": "OFFSET → 30 → objektas → pusė",
+   "pamoka": "masyvai"
+  },
+  {
+   "k": "ARRAYPOLAR",
+   "trump": "",
+   "ka": "Kopijos tolygiai aplink centrą (apskritiminis masyvas).",
+   "pvz": "ARRAYPOLAR → objektas → centras → I → 6",
+   "pamoka": "masyvai"
+  },
+  {
+   "k": "ARRAYRECT",
+   "trump": "",
+   "ka": "Kopijos eilutėmis ir stulpeliais (stačiakampis masyvas).",
+   "pvz": "ARRAYRECT → objektas → COL → R",
+   "pamoka": "masyvai"
+  },
+  {
+   "k": "ROTATE",
+   "trump": "RO",
+   "ka": "Pasuka objektus aplink bazinį tašką.",
+   "pvz": "ROTATE → objektai → 0,0 → 30",
+   "pamoka": "masyvai"
+  },
+  {
+   "k": "MATCHPROP",
+   "trump": "MA",
+   "ka": "Nukopijuoja sluoksnį ir savybes nuo vieno objekto kitiems.",
+   "pvz": "MA → šaltinis → kiti objektai",
+   "pamoka": "masyvai"
+  },
+  {
+   "k": "PLINE",
+   "trump": "PL",
+   "ka": "Polilinija - vienas objektas iš atkarpų ir lankų.",
+   "pvz": "PLINE → taškai → C",
+   "pamoka": "bruksniavimas"
+  },
+  {
+   "k": "HATCH",
+   "trump": "H",
+   "ka": "Brūkšniuoja uždarą plotą. Pjūviams - ANSI31.",
+   "pvz": "HATCH → ANSI31 → vidinis taškas → Enter",
+   "pamoka": "bruksniavimas"
+  },
+  {
+   "k": "DIMRADIUS",
+   "trump": "DRA",
+   "ka": "Spindulio matmuo - prieš skaičių R.",
+   "pvz": "DIMRADIUS → lankas → vieta",
+   "pamoka": "matmenys"
   }
  ]
 }

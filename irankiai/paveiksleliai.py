@@ -27,7 +27,7 @@ import vertimas             # noqa: E402
 
 APLANKAS = os.path.join(SAKNIS, "paveiksleliai")
 SENA, NAUJA = "#8b95a7", "#f59e0b"           # matosi ir tamsioje, ir šviesioje temoje
-SLUOKSNIAI = ("KONTURAS", "ASYS", "MATMENYS", "TEKSTAS", "BRUKSNINE")
+SLUOKSNIAI = ("KONTURAS", "ASYS", "MATMENYS", "TEKSTAS", "BRUKSNINE", "NEMATOMOS", "BRUKSNIAI")
 
 
 class Nera(Exception):
@@ -45,6 +45,52 @@ class Obj:
     def SetBulge(self, i, k):
         self.bulge[i] = k
 
+    def GetBulge(self, i):
+        return self.bulge.get(i, 0.0)
+
+    # COM savybės, kurias skaito tikrinimas (pamokos.py)
+    @property
+    def Coordinates(self):
+        return tuple(v for p in self.__dict__.get("v", []) for v in p)
+
+    @property
+    def StartPoint(self):
+        return self.__dict__["p1"] + (0.0,)
+
+    @property
+    def EndPoint(self):
+        return self.__dict__["p2"] + (0.0,)
+
+    @property
+    def Center(self):
+        return self.__dict__["c"] + (0.0,)
+
+    @property
+    def Radius(self):
+        return self.__dict__["r"]
+
+    @property
+    def Height(self):
+        return self.__dict__["h"]
+
+    @property
+    def InsertionPoint(self):
+        return self.__dict__["p"] + (0.0,)
+
+    @property
+    def Measurement(self):
+        return self.__dict__.get("matas", 0.0)
+
+    @property
+    def NumberOfLoops(self):
+        return len(self.__dict__.get("kilpos", []))
+
+    def AppendOuterLoop(self, objs):
+        self.kilpos.append([p for o in objs for p in o.taskai()])
+
+    def Evaluate(self):
+        pass
+
     def Delete(self):
         self.talpa.sar.remove(self)
 
@@ -58,11 +104,21 @@ class Obj:
             return list(r["v"])
         if self.rusis == "linija":
             return [r["p1"], r["p2"]]
+        if self.rusis == "matmuo" and r["budas"] == "spindulys":      # su užrašu „R10“ už lanko
+            (cx, cy), (px, py) = r["p1"], r["p2"]
+            d = math.dist(r["p1"], r["p2"]) or 1
+            return [r["p1"], (px + (px - cx) / d * 18, py + (py - cy) / d * 18)]
         if self.rusis == "matmuo":                      # su matmens linijos vieta ir užrašu
             return [r["p1"], r["p2"]] + ([r["vieta"]] if "vieta" in r else [])
         if self.rusis == "apskritimas":
             (x, y), R = r["c"], r["r"]
             return [(x - R, y - R), (x + R, y + R)]
+        if self.rusis == "lankas":
+            (x, y), R = r["c"], r["r"]
+            ap = (r["a1"] - r["a0"]) % (2 * math.pi)
+            return [(x + R * math.cos(r["a0"] + ap * i / 24), y + R * math.sin(r["a0"] + ap * i / 24)) for i in range(25)]
+        if self.rusis == "bruksniai":
+            return [p for k in r["kilpos"] for p in k]
         if self.rusis == "elipse":
             (x, y), R = r["c"], math.hypot(*r["maj"])
             return [(x - R, y - R), (x + R, y + R)]
@@ -106,6 +162,17 @@ class Talpa:
     def AddCircle(self, c, r):
         return self._naujas("apskritimas", "AcDbCircle", c=_xy(c), r=float(r))
 
+    def AddArc(self, c, r, a0, a1):
+        return self._naujas("lankas", "AcDbArc", c=_xy(c), r=float(r), a0=float(a0), a1=float(a1),
+                            StartAngle=float(a0), EndAngle=float(a1))
+
+    def AddHatch(self, tipas, rastas, asociatyvus):
+        return self._naujas("bruksniai", "AcDbHatch", PatternName=rastas, kilpos=[])
+
+    def AddDimRadial(self, c, p, ilgis):
+        return self._naujas("matmuo", "AcDbRadialDimension", p1=_xy(c), p2=_xy(p), budas="spindulys",
+                            matas=math.dist(_xy(c), _xy(p)))
+
     def AddLightWeightPolyline(self, koord):
         k = [float(v) for v in koord]
         return self._naujas("pl", "AcDbPolyline", v=list(zip(k[0::2], k[1::2])))
@@ -121,14 +188,17 @@ class Talpa:
                             TextString=numatyta)
 
     def AddDimRotated(self, a, b, vieta, kampas):
+        u = (math.cos(float(kampas)), math.sin(float(kampas)))
         return self._naujas("matmuo", "AcDbRotatedDimension", p1=_xy(a), p2=_xy(b), vieta=_xy(vieta),
-                            kampas=float(kampas), budas="pasuktas")
+                            kampas=float(kampas), budas="pasuktas", matas=abs((b[0] - a[0]) * u[0] + (b[1] - a[1]) * u[1]))
 
     def AddDimAligned(self, a, b, vieta):
-        return self._naujas("matmuo", "AcDbAlignedDimension", p1=_xy(a), p2=_xy(b), vieta=_xy(vieta), budas="lygiagretus")
+        return self._naujas("matmuo", "AcDbAlignedDimension", p1=_xy(a), p2=_xy(b), vieta=_xy(vieta), budas="lygiagretus",
+                            matas=math.dist(_xy(a), _xy(b)))
 
     def AddDimDiametric(self, a, b, ilgis):
-        return self._naujas("matmuo", "AcDbDiametricDimension", p1=_xy(a), p2=_xy(b), budas="skersmuo")
+        return self._naujas("matmuo", "AcDbDiametricDimension", p1=_xy(a), p2=_xy(b), budas="skersmuo",
+                            matas=math.dist(_xy(a), _xy(b)))
 
     def InsertBlock(self, p, vardas, sx=1, sy=1, sz=1, kampas=0):
         blk = self.doc.Blocks.Item(vardas)
@@ -251,6 +321,7 @@ class Braizytojas:
         if eilute == "sluoksniai":
             for s in SLUOKSNIAI:
                 self.doc.Layers.Add(s)
+            self.doc.sluoksnis = "KONTURAS"         # kaip tikrame: po sluoksnių aktyvus KONTURAS
             return
         raise Nera(eilute)
 
@@ -317,6 +388,14 @@ class Piesinys:
 
     def matmuo(self, o, spalva):
         r = o.__dict__
+        if r["budas"] == "spindulys":
+            c, p = r["p1"], r["p2"]
+            u = ((p[0] - c[0]) / (math.dist(c, p) or 1), (p[1] - c[1]) / (math.dist(c, p) or 1))
+            galas = (p[0] + u[0] * 6 * self.mastelis, p[1] + u[1] * 6 * self.mastelis)
+            self.linija(c, galas, spalva, 1)
+            self.rodykle(p, u, spalva)
+            self.tekstas(f"R{math.dist(c, p):.0f}", (galas[0] + self.mastelis, galas[1]), 3.2 * self.mastelis, spalva)
+            return
         if r["budas"] == "skersmuo":
             a, b = r["p1"], r["p2"]
             self.linija(a, b, spalva, 1)
@@ -373,15 +452,38 @@ class Piesinys:
                 if k:
                     th = 4 * math.atan(abs(k))
                     R = math.dist(pts[i], pts[i + 1]) / (2 * math.sin(th / 2))
-                    d.append(f"A{_f(R)} {_f(R)} 0 {1 if th > math.pi else 0} {1 if k > 0 else 0} {_f(x1)} {_f(y1)}")
+                    d.append(f"A{_f(R)} {_f(R)} 0 {1 if th > math.pi else 0} {0 if k > 0 else 1} {_f(x1)} {_f(y1)}")   # y apverstas: prieš laikrodį = 0
                 else:
                     d.append(f"L{_f(x1)} {_f(y1)}")
             self.el.append(f'<path d="{" ".join(d)}" fill="none" stroke="{spalva}" stroke-width="{storis}" '
                            f'vector-effect="non-scaling-stroke" stroke-linejoin="round"/>')
+        elif o.rusis == "lankas":
+            ap = (r["a1"] - r["a0"]) % (2 * math.pi)
+            (x0, y0) = self.p(r["c"][0] + dx + r["r"] * math.cos(r["a0"]), r["c"][1] + dy + r["r"] * math.sin(r["a0"]))
+            (x1, y1) = self.p(r["c"][0] + dx + r["r"] * math.cos(r["a0"] + ap), r["c"][1] + dy + r["r"] * math.sin(r["a0"] + ap))
+            self.el.append(f'<path d="M{_f(x0)} {_f(y0)} A{_f(r["r"])} {_f(r["r"])} 0 {1 if ap > math.pi else 0} 0 {_f(x1)} {_f(y1)}" '
+                           f'fill="none" stroke="{spalva}" stroke-width="{storis}" vector-effect="non-scaling-stroke"/>')
+        elif o.rusis == "bruksniai":
+            for k in r["kilpos"]:
+                xs, ys = zip(*k)
+                x0, y0, x1, y1 = min(xs) + dx, min(ys) + dy, max(xs) + dx, max(ys) + dy
+                zingsn = 3.0
+                c = x0 - (y1 - y0)                      # 45° linijos y - x = konst., apkarpytos iki stačiakampio
+                while c <= x1:
+                    a = (max(x0, c), max(x0, c) - c + y0)
+                    if a[1] > y1:
+                        c += zingsn
+                        continue
+                    bx = min(x1, c + (y1 - y0))
+                    b2 = (bx, bx - c + y0)
+                    if b2[0] > a[0]:
+                        self.linija(a, b2, spalva, 0.8)
+                    c += zingsn
         elif o.rusis == "apskritimas":
             x, y = self.p(r["c"][0] + dx, r["c"][1] + dy)
+            d = f' stroke-dasharray="{bruks}"' if bruks else ""
             self.el.append(f'<circle cx="{_f(x)}" cy="{_f(y)}" r="{_f(r["r"])}" fill="none" stroke="{spalva}" '
-                           f'stroke-width="{storis}" vector-effect="non-scaling-stroke"/>')
+                           f'stroke-width="{storis}" vector-effect="non-scaling-stroke"{d}/>')
         elif o.rusis == "elipse":
             x, y = self.p(r["c"][0] + dx, r["c"][1] + dy)
             R = math.hypot(*r["maj"])
@@ -440,7 +542,7 @@ def generuoti(kalba):
     senas = (A.taskas, pamokos.win32com, pamokos.pythoncom)
     A.taskas = lambda x, y, z=0: (x, y, z)
     pamokos.win32com = types.SimpleNamespace(client=types.SimpleNamespace(VARIANT=lambda t, v: v))
-    pamokos.pythoncom = types.SimpleNamespace(VT_ARRAY=0, VT_R8=0)
+    pamokos.pythoncom = types.SimpleNamespace(VT_ARRAY=0, VT_R8=0, VT_DISPATCH=0)
     rez = {}
     try:
         for p in pamokos.PAMOKOS:
