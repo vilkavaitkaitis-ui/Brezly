@@ -20,19 +20,23 @@ BRĖŽLY - MOKYMOSI PROGRAMA (bandomoji versija 0.8 beta)
   Mokymosi programa: braižai AutoCAD'e PATS, o Brėžly veda ir tikrina.
   Paleidimas: nuoroda "Brėžly" (po IDIEGTI.bat) arba BREZLY.bat.
 
-  11 pamokų iš eilės (kiekviena su žingsniais, tikrinimu ir testu):
+  15 pamokų iš eilės (kiekviena su žingsniais, tikrinimu ir testu):
     1. Failas ir formatai   - NEW iš acadiso.dwt, UNITS, SAVEAS (DWG), PLOT į PDF
     2. Kampinis įrašas      - pirmas brėžinys: lentelė 185 × 40 (RECTANG, LINE, TEXT)
-    3. 2D brėžinys          - sluoksniai, RECTANG, CIRCLE, ašys, FILLET
-    4. Šriftai              - STYLE: ISO (isocp.shx) ir ISO_LT (ISOCPEUR, ąčęėįšųūž)
-    5. Matmenys             - DIMSTYLE, DIMLINEAR, DIMDIAMETER (2D plokštei)
-    6. Pirmoji 3D detalė    - BOX, CYLINDER, UNION, POLYGON + EXTRUDE, SUBTRACT,
+    3. Tikslus braižymas    - ZOOM/PAN, OSNAP, OTRACK (F11), POLAR (F10), AREA
+    4. 2D brėžinys          - sluoksniai, RECTANG, CIRCLE, ašys, FILLET
+    5. Redagavimas          - CHAMFER, COPY, Quadrant, TRIM, MIRROR, pažymėjimo rėmeliai
+    6. Masyvai              - OFFSET, sluoksnio keitimas, ARRAYPOLAR, ROTATE, ašys
+    7. 2D pjūvis            - PLINE, HATCH (ANSI31) sluoksnyje BRUKSNIAI
+    8. Šriftai              - STYLE: ISO (isocp.shx) ir ISO_LT (ISOCPEUR, ąčęėįšųūž)
+    9. Matmenys             - DIMSTYLE, DIMLINEAR, DIMDIAMETER, DIMRADIUS (2D plokštei)
+   10. Pirmoji 3D detalė    - BOX, CYLINDER, UNION, POLYGON + EXTRUDE, SUBTRACT,
                               WEDGE, MIRROR3D
-    7. Projekcijos iš 3D    - VIEWSTD (First angle), VIEWBASE, VIEWPROJ, A3 lape
-    8. Aksonometrija        - ISODRAFT, izometrinė dėžė, ELLIPSE Isocircle, DIMEDIT
-    9. Pjūviai              - ketvirtinė išpjova, SECTIONPLANE, VIEWBASE, VIEWSECTION
-   10. Elektrinė schema     - ženklas, ATTDEF, BLOCK, INSERT, DATAEXTRACTION
-   11. A3 lapas             - LAYOUTWIZARD, rėmelis 20/5 mm, kampinis įrašas į lapo
+   11. Projekcijos iš 3D    - VIEWSTD (First angle), VIEWBASE, VIEWPROJ, A3 lape
+   12. Aksonometrija        - ISODRAFT, izometrinė dėžė, ELLIPSE Isocircle, DIMEDIT
+   13. Pjūviai              - ketvirtinė išpjova, SECTIONPLANE, VIEWBASE, VIEWSECTION
+   14. Elektrinė schema     - ženklas, ATTDEF, BLOCK, INSERT, DATAEXTRACTION
+   15. A3 lapas             - LAYOUTWIZARD, rėmelis 20/5 mm, kampinis įrašas į lapo
                               kampą (COPYBASE + PASTECLIP 0,0)
   Tvarka - kaip inžinerinės grafikos kurse: pradedi nuo kampinio įrašo lentelės,
   kiekviena pamoka remiasi ankstesnėmis, o A3 lapas su rėmeliu - paskutinė tema.

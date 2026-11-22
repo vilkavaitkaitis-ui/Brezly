@@ -661,3 +661,6 @@ h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color
 .silp-k{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px}
 .silp-k b{display:block;margin:1px 0 6px}
 .silp-pr,.silp-kom,.silp-m{display:flex;gap:6px;flex-wrap:wrap}
+/* ilgi AutoCAD raginimai (ARRAYPOLAR, ZOOM) laužomi, o atsakymas visada matomas */
+.kl .pr{flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
+.kl .iv{flex:none}

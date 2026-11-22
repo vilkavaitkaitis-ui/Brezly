@@ -13,7 +13,11 @@ SAKNIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # pamoka -> pamokos, kurių įgūdžių ar failų jai reikia
 REMIASI = {
     "kampinis-irasas": ["failas"],          # pirmas brėžinys
+    "tikslumas": ["kampinis-irasas"],       # OSNAP, sekimas - kai RECTANG, LINE jau pažįstami
     "2d": ["kampinis-irasas"],              # RECTANG, LINE jau pažįstami
+    "redagavimas": ["2d", "tikslumas"],     # sluoksniai kaip 2D, Midpoint/Quadrant pritraukimai
+    "masyvai": ["redagavimas"],             # OFFSET, ROTATE po COPY/MIRROR
+    "bruksniavimas": ["masyvai"],           # sluoksnio keitimas, BRUKSNIAI
     "sriftai": ["kampinis-irasas"],         # TEXT jau pažįstamas
     "matmenys": ["2d", "sriftai"],          # matmenys plokštei iš 2D, teksto stilius ISO_LT
     "lapas": ["kampinis-irasas", "projekcijos", "pjuviai", "schema"],   # A3 - paskutinė: kampinis įrašas į lapą

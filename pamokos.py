@@ -1272,6 +1272,582 @@ def d_iso_matmuo(b):
 # Tekstai (žingsniai, užuominos, testai, kortelės) - pamokos.json. Jį naudoja ir programėlė (app/).
 # Čia - tik kas tikrina žingsnį ir kas jį parodo AutoCAD'e: žingsnio id -> (tikrinti, demo).
 # Naujas žingsnis be įrašo čia veiks, tik nebus tikrinamas ir demonstruojamas.
+
+# ------------------------------------------------------------- bendri 2D pagalbininkai (1.2)
+def _galai(o):
+    """Linijos galai (x, y) iš StartPoint/EndPoint - įstrižai linijai ribos nepasako krypties."""
+    try:
+        return tuple(o["obj"].StartPoint)[:2], tuple(o["obj"].EndPoint)[:2]
+    except Exception:
+        return None
+
+
+def atkarpos(objs, sluoksnis=None):
+    """Tiesios atkarpos: linijos ir polilinijų kraštinės be lankų. [(p, q, objektas)]"""
+    rez = []
+    for o in objs:
+        if sluoksnis and o["sluoksnis"].upper() != sluoksnis:
+            continue
+        if o["tipas"] == "AcDbLine":
+            g = _galai(o)
+            if g:
+                rez.append((g[0], g[1], o))
+        elif o["tipas"] == "AcDbPolyline":
+            try:
+                k = list(o["obj"].Coordinates)
+                uzd = bool(o["obj"].Closed)
+            except Exception:
+                continue
+            v = list(zip(k[0::2], k[1::2]))
+            for i in range(len(v) - (0 if uzd else 1)):
+                try:
+                    bl = float(o["obj"].GetBulge(i))
+                except Exception:
+                    bl = 0.0
+                if abs(bl) < 1e-6:
+                    rez.append((v[i], v[(i + 1) % len(v)], o))
+    return rez
+
+
+def yra_atkarpa(seg, p, q, tol=TOL):
+    return any((artima(a, p, tol) and artima(c, q, tol)) or (artima(a, q, tol) and artima(c, p, tol)) for a, c, _ in seg)
+
+
+def lankai(objs, r=None, tol=0.3):
+    """Lankai su centru, spinduliu, apimtimi (rad) ir vidurio tašku."""
+    rez = []
+    for o in objs:
+        if o["tipas"] != "AcDbArc":
+            continue
+        try:
+            c, rr = tuple(o["obj"].Center)[:2], float(o["obj"].Radius)
+            a0, a1 = float(o["obj"].StartAngle), float(o["obj"].EndAngle)
+        except Exception:
+            continue
+        if r is None or abs(rr - r) <= tol:
+            apimtis = (a1 - a0) % (2 * math.pi)
+            v = a0 + apimtis / 2
+            rez.append({**o, "c": c, "r": rr, "apimtis": apimtis, "vid": (c[0] + rr * math.cos(v), c[1] + rr * math.sin(v))})
+    return rez
+
+
+def _p(t):
+    return f"{t[0]:g},{t[1]:g}"
+
+
+def _objektu_masyvas(objs):
+    return win32com.client.VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_DISPATCH, list(objs))
+
+
+# ------------------------------------------------------------- TIKSLUS BRAIŽYMAS (OSNAP, OTRACK, POLAR, AREA)
+TK_ROMBAS = ((40, 0), (80, 25), (40, 50), (0, 25))          # 80 × 50 stačiakampio kraštinių viduriai
+TK_CENTRAS, TK_R = (40, 25), 10
+TK_POLAR = ((80, 50), (80 + 40 * math.cos(math.radians(30)), 50 + 40 * math.sin(math.radians(30))))   # (114.64, 70)
+TK_PLOTAS = 2000                                              # rombo plotas = 80 · 50 / 2
+OSNAP_REIKIA = ((1, "Endpoint"), (2, "Midpoint"), (4, "Center"), (16, "Quadrant"), (32, "Intersection"))
+
+
+def t_tk_osnap(b):
+    m = kintamasis(b, "OSMODE")
+    if m is None:
+        return [tr("Nepavyko perskaityti pritraukimo nustatymų (OSMODE).", "Couldn't read the object snap settings (OSMODE).")]
+    m = int(m)
+    if m & 16384:
+        return [tr("Objekto pritraukimas išjungtas - spausk F3 (apačioje užsidegs pritraukimo mygtukas).",
+                   "Object snap is off - press F3 (the snap button at the bottom lights up).")]
+    truksta = [v for bitas, v in OSNAP_REIKIA if not m & bitas]
+    if truksta:
+        return [tr("Įjunk pritraukimus: ", "Turn on the snaps: ") + ", ".join(truksta)
+                + tr(". OSNAP → skirtukas Object Snap → pažymėk varneles → OK.", ". OSNAP → Object Snap tab → tick the boxes → OK.")]
+    return []
+
+
+def d_tk_osnap(b):
+    b.doc.SetVariable("OSMODE", 1 | 2 | 4 | 16 | 32)
+
+
+def t_tk_rombas(b):
+    objs = objektai(b.ms)
+    if not staciakampis(objs, 0, 0, 80, 50):
+        return [tr("Neradau stačiakampio 80 × 50. RECTANG → 0,0 → @80,50.", "No 80 × 50 rectangle found. RECTANG → 0,0 → @80,50.")]
+    seg = atkarpos(objs)
+    truksta = [(p, q) for p, q in zip(TK_ROMBAS, TK_ROMBAS[1:] + TK_ROMBAS[:1]) if not yra_atkarpa(seg, p, q)]
+    if truksta:
+        p, q = truksta[0]
+        return [tr(f"Trūksta rombo kraštinės {_p(p)} → {_p(q)} (dar {len(truksta)} iš 4). LINE ir spustelėk kraštinių vidurius, kai pasirodo trikampis (Midpoint).",
+                   f"A rhombus side is missing: {_p(p)} → {_p(q)} ({len(truksta)} of 4 left). LINE and click the side midpoints when the triangle appears (Midpoint).")]
+    return []
+
+
+def d_tk_rombas(b):
+    _pl(b.ms, [(0, 0), (80, 0), (80, 50), (0, 50)])
+    for p, q in zip(TK_ROMBAS, TK_ROMBAS[1:] + TK_ROMBAS[:1]):
+        b.ms.AddLine(A.taskas(*p), A.taskas(*q))
+
+
+def t_tk_centras(b):
+    objs = objektai(b.ms)
+    if any(artima(c["c"][:2], TK_CENTRAS) for c in apskritimai(objs, TK_R)):
+        return []
+    kiti = apskritimai(objs)
+    if kiti:
+        c = kiti[-1]
+        return [tr(f"Apskritimas yra ({_p(c['c'])}), spindulys {c['r']:g}. Reikia: centras rombo viduryje (40,25), spindulys 10. Su F11 (OTRACK) užvesk žymeklį ant dviejų kraštinių vidurių ir nuvesk į susikirtimą.",
+                   f"The circle is at ({_p(c['c'])}), radius {c['r']:g}. Needed: centre in the middle of the rhombus (40,25), radius 10. With F11 (OTRACK) hover over two side midpoints and move to where the tracking lines cross.")]
+    return [tr("Neradau apskritimo. CIRCLE → centras rombo viduryje (OTRACK, F11) → 10.", "No circle found. CIRCLE → centre in the middle of the rhombus (OTRACK, F11) → 10.")]
+
+
+def d_tk_centras(b):
+    b.ms.AddCircle(A.taskas(*TK_CENTRAS), TK_R)
+
+
+def t_tk_polar(b):
+    seg = atkarpos(objektai(b.ms))
+    if yra_atkarpa(seg, *TK_POLAR):
+        return []
+    nuo = [(a, c) if artima(a, TK_POLAR[0]) else (c, a) for a, c, _ in seg
+           if (artima(a, TK_POLAR[0]) or artima(c, TK_POLAR[0])) and not (artima(a, (80, 0)) or artima(c, (80, 0)) or artima(a, (0, 50)) or artima(c, (0, 50)))]
+    if nuo:
+        a, c = nuo[-1]
+        ilgis = math.dist(a, c)
+        kampas = math.degrees(math.atan2(c[1] - a[1], c[0] - a[0]))
+        return [tr(f"Linija nuo 80,50 yra {ilgis:.1f} ilgio ir {kampas:.0f}° kampu. Reikia 40 ilgio ir 30°: F10, žymeklį - 30° kryptimi, įvesk 40 → Enter.",
+                   f"The line from 80,50 is {ilgis:.1f} long at {kampas:.0f}°. Needed: length 40 at 30°: F10, move the cursor along 30°, type 40 → Enter.")]
+    return [tr("Neradau linijos nuo stačiakampio kampo 80,50. LINE → spustelėk kampą (Endpoint) → 30° kryptimi įvesk 40 → Enter.",
+               "No line from the rectangle corner 80,50. LINE → click the corner (Endpoint) → along 30° type 40 → Enter.")]
+
+
+def d_tk_polar(b):
+    b.doc.SetVariable("POLARANG", math.radians(30))
+    b.ms.AddLine(A.taskas(*TK_POLAR[0]), A.taskas(*TK_POLAR[1]))
+
+
+def t_tk_plotas(b):
+    t = tekstai(objektai(b.ms))
+    sk = ["".join(x["txt"].split()).replace(",", ".") for x in t]
+    if any(str(TK_PLOTAS) in x for x in sk):
+        return []
+    if any("4000" in x for x in sk):
+        return [tr("4000 - tai viso stačiakampio plotas. Matuok rombą: AREA → spustelėk 4 rombo viršūnes → Enter.",
+                   "4000 is the area of the whole rectangle. Measure the rhombus: AREA → click its 4 corners → Enter.")]
+    if t:
+        return [tr("Tekste nerandu rombo ploto. AREA → 4 rombo viršūnės → Enter - AutoCAD parodys Area = ... Įrašyk tą skaičių.",
+                   "I can't find the rhombus area in your text. AREA → the 4 rhombus corners → Enter - AutoCAD shows Area = ... Write that number.")]
+    return [tr("Neradau teksto. Išmatuok AREA ir įrašyk TEXT, pvz. S = ... (aukštis 3.5).", "No text found. Measure with AREA and write it with TEXT, e.g. A = ... (height 3.5).")]
+
+
+def d_tk_plotas(b):
+    b.ms.AddText(tr(f"S = {TK_PLOTAS}", f"A = {TK_PLOTAS}"), A.taskas(85, 5), 3.5)
+
+
+# ------------------------------------------------------------- REDAGAVIMAS (COPY, CHAMFER, TRIM, MIRROR)
+RD_PLOKSTE = (0, 0, 120, 80)
+RD_NUOSKLEMBOS = ((10, 0), (110, 0), (120, 10), (120, 70), (110, 80), (10, 80), (0, 70), (0, 10))
+RD_R = 6
+RD_SKYLE = ((25, 40), (55, 40))            # pailga skylė: du pusapskritimiai ir dvi liestinės
+RD_KOPIJA = ((65, 40), (95, 40))           # MIRROR per 60 (plokštės vidurį)
+
+
+def _rd_liestines(xa, xb):
+    return (((xa, 40 + RD_R), (xb, 40 + RD_R)), ((xa, 40 - RD_R), (xb, 40 - RD_R)))
+
+
+def _plokstes_pl(objs):
+    for o in objs:
+        if o["tipas"] == "AcDbPolyline" and artima(o["min"][:2] + o["max"][:2], RD_PLOKSTE, 1.0):
+            return o
+    return None
+
+
+def t_rd_plokste(b):
+    objs = objektai(b.ms)
+    o = staciakampis(objs, *RD_PLOKSTE) or _plokstes_pl(objs)
+    if not o:
+        return [tr("Neradau plokštės 120 × 80. RECTANG → 0,0 → @120,80.", "No 120 × 80 plate found. RECTANG → 0,0 → @120,80.")]
+    if o["sluoksnis"].upper() != "KONTURAS":
+        return [tr(f"Plokštė sluoksnyje „{o['sluoksnis']}“, o turi būti KONTURAS. Pažymėk ją ir sluoksnių sąraše pasirink KONTURAS.",
+                   f"The plate is on layer „{o['sluoksnis']}“ but should be on KONTURAS. Select it and pick KONTURAS in the layer list.")]
+    return []
+
+
+def d_rd_plokste(b):
+    _sl(b, "KONTURAS")
+    _pl(b.ms, [(0, 0), (120, 0), (120, 80), (0, 80)])
+
+
+def t_rd_chamfer(b):
+    o = _plokstes_pl(objektai(b.ms))
+    if not o:
+        return [tr("Neradau plokštės polilinijos (RECTANG 0,0 → @120,80).", "No plate polyline found (RECTANG 0,0 → @120,80).")]
+    try:
+        k = list(o["obj"].Coordinates)
+    except Exception:
+        return [tr("Nepavyko perskaityti kontūro.", "Couldn't read the outline.")]
+    v = list(zip(k[0::2], k[1::2]))
+    if len(v) <= 4:
+        return [tr("Kampai dar nenusklembti. CHAMFER → D → 10 → 10 → P → spustelėk kontūrą.", "The corners aren't chamfered yet. CHAMFER → D → 10 → 10 → P → click the outline.")]
+    truksta = [p for p in RD_NUOSKLEMBOS if not any(artima(p, q) for q in v)]
+    if truksta:
+        return [tr(f"Nuosklembos ne 10 × 10 (pvz. nėra taško {_p(truksta[0])}). U → CHAMFER → D → 10 → 10 → P.",
+                   f"The chamfers aren't 10 × 10 (e.g. point {_p(truksta[0])} is missing). U → CHAMFER → D → 10 → 10 → P.")]
+    return []
+
+
+def d_rd_chamfer(b):
+    o = _plokstes_pl(objektai(b.ms))
+    if o:
+        o["obj"].Delete()
+    _sl(b, "KONTURAS")
+    _pl(b.ms, RD_NUOSKLEMBOS)
+
+
+def _rd_apskritimas_ar_lankas(objs, c):
+    return any(artima(x["c"][:2], c) for x in apskritimai(objs, RD_R) + lankai(objs, RD_R))
+
+
+def t_rd_kopija(b):
+    objs = objektai(b.ms)
+    if not _rd_apskritimas_ar_lankas(objs, RD_SKYLE[0]):
+        return [tr("Neradau apskritimo R6 taške 25,40. CIRCLE → 25,40 → 6.", "No R6 circle at 25,40. CIRCLE → 25,40 → 6.")]
+    if not _rd_apskritimas_ar_lankas(objs, RD_SKYLE[1]):
+        return [tr("Neradau kopijos taške 55,40. COPY → spustelėk apskritimą → Enter → bazinis taškas - centras → @30,0 → Enter.",
+                   "No copy at 55,40. COPY → click the circle → Enter → base point - the centre → @30,0 → Enter.")]
+    return []
+
+
+def d_rd_kopija(b):
+    _sl(b, "KONTURAS")
+    for c in RD_SKYLE:
+        b.ms.AddCircle(A.taskas(*c), RD_R)
+
+
+def _t_liestines(seg, xa, xb):
+    return [(p, q) for p, q in _rd_liestines(xa, xb) if not yra_atkarpa(seg, p, q)]
+
+
+def t_rd_liestines(b):
+    truksta = _t_liestines(atkarpos(objektai(b.ms)), 25, 55)
+    if truksta:
+        p, q = truksta[0]
+        return [tr(f"Trūksta linijos {_p(p)} → {_p(q)}. LINE → įvesk QUA → spustelėk apskritimo viršų (Quadrant) → QUA → kito apskritimo viršų.",
+                   f"Line {_p(p)} → {_p(q)} is missing. LINE → type QUA → click the top of the circle (Quadrant) → QUA → the top of the other circle.")]
+    return []
+
+
+def d_rd_liestines(b):
+    for p, q in _rd_liestines(25, 55):
+        b.ms.AddLine(A.taskas(*p), A.taskas(*q))
+
+
+def _pusapskritimis(objs, c, kryptis):
+    """Pusė apskritimo R6, išgaubta į kryptį (-1 kairėn, +1 dešinėn)."""
+    return any(artima(x["c"][:2], c) and abs(x["apimtis"] - math.pi) < 0.05 and artima(x["vid"], (c[0] + kryptis * RD_R, c[1]))
+               for x in lankai(objs, RD_R))
+
+
+def _t_skyle(objs, ca, cb, kas):
+    pilni = [c for c in (ca, cb) if any(artima(x["c"][:2], c) for x in apskritimai(objs, RD_R))]
+    if pilni:
+        return [tr(f"{kas}: apskritimas {_p(pilni[0])} dar neapkarpytas. TRIM → spustelėk vidinę apskritimo pusę (tarp linijų) → Enter.",
+                   f"{kas}: circle {_p(pilni[0])} isn't trimmed yet. TRIM → click the inner half of the circle (between the lines) → Enter.")]
+    if not _pusapskritimis(objs, ca, -1) or not _pusapskritimis(objs, cb, +1):
+        if lankai(objs, RD_R):
+            return [tr(f"{kas}: nukirpta ne ta pusė. Turi likti išorinės pusės (kairėje - kairioji, dešinėje - dešinioji). U ir pakartok.",
+                       f"{kas}: the wrong half was trimmed. The outer halves must stay (left half on the left, right half on the right). U and repeat.")]
+        return [tr(f"{kas}: neradau lankų R6 ties {_p(ca)} ir {_p(cb)}.", f"{kas}: no R6 arcs at {_p(ca)} and {_p(cb)}.")]
+    return []
+
+
+def t_rd_trim(b):
+    objs = objektai(b.ms)
+    kl = _t_skyle(objs, *RD_SKYLE, tr("Skylė", "Slot"))
+    if not kl and _t_liestines(atkarpos(objs), 25, 55):
+        kl = [tr("Dingo tiesios skylės linijos - TRIM nukirpo per daug. U ir spausk tik apskritimų vidines puses.",
+                 "The straight slot lines are gone - TRIM cut too much. U and click only the inner halves of the circles.")]
+    return kl
+
+
+def _rd_lankas(b, c, kryptis):
+    a0 = math.pi / 2 if kryptis < 0 else 3 * math.pi / 2
+    b.ms.AddArc(A.taskas(*c), RD_R, a0, a0 + math.pi)
+
+
+def d_rd_trim(b):
+    for o in objektai(b.ms):
+        if o["tipas"] == "AcDbCircle" and any(artima(x["c"][:2], c) for x in apskritimai([o], RD_R) for c in RD_SKYLE):
+            o["obj"].Delete()
+    _sl(b, "KONTURAS")
+    _rd_lankas(b, RD_SKYLE[0], -1)
+    _rd_lankas(b, RD_SKYLE[1], +1)
+
+
+def t_rd_mirror(b):
+    objs = objektai(b.ms)
+    if _t_skyle(objs, *RD_SKYLE, ""):
+        return [tr("Pirmoji skylė dingo - ar į „Erase source objects?“ atsakei Y? U ir pakartok, atsakydamas N.",
+                   "The first slot is gone - did you answer Y to „Erase source objects?“? U and repeat answering N.")]
+    if not lankai(objs, RD_R) or not any(artima(x["c"][:2], c) for x in lankai(objs, RD_R) for c in RD_KOPIJA):
+        return [tr("Neradau veidrodinės skylės dešinėje. MIRROR → pažymėk skylę rėmeliu iš kairės į dešinę → Enter → viršutinės kraštinės vidurys → apatinės vidurys → N.",
+                   "No mirrored slot on the right. MIRROR → select the slot with a box from left to right → Enter → top edge midpoint → bottom edge midpoint → N.")]
+    kl = _t_skyle(objs, *RD_KOPIJA, tr("Veidrodinė skylė", "Mirrored slot"))
+    if not kl and _t_liestines(atkarpos(objs), 65, 95):
+        kl = [tr("Veidrodinė skylė be tiesių linijų - pažymėk visą skylę: rėmelis turi apimti ir lankus, ir linijas.",
+                 "The mirrored slot has no straight lines - select the whole slot: the box must enclose both arcs and lines.")]
+    return kl
+
+
+def d_rd_mirror(b):
+    _sl(b, "KONTURAS")
+    _rd_lankas(b, RD_KOPIJA[0], -1)
+    _rd_lankas(b, RD_KOPIJA[1], +1)
+    for p, q in _rd_liestines(65, 95):
+        b.ms.AddLine(A.taskas(*p), A.taskas(*q))
+
+
+# ------------------------------------------------------------- MASYVAI (OFFSET, sluoksnio keitimas, ARRAYPOLAR, ROTATE)
+MS_R, MS_SKYLE_R, MS_PCD_R = 50, 5, 35
+
+
+def _ms_kampai(nuo):
+    return [(MS_PCD_R * math.cos(math.radians(nuo + 60 * i)), MS_PCD_R * math.sin(math.radians(nuo + 60 * i))) for i in range(6)]
+
+
+MS_PRIES, MS_PO = _ms_kampai(90), _ms_kampai(0)          # po ARRAYPOLAR ir po ROTATE 30°
+
+
+def _apskritimas(objs, c, r):
+    rr = [x for x in apskritimai(objs, r) if artima(x["c"][:2], c)]
+    return rr[0] if rr else None
+
+
+def t_ms_offset(b):
+    objs = objektai(b.ms)
+    if not _apskritimas(objs, (0, 0), MS_R):
+        return [tr("Neradau apskritimo ⌀100. CIRCLE → 0,0 → 50.", "No ⌀100 circle found. CIRCLE → 0,0 → 50.")]
+    if not _apskritimas(objs, (0, 0), 20):
+        return [tr("Neradau kiaurymės ⌀40. OFFSET → 30 → spustelėk apskritimą → spustelėk jo viduje → Enter.",
+                   "No ⌀40 bore found. OFFSET → 30 → click the circle → click inside it → Enter.")]
+    return []
+
+
+def d_ms_offset(b):
+    _sl(b, "KONTURAS")
+    b.ms.AddCircle(A.taskas(0, 0), MS_R)
+    b.ms.AddCircle(A.taskas(0, 0), 20)
+
+
+def t_ms_pcd(b):
+    c = _apskritimas(objektai(b.ms), (0, 0), MS_PCD_R)
+    if not c:
+        return [tr("Neradau centrų apskritimo ⌀70. OFFSET → 15 → spustelėk ⌀100 apskritimą → spustelėk viduje.",
+                   "No ⌀70 pitch circle found. OFFSET → 15 → click the ⌀100 circle → click inside.")]
+    if c["sluoksnis"].upper() != "ASYS":
+        return [tr(f"Apskritimas ⌀70 sluoksnyje „{c['sluoksnis']}“. Pažymėk jį (spustelėk) ir sluoksnių sąraše (Home → Layers) pasirink ASYS → Esc.",
+                   f"The ⌀70 circle is on layer „{c['sluoksnis']}“. Select it (click) and pick ASYS in the layer list (Home → Layers) → Esc.")]
+    return []
+
+
+def d_ms_pcd(b):
+    c = b.ms.AddCircle(A.taskas(0, 0), MS_PCD_R)
+    c.Layer = "ASYS"
+
+
+def t_ms_skyle(b):
+    c = _apskritimas(objektai(b.ms), MS_PRIES[0], MS_SKYLE_R)
+    if not c:
+        return [tr("Neradau skylės ⌀10 taške 0,35. CIRCLE → spustelėk ⌀70 apskritimo viršų (Quadrant) → 5.",
+                   "No ⌀10 hole at 0,35. CIRCLE → click the top of the ⌀70 circle (Quadrant) → 5.")]
+    if c["sluoksnis"].upper() == "ASYS":
+        return [tr("Skylė nubraižyta sluoksnyje ASYS. Pažymėk ją → sluoksnių sąraše pasirink KONTURAS (ir padaryk KONTURAS aktyvų).",
+                   "The hole is on layer ASYS. Select it → pick KONTURAS in the layer list (and make KONTURAS current).")]
+    return []
+
+
+def d_ms_skyle(b):
+    _sl(b, "KONTURAS")
+    b.ms.AddCircle(A.taskas(*MS_PRIES[0]), MS_SKYLE_R)
+
+
+def _ms_truksta(objs, vietos):
+    return [p for p in vietos if not _apskritimas(objs, p, MS_SKYLE_R)]
+
+
+def t_ms_masyvas(b):
+    objs = objektai(b.ms)
+    truksta = _ms_truksta(objs, MS_PRIES)
+    if not truksta:
+        return []
+    if any("BlockReference" in o["tipas"] or "Array" in o["tipas"] for o in objs):
+        return [tr("Masyvas sukurtas kaip susietas (Associative) - jo skylių negaliu patikrinti po vieną. Pažymėk masyvą → EXPLODE → Enter (arba U ir kartok su AS → N).",
+                   "The array is associative - I can't check its holes one by one. Select the array → EXPLODE → Enter (or U and repeat with AS → N).")]
+    return [tr(f"Radau {6 - len(truksta)} skyles(-ių) iš 6. ARRAYPOLAR → skylė → Enter → centras 0,0 → AS → N → I → 6 → Enter.",
+               f"Found {6 - len(truksta)} of 6 holes. ARRAYPOLAR → the hole → Enter → centre 0,0 → AS → N → I → 6 → Enter.")]
+
+
+def d_ms_masyvas(b):
+    _sl(b, "KONTURAS")
+    for p in MS_PRIES[1:]:
+        b.ms.AddCircle(A.taskas(*p), MS_SKYLE_R)
+
+
+def t_ms_rotate(b):
+    objs = objektai(b.ms)
+    if not _ms_truksta(objs, MS_PO):
+        return []
+    if not _ms_truksta(objs, MS_PRIES):
+        return [tr("Skylės dar nepasuktos. ROTATE → spustelėk visas 6 skyles → Enter → 0,0 → 30.",
+                   "The holes aren't rotated yet. ROTATE → click all 6 holes → Enter → 0,0 → 30.")]
+    return [tr("Skylės ne ten, kur reikia: dvi turi būti ant horizontalios ašies (35,0 ir -35,0). U ir ROTATE → 6 skylės → 0,0 → 30.",
+               "The holes are in the wrong place: two must lie on the horizontal axis (35,0 and -35,0). U and ROTATE → 6 holes → 0,0 → 30.")]
+
+
+def d_ms_rotate(b):
+    for o in objektai(b.ms):
+        if o["tipas"] == "AcDbCircle" and any(artima(x["c"][:2], p) for x in apskritimai([o], MS_SKYLE_R) for p in MS_PRIES):
+            o["obj"].Delete()
+    _sl(b, "KONTURAS")
+    for p in MS_PO:
+        b.ms.AddCircle(A.taskas(*p), MS_SKYLE_R)
+
+
+def _t_asys(b, horiz, vert, kaip_h, kaip_v):
+    """horiz/vert: ((x0, x1), y) ir (x, (y0, y1)) - ašis turi siekti bent tiek."""
+    seg = atkarpos(objektai(b.ms), "ASYS")
+    if not seg:
+        return [tr("Sluoksnyje ASYS neradau linijų. Pasirink sluoksnį ASYS ir braižyk LINE.", "No lines on layer ASYS. Make ASYS current and draw with LINE.")]
+    kl = []
+    (hx0, hx1), hy = horiz
+    if not any(abs(p[1] - hy) < 1 and abs(q[1] - hy) < 1 and min(p[0], q[0]) <= hx0 + 1 and max(p[0], q[0]) >= hx1 - 1 for p, q, _ in seg):
+        kl.append(tr("Trūksta horizontalios ašies: ", "The horizontal centre line is missing: ") + kaip_h)
+    if vert:
+        vx, (vy0, vy1) = vert
+        if not any(abs(p[0] - vx) < 1 and abs(q[0] - vx) < 1 and min(p[1], q[1]) <= vy0 + 1 and max(p[1], q[1]) >= vy1 - 1 for p, q, _ in seg):
+            kl.append(tr("Trūksta vertikalios ašies: ", "The vertical centre line is missing: ") + kaip_v)
+    return kl
+
+
+def t_ms_asys(b):
+    return _t_asys(b, ((-50, 50), 0), (0, (-50, 50)), "LINE → -55,0 → 55,0.", "LINE → 0,-55 → 0,55.")
+
+
+def d_ms_asys(b):
+    for p, q in (((-55, 0), (55, 0)), ((0, -55), (0, 55))):
+        l = b.ms.AddLine(A.taskas(*p), A.taskas(*q))
+        l.Layer = "ASYS"
+
+
+# ------------------------------------------------------------- 2D PJŪVIS (PLINE, HATCH)
+BK_ISOR, BK_VID, BK_L = 20, 10, 50          # įvorė ⌀40 / ⌀20, ilgis 50
+BK_SIENELES = ((0, BK_VID, BK_L, BK_ISOR), (0, -BK_ISOR, BK_L, -BK_VID))
+
+
+def t_bk_sluoksniai(b):
+    try:
+        b.doc.Layers.Item("BRUKSNIAI")
+    except Exception:
+        return [tr("Nerandu sluoksnio BRUKSNIAI. LAYER → New Layer → BRUKSNIAI (spalva 8 - pilka).",
+                   "Layer BRUKSNIAI not found. LAYER → New Layer → BRUKSNIAI (colour 8 - grey).")]
+    return t_sluoksniai(b)
+
+
+def d_bk_sluoksniai(b):
+    b.vykdyti_saugiai("sluoksniai")
+
+
+def t_bk_konturas(b):
+    objs = objektai(b.ms)
+    if not staciakampis(objs, 0, -BK_ISOR, BK_L, BK_ISOR):
+        return [tr("Neradau įvorės kontūro 50 × 40. PLINE → 0,-20 → @50,0 → @0,40 → @-50,0 → C.",
+                   "No 50 × 40 bushing outline found. PLINE → 0,-20 → @50,0 → @0,40 → @-50,0 → C.")]
+    seg = atkarpos(objs)
+    truksta = [y for y in (BK_VID, -BK_VID) if not yra_atkarpa(seg, (0, y), (BK_L, y))]
+    if truksta:
+        return [tr(f"Trūksta kiaurymės linijos y = {truksta[0]:g}: LINE → 0,{truksta[0]:g} → @50,0.",
+                   f"The bore line y = {truksta[0]:g} is missing: LINE → 0,{truksta[0]:g} → @50,0.")]
+    return []
+
+
+def d_bk_konturas(b):
+    _sl(b, "KONTURAS")
+    _pl(b.ms, [(0, -BK_ISOR), (BK_L, -BK_ISOR), (BK_L, BK_ISOR), (0, BK_ISOR)])
+    for y in (BK_VID, -BK_VID):
+        b.ms.AddLine(A.taskas(0, y), A.taskas(BK_L, y))
+
+
+def _ribos_sutampa(o, r, tol=1.0):
+    return artima(o["min"][:2] + o["max"][:2], r, tol)
+
+
+def t_bk_hatch(b):
+    hs = [o for o in objektai(b.ms) if o["tipas"] == "AcDbHatch"]
+    if not hs:
+        return [tr("Neradau brūkšniavimo. HATCH → Pattern ANSI31 → spustelėk viršutinės ir apatinės sienelės vidų → Enter.",
+                   "No hatch found. HATCH → Pattern ANSI31 → click inside the top and bottom walls → Enter.")]
+    for h in hs:
+        try:
+            rastas = (h["obj"].PatternName or "").upper()
+        except Exception:
+            rastas = "ANSI31"
+        if rastas != "ANSI31":
+            return [tr(f"Raštas {rastas} - pjūviams naudok ANSI31 (linijos 45°). Pažymėk brūkšniavimą ir pakeisk Pattern.",
+                       f"Pattern {rastas} - use ANSI31 (45° lines) for sections. Select the hatch and change the Pattern.")]
+        if h["sluoksnis"].upper() != "BRUKSNIAI":
+            return [tr(f"Brūkšniavimas sluoksnyje „{h['sluoksnis']}“ - pažymėk jį ir pasirink sluoksnį BRUKSNIAI.",
+                       f"The hatch is on layer „{h['sluoksnis']}“ - select it and pick layer BRUKSNIAI.")]
+    visa = (0, -BK_ISOR, BK_L, BK_ISOR)
+    for h in hs:
+        if _ribos_sutampa(h, visa):
+            try:
+                kilpos = int(h["obj"].NumberOfLoops)
+            except Exception:
+                kilpos = 2
+            if kilpos < 2:
+                return [tr("Užbrūkšniavai ir kiaurymę. Kiaurymėje medžiagos nėra - U ir spustelėk tik sienelių vidų.",
+                           "You hatched the bore too. There's no material in the bore - U and click only inside the walls.")]
+            return []
+    truksta = [r for r in BK_SIENELES if not any(_ribos_sutampa(h, r) for h in hs)]
+    if truksta:
+        kuri = tr("viršutinės", "top") if truksta[0][1] > 0 else tr("apatinės", "bottom")
+        return [tr(f"Trūksta {kuri} sienelės brūkšniavimo. HATCH → spustelėk jos vidų → Enter.",
+                   f"The {kuri} wall isn't hatched. HATCH → click inside it → Enter.")]
+    return []
+
+
+def d_bk_hatch(b):
+    _sl(b, "BRUKSNIAI")
+    h = b.ms.AddHatch(1, "ANSI31", False)       # acHatchPatternTypePreDefined
+    laikinos = []
+    for x0, y0, x1, y1 in BK_SIENELES:
+        pl = _pl(b.ms, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
+        laikinos.append(pl)
+        h.AppendOuterLoop(_objektu_masyvas([pl]))
+    h.Evaluate()
+    h.Layer = "BRUKSNIAI"
+    for pl in laikinos:
+        pl.Delete()
+    _sl(b, "KONTURAS")
+
+
+def t_bk_asis(b):
+    return _t_asys(b, ((0, BK_L), 0), None, "LINE → -5,0 → 55,0.", "")
+
+
+def d_bk_asis(b):
+    l = b.ms.AddLine(A.taskas(-5, 0), A.taskas(BK_L + 5, 0))
+    l.Layer = "ASYS"
+
+
+# ------------------------------------------------------------- MATMENYS: spindulys
+def t_spindulys(b):
+    return _t_matmuo(b, "Radial", 10, tr("DIMRADIUS → spustelėk suapvalintą kampą → padėk tekstą.", "DIMRADIUS → click a rounded corner → place the text."))
+
+
+def d_spindulys(b):
+    _sl(b, "MATMENYS")
+    k = math.radians(45)
+    b.ms.AddDimRadial(A.taskas(90, 50), A.taskas(90 + 10 * math.cos(k), 50 + 10 * math.sin(k)), 12)
+
+
 TIKRINIMAS = {
     # failas
     "naujas": (t_naujas, d_naujas),
@@ -1307,6 +1883,35 @@ TIKRINIMAS = {
     "ilgis": (t_ilgis, d_ilgis),
     "aukstis": (t_aukstis, d_aukstis),
     "skersmuo": (t_skersmuo, d_skersmuo),
+    "spindulys": (t_spindulys, d_spindulys),
+    # tikslumas
+    "tk-naujas": (t_naujas, d_naujas),
+    "tk-osnap": (t_tk_osnap, d_tk_osnap),
+    "tk-rombas": (t_tk_rombas, d_tk_rombas),
+    "tk-centras": (t_tk_centras, d_tk_centras),
+    "tk-polar": (t_tk_polar, d_tk_polar),
+    "tk-plotas": (t_tk_plotas, d_tk_plotas),
+    # redagavimas
+    "rd-sluoksniai": (t_sluoksniai, d_sluoksniai),
+    "rd-plokste": (t_rd_plokste, d_rd_plokste),
+    "rd-chamfer": (t_rd_chamfer, d_rd_chamfer),
+    "rd-kopija": (t_rd_kopija, d_rd_kopija),
+    "rd-liestines": (t_rd_liestines, d_rd_liestines),
+    "rd-trim": (t_rd_trim, d_rd_trim),
+    "rd-mirror": (t_rd_mirror, d_rd_mirror),
+    # masyvai
+    "ms-sluoksniai": (t_sluoksniai, d_sluoksniai),
+    "ms-offset": (t_ms_offset, d_ms_offset),
+    "ms-pcd": (t_ms_pcd, d_ms_pcd),
+    "ms-skyle": (t_ms_skyle, d_ms_skyle),
+    "ms-masyvas": (t_ms_masyvas, d_ms_masyvas),
+    "ms-rotate": (t_ms_rotate, d_ms_rotate),
+    "ms-asys": (t_ms_asys, d_ms_asys),
+    # 2D pjūvis
+    "bk-sluoksniai": (t_bk_sluoksniai, d_bk_sluoksniai),
+    "bk-konturas": (t_bk_konturas, d_bk_konturas),
+    "bk-hatch": (t_bk_hatch, d_bk_hatch),
+    "bk-asis": (t_bk_asis, d_bk_asis),
     # sriftai
     "iso": (t_iso, d_sriftai),
     "isolt": (t_isolt, d_sriftai),

@@ -100,6 +100,7 @@ STANDARTINIAI_SLUOKSNIAI = [
     ("ASYS", 1, "CENTER", 18),
     ("MATMENYS", 3, "Continuous", 18),
     ("NEMATOMOS", 5, "HIDDEN", 25),
+    ("BRUKSNIAI", 8, "Continuous", 18),      # pjūvių brūkšniavimas - plona linija
 ]
 
 

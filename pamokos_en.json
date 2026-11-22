@@ -157,6 +157,162 @@
     }
    ]
   },
+  "tikslumas": {
+   "pavadinimas": "Precision drafting",
+   "trukme": "~20 min.",
+   "aprasas": "Navigation (ZOOM, PAN), object snap (OSNAP), tracking (OTRACK, POLAR) and measuring (AREA) - you'll draw precisely, not by eye.",
+   "pabaiga": "Now you draw precisely: snaps, tracking, polar angles and measuring - the basis for every other drawing.",
+   "zingsniai": {
+    "tk-naujas": {
+     "pavadinimas": "New drawing and navigation",
+     "kodel": "The drawing is big and the screen is small - you need to zoom, pan and see everything quickly. The mouse wheel is all it takes.",
+     "zingsniai": [
+      "NEW → acadiso.dwt (millimetres).",
+      "Roll the mouse wheel - the view zooms towards the cursor.",
+      "Hold the wheel down and drag - the view pans (PAN).",
+      "Double-click the wheel - you'll see the whole drawing (ZOOM Extents). Same as Z → E."
+     ],
+     "komandos": [
+      ["Command:", "NEW"],
+      ["Select template:", "acadiso.dwt"],
+      ["Command:", "ZOOM"],
+      [
+       "Specify corner of window or [All/Center/Dynamic/Extents/Previous/Scale/Window/Object] <real time>:",
+       "E"
+      ]
+     ],
+     "uzuominos": [
+      "Lost in the drawing? Double-click the wheel and you see everything again.",
+      "The wheel zooms too much? Just roll it back."
+     ],
+     "tikslas": "A new drawing in millimetres"
+    },
+    "tk-osnap": {
+     "pavadinimas": "Object snap: OSNAP",
+     "kodel": "Without snaps a click lands only „roughly“. With OSNAP the cursor sticks exactly to an endpoint, midpoint or centre - the most important precision tool.",
+     "zingsniai": [
+      "Type OSNAP - the Drafting Settings window opens.",
+      "On the Object Snap tab tick: Endpoint, Midpoint, Center, Quadrant, Intersection.",
+      "Object Snap On (F3) must be ticked at the top → OK."
+     ],
+     "komandos": [
+      ["Command:", "OSNAP"],
+      ["Object Snap:", "Endpoint · Midpoint · Center · Quadrant · Intersection"],
+      ["Object Snap On:", "F3"]
+     ],
+     "uzuominos": [
+      "Don't tick every snap - too many markers just get in the way. These five are enough.",
+      "F3 turns snapping on and off. The cursor stopped snapping? Press F3."
+     ],
+     "tikslas": "5 snaps turned on"
+    },
+    "tk-rombas": {
+     "pavadinimas": "A rhombus through midpoints: Midpoint",
+     "kodel": "You can't find the middle of an edge exactly by eye. The Midpoint snap finds it for you - hover over the line and a triangle appears.",
+     "zingsniai": [
+      "Draw an 80 × 50 rectangle.",
+      "LINE and click the midpoint of the bottom edge (a triangle ▲ appears), then the midpoints of the right, top and left edges.",
+      "Finish with C (Close) - the line returns to the start."
+     ],
+     "komandos": [
+      ["Command:", "RECTANG"],
+      ["Specify first corner point:", "0,0"],
+      ["Specify other corner point:", "@80,50"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "(bottom edge midpoint ▲)"],
+      ["Specify next point:", "(right edge midpoint ▲)"],
+      ["Specify next point:", "(top edge midpoint ▲)"],
+      ["Specify next point:", "(left edge midpoint ▲)"],
+      ["Specify next point or [Close/Undo]:", "C"]
+     ],
+     "uzuominos": [
+      "No triangle? Check that F3 is on and Midpoint is ticked.",
+      "The rhombus corners: 40,0 · 80,25 · 40,50 · 0,25."
+     ],
+     "tikslas": "An 80 × 50 rectangle and a rhombus through the edge midpoints"
+    },
+    "tk-centras": {
+     "pavadinimas": "A centre with tracking: OTRACK",
+     "kodel": "Sometimes a point isn't marked anywhere - like the centre of the rhombus. Object snap tracking (OTRACK) draws dotted lines from other points, and where they cross is the point you need.",
+     "zingsniai": [
+      "Turn tracking on: F11 (Object Snap Tracking lights up at the bottom).",
+      "CIRCLE. Hover over the midpoint of the top edge and wait a second (don't click!) - a small plus appears.",
+      "Do the same with the midpoint of the left edge, then move the cursor to the middle of the rectangle - two dotted lines cross. Click.",
+      "Radius 10."
+     ],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "(intersection - tracking from two midpoints)"],
+      ["Specify radius of circle:", "10"]
+     ],
+     "uzuominos": [
+      "No dotted lines? Press F11 and hover over the midpoint a little longer.",
+      "The centre must be 40,25. Try it with tracking - coordinates aren't always known."
+     ],
+     "tikslas": "An R10 circle in the centre of the rhombus"
+    },
+    "tk-polar": {
+     "pavadinimas": "Polar tracking: POLAR 30°",
+     "kodel": "ORTHO (F8) only lets you draw horizontally and vertically, while POLAR (F10) works at a chosen angle, e.g. every 30°. Point the cursor, type the length - and the line is exact.",
+     "zingsniai": [
+      "Right-click the POLAR button at the bottom → choose 30. Turn on F10.",
+      "LINE and click the top right corner of the rectangle (Endpoint).",
+      "Move the cursor up and to the right until a dotted line and 30° appear. Type 40 → Enter → Enter."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "(corner 80,50 - Endpoint ■)"],
+      ["Specify next point:", "40"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "You type only the number and the cursor gives the direction - this is „direct distance entry“.",
+      "The same without tracking: @40<30."
+     ],
+     "tikslas": "A 40 mm line at 30° from corner 80,50"
+    },
+    "tk-plotas": {
+     "pavadinimas": "Measure: AREA",
+     "kodel": "You often need a length or an area - e.g. for the amount of material. AutoCAD measures exactly: DIST - a distance, AREA - an area.",
+     "zingsniai": [
+      "AREA and click the 4 corners of the rhombus (Endpoint) → Enter.",
+      "The command line shows Area = ... Write that number with TEXT next to the rectangle, e.g. A = ... (height 3.5)."
+     ],
+     "komandos": [
+      ["Command:", "AREA"],
+      ["Specify first corner point:", "(the 4 rhombus corners)"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "TEXT"],
+      ["Specify start point of text:", "(next to the rectangle)"],
+      ["Specify height:", "3.5"],
+      ["Specify rotation angle of text:", "0"],
+      ["Enter text:", "(A = area)"]
+     ],
+     "uzuominos": [
+      "The area of the rhombus is half the area of the rectangle.",
+      "DIST measures the distance between two points - check the 30° line: it must be 40."
+     ],
+     "tikslas": "A text with the rhombus area"
+    }
+   },
+   "testas": [
+    {
+     "k": "What does F3 do?",
+     "v": ["Turns on ORTHO", "Turns object snap (OSNAP) on and off", "Opens the layers", "Turns on polar tracking"],
+     "p": "F3 - OSNAP, F8 - ORTHO, F10 - POLAR, F11 - OTRACK."
+    },
+    {
+     "k": "How do you quickly see the whole drawing?",
+     "v": ["Press Esc", "F8", "Double-click the mouse wheel (ZOOM Extents)", "REGEN"],
+     "p": "Double-clicking the wheel or Z → E shows all objects in the drawing."
+    },
+    {
+     "k": "With POLAR 30° you point the cursor along 30° and type 40. What is drawn?",
+     "v": ["A 40 mm line at 30°", "A line to point 40,30", "A 30 mm line at 40°", "Nothing"],
+     "p": "When you type only a number, the line goes in the cursor direction with that length."
+    }
+   ]
+  },
   "2d": {
    "pavadinimas": "2D drawing",
    "aprasas": "Layers, RECTANG, CIRCLE, centre lines and FILLET - you will draw a plate with holes.",
@@ -237,6 +393,445 @@
     }
    ]
   },
+  "redagavimas": {
+   "pavadinimas": "Editing: COPY, CHAMFER, TRIM, MIRROR",
+   "trukme": "~25 min.",
+   "aprasas": "A plate with two slots: chamfers (CHAMFER), a copy (COPY), tangent lines (Quadrant), trimming (TRIM) and a mirror image (MIRROR).",
+   "pabaiga": "You can edit now: copy, chamfer, trim and mirror. Most real parts are drawn like this - not from scratch, but from what is already there.",
+   "zingsniai": {
+    "rd-sluoksniai": {
+     "pavadinimas": "New drawing and layers",
+     "kodel": "Every job gets a new drawing with the same layers. Engineers do the same: they start from a template.",
+     "zingsniai": [
+      "NEW → acadiso.dwt.",
+      "LAYER → create KONTURAS (7), ASYS (1, linetype CENTER), MATMENYS (3) - as in the lesson „2D drawing“.",
+      "Make KONTURAS current."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": [
+      "Tip: save such an empty drawing as a template (SAVEAS → AutoCAD Drawing Template .dwt) - next time you won't need to create the layers.",
+      "Never draw on layer 0 - it's meant for blocks."
+     ]
+    },
+    "rd-plokste": {
+     "pavadinimas": "A 120 × 80 plate",
+     "kodel": "The base is a rectangle. The next steps will edit it, not draw it again.",
+     "zingsniai": ["On layer KONTURAS:"],
+     "komandos": [
+      ["Command:", "RECTANG"],
+      ["Specify first corner point:", "0,0"],
+      ["Specify other corner point:", "@120,80"]
+     ],
+     "uzuominos": ["@ means „from the last point“: @120,80 - 120 to the right and 80 up."],
+     "tikslas": "A 120 × 80 rectangle"
+    },
+    "rd-chamfer": {
+     "pavadinimas": "Chamfers: CHAMFER",
+     "kodel": "A chamfer is a cut-off corner - like FILLET, but straight. D (Distance) sets how much to cut, P (Polyline) chamfers all corners at once.",
+     "zingsniai": ["Type:"],
+     "komandos": [
+      ["Command:", "CHAMFER"],
+      ["Select first line or [Undo/Polyline/Distance/Angle/Trim/mEthod/Multiple]:", "D"],
+      ["Specify first chamfer distance:", "10"],
+      ["Specify second chamfer distance:", "10"],
+      ["Select first line or [Undo/Polyline/Distance/Angle/Trim/mEthod/Multiple]:", "P"],
+      ["Select 2D polyline:", "(click the plate)"]
+     ],
+     "uzuominos": [
+      "Only one corner chamfered? You forgot P (Polyline). U and again.",
+      "On a drawing this chamfer is written 10×45°."
+     ],
+     "tikslas": "4 chamfers 10 × 10"
+    },
+    "rd-kopija": {
+     "pavadinimas": "Start of the slot: CIRCLE and COPY",
+     "kodel": "When you need a second identical object, don't draw it again. COPY: select, give a base point and where to put it. MOVE works exactly the same, it just doesn't leave the original.",
+     "zingsniai": ["An R6 circle at 25,40.", "COPY: select it → Enter → base point - the centre → @30,0 → Enter."],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "25,40"],
+      ["Specify radius of circle:", "6"],
+      ["Command:", "COPY"],
+      ["Select objects:", "(click the circle)"],
+      ["Select objects:", "Enter"],
+      ["Specify base point:", "(the centre - Center ○)"],
+      ["Specify second point:", "@30,0"],
+      ["Specify second point:", "Enter"]
+     ],
+     "uzuominos": [
+      "You can also select before the command: click the object, then COPY.",
+      "To snap to the centre, hover over the circle line - the centre marker appears."
+     ],
+     "tikslas": "Two R6 circles: 25,40 and 55,40"
+    },
+    "rd-liestines": {
+     "pavadinimas": "Tangent lines: Quadrant",
+     "kodel": "A slot is two half-circles and two straight lines across their top and bottom. The Quadrant snap finds the exact top and bottom points of a circle.",
+     "zingsniai": [
+      "LINE → type QUA → click the top of the left circle → QUA → the top of the right circle → Enter.",
+      "The same at the bottom."
+     ],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "QUA"],
+      ["Specify first point:", "(top of the left circle ◇)"],
+      ["Specify next point:", "QUA"],
+      ["Specify next point:", "(top of the right circle ◇)"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "QUA is a one-off snap, it works for the next click only. The same: Shift + right mouse button → Quadrant.",
+      "The lines: 25,46 → 55,46 and 25,34 → 55,34."
+     ],
+     "tikslas": "Two tangent lines: y = 46 and y = 34"
+    },
+    "rd-trim": {
+     "pavadinimas": "Trim it: TRIM",
+     "kodel": "TRIM cuts off part of an object up to other objects. The inner halves of the circles aren't needed - trim them and a real slot remains.",
+     "zingsniai": [
+      "TRIM → click the right half of the left circle (between the lines) and the left half of the right circle → Enter."
+     ],
+     "komandos": [
+      ["Command:", "TRIM"],
+      ["Select object to trim or shift-select to extend:", "(inner half of the left circle)"],
+      ["Select object to trim or shift-select to extend:", "(inner half of the right circle)"],
+      ["Select object to trim or shift-select to extend:", "Enter"]
+     ],
+     "uzuominos": [
+      "In recent AutoCAD TRIM cuts to the nearest lines by itself - just click what to cut off.",
+      "Trimmed the wrong part? U undoes the last trim without ending the command.",
+      "Hold Shift and TRIM extends a line to a boundary (like EXTEND)."
+     ],
+     "tikslas": "A 42 × 12 slot"
+    },
+    "rd-mirror": {
+     "pavadinimas": "The second slot: MIRROR",
+     "kodel": "Half of a symmetric part is drawn and the other half is mirrored. The mirror line goes through the middle of the plate, and a selection box helps you select.",
+     "zingsniai": [
+      "MIRROR. Select the slot with a box from left to right (blue): click left above the slot, then right below it → Enter.",
+      "Mirror line: top edge midpoint → bottom edge midpoint (Midpoint).",
+      "Erase source objects? → N."
+     ],
+     "komandos": [
+      ["Command:", "MIRROR"],
+      ["Select objects:", "(a box from left to right around the slot)"],
+      ["Select objects:", "Enter"],
+      ["Specify first point of mirror line:", "(top edge midpoint ▲)"],
+      ["Specify second point of mirror line:", "(bottom edge midpoint ▲)"],
+      ["Erase source objects? [Yes/No] <No>:", "N"]
+     ],
+     "uzuominos": [
+      "A box from left to right (blue) selects only what fits inside it completely. From right to left (green) - everything it touches.",
+      "The mirror line is x = 60 - the middle of the plate."
+     ],
+     "tikslas": "Two symmetric slots"
+    }
+   },
+   "testas": [
+    {
+     "k": "A 10×45° chamfer: which distances do you enter in CHAMFER?",
+     "v": ["10 and 45", "10 and 10", "45 and 45", "5 and 5"],
+     "p": "A 45° angle comes from two equal distances."
+    },
+    {
+     "k": "How is COPY different from MOVE?",
+     "v": [
+      "No difference",
+      "MOVE works only on lines",
+      "COPY leaves the original, MOVE doesn't",
+      "COPY has no base point"
+     ],
+     "p": "Both ask for a base point and where to put it, but COPY leaves the original in place."
+    },
+    {
+     "k": "A box from left to right (blue) selects...",
+     "v": [
+      "only objects that fit inside the box completely",
+      "everything the box touches",
+      "only lines",
+      "the whole drawing"
+     ],
+     "p": "A box from right to left (green) also selects what it only touches."
+    }
+   ]
+  },
+  "masyvai": {
+   "pavadinimas": "Arrays: OFFSET, ARRAYPOLAR, ROTATE",
+   "trukme": "~25 min.",
+   "aprasas": "A flange with 6 holes: a parallel copy (OFFSET), changing a layer, a polar array (ARRAYPOLAR), rotation (ROTATE) and centre lines.",
+   "pabaiga": "You drew a flange: OFFSET, changing a layer, a polar array and rotation. Arrays save the most time - 6 or 60 holes take the same effort.",
+   "zingsniai": {
+    "ms-sluoksniai": {
+     "pavadinimas": "New drawing and layers",
+     "kodel": "A new job - a new drawing. If you saved a template with layers, start from it.",
+     "zingsniai": [
+      "NEW → acadiso.dwt (or your template).",
+      "Layers KONTURAS (7), ASYS (1, CENTER), MATMENYS (3); KONTURAS current."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": ["Already have a template with layers? NEW → pick it - the layers will be there."]
+    },
+    "ms-offset": {
+     "pavadinimas": "Flange and bore: OFFSET",
+     "kodel": "OFFSET draws a parallel copy at a given distance - for a line, circle or polyline. For a circle it is a concentric circle.",
+     "zingsniai": [
+      "A ⌀100 circle: CIRCLE → 0,0 → 50.",
+      "OFFSET → 30 → click the circle → click inside it → Enter. You get a ⌀40 bore."
+     ],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "0,0"],
+      ["Specify radius of circle:", "50"],
+      ["Command:", "OFFSET"],
+      ["Specify offset distance:", "30"],
+      ["Select object to offset:", "(click the circle)"],
+      ["Specify point on side to offset:", "(click inside)"],
+      ["Select object to offset:", "Enter"]
+     ],
+     "uzuominos": [
+      "The distance is taken off the radius: 50 − 30 = 20, so you get R20 (⌀40).",
+      "OFFSET stays on - you can copy again at the same distance."
+     ],
+     "tikslas": "Circles ⌀100 and ⌀40"
+    },
+    "ms-pcd": {
+     "pavadinimas": "Pitch circle and layer",
+     "kodel": "Hole centres are marked with a thin centre line - the pitch circle. You'll draw it with OFFSET and move it to layer ASYS: this is how you change the layer of any object.",
+     "zingsniai": [
+      "OFFSET → 15 → click the ⌀100 circle → click inside → Enter. You get ⌀70.",
+      "Click the new circle without any command - it gets selected.",
+      "Pick ASYS in the Home → Layers list → Esc."
+     ],
+     "komandos": [
+      ["Command:", "OFFSET"],
+      ["Specify offset distance:", "15"],
+      ["Select object to offset:", "(the ⌀100 circle)"],
+      ["Specify point on side to offset:", "(inside)"],
+      ["Select object to offset:", "Enter"],
+      ["(select ⌀70):", "Layers → ASYS"]
+     ],
+     "uzuominos": [
+      "Another way: select the object and press Ctrl+1 - in Properties set Layer → ASYS.",
+      "MATCHPROP (MA) copies the layer and other properties from one object to others."
+     ],
+     "tikslas": "A ⌀70 pitch circle on layer ASYS"
+    },
+    "ms-skyle": {
+     "pavadinimas": "The first hole: Quadrant",
+     "kodel": "The first hole sits at the top of the pitch circle. The array will create the other five.",
+     "zingsniai": ["Check that KONTURAS is current.", "CIRCLE → click the top of the ⌀70 circle (Quadrant ◇) → 5."],
+     "komandos": [
+      ["Command:", "CIRCLE"],
+      ["Specify center point:", "(top of ⌀70 - Quadrant ◇)"],
+      ["Specify radius of circle:", "5"]
+     ],
+     "uzuominos": ["The centre must be 0,35.", "The hole ended up on layer ASYS? Select it and pick KONTURAS."],
+     "tikslas": "A ⌀10 hole at 0,35"
+    },
+    "ms-masyvas": {
+     "pavadinimas": "6 holes: ARRAYPOLAR",
+     "kodel": "A polar array spaces copies evenly around a centre. You give the centre and the count - AutoCAD works out the angles.",
+     "zingsniai": [
+      "ARRAYPOLAR → click the hole → Enter → centre 0,0.",
+      "Type AS → N (so the holes are separate circles), then I → 6 → Enter."
+     ],
+     "komandos": [
+      ["Command:", "ARRAYPOLAR"],
+      ["Select objects:", "(the hole)"],
+      ["Select objects:", "Enter"],
+      ["Specify center point of array or [Base point/Axis of rotation]:", "0,0"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "AS"
+      ],
+      ["Create associative array [Yes/No] <Yes>:", "N"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "I"
+      ],
+      ["Enter number of items in array:", "6"],
+      [
+       "Select grip to edit array or [ASsociative/Base point/Items/Angle between/Fill angle/ROWs/Levels/ROTate items/eXit]<eXit>:",
+       "Enter"
+      ]
+     ],
+     "uzuominos": [
+      "An associative array is one object: easy to change, but the holes are no longer separate. For this lesson - AS → N.",
+      "For a rectangular grid there is ARRAYRECT: rows and columns."
+     ],
+     "tikslas": "6 ⌀10 holes on ⌀70"
+    },
+    "ms-rotate": {
+     "pavadinimas": "Rotate: ROTATE 30°",
+     "kodel": "On a drawing the holes should sit on the centre lines - that makes dimensioning easier. ROTATE turns the selected objects around a base point.",
+     "zingsniai": ["ROTATE → click all 6 holes → Enter.", "Base point 0,0 → angle 30."],
+     "komandos": [
+      ["Command:", "ROTATE"],
+      ["Select objects:", "(the 6 holes)"],
+      ["Select objects:", "Enter"],
+      ["Specify base point:", "0,0"],
+      ["Specify rotation angle:", "30"]
+     ],
+     "uzuominos": [
+      "A positive angle turns counter-clockwise.",
+      "After rotating, two holes lie on the horizontal axis: 35,0 and -35,0."
+     ],
+     "tikslas": "Holes at 0°, 60°, 120°..."
+    },
+    "ms-asys": {
+     "pavadinimas": "Centre lines",
+     "kodel": "Every round part has two perpendicular centre lines through its centre - they extend 2-5 mm beyond the outline.",
+     "zingsniai": ["Make ASYS current.", "LINE → -55,0 → 55,0 and LINE → 0,-55 → 0,55.", "Make KONTURAS current again."],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "-55,0"],
+      ["Specify next point:", "55,0"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,-55"],
+      ["Specify next point:", "0,55"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "The centre line looks continuous? LTSCALE → 0.5 or 1.",
+      "Centre lines are thin, so they live on their own layer ASYS."
+     ],
+     "tikslas": "Two centre lines through the centre"
+    }
+   },
+   "testas": [
+    {
+     "k": "OFFSET 30 inwards from an R50 circle - what radius do you get?",
+     "v": ["80", "50", "30", "20"],
+     "p": "The distance is taken off the radius: 50 − 30 = 20."
+    },
+    {
+     "k": "Why do we pick AS → N in ARRAYPOLAR?",
+     "v": [
+      "So the holes are separate circles",
+      "To make the array bigger",
+      "To fill the holes",
+      "Otherwise it doesn't work"
+     ],
+     "p": "An associative array is one object, a non-associative one - separate circles."
+    },
+    {
+     "k": "How do you change the layer of an object you've already drawn?",
+     "v": [
+      "Only by deleting and redrawing it",
+      "Select it and pick another layer in the Layers list",
+      "LAYER → New",
+      "F8"
+     ],
+     "p": "Or Ctrl+1 (Properties) → Layer."
+    }
+   ]
+  },
+  "bruksniavimas": {
+   "pavadinimas": "2D section: PLINE and HATCH",
+   "trukme": "~15 min.",
+   "aprasas": "A bushing section: a polyline (PLINE), bore lines, ANSI31 hatching (HATCH) on layer BRUKSNIAI and a centre line.",
+   "pabaiga": "You drew a hatched bushing section - this is how every hollow part is shown: pipes, bushings, housings.",
+   "zingsniai": {
+    "bk-sluoksniai": {
+     "pavadinimas": "Layers with BRUKSNIAI",
+     "kodel": "Hatching is drawn with a thin line, so it gets its own layer. Then the lineweights print correctly.",
+     "zingsniai": [
+      "NEW → acadiso.dwt.",
+      "LAYER → KONTURAS (7), ASYS (1, CENTER), MATMENYS (3) and a new BRUKSNIAI (8).",
+      "KONTURAS current."
+     ],
+     "komandos": [["Command:", "NEW"], ["Command:", "LAYER"]],
+     "uzuominos": ["Colour 8 is grey: the hatching doesn't overpower the outline."]
+    },
+    "bk-konturas": {
+     "pavadinimas": "Outline: PLINE",
+     "kodel": "PLINE draws one connected object from several segments - it is easier to select, offset and hatch than separate LINE lines.",
+     "zingsniai": [
+      "A ⌀40 × 50 bushing: PLINE → 0,-20 → @50,0 → @0,40 → @-50,0 → C.",
+      "In section the ⌀20 bore shows as two lines: LINE → 0,10 → @50,0 and LINE → 0,-10 → @50,0."
+     ],
+     "komandos": [
+      ["Command:", "PLINE"],
+      ["Specify start point:", "0,-20"],
+      ["Specify next point or [Arc/Halfwidth/Length/Undo/Width]:", "@50,0"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "@0,40"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "@-50,0"],
+      ["Specify next point or [Arc/Close/Halfwidth/Length/Undo/Width]:", "C"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,10"],
+      ["Specify next point:", "@50,0"],
+      ["Specify next point:", "Enter"],
+      ["Command:", "LINE"],
+      ["Specify first point:", "0,-10"],
+      ["Specify next point:", "@50,0"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": [
+      "Click the outline: if it all gets selected at once, it's a polyline.",
+      "In the section the top and bottom are walls (material), the middle is the empty bore."
+     ],
+     "tikslas": "A 50 × 40 outline and the bore lines"
+    },
+    "bk-hatch": {
+     "pavadinimas": "Hatching: HATCH",
+     "kodel": "In a section you hatch only where the cutting plane goes through material - the walls. The bore stays unhatched. The standard: thin lines at 45° (ANSI31).",
+     "zingsniai": [
+      "Make BRUKSNIAI current.",
+      "HATCH → in the ribbon pick Pattern ANSI31, Scale 1.",
+      "Click inside the top wall, then the bottom one → Enter.",
+      "Make KONTURAS current again."
+     ],
+     "komandos": [
+      ["Command:", "HATCH"],
+      ["Pattern:", "ANSI31"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "(inside the top wall)"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "(inside the bottom wall)"],
+      ["Pick internal point or [Select objects/Undo/seTtings]:", "Enter"]
+     ],
+     "uzuominos": [
+      "The whole rectangle got hatched? You clicked in the bore - U and click in the walls.",
+      "Too dense or too sparse? Select the hatch and change Scale (e.g. 0.5 or 2)."
+     ],
+     "tikslas": "Both walls hatched"
+    },
+    "bk-asis": {
+     "pavadinimas": "Centre line",
+     "kodel": "A turned part (bushing, shaft) always has a centre line - it extends 2-5 mm beyond the outline.",
+     "zingsniai": ["ASYS current: LINE → -5,0 → 55,0."],
+     "komandos": [
+      ["Command:", "LINE"],
+      ["Specify first point:", "-5,0"],
+      ["Specify next point:", "55,0"],
+      ["Specify next point:", "Enter"]
+     ],
+     "uzuominos": ["The centre line runs through the middle of the bore - where there's no hatching."],
+     "tikslas": "A centre line through the bushing"
+    }
+   },
+   "testas": [
+    {
+     "k": "At what angle is a section hatched?",
+     "v": ["30°", "90°", "45°", "60°"],
+     "p": "Thin parallel lines at 45° - ANSI31."
+    },
+    {
+     "k": "Which areas of a section are hatched?",
+     "v": [
+      "The whole part including holes",
+      "Only where the plane cuts through material",
+      "Only the bore",
+      "The centre lines"
+     ],
+     "p": "Holes and hollows stay unhatched."
+    },
+    {
+     "k": "How is PLINE different from LINE?",
+     "v": ["PLINE is one connected object", "PLINE draws only circles", "No difference", "LINE can't be closed"],
+     "p": "LINE creates separate segments, PLINE - one object."
+    }
+   ]
+  },
   "sriftai": {
    "pavadinimas": "Fonts and text",
    "aprasas": "ISO 3098 text styles: isocp.shx and ISOCPEUR with Lithuanian letters.",
@@ -288,7 +883,7 @@
   },
   "matmenys": {
    "pavadinimas": "Dimensions to the standard",
-   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER - you will dimension the plate on layer MATMENYS (dimensions).",
+   "aprasas": "DIMSTYLE, DIMLINEAR, DIMDIAMETER, DIMRADIUS - you will dimension the plate on layer MATMENYS (dimensions).",
    "trukme": "~15 min.",
    "pabaiga": "You can create a dimension style and dimension lengths and diameters.",
    "zingsniai": {
@@ -343,6 +938,21 @@
      ],
      "uzuominos": ["For the small holes write 4x: DIMDIAMETER → M (Mtext) → 4x<>."],
      "tikslas": "Dimension ø30"
+    },
+    "spindulys": {
+     "pavadinimas": "Radius: DIMRADIUS",
+     "kodel": "Fillets and arcs are dimensioned by their radius - an R appears before the number automatically.",
+     "zingsniai": ["Type:"],
+     "komandos": [
+      ["Command:", "DIMRADIUS"],
+      ["Select arc or circle:", "(click a rounded corner)"],
+      ["Specify dimension line location:", "(place the text)"]
+     ],
+     "uzuominos": [
+      "Circles get a diameter (⌀), arcs and fillets - a radius (R).",
+      "Don't type over a dimension value: if it shows the wrong number, fix the drawing."
+     ],
+     "tikslas": "Dimension R10"
     }
    },
    "testas": [
@@ -1039,7 +1649,13 @@
   "Shift + middle mouse button rotates the 3D view (orbit).",
   "Double-click the mouse wheel - ZOOM Extents: shows the whole drawing.",
   "The first letters are enough in the command line: L = LINE, C = CIRCLE, EXT = EXTRUDE.",
-  "VSCURRENT → C (Conceptual) shows the part in colour and nicely lit."
+  "VSCURRENT → C (Conceptual) shows the part in colour and nicely lit.",
+  "Never draw on layer 0 - it's meant for blocks. And put nothing on Defpoints: that layer doesn't print.",
+  "Draw 1:1 in real millimetres. The scale is set only on the layout, when printing.",
+  "Don't type over a dimension value: if it shows the wrong number, the drawing is inaccurate - fix the drawing.",
+  "Don't EXPLODE dimensions and blocks - they lose their properties and are hard to fix.",
+  "Ctrl+S - often! AutoCAD sometimes freezes, and unsaved work is lost.",
+  "A box from left to right selects only what fits inside it completely; from right to left - everything it touches."
  ],
  "korteles": {
   "NEW": {
@@ -1177,6 +1793,74 @@
   "DIMEDIT": {
    "ka": "Edits dimensions; Oblique turns the extension lines.",
    "pvz": "DIMEDIT → O → (dimension) → 90"
+  },
+  "ZOOM": {
+   "ka": "Zooms in and out. E (Extents) shows the whole drawing - so does double-clicking the wheel.",
+   "pvz": "Z → E"
+  },
+  "OSNAP": {
+   "ka": "Object snap settings: Endpoint, Midpoint, Center... F3 - turn on and off.",
+   "pvz": "OSNAP → Object Snap → OK"
+  },
+  "AREA": {
+   "ka": "Measures the area and perimeter of the points you click.",
+   "pvz": "AREA → points → Enter"
+  },
+  "DIST": {
+   "ka": "Measures the distance and angle between two points.",
+   "pvz": "DIST → 2 points"
+  },
+  "MOVE": {
+   "ka": "Moves objects: base point → new place.",
+   "pvz": "MOVE → objects → Enter → point → @50,0"
+  },
+  "CHAMFER": {
+   "ka": "Chamfers a corner. D (Distance) - the distances, P (Polyline) - all corners.",
+   "pvz": "CHAMFER → D → 10 → 10 → P"
+  },
+  "TRIM": {
+   "ka": "Cuts off part of an object up to other objects. With Shift - extends (EXTEND).",
+   "pvz": "TRIM → click what to cut off → Enter"
+  },
+  "EXTEND": {
+   "ka": "Extends a line to another object (a boundary).",
+   "pvz": "EXTEND → click the end of the line → Enter"
+  },
+  "MIRROR": {
+   "ka": "A mirror copy across a line. N - keep the original.",
+   "pvz": "MIRROR → objects → 2 points of the line → N"
+  },
+  "OFFSET": {
+   "ka": "A parallel copy at a given distance: for a line, circle, polyline.",
+   "pvz": "OFFSET → 30 → object → side"
+  },
+  "ARRAYPOLAR": {
+   "ka": "Copies spaced evenly around a centre (polar array).",
+   "pvz": "ARRAYPOLAR → object → centre → I → 6"
+  },
+  "ARRAYRECT": {
+   "ka": "Copies in rows and columns (rectangular array).",
+   "pvz": "ARRAYRECT → object → COL → R"
+  },
+  "ROTATE": {
+   "ka": "Rotates objects around a base point.",
+   "pvz": "ROTATE → objects → 0,0 → 30"
+  },
+  "MATCHPROP": {
+   "ka": "Copies the layer and properties from one object to others.",
+   "pvz": "MA → source → other objects"
+  },
+  "PLINE": {
+   "ka": "A polyline - one object made of segments and arcs.",
+   "pvz": "PLINE → points → C"
+  },
+  "HATCH": {
+   "ka": "Hatches a closed area. For sections - ANSI31.",
+   "pvz": "HATCH → ANSI31 → internal point → Enter"
+  },
+  "DIMRADIUS": {
+   "ka": "A radius dimension - R before the number.",
+   "pvz": "DIMRADIUS → arc → location"
   }
  },
  "ateityje": [

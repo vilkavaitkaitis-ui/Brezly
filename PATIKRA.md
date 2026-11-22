@@ -25,13 +25,13 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] 1 pamoka („Failas ir formatai“): naujas brėžinys iš acadiso.dwt → „Patikrinti“ priima.
 - [ ] 2 pamoka („Kampinis įrašas“): visi 4 žingsniai priimami; be vertikalios linijos 295,5 → 295,45 - aiški pastaba;
       išsaugotas `Kampinis_irasas.dwg`.
-- [ ] 3 pamoka („2D brėžinys“): „Parodyk man“ nubraižo plokštę; automatinis tikrinimas pastebi atliktą žingsnį.
-- [ ] 6 pamoka („Pirmoji 3D detalė“): BOX žingsnis - specialiai suklysk (z = 10) ir pažiūrėk, ar paaiškinimas aiškus.
-- [ ] 7 pamoka („Projekcijos“): 1, 3 ir 4 vaizdai A3 lape atpažįstami.
-- [ ] 8 pamoka („Aksonometrija“): visi 4 žingsniai su „Parodyk man“ ir tikrinimu.
-- [ ] 9 pamoka („Pjūviai“): ketvirtinė išpjova (BOX + SUBTRACT) priimama; VIEWBASE ir VIEWSECTION žingsniai priimami
+- [ ] Pamoka „2D brėžinys“: „Parodyk man“ nubraižo plokštę; automatinis tikrinimas pastebi atliktą žingsnį.
+- [ ] Pamoka „Pirmoji 3D detalė“: BOX žingsnis - specialiai suklysk (z = 10) ir pažiūrėk, ar paaiškinimas aiškus.
+- [ ] Pamoka „Projekcijos“: 1, 3 ir 4 vaizdai A3 lape atpažįstami.
+- [ ] Pamoka „Aksonometrija“: visi 4 žingsniai su „Parodyk man“ ir tikrinimu.
+- [ ] Pamoka „Pjūviai“: ketvirtinė išpjova (BOX + SUBTRACT) priimama; VIEWBASE ir VIEWSECTION žingsniai priimami
       (**pirmas kartas su tikru AutoCAD** - jei ne, `Pranešti apie klaidą` ir pažiūrėk `brezly.log`).
-- [ ] 11 pamoka („A3 lapas“): COPYBASE iš `Kampinis_irasas.dwg` (0,0) → lape PASTECLIP 0,0 → lentelė atsiduria
+- [ ] Pamoka „A3 lapas“: COPYBASE iš `Kampinis_irasas.dwg` (0,0) → lape PASTECLIP 0,0 → lentelė atsiduria
       rėmelio kampe ir „Patikrinti“ priima abu paskutinius žingsnius.
 - [ ] Vedlyje „Moku pagrindus“ → atsidaro pamoka „2D brėžinys“.
 
@@ -73,3 +73,12 @@ Automatiniai testai (`python -m unittest discover -s testai`) tikrina viską, k�
 - [ ] Kartoti → „⌨ Komandų eilutė“: įvesk LINE / L, koordinates, Enter (tuščias) - priima; klaida → „Ne visai“, antra klaida → parodo atsakymą. Žingsnis be klaidų → +2 XP (vieną kartą).
 - [ ] Meniu „Žinynas“: paieška be lietuviškų raidžių („pjuvis“) randa „pjūvis“; „Standartų atmintinė“ → „🖨 Spausdinti“.
 - [ ] Programėlė telefone: Komandos → „⌨ Treniruoklis“, meniu „Žinynas“; po atnaujinimo apačioje - v1.1.
+
+## 11. 1.2: naujos pamokos (tikras AutoCAD)
+Kiekvieną žingsnį pirmiausia padaryk pats, tada patikrink; kitame brėžinyje - „Parodyk man“.
+- [ ] „Tikslus braižymas“: OSNAP žingsnis priimamas tik su Endpoint, Midpoint, Center, Quadrant, Intersection ir įjungtu F3; rombas per vidurius (LINE + Midpoint) priimamas; apskritimas su OTRACK (F11) 40,25; linija su POLAR 30° ir 40 → priimama; AREA → tekstas „S = 2000“ priimamas, „4000“ - paaiškinama, kad tai stačiakampis.
+- [ ] „Redagavimas“: CHAMFER D 10 10 P → priimama; TRIM (spustelint vidines puses) → priimama; specialiai nukirpk išorinę pusę → paaiškinimas „ne ta pusė“; MIRROR per vidurius su N → priimama, su Y → paaiškinimas.
+- [ ] „Masyvai“: OFFSET 30 → ⌀40; ⌀70 perkeltas į ASYS per Layers sąrašą → priimama; ARRAYPOLAR su AS → N → priimama; **su AS → Yes** → ar paaiškinimas apie EXPLODE pasirodo (tikrinama, kaip COM mato susietą masyvą); ROTATE 30 → priimama.
+- [ ] „2D pjūvis“: PLINE kontūras + 2 linijos → priimama; HATCH ANSI31 abiejose sienelėse vienu kartu (vienas objektas, 2 kilpos) ir atskirai (2 objektai) → abu priimami; spustelėjus kiaurymėje → paaiškinimas.
+- [ ] „Matmenys“ → „Spindulys“: DIMRADIUS ant suapvalinto kampo → priimama.
+- [ ] Komandų eilutės treniruoklyje naujos pamokos: QUA, CHAMFER → D, ARRAYPOLAR → AS → N priimami.

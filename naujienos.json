@@ -2,6 +2,31 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.2",
+   "pavadinimas": "4 naujos pamokos: tikslumas, redagavimas, masyvai, 2D pjūvis",
+   "aprasas": "Pamokos papildytos tuo, ko reikalauja AutoCAD Certified User egzaminas ir be ko pradedantieji dažniausiai klysta.",
+   "punktai": [
+    "<b>Tikslus braižymas:</b> ZOOM ir PAN pele, objekto pritraukimas (OSNAP, F3), sekimas (OTRACK, F11), polinis kampas (POLAR, F10) ir matavimas (AREA).",
+    "<b>Redagavimas:</b> plokštė su pailgomis skylėmis - CHAMFER, COPY, Quadrant, TRIM, MIRROR ir pažymėjimo rėmeliai (iš kairės ir iš dešinės).",
+    "<b>Masyvai:</b> flanšas su 6 skylėmis - OFFSET, objekto sluoksnio keitimas, ARRAYPOLAR ir ROTATE.",
+    "<b>2D pjūvis:</b> įvorė su PLINE ir HATCH (ANSI31) atskirame sluoksnyje BRUKSNIAI.",
+    "<b>Matmenys:</b> naujas žingsnis DIMRADIUS. Dar - 17 naujų komandų kortelių ir patarimai apie dažniausias klaidas (sluoksnis 0, EXPLODE, ranka keičiami matmenys).",
+    "Pataisyta: paveikslėliuose suapvalinti plokštės kampai buvo nupiešti įgaubti."
+   ],
+   "en": {
+    "pavadinimas": "4 new lessons: precision, editing, arrays, 2D section",
+    "aprasas": "The lessons now cover what the AutoCAD Certified User exam expects and where beginners most often go wrong.",
+    "punktai": [
+     "<b>Precision drafting:</b> ZOOM and PAN with the mouse, object snap (OSNAP, F3), tracking (OTRACK, F11), polar angles (POLAR, F10) and measuring (AREA).",
+     "<b>Editing:</b> a plate with slots - CHAMFER, COPY, Quadrant, TRIM, MIRROR and selection boxes (left-to-right and right-to-left).",
+     "<b>Arrays:</b> a flange with 6 holes - OFFSET, changing an object's layer, ARRAYPOLAR and ROTATE.",
+     "<b>2D section:</b> a bushing with PLINE and HATCH (ANSI31) on its own layer BRUKSNIAI.",
+     "<b>Dimensions:</b> a new DIMRADIUS step. Plus 17 new command cards and tips on the most common mistakes (layer 0, EXPLODE, typed-over dimensions).",
+     "Fixed: the pictures showed the plate's rounded corners curving inwards."
+    ]
+   }
+  },
+  {
    "versija": "1.1",
    "pavadinimas": "Mokytis lengviau: paveikslėliai, egzaminas, treniruoklis ir žinynas",
    "aprasas": "Matai, kaip turi atrodyti rezultatas, gali pasitikrinti su laikmačiu, o komandas ir terminus kartoti ir be AutoCAD.",

@@ -16,7 +16,7 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 
 ## Kas viduje
 
-- 11 pamokų (56 žingsniai) – nuo kampinio įrašo iki 3D detalės, projekcijų, pjūvių ir A3 lapo
+- 15 pamokų (81 žingsnis) – nuo kampinio įrašo ir tikslaus braižymo (OSNAP, sekimas), redagavimo (TRIM, OFFSET, MIRROR, masyvai) ir 2D pjūvio iki 3D detalės, projekcijų, pjūvių ir A3 lapo
 - 8 praktikos užduotys: 2D A4 ir 3D A3 lapuose, su automatiniu tikrinimu
 - Egzamino režimas su laikmačiu, „Mano silpnos vietos“, komandų eilutės treniruoklis
 - Žinynas: inžinerinės grafikos terminai LT–EN ir standartų atmintinė; 2D žingsniuose – paveikslėlis „taip turi atrodyti“
