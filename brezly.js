@@ -78,7 +78,7 @@ function pranesti(t){const p=$("#pranesimas");p.textContent=t;p.classList.add("r
 const LYGIAI=[[0,"Naujokas"],[100,"Kadetas"],[250,"Braižytojas"],[450,"Konstruktorius"],[700,"Inžinierius"]];
 const ZENKLELIAI={pirmas:"🎯 Pirmas žingsnis",be_uzuominu:"🧠 Be užuominų",detale:"🏆 Pirmoji 3D detalė",testas:"📝 Testas 100%",praktikas:"📐 Praktikas"};
 let INFO=null, PAM=null;
-let S={xp:0,atlikta:{},praktika:{},zenkleliai:[],dabartinis:{},eq:null,matyti:null,nauji:[],dienos:[],vardas:"Robis",savininkas:""};   // progresas
+let S={xp:0,atlikta:{},praktika:{},zenkleliai:[],dabartinis:{},eq:null,matyti:null,nauji:[],dienos:[],vardas:"",savininkas:""};   // progresas
 let uzuominuRodyta=0, demo=false, bandymai=0, tikrina=false, paskutinisAtsakas=null;
 
 function saugoti(){ if(DEMO_S) return; sg("cadet",JSON.stringify(S)); planuotiSaugojima();}
@@ -88,8 +88,8 @@ function ikelti(){try{const t=sg("cadet");if(t)S=Object.assign(S,JSON.parse(t));
 function lygis(xp){let i=0;LYGIAI.forEach((l,j)=>{if(xp>=l[0])i=j;});return i;}
 function piestiZaideja(){
   const i=lygis(S.xp), [nuo,pav]=LYGIAI[i], kitas=LYGIAI[i+1];
-  if(S.eq){ $("#avataras").innerHTML=robotoSVG(S.eq); $("#avataras").style.cssText=fonoStilius(S.eq.fonas,true); $("#gidoRobotas").innerHTML=robotoSVG(S.eq); }
-  $("#robotoVardas").textContent=S.vardas||"Robis";
+  if(S.eq){ $("#avataras").innerHTML=robotoSVG(S.eq); $("#avataras").style.cssText=fonoStilius(S.eq,true); $("#gidoRobotas").innerHTML=robotoSVG(S.eq); }
+  $("#robotoVardas").textContent=personazoVardas();
   $("#naujiTaskelis").classList.toggle("hidden",!(S.nauji&&S.nauji.length));
   $("#lygNr").textContent=`${i+1} lygis`; $("#lygPav").textContent=pav; $("#xpTekstas").textContent=`${S.xp} XP`;
   $("#xpJuosta").style.width = kitas ? `${Math.round((S.xp-nuo)/(kitas[0]-nuo)*100)}%` : "100%";
@@ -105,7 +105,7 @@ function pridetiXP(kiek,el){
   const s=document.createElement("div"); s.className="skrenda"; s.textContent=`+${kiek} XP`;
   const z=parseFloat(document.body.style.zoom)||1;
   s.style.left=((r.left+r.width/2)/z-40)+"px"; s.style.top=(r.top/z-10)+"px"; document.body.appendChild(s); setTimeout(()=>s.remove(),1400);
-  if(lygis(S.xp)>pries){ setTimeout(()=>{pranesti(`🎉 Naujas lygis: ${LYGIAI[lygis(S.xp)][1]}!`);konfeti(60);},700); }
+  if(lygis(S.xp)>pries){ setTimeout(()=>{pranesti(`🎉 Naujas lygis: ${LYGIAI[lygis(S.xp)][1]}!`);konfeti(60);Robotas.reaguoti("lygis",3200);},700); }
   pazymetiDiena(); tikrintiAtlygiusVeliau();
 }
 function duotiZenkleli(k){ if(!S.zenkleliai.includes(k)){S.zenkleliai.push(k);saugoti();piestiZaideja();setTimeout(()=>pranesti(`Naujas ženklelis: ${ZENKLELIAI[k]}`),900);tikrintiAtlygiusVeliau();} }
@@ -119,7 +119,7 @@ const Robotas={
   reaguoti(busena,ms){
     if(!this.jungtas()) return;
     document.querySelectorAll(".gyvas").forEach(el=>{
-      el.classList.remove("rob-dziaug","rob-liud","rob-kalba","rob-moja"); void el.offsetWidth; el.classList.add("rob-"+busena);
+      el.classList.remove("rob-dziaug","rob-liud","rob-kalba","rob-moja","rob-lygis"); void el.offsetWidth; el.classList.add("rob-"+busena);
       clearTimeout(el._rt); el._rt=setTimeout(()=>el.classList.remove("rob-"+busena),ms||1500);
     });
   },
@@ -147,22 +147,29 @@ const Robotas={
   }
 };
 
-/* =================== PERSONAŽAS IR DAIKTAI =================== */
-const SPALVOS={zydra:"#14b8a6",gintaras:"#f59e0b",violetine:"#a78bfa",auksas:"#fbbf24"};
-const FONAI={tamsus:{c:"#151e35"},tinklelis:{c:"#0c2f55",t:true},saulelydis:{c:"#7c2d4a",g:"linear-gradient(180deg,#fb7185 0%,#f59e0b 55%,#7c2d4a 100%)"},kosmosas:{c:"#1e1b4b",z:true}};
+/* =================== PERSONAŽAS IR DAIKTAI (1.4: Bauhaus personažai) =================== */
+const BH={R:"#e2362b",Y:"#ffc400",B:"#1f4fd1",K:"#111111",P:"#f7f5f0",A:"#d9a520"};
+/* Spalvų rinkiniai sukeičia personažo Bauhaus spalvas: kuri spalva tampa kuria.
+   id - iš senesnių versijų, kad išsaugoti pasirinkimai liktų. */
+const SPALVOS={zydra:{R:"R",Y:"Y",B:"B"},gintaras:{R:"Y",Y:"B",B:"R"},violetine:{R:"B",Y:"R",B:"Y"},auksas:{R:"B",Y:"A",B:"R"}};
+/* tamsus - personažo savo spalva (iš dizaino); c - fono spalva, t - tinklelis, s - saulė, z - žvaigždės */
+const FONAI={tamsus:{},tinklelis:{c:"P",t:true},saulelydis:{c:"R",s:true},kosmosas:{c:"K",z:true}};
+/* Vardai - pagal AutoCAD komandas (nuo 1.4; seni vardai - SENI_VARDAI) */
 const PERSONAZAI=[
-  {id:"robotas",pav:"Robotas",vardas:"Robis",txt:"Klasika: antena ir šypsena"},
-  {id:"katinas",pav:"Katinas",vardas:"Murkis",txt:"Smalsus, ūsuotas, mėgsta tikslumą"},
-  {id:"peleda",pav:"Pelėda",vardas:"Pelėdžius",txt:"Išmintinga - žino visas komandas"},
-  {id:"lape",pav:"Lapė",vardas:"Lapis",txt:"Gudri - randa trumpiausią kelią"},
-  {id:"drakonas",pav:"Drakoniukas",vardas:"Drakis",txt:"Mažas, bet su sparnais"},
-  {id:"ateivis",pav:"Ateivis",vardas:"Zūmas",txt:"Atskrido išmokti AutoCAD"},
-  {id:"pingvinas",pav:"Pingvinas",vardas:"Ledukas",txt:"Ramus kaip ledkalnis"},
-  {id:"meska",pav:"Meškiukas",vardas:"Meškis",txt:"Stiprus ir kantrus"},
+  {id:"robotas",pav:"Robotas",forma:"Robotas · kvadratas",vardas:"Kadis",txt:"Antena gaudo kiekvieną AutoCAD komandą",fonas:"B"},
+  {id:"katinas",pav:"Katinas",forma:"Katinas · apskritimas",vardas:"Kursorius",txt:"Gaudo pelę - ir tikrą, ir kompiuterio",fonas:"Y"},
+  {id:"peleda",pav:"Pelėda",forma:"Pelėda · kupolas",vardas:"Snapas",txt:"Kaip OSNAP - pataiko tiksliai į tašką",fonas:"P"},
+  {id:"lape",pav:"Lapė",forma:"Lapė · trikampis",vardas:"Trimas",txt:"Gudrus - nukerpa viską, kas nereikalinga",fonas:"K"},
+  {id:"drakonas",pav:"Drakoniukas",forma:"Drakoniukas · kvadratas",vardas:"Ekstrudas",txt:"Vienu kvėptelėjimu iškelia 2D į 3D",fonas:"R"},
+  {id:"ateivis",pav:"Ateivis",forma:"Ateivis · kapsulė",vardas:"Orbitas",txt:"Atskrido per 3DORBIT išmokti AutoCAD",fonas:"P"},
+  {id:"pingvinas",pav:"Pingvinas",forma:"Pingvinas · ovalas",vardas:"Elipsas",txt:"Ramus ir apvalus kaip ELLIPSE",fonas:"B"},
+  {id:"meska",pav:"Meškiukas",forma:"Meškiukas · apskritimai",vardas:"Dimas",txt:"Stiprus ir kantrus - viską išmatuoja",fonas:"Y"},
 ];
+const SENI_VARDAI={robotas:"Robis",katinas:"Murkis",peleda:"Pelėdžius",lape:"Lapis",drakonas:"Drakis",ateivis:"Zūmas",pingvinas:"Ledukas",meska:"Meškis"};
 const personazas=id=>PERSONAZAI.find(p=>p.id===id)||PERSONAZAI[0];
+const personazoVardas=()=>S.vardas||personazas(S.eq&&S.eq.personazas).vardas;
 const KATEGORIJOS=[["personazas","Personažas"],["galva","Galva"],["akys","Akys"],["kaklas","Kaklas"],["ranka","Rankoje"],["spalva","Spalva"],["fonas","Fonas"]];
-const PRADINIS={personazas:"robotas",galva:"kepure",akys:null,kaklas:null,ranka:"piestukas",spalva:"zydra",fonas:"tamsus"};
+const PRADINIS={personazas:"robotas",galva:null,akys:null,kaklas:null,ranka:null,spalva:"zydra",fonas:"tamsus"};
 /* ar(b) - b: {lyg, zen[], pamokos, serija} */
 const DAIKTAI=[
   ...PERSONAZAI.map(p=>({id:p.id,kat:"personazas",pav:p.pav,txt:p.txt,ar:b=>true})),
@@ -179,11 +186,11 @@ const DAIKTAI=[
   {id:"skriestuvas",kat:"ranka",pav:"Skriestuvas",txt:"Baik bet kurią pamoką",ar:b=>b.pamokos>=1},
   {id:"liniuote",kat:"ranka",pav:"Liniuotė",txt:"3 lygis „Braižytojas“",ar:b=>b.lyg>=3},
   {id:"slankmatis",kat:"ranka",pav:"Slankmatis",txt:"Baik 3 pamokas",ar:b=>b.pamokos>=3,retas:true},
-  {id:"zydra",kat:"spalva",pav:"Žydra",txt:"Pradinė spalva",ar:b=>true},
-  {id:"gintaras",kat:"spalva",pav:"Gintarinė",txt:"2 lygis „Kadetas“",ar:b=>b.lyg>=2},
-  {id:"violetine",kat:"spalva",pav:"Violetinė",txt:"3 lygis „Braižytojas“",ar:b=>b.lyg>=3},
+  {id:"zydra",kat:"spalva",pav:"Klasika",txt:"Pradinė spalva",ar:b=>true},
+  {id:"gintaras",kat:"spalva",pav:"Spalvų ratas",txt:"2 lygis „Kadetas“",ar:b=>b.lyg>=2},
+  {id:"violetine",kat:"spalva",pav:"Atvirkštinis ratas",txt:"3 lygis „Braižytojas“",ar:b=>b.lyg>=3},
   {id:"auksas",kat:"spalva",pav:"Auksinė",txt:"5 lygis „Inžinierius“",ar:b=>b.lyg>=5,retas:true},
-  {id:"tamsus",kat:"fonas",pav:"Naktis",txt:"Pradinis fonas",ar:b=>true},
+  {id:"tamsus",kat:"fonas",pav:"Savo spalva",txt:"Pradinis fonas",ar:b=>true},
   {id:"tinklelis",kat:"fonas",pav:"Brėžinio tinklelis",txt:"2 lygis „Kadetas“",ar:b=>b.lyg>=2},
   {id:"saulelydis",kat:"fonas",pav:"Saulėlydis",txt:"4 lygis „Konstruktorius“",ar:b=>b.lyg>=4},
   {id:"kosmosas",kat:"fonas",pav:"Kosmosas",txt:"Surink visus 4 ženklelius",ar:b=>Object.keys(ZENKLELIAI).every(z=>b.zen.includes(z)),retas:true},
@@ -202,102 +209,203 @@ function pazymetiDiena(){ const t=dienaStr(new Date()); S.dienos=S.dienos||[]; i
 function busenaAtrakinimui(){ return {lyg:lygis(S.xp)+1, zen:S.zenkleliai, pamokos:pamokuBaigta(), serija:serija()}; }
 function atrakinti(){ const b=busenaAtrakinimui(); return DAIKTAI.filter(d=>d.ar(b)).map(d=>d.id); }
 
-function fonoStilius(id,mazas){
-  const f=FONAI[id]||FONAI.tamsus, dyd=mazas?10:24;
-  let st=`background-color:${f.c};`;
-  if(f.g) st+=`background-image:${f.g};`;
-  if(f.t) st+=`background-image:linear-gradient(rgba(125,211,252,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(125,211,252,.14) 1px,transparent 1px);background-size:${dyd}px ${dyd}px;`;
-  if(f.z) st+=`background-image:radial-gradient(circle at 20% 30%,#fff 1px,transparent 1.5px),radial-gradient(circle at 70% 20%,#fde68a 1px,transparent 1.5px),radial-gradient(circle at 80% 70%,#fff 1px,transparent 1.5px),radial-gradient(circle at 35% 80%,#c4b5fd 1.2px,transparent 1.7px),radial-gradient(circle at 55% 50%,#fff .8px,transparent 1.3px);background-size:${mazas?40:120}px ${mazas?40:120}px;`;
+function spalvosRinkinys(eq){ const p=SPALVOS[eq&&eq.spalva]||SPALVOS.zydra; return v=>BH[p[v]||v]; }
+function plytelesSpalva(eq){
+  const f=FONAI[eq&&eq.fonas]||FONAI.tamsus;
+  return f.c ? BH[f.c] : spalvosRinkinys(eq)(personazas(eq&&eq.personazas).fonas);
+}
+/* fono CSS: eq - personažo apranga (fonas priklauso nuo personažo ir jo spalvų) */
+function fonoStilius(eq,mazas){
+  const f=FONAI[eq&&eq.fonas]||FONAI.tamsus, d=mazas?10:24;
+  let st=`background-color:${plytelesSpalva(eq)};`;
+  if(f.t) st+=`background-image:linear-gradient(rgba(17,17,17,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(17,17,17,.13) 1px,transparent 1px);background-size:${d}px ${d}px;`;
+  if(f.s) st+=`background-image:radial-gradient(circle at 50% 100%,${BH.Y} 0 36%,transparent 36%);`;
+  if(f.z) st+=`background-image:radial-gradient(circle at 18% 22%,${BH.P} 0 1.5px,transparent 2px),radial-gradient(circle at 78% 18%,${BH.Y} 0 2.5px,transparent 3px),radial-gradient(circle at 84% 74%,${BH.R} 0 2px,transparent 2.5px),radial-gradient(circle at 30% 82%,${BH.B} 0 2.5px,transparent 3px),radial-gradient(circle at 55% 48%,${BH.P} 0 1px,transparent 1.5px);background-size:${mazas?44:120}px ${mazas?44:120}px;`;
   return st;
 }
-/* =================== PERSONAŽAI =================== */
-/* Kiekvieno personažo dalys. Akys (78/122, 94), burna (100, 120), rankos ir kūnas lieka tose pačiose vietose,
-   todėl tinka visi daiktai ir judesiai. uz - už kūno, kunas - ant kūno, ausys - už galvos, galva - galvos forma,
-   veidasUz - po akimis/burna, veidas - virš jų. */
-function personazoDalys(p,c,beKepures){
-  const D="#0f172a", W="#e2e8f0", O="#f59e0b", R="#fb7185";
-  const galvaRect=rx=>`<rect x="45" y="54" width="110" height="86" rx="${rx}" fill="${D}" stroke="${c}" stroke-width="6"/>`;
-  const z={uz:"",kunas:"",ausys:"",galva:galvaRect(20),veidasUz:"",veidas:"",kaklas:true};
-  if(p==="katinas") Object.assign(z,{kaklas:false,
-    ausys:`<polygon points="50,76 56,26 92,58" fill="${D}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/><polygon points="150,76 144,26 108,58" fill="${D}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/><polygon points="58,62 60,40 76,56" fill="${R}" opacity=".75"/><polygon points="142,62 140,40 124,56" fill="${R}" opacity=".75"/>`,
-    galva:galvaRect(40),
-    veidas:`<polygon points="93,106 107,106 100,114" fill="${R}"/><path d="M58 112 L26 106 M58 120 L26 124 M142 112 L174 106 M142 120 L174 124" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity=".85"/>`});
-  if(p==="peleda") Object.assign(z,{kaklas:false,
-    ausys:`<polygon points="52,66 44,28 80,56" fill="${c}"/><polygon points="148,66 156,28 120,56" fill="${c}"/>`,
-    galva:galvaRect(38),
-    veidasUz:`<circle cx="78" cy="94" r="21" fill="${c}" opacity=".22"/><circle cx="122" cy="94" r="21" fill="${c}" opacity=".22"/>`,
-    veidas:`<polygon points="94,104 106,104 100,115" fill="${O}" stroke="${D}" stroke-width="1.5" stroke-linejoin="round"/>`,
-    kunas:`<path d="M80 162 l6 6 l6 -6 M94 172 l6 6 l6 -6 M108 162 l6 6 l6 -6" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>`});
-  if(p==="lape") Object.assign(z,{kaklas:false,
-    ausys:`<polygon points="46,80 52,18 90,58" fill="${D}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/><polygon points="154,80 148,18 110,58" fill="${D}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/><polygon points="56,64 57,36 76,56" fill="${O}"/><polygon points="144,64 143,36 124,56" fill="${O}"/>`,
-    galva:galvaRect(30)+`<polygon points="46,112 32,128 50,128" fill="${c}"/><polygon points="154,112 168,128 150,128" fill="${c}"/>`,
-    veidasUz:`<ellipse cx="100" cy="121" rx="27" ry="15" fill="${W}" opacity=".92"/>`,
-    veidas:`<ellipse cx="100" cy="109" rx="6" ry="4.5" fill="${D}"/>`,
-    kunas:`<ellipse cx="100" cy="171" rx="20" ry="15" fill="${W}" opacity=".85"/>`});
-  if(p==="drakonas") Object.assign(z,{kaklas:false,
-    uz:`<path d="M66 160 L22 136 L34 160 L18 172 L64 178 Z" fill="${D}" stroke="${c}" stroke-width="4" stroke-linejoin="round"/><path d="M134 160 L178 136 L166 160 L182 172 L136 178 Z" fill="${D}" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>`,
-    ausys:`<path d="M64 60 Q52 44 58 26" fill="none" stroke="${O}" stroke-width="7" stroke-linecap="round"/><path d="M136 60 Q148 44 142 26" fill="none" stroke="${O}" stroke-width="7" stroke-linecap="round"/><polygon points="82,57 91,38 100,57" fill="${c}"/><polygon points="100,57 109,38 118,57" fill="${c}"/>`,
-    galva:galvaRect(24),
-    veidas:`<ellipse cx="92" cy="109" rx="3" ry="2.2" fill="${c}"/><ellipse cx="108" cy="109" rx="3" ry="2.2" fill="${c}"/>`,
-    kunas:`<path d="M78 158 h44 M80 168 h40 M84 178 h32" stroke="${c}" stroke-width="2.5" opacity=".45"/>`});
-  if(p==="ateivis") Object.assign(z,{kaklas:true,
-    ausys:beKepures?`<g class="r-antena"><path d="M78 56 L62 24" stroke="${c}" stroke-width="4.5" stroke-linecap="round"/><circle cx="61" cy="21" r="7" fill="#a3e635"/><path d="M122 56 L138 24" stroke="${c}" stroke-width="4.5" stroke-linecap="round"/><circle cx="139" cy="21" r="7" fill="#a3e635"/></g>`:"",
-    galva:`<path d="M100 48 C150 48 162 80 156 106 C150 134 128 142 100 142 C72 142 50 134 44 106 C38 80 50 48 100 48 Z" fill="${D}" stroke="${c}" stroke-width="6"/>`,
-    veidasUz:`<circle cx="58" cy="72" r="4" fill="${c}" opacity=".35"/><circle cx="146" cy="80" r="5" fill="${c}" opacity=".35"/><circle cx="138" cy="66" r="3" fill="${c}" opacity=".35"/>`});
-  if(p==="pingvinas") Object.assign(z,{kaklas:false,
-    uz:`<ellipse cx="82" cy="194" rx="13" ry="6" fill="${O}"/><ellipse cx="118" cy="194" rx="13" ry="6" fill="${O}"/>`,
-    galva:galvaRect(42),
-    veidasUz:`<path d="M100 76 C112 64 142 70 142 100 C142 124 124 134 100 134 C76 134 58 124 58 100 C58 70 88 64 100 76 Z" fill="${W}" opacity=".92"/>`,
-    veidas:`<polygon points="92,105 108,105 100,115" fill="${O}" stroke="${D}" stroke-width="1.5" stroke-linejoin="round"/>`,
-    kunas:`<ellipse cx="100" cy="171" rx="24" ry="17" fill="${W}" opacity=".9"/>`});
-  if(p==="meska") Object.assign(z,{kaklas:false,
-    ausys:`<circle cx="58" cy="60" r="17" fill="${D}" stroke="${c}" stroke-width="6"/><circle cx="142" cy="60" r="17" fill="${D}" stroke="${c}" stroke-width="6"/><circle cx="58" cy="60" r="7" fill="${R}" opacity=".7"/><circle cx="142" cy="60" r="7" fill="${R}" opacity=".7"/>`,
-    galva:galvaRect(38),
-    veidasUz:`<ellipse cx="100" cy="118" rx="25" ry="16" fill="${c}" opacity=".22"/>`,
-    veidas:`<ellipse cx="100" cy="108" rx="7" ry="5" fill="${c}"/>`});
-  return z;
+/* =================== PERSONAŽAI (pagal dizainą „Personažai · Bauhaus“, viewBox 0 0 160 160) ===================
+   c(v): "R","Y","B" - pagal spalvų rinkinį, BH.K ir BH.P nesikeičia.
+   akys [{x,y,r}], akis(e) - viena akis (vyzdys .r-vyzd seka pelę), m {x,y,w} - kur piešiamos nuotaikų burnos,
+   ak - nuotaikų akių spalva, bk/lk - burnos užpildas/linija, veidas0 - veido spalva po akimis,
+   isore - kontūro spalvos (jei fonas tokios pat spalvos - personažas apvedamas),
+   virsus/plotis - galvos daiktams, ausys [x kairė, x dešinė, y] - ausinėms, kaklas {y,w}, ranka {x,y,f - veidrodiškai} */
+function personazoDalys(p,c){
+  const K=BH.K, P=BH.P;
+  if(p==="katinas") return {
+    galva:`<path d="M34 66 L44 14 L76 46 Z" fill="${K}"/><path d="M126 66 L116 14 L84 46 Z" fill="${K}"/><circle cx="80" cy="88" r="52" fill="${c("B")}"/>`,
+    akys:[{x:60,y:80,r:13},{x:100,y:80,r:13}],
+    akis:e=>`<circle cx="${e.x}" cy="${e.y}" r="13" fill="${c("Y")}"/><g class="r-vyzd"><rect x="${e.x-3}" y="${e.y-11}" width="6" height="22" fill="${K}"/></g>`,
+    veidas:`<path d="M72 100 H88 L80 110 Z" fill="${c("R")}"/><path d="M8 98 H54 M8 112 L54 106 M106 98 H152 M106 106 L152 112" stroke="${K}" stroke-width="3"/>`,
+    m:{x:80,y:114,w:20}, ak:c("Y"), bk:c("R"), lk:K, veidas0:c("B"), isore:["K","B"],
+    virsus:36, plotis:70, ausys:[30,130,88], kaklas:{y:140,w:40}, ranka:{x:146,y:132}};
+  if(p==="peleda") return {
+    galva:`<path d="M30 40 L48 10 L58 44 Z" fill="${K}"/><path d="M130 40 L112 10 L102 44 Z" fill="${K}"/><path d="M26 150 V80 A54 54 0 0 1 134 80 V150 Z" fill="${c("R")}"/><path d="M44 124 H116 M50 138 H110" stroke="${P}" stroke-width="4"/>`,
+    akys:[{x:58,y:76,r:22},{x:102,y:76,r:22}],
+    akis:e=>`<circle cx="${e.x}" cy="${e.y}" r="22" fill="${c("Y")}"/><g class="r-vyzd"><circle cx="${e.x}" cy="${e.y}" r="10" fill="${K}"/></g>`,
+    veidas:`<path d="M72 96 H88 L80 112 Z" fill="${K}"/>`,
+    m:{x:80,y:112,w:18}, ak:c("Y"), bk:c("Y"), lk:K, veidas0:c("R"), isore:["K","R"],
+    virsus:26, plotis:80, ausys:[26,134,96], kaklas:{y:118,w:40}, ranka:{x:148,y:132}};
+  if(p==="lape") return {
+    galva:`<path d="M20 50 L36 8 L62 46 Z" fill="${c("R")}"/><path d="M140 50 L124 8 L98 46 Z" fill="${c("R")}"/><path d="M14 44 H146 L80 150 Z" fill="${c("R")}"/><path d="M50 92 L80 150 L110 92 Z" fill="${P}"/>`,
+    akys:[{x:55,y:69,r:7},{x:105,y:69,r:7}],
+    akis:e=>`<g class="r-vyzd"><rect x="${e.x-7}" y="${e.y-7}" width="14" height="14" fill="${K}"/></g>`,
+    veidas:`<circle cx="80" cy="140" r="8" fill="${K}"/>`,
+    m:{x:80,y:110,w:18}, ak:K, bk:c("R"), lk:K, veidas0:c("R"), isore:["R"],
+    virsus:44, plotis:96, ausys:[24,136,62], kaklas:{y:152,w:30}, ranka:{x:146,y:132}};
+  if(p==="drakonas") return {
+    uz:`<path d="M44 44 A40 40 0 0 0 4 84 H44 Z" fill="${c("Y")}"/><path d="M116 44 A40 40 0 0 1 156 84 H116 Z" fill="${c("Y")}"/><path d="M120 124 L148 150 L120 150 Z" fill="${c("B")}"/>`,
+    galva:`<path d="M44 40 L56 18 L68 40 Z M68 40 L80 14 L92 40 Z M92 40 L104 18 L116 40 Z" fill="${K}"/><rect x="40" y="40" width="80" height="84" fill="${c("B")}"/>`,
+    akys:[{x:62,y:74,r:11},{x:98,y:74,r:11}],
+    akis:e=>`<circle cx="${e.x}" cy="${e.y}" r="11" fill="${P}"/><g class="r-vyzd"><circle cx="${e.x+2}" cy="${e.y+2}" r="6" fill="${K}"/></g>`,
+    burna:`<rect x="52" y="100" width="56" height="14" fill="${K}"/><path d="M58 100 L64 108 L70 100 Z M90 100 L96 108 L102 100 Z" fill="${P}"/>`,
+    m:{x:80,y:100,w:36}, ak:P, bk:K, lk:K, veidas0:c("B"), isore:["K","B","Y"],
+    virsus:40, plotis:80, ausys:[40,120,80], kaklas:{y:126,w:40}, ranka:{x:18,y:132,f:1}};
+  if(p==="ateivis") return {
+    antena:`<path d="M58 34 L44 6 M102 34 L116 6" stroke="${K}" stroke-width="4"/><circle cx="44" cy="8" r="8" fill="${c("Y")}"/><circle cx="116" cy="8" r="8" fill="${c("Y")}"/>`,
+    galva:`<rect x="38" y="26" width="84" height="124" rx="42" fill="${c("B")}"/>`,
+    akys:[{x:80,y:74,r:28}],
+    akis:e=>`<circle cx="${e.x}" cy="${e.y}" r="28" fill="${P}"/><g class="r-vyzd"><circle cx="${e.x}" cy="${e.y}" r="16" fill="${c("R")}"/><circle cx="${e.x}" cy="${e.y}" r="7" fill="${K}"/></g>`,
+    burna:`<rect x="64" y="116" width="32" height="6" fill="${K}"/>`,
+    m:{x:80,y:114,w:30}, ak:P, bk:c("R"), lk:K, veidas0:c("B"), isore:["B","K"],
+    virsus:26, plotis:72, ausys:[38,122,84], kaklas:{y:138,w:44}, ranka:{x:146,y:132}};
+  if(p==="pingvinas") return {
+    galva:`<ellipse cx="80" cy="88" rx="50" ry="66" fill="${K}"/><ellipse cx="80" cy="98" rx="34" ry="50" fill="${P}"/>`,
+    akys:[{x:66,y:66,r:6},{x:94,y:66,r:6}],
+    akis:e=>`<g class="r-vyzd"><circle cx="${e.x}" cy="${e.y}" r="6" fill="${K}"/></g>`,
+    veidas:`<path d="M68 78 H92 L80 94 Z" fill="${c("Y")}"/>`,
+    kaklasSav:`<rect x="34" y="112" width="92" height="12" fill="${c("R")}"/><rect x="96" y="112" width="12" height="30" fill="${c("R")}"/>`,
+    m:{x:80,y:97,w:18}, ak:K, bk:c("R"), lk:K, veidas0:P, isore:["K"],
+    virsus:22, plotis:62, ausys:[32,128,70], kaklas:{y:118,w:64}, ranka:{x:146,y:132}};
+  if(p==="meska") return {
+    galva:`<circle cx="40" cy="38" r="20" fill="${K}"/><circle cx="120" cy="38" r="20" fill="${K}"/><circle cx="40" cy="38" r="9" fill="${c("R")}"/><circle cx="120" cy="38" r="9" fill="${c("R")}"/><circle cx="80" cy="78" r="50" fill="${K}"/><circle cx="80" cy="92" r="22" fill="${P}"/>`,
+    akys:[{x:60,y:66,r:6},{x:100,y:66,r:6}],
+    akis:e=>`<g class="r-vyzd"><circle cx="${e.x}" cy="${e.y}" r="6" fill="${P}"/></g>`,
+    veidas:`<path d="M72 84 H88 L80 94 Z" fill="${K}"/>`,
+    kaklasSav:`<path d="M80 138 L56 126 V150 Z M80 138 L104 126 V150 Z" fill="${c("B")}"/><rect x="74" y="132" width="12" height="12" fill="${c("R")}"/>`,
+    m:{x:80,y:99,w:16}, ak:P, bk:c("R"), lk:K, veidas0:K, isore:["K"],
+    virsus:28, plotis:62, ausys:[30,130,74], kaklas:{y:138,w:48}, ranka:{x:146,y:132}};
+  return {     // robotas
+    antena:`<rect x="76" y="14" width="8" height="22" fill="${K}"/><circle cx="80" cy="14" r="9" fill="${c("R")}"/>`,
+    galva:`<rect x="22" y="62" width="12" height="28" fill="${K}"/><rect x="126" y="62" width="12" height="28" fill="${K}"/><rect x="34" y="36" width="92" height="80" fill="${c("Y")}"/>`,
+    akys:[{x:60,y:72,r:12},{x:100,y:72,r:12}],
+    akis:e=>`<circle cx="${e.x}" cy="${e.y}" r="12" fill="${K}"/><g class="r-vyzd"><circle cx="${e.x+3}" cy="${e.y-3}" r="4" fill="${P}"/></g>`,
+    burna:`<path d="M62 94 A18 18 0 0 0 98 94 Z" fill="${c("R")}"/>`,
+    kunas:`<path d="M40 160 L52 124 H108 L120 160 Z" fill="${K}"/>`,
+    m:{x:80,y:94,w:36}, ak:K, bk:c("R"), lk:K, veidas0:c("Y"), isore:["K","Y"],
+    virsus:36, plotis:92, ausys:[28,132,76], kaklas:{y:120,w:44}, ranka:{x:146,y:132}};
 }
-function robotoSVG(eq){
-  const c=SPALVOS[eq.spalva]||"#14b8a6", g=eq.galva, a=eq.akys, k=eq.kaklas, r=eq.ranka;
-  // dalys sugrupuotos, kad jas būtų galima judinti (žr. .gyvas CSS ir Robotas)
-  const pid=eq.personazas||"robotas", z=personazoDalys(pid,c,!g||g==="ausines");
-  let s=`<svg viewBox="0 0 200 200" aria-hidden="true"><g class="r-kunas">`+z.uz;
-  s+=`<g class="r-kaire"><path d="M62 160 Q44 168 40 184" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="186" r="6" fill="${c}"/></g>`+
-    `<g class="r-ranka"><path d="M138 160 Q156 164 162 152" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round"/></g>`+
-    (z.kaklas?`<rect x="92" y="139" width="16" height="12" fill="${c}"/><rect x="62" y="150" width="76" height="42" rx="14" fill="#0f172a" stroke="${c}" stroke-width="6"/>`
-              :`<rect x="62" y="143" width="76" height="49" rx="18" fill="#0f172a" stroke="${c}" stroke-width="6"/>`)+z.kunas+
-    `<circle class="r-sirdis" cx="100" cy="171" r="6" fill="#fb7185"/><g class="r-galva">`+z.ausys;
-  if(pid==="robotas"&&(!g||g==="ausines")) s+=`<g class="r-antena"><line x1="100" y1="54" x2="100" y2="36" stroke="${c}" stroke-width="5"/><circle cx="100" cy="31" r="7" fill="#f59e0b"/></g>`;
-  s+=z.galva+z.veidasUz+
-    `<g class="r-akys"><circle cx="78" cy="94" r="13" fill="#0f172a" stroke="${c}" stroke-width="5"/><circle cx="122" cy="94" r="13" fill="#0f172a" stroke="${c}" stroke-width="5"/>`+
-    `<g class="r-vyzd"><circle cx="79" cy="96" r="5" fill="${c}"/><circle cx="123" cy="96" r="5" fill="${c}"/></g></g>`+
-    `<path class="r-burna" d="M80 117 Q100 131 120 117" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`+
-    `<path class="r-liud" display="none" d="M82 126 Q100 114 118 126" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`+
-    `<ellipse class="r-kalba" display="none" cx="100" cy="121" rx="11" ry="7" fill="${c}"/>`+z.veidas;
-  if(k==="varlyte") s+=`<polygon points="100,146 80,135 80,158" fill="#fb7185"/><polygon points="100,146 120,135 120,158" fill="#fb7185"/><circle cx="100" cy="146.5" r="5.5" fill="#be123c"/>`;
-  if(k==="salikas") s+=`<path d="M62 140 Q100 156 138 140 L138 151 Q100 167 62 151 Z" fill="#f59e0b"/><rect x="110" y="150" width="13" height="32" rx="4" fill="#f59e0b" transform="rotate(-12 116 150)"/><path d="M70 146 L76 150 M84 150 L90 154 M98 152 L104 155" stroke="#b45309" stroke-width="2.5"/>`;
-  if(a==="akiniai") s+=`<rect x="60" y="80" width="36" height="28" rx="9" fill="none" stroke="#e2e8f0" stroke-width="4"/><rect x="104" y="80" width="36" height="28" rx="9" fill="none" stroke="#e2e8f0" stroke-width="4"/><line x1="96" y1="92" x2="104" y2="92" stroke="#e2e8f0" stroke-width="4"/>`;
-  if(a==="saules") s+=`<rect x="58" y="81" width="38" height="26" rx="8" fill="#020617" stroke="#f59e0b" stroke-width="3.5"/><rect x="104" y="81" width="38" height="26" rx="8" fill="#020617" stroke="#f59e0b" stroke-width="3.5"/><line x1="96" y1="90" x2="104" y2="90" stroke="#f59e0b" stroke-width="3.5"/><line x1="66" y1="88" x2="76" y2="88" stroke="#64748b" stroke-width="3" stroke-linecap="round"/><line x1="112" y1="88" x2="122" y2="88" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>`;
-  if(a==="monoklis") s+=`<circle cx="122" cy="94" r="18" fill="none" stroke="#fbbf24" stroke-width="4"/><path d="M139 101 Q152 122 141 142" fill="none" stroke="#fbbf24" stroke-width="2.5"/>`;
-  if(g==="kepure") s+=`<path d="M70 42 V58 Q100 70 130 58 V42" fill="#1e293b" stroke="#f59e0b" stroke-width="4"/><polygon points="100,12 160,33 100,54 40,33" fill="#1e293b" stroke="#f59e0b" stroke-width="4" stroke-linejoin="round"/><line x1="153" y1="35" x2="153" y2="58" stroke="#f59e0b" stroke-width="3"/><circle cx="153" cy="62" r="5" fill="#fb7185"/>`;
-  if(g==="salmas") s+=`<path d="M44 64 Q44 16 100 16 Q156 16 156 64 Z" fill="#facc15" stroke="#ca8a04" stroke-width="3"/><rect x="93" y="16" width="14" height="46" rx="5" fill="#fde047"/><rect x="32" y="58" width="136" height="11" rx="5.5" fill="#eab308" stroke="#ca8a04" stroke-width="2"/>`;
-  if(g==="karuna") s+=`<polygon points="56,58 62,18 81,42 100,10 119,42 138,18 144,58" fill="#fbbf24" stroke="#b45309" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="42" r="6" fill="#fb7185"/><circle cx="72" cy="48" r="4" fill="#22d3ee"/><circle cx="128" cy="48" r="4" fill="#22d3ee"/>`;
-  if(g==="ausines") s+=`<path d="M40 92 Q40 26 100 26 Q160 26 160 92" fill="none" stroke="#a78bfa" stroke-width="9" stroke-linecap="round"/><rect x="28" y="80" width="22" height="34" rx="8" fill="#a78bfa"/><rect x="150" y="80" width="22" height="34" rx="8" fill="#a78bfa"/>`;
-  s+=`</g>`;                                   // galvos pabaiga (su kepure/akiniais)
-  const ranka=`<circle cx="163" cy="152" r="7" fill="${c}"/>`;
-  let rk="";
-  if(r==="piestukas") rk=`<polygon points="157,156 169,156 169,114 157,114" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/><polygon points="157,114 169,114 163,100" fill="#fde68a" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/><rect x="157" y="156" width="12" height="7" fill="#fb7185"/>`+ranka;
-  if(r==="skriestuvas") rk=`<line x1="170" y1="104" x2="156" y2="156" stroke="#cbd5e1" stroke-width="4.5" stroke-linecap="round"/><line x1="170" y1="104" x2="188" y2="152" stroke="#cbd5e1" stroke-width="4.5" stroke-linecap="round"/><circle cx="170" cy="102" r="6" fill="#94a3b8" stroke="#0f172a" stroke-width="2"/><polygon points="185,146 191,146 189,160" fill="#f59e0b"/>`+ranka;
-  if(r==="liniuote") rk=`<rect x="157" y="88" width="14" height="72" rx="2" fill="#fde68a" stroke="#b45309" stroke-width="2"/><path d="M157 98 h6 M157 108 h4 M157 118 h6 M157 128 h4 M157 138 h6 M157 148 h4" stroke="#b45309" stroke-width="1.8"/>`+ranka;
-  if(r==="slankmatis") rk=`<rect x="158" y="86" width="9" height="74" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/><path d="M158 86 h30 v8 h-22 z" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/><path d="M158 106 h26 v8 h-26 z" fill="#94a3b8" stroke="#475569" stroke-width="1.5"/><path d="M160 124 v30 M163 124 v30" stroke="#475569" stroke-width="1"/>`+ranka;
-  return s+`<g class="r-ranka">${rk}</g></g></svg>`;
+const PAKAITAS={[BH.Y]:BH.R,[BH.R]:BH.Y,[BH.B]:BH.Y,[BH.P]:BH.K,[BH.K]:BH.P};
+const ne=(spalva,fonas)=>spalva===fonas?PAKAITAS[spalva]:spalva;      // daikto spalva neturi susilieti su fonu
+const zvaigzde=(x,y,R)=>{ const q=R*.32; return `M${x} ${y-R} L${x+q} ${y-q} L${x+R} ${y} L${x+q} ${y+q} L${x} ${y+R} L${x-q} ${y+q} L${x-R} ${y} L${x-q} ${y-q} Z`; };
+const KARUNA=(I,F)=>{ const y=ne(BH.Y,F); return `<path d="M10 74 L16 28 L34 50 L50 20 L66 50 L84 28 L90 74 Z" fill="${y}"/><rect x="10" y="64" width="80" height="10" fill="${I}"/><circle cx="50" cy="52" r="7" fill="${y===BH.R?BH.B:BH.R}"/>`; };
+/* galvos daiktas: grąžina {svg, virsus} - virsus reikalingas, kad viskas tilptų į lapą */
+function galvosDaiktas(g,z,I,ausAntena,F){
+  const top=z.virsus, w=z.plotis;
+  const dek=(s,ax,ay,turinys)=>({svg:`<g transform="translate(${(80-ax*s).toFixed(2)} ${(ay).toFixed(2)}) scale(${s.toFixed(3)})">${turinys}</g>`});
+  if(g==="kepure"){ const s=w/80, y=top+8-72*s;
+    return {...dek(s,50,y,`<path d="M50 16 L96 36 L50 56 L4 36 Z" fill="${I}"/><rect x="26" y="46" width="48" height="26" fill="${I}"/><rect x="86" y="38" width="4" height="30" fill="${ne(BH.R,F)}"/><rect x="82" y="66" width="12" height="12" fill="${ne(BH.R,F)}"/>`), virsus:y+16*s}; }
+  if(g==="salmas"){ const s=w/76, y=top+10-74*s;
+    return {...dek(s,50,y,`<path d="M14 66 A36 36 0 0 1 86 66 Z" fill="${ne(BH.Y,F)}"/><rect x="6" y="64" width="88" height="10" fill="${I}"/><rect x="46" y="30" width="8" height="34" fill="${I}"/>`), virsus:y+30*s}; }
+  if(g==="karuna"){ const s=w/86, y=top+6-74*s;
+    return {...dek(s,50,y,KARUNA(I,F)), virsus:y+20*s}; }
+  if(g==="ausines"){ const [L,R,cy]=z.ausys, r=(R-L)/2, a=Math.min(cy,top-8+r), ks=[BH.B,BH.R,BH.Y].find(x=>x!==F&&x!==z.veidas0);
+    return {svg:`<path d="M${L} ${cy} V${a} A${r} ${r} 0 0 1 ${R} ${a} V${cy}" fill="none" stroke="${I}" stroke-width="8"/><rect x="${L-10}" y="${cy-16}" width="20" height="32" fill="${ks}"/><rect x="${R-10}" y="${cy-16}" width="20" height="32" fill="${ks}"/>`, virsus:Math.min(a-r-4,ausAntena)}; }
+  return {svg:"",virsus:ausAntena};
+}
+function akiuDaiktas(a,z){
+  const E=z.akys, fr=z.veidas0===BH.K?BH.P:BH.K, [L,R]=z.ausys;
+  const rr=e=>e.r+(e.r>15?4:7);
+  if(a==="akiniai"){
+    let s=E.map(e=>`<circle cx="${e.x}" cy="${e.y}" r="${rr(e)}" fill="none" stroke="${fr}" stroke-width="5"/>`).join("");
+    if(E.length===2){ const x1=E[0].x+rr(E[0]), x2=E[1].x-rr(E[1]); if(x2>x1) s+=`<rect x="${x1}" y="${E[0].y-2.5}" width="${x2-x1}" height="5" fill="${fr}"/>`; }
+    else s+=`<path d="M${L+6} ${E[0].y} H${E[0].x-rr(E[0])} M${E[0].x+rr(E[0])} ${E[0].y} H${R-6}" stroke="${fr}" stroke-width="5"/>`;
+    return s;
+  }
+  if(a==="saules"){
+    const st=fr===BH.P?BH.B:BH.K;
+    if(E.length===1){ const e=E[0], h=e.r*.9; return `<rect x="${L+4}" y="${e.y-h}" width="${R-L-8}" height="${h*1.6}" fill="${st}"/><rect x="${L+14}" y="${e.y-h+6}" width="${(R-L)*.3}" height="5" fill="${BH.P}"/>`; }
+    let s=E.map(e=>{ const R2=rr(e), h=R2*.8; return `<rect x="${e.x-R2}" y="${e.y-h}" width="${R2*2}" height="${h*1.7}" fill="${st}"/><rect x="${e.x-R2+4}" y="${e.y-h+4}" width="${R2*.7}" height="4" fill="${BH.P}"/>`; }).join("");
+    const x1=E[0].x+rr(E[0]), x2=E[1].x-rr(E[1]); if(x2>x1) s+=`<rect x="${x1}" y="${E[0].y-rr(E[0])*.8}" width="${x2-x1}" height="5" fill="${st}"/>`;
+    return s;
+  }
+  if(a==="monoklis"){ const e=E[E.length-1], R2=rr(e)+1, y=ne(BH.Y,z.veidas0);
+    return `<circle cx="${e.x}" cy="${e.y}" r="${R2}" fill="none" stroke="${y}" stroke-width="4"/><path d="M${e.x+R2*.7} ${e.y+R2*.7} Q${e.x+R2+10} ${e.y+R2+6} ${e.x+R2+4} ${e.y+R2+28}" fill="none" stroke="${y}" stroke-width="2.5"/>`; }
+  return "";
+}
+function kakloDaiktas(k,z,I,F){
+  const {y,w}=z.kaklas;
+  if(k==="varlyte"){ const s=w/48;
+    return `<path d="M80 ${y} L${80-24*s} ${y-12*s} V${y+12*s} Z M80 ${y} L${80+24*s} ${y-12*s} V${y+12*s} Z" fill="${ne(BH.B,F)}"/><rect x="${80-6*s}" y="${y-6*s}" width="${12*s}" height="${12*s}" fill="${ne(BH.R,F)}"/>`; }
+  if(k==="salikas"){ const sl=ne(BH.Y,F); return `<rect x="${80-w/2}" y="${y-6}" width="${w}" height="12" fill="${sl}"/><rect x="${80+w/2-18}" y="${y-6}" width="12" height="32" fill="${sl}"/><rect x="${80+w/2-18}" y="${y+14}" width="12" height="4" fill="${I}"/><rect x="${80+w/2-18}" y="${y+21}" width="12" height="4" fill="${I}"/>`; }
+  return z.kaklasSav||"";
+}
+function rankosDaiktas(r,z,I,F){
+  const {x,y,f}=z.ranka, s=.6, Y=ne(BH.Y,F), R=ne(BH.R,F), B=ne(BH.B,F);
+  const D={
+    piestukas:`<rect x="40" y="10" width="20" height="62" fill="${Y}"/><rect x="40" y="10" width="20" height="10" fill="${R}"/><path d="M40 72 H60 L50 94 Z" fill="${BH.P}" stroke="${I}" stroke-width="3"/><path d="M46 85 H54 L50 94 Z" fill="${I}"/>`,
+    skriestuvas:`<path d="M50 22 L24 90 M50 22 L76 90" stroke="${I}" stroke-width="7"/><circle cx="50" cy="20" r="9" fill="${R}"/><rect x="47" y="2" width="6" height="12" fill="${I}"/><path d="M72 80 L82 80 L77 94 Z" fill="${B}"/>`,
+    liniuote:`<g transform="rotate(90 50 50)"><rect x="8" y="38" width="84" height="24" fill="${B}"/><path d="M18 38 V50 M28 38 V46 M38 38 V50 M48 38 V46 M58 38 V50 M68 38 V46 M78 38 V50" stroke="${BH.P}" stroke-width="3"/></g>`,
+    slankmatis:`<rect x="44" y="4" width="12" height="90" fill="${B}"/><rect x="56" y="4" width="32" height="12" fill="${I}"/><rect x="56" y="42" width="26" height="12" fill="${I}"/><path d="M44 68 H52 M44 76 H50 M44 84 H52" stroke="${BH.P}" stroke-width="2.5"/>`,
+  }[r];
+  if(!D) return "";
+  const t=`translate(${x-50*s} ${y-60*s}) scale(${s})`;
+  return `<g${f?` transform="translate(${2*x} 0) scale(-1 1)"`:""}><g transform="${t}">${D}</g><circle cx="${x}" cy="${y}" r="7" fill="${I}"/></g>`;
+}
+/* nuotaikos: įprasta, „lauk“ (laukia), „dziaug“ (priimta), „liud“ (klaida), „kalba“, „lygis“ (naujas lygis).
+   Visos nupiešiamos iš karto, rodoma CSS klasėmis: .n-<nuotaika> ant svg arba .rob-<nuotaika> ant .gyvas. */
+function nuotaikos(z,arKaruna,I,F){
+  const {x,y,w}=z.m, E=z.akys, sw=e=>Math.max(3.5,Math.min(8,e.r*.55));
+  const r=w*.72, h=w/2, ak2=E.length>1?E[1]:null;
+  return {
+    lauk:`<rect class="r-lauk" x="${x-h}" y="${y+2}" width="${w}" height="6" fill="${z.lk}"/>`,
+    dziaug:`<path class="r-dz" d="M${x-r} ${y-4} A${r} ${r} 0 0 0 ${x+r} ${y-4} Z" fill="${z.bk}"/>`+
+      `<g class="r-dz">${E.map(e=>`<path d="M${e.x-e.r} ${e.y+e.r*.5} A${e.r} ${e.r} 0 0 1 ${e.x+e.r} ${e.y+e.r*.5}" fill="none" stroke="${z.ak}" stroke-width="${sw(e)}"/>`).join("")}</g>`,
+    liud:`<path class="r-liud" d="M${x-h} ${y+8} L${x-h/2} ${y+2} L${x} ${y+8} L${x+h/2} ${y+2} L${x+h} ${y+8}" fill="none" stroke="${z.lk}" stroke-width="5"/>`+
+      `<g class="r-li">`+(ak2?`<rect x="${ak2.x-ak2.r}" y="${ak2.y-3}" width="${ak2.r*2}" height="${Math.max(4,ak2.r*.55)}" fill="${z.ak===BH.P&&z.veidas0===BH.P?BH.K:z.ak}"/><rect x="${E[0].x-E[0].r-1}" y="${E[0].y-E[0].r-9}" width="${E[0].r*2+2}" height="5" fill="${z.lk===z.veidas0?BH.P:z.lk}" transform="rotate(-10 ${E[0].x} ${E[0].y-E[0].r-7})"/>`
+        :`<path d="M${E[0].x-E[0].r} ${E[0].y} A${E[0].r} ${E[0].r} 0 0 1 ${E[0].x+E[0].r} ${E[0].y} Z" fill="${z.veidas0}"/><rect x="${E[0].x-E[0].r}" y="${E[0].y-3}" width="${E[0].r*2}" height="6" fill="${BH.K}"/>`)+`</g>`,
+    kalba:`<ellipse class="r-kalba" cx="${x}" cy="${y+6}" rx="${Math.max(6,w*.3)}" ry="7" fill="${z.bk}"/>`,
+    lygis:`<circle class="r-ly" cx="${x}" cy="${y+6}" r="${Math.max(6,w*.28)}" fill="${z.lk}"/>`+
+      `<g class="r-ly">${E.map(e=>{ const ap=z.ak, zv=ap===BH.K?BH.Y:BH.K; return `<circle cx="${e.x}" cy="${e.y}" r="${e.r}" fill="${ap}"/><path d="${zvaigzde(e.x,e.y,e.r*.85)}" fill="${zv}"/>`; }).join("")}`+
+      (arKaruna?(()=>{ const s2=Math.min(z.plotis/100,(z.virsus+8)/56); return `<g transform="translate(${80-50*s2} ${z.virsus+8-74*s2}) scale(${s2})">${KARUNA(I,F)}</g>`; })():"")+`</g>`,
+  };
+}
+/* paveikslėliui (be CSS) - ką paslėpti, kai rodoma viena nuotaika */
+const NUOT_SLEPIA={lauk:["r-burna"],dziaug:["r-akys","r-burna"],liud:["r-a1","r-burna"],kalba:["r-burna"],lygis:["r-akys","r-burna"]};
+const KONFETI=`<g class="r-konf"><rect x="6" y="54" width="10" height="10" fill="${BH.Y}"/><path d="M138 18 L154 26 L140 38 Z" fill="${BH.R}"/><rect x="144" y="94" width="10" height="10" fill="${BH.B}"/><circle cx="16" cy="118" r="5" fill="${BH.R}"/></g>`;
+/* eq - apranga {personazas, galva, akys, kaklas, ranka, spalva, fonas}; o.n - nuotaika (statiškai);
+   o.eks - paveikslėliui be CSS: nupiešiama tik o.n nuotaika */
+function robotoSVG(eq,o){
+  eq=eq||{}; o=o||{};
+  const eks=!!o.eks, sl=k=>eks&&(NUOT_SLEPIA[o.n]||[]).includes(k)?' style="display:none"':"";
+  const pid=eq.personazas||"robotas", c=spalvosRinkinys(eq), z=personazoDalys(pid,c);
+  const g=eq.galva, a=eq.akys, k=eq.kaklas, r=eq.ranka;
+  const fonas=plytelesSpalva(eq), I=fonas===BH.K?BH.P:BH.K;
+  const antena=z.antena&&(!g||g==="ausines")?z.antena:"";
+  const ant0=antena?4:(pid==="peleda"?10:pid==="lape"?8:pid==="drakonas"?14:pid==="katinas"?14:z.virsus);
+  const gd=galvosDaiktas(g,z,I,ant0,fonas);
+  const k1=gd.virsus<3 ? 157/(160-gd.virsus) : 1;          // kepurė netelpa - visą personažą šiek tiek sumažinam
+  const tf=k1<1?` transform="translate(80 160) scale(${k1.toFixed(3)}) translate(-80 -160)"`:"";
+  const kontur=z.isore.map(v=>c(v)).includes(fonas) ? (fonas===BH.K||fonas===BH.B?BH.P:BH.K) : null;
+  const fid=kontur?(kontur===BH.P?"bhKonturP":"bhKonturK"):"";
+  const defs=kontur?`<defs><filter id="${fid}" x="-8%" y="-8%" width="116%" height="116%"><feMorphology in="SourceAlpha" operator="dilate" radius="2.6" result="d"/><feFlood flood-color="${kontur}"/><feComposite in2="d" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`:"";
+  const akys=z.akys.map((e,i)=>`<g class="r-a${i}"${sl("r-a"+i)}>${z.akis(e)}</g>`).join("");
+  const nt=nuotaikos(z,!g,I,fonas), nuot=eks?(nt[o.n]||""):Object.values(nt).join("");
+  const konf=!eks||o.n==="dziaug"||o.n==="lygis"?KONFETI:"";
+  return `<svg viewBox="0 0 160 160" class="bh-pers${o.n?" n-"+o.n:""}" aria-hidden="true">${defs}<g${kontur?` filter="url(#${fid})"`:""}><g${tf}>`+
+    `<g class="r-kunas">${z.uz||""}${z.kunas||""}`+
+    `<g class="r-galva">${antena?`<g class="r-antena">${antena}</g>`:""}${z.galva}<g class="r-akys"${sl("r-akys")}>${akys}</g>`+
+    `${z.burna?`<g class="r-burna"${sl("r-burna")}>${z.burna}</g>`:""}${nuot}${z.veidas||""}${akiuDaiktas(a,z)}${gd.svg}</g>`+
+    `${kakloDaiktas(k,z,I,fonas)}<g class="r-ranka">${rankosDaiktas(r,z,I,fonas)}</g>${konf}</g></g></g></svg>`;
 }
 function suDaiktu(id){ const d=daiktas(id); return {...S.eq, [d.kat]:id}; }
+/* mažas personažas savo fone (žingsnio pastaboje, mini kortelėje); n - nuotaika */
+function avataroMini(n,kl){ const eq=S.eq||PRADINIS; return `<span class="av-mini gyvas ${kl||""}" style="${fonoStilius(eq,true)}" aria-hidden="true">${robotoSVG(eq,{n})}</span>`; }
 
 /* ---- atlygiai ---- */
 let atlygioEile=[], atlygioLaikmatis=null;
 function inicializuotiDaiktus(){
   if(!S.eq) S.eq={...PRADINIS};
+  if(!S.vardas||S.vardas===SENI_VARDAI[S.eq.personazas]) S.vardas=personazas(S.eq.personazas).vardas;   // 1.4: nauji vardai
   if(!S.matyti){ S.matyti=atrakinti(); S.nauji=[]; }
   saugoti();
 }
@@ -316,7 +424,7 @@ function rodytiAtlygi(){
   Gidas.slepti();
   $("#atlygis").innerHTML=`<div class="lang" role="dialog" aria-labelledby="atlAnt">
     <div class="eil" style="justify-content:center"><span class="zyme">Naujas daiktas</span>${d.retas?'<span class="zyme t">Retas</span>':""}</div>
-    <div class="apsk" style="${fonoStilius(d.kat==="fonas"?id:S.eq.fonas)}">${robotoSVG(suDaiktu(id))}</div>
+    <div class="apsk" style="${fonoStilius(suDaiktu(id))}">${robotoSVG(suDaiktu(id),{n:"dziaug"})}</div>
     <h2 id="atlAnt">${esc(d.pav)}</h2><p>Gavai už: <b style="color:var(--text)">${esc(d.txt)}</b></p>
     <div class="eil" style="width:100%;margin-top:8px">
       <button class="btn pagr didelis" style="flex:1" onclick="uzsideti('${id}');rodytiAtlygi()">Užsidėti dabar</button>
@@ -336,7 +444,7 @@ function testZenkleliai(){ if(!testasAtrakintas)return; Object.keys(ZENKLELIAI).
 function testSerija(){ if(!testasAtrakintas)return; S.dienos=S.dienos||[]; const s=serija(); const d=new Date(); d.setDate(d.getDate()-Math.max(s,1)); S.dienos.push(dienaStr(d)); pazymetiDiena(); saugoti(); pranesti(`Mokymosi serija: ${serija()} d.`); tikrintiAtlygiusVeliau(); atnaujintiRodini(); }
 
 /* =================== RODINIAI: SPINTA, LYGIAI, PROFILIS =================== */
-let rodinys="pradzia", spintosSkirtukas="galva";
+let rodinys="pradzia", spintosSkirtukas="personazas";
 function nustatytiRodini(v){ rodinys=v; document.body.classList.remove("meniu"); if(v!=="pamoka") auto.reset(); document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("akt",b.dataset.v===v||((v==="pamoka"||v==="testas")&&b.dataset.v==="pradzia"))); Gidas.slepti(); clearTimeout(Gidas.nuobodu); $("main").scrollTop=0; if(miniIjungtas()) setTimeout(miniPiesti,0); setTimeout(piestiApacia,0); }
 function atnaujintiRodini(){ const f={kurejas:rodytiKureja,praktika:()=>prDabar?rodytiUzduoti(prDabar):rodytiPraktika(),spinta:rodytiSpinta,lygiai:rodytiLygius,profilis:rodytiProfili,nustatymai:rodytiNustatymus,zinynas:rodytiZinyna}[rodinys]; if(f) f(); }
 function kitasAtlygis(){
@@ -351,10 +459,16 @@ function rodytiSpinta(){
   const sk=KATEGORIJOS.map(([id,pav])=>{const g=DAIKTAI.filter(d=>d.kat===id);return `<button class="${spintosSkirtukas===id?"akt":""}" onclick="spintosSkirtukas='${id}';rodytiSpinta()">${pav}${id==="personazas"?"":`<small>${g.filter(d=>at.includes(d.id)).length}/${g.length}</small>`}</button>`;}).join("");
   const kortos=DAIKTAI.filter(d=>d.kat===spintosSkirtukas).map(d=>{
     const ok=at.includes(d.id), on=eq[d.kat]===d.id, naujas=(S.nauji||[]).includes(d.id);
-    const mini = d.kat==="personazas" ? `<div class="mini" style="${fonoStilius(eq.fonas,true)}">${robotoSVG({...eq,personazas:d.id})}</div>`
-               : d.kat==="fonas" ? `<div class="mini" style="${fonoStilius(d.id,true)}">${robotoSVG({spalva:eq.spalva})}</div>`
-               : d.kat==="spalva" ? `<div class="mini" style="background:#0f172a">${robotoSVG({spalva:d.id})}</div>`
-               : `<div class="mini" style="${fonoStilius(eq.fonas,true)}">${robotoSVG({spalva:eq.spalva,[d.kat]:d.id})}</div>`;
+    const be={personazas:eq.personazas,spalva:eq.spalva,fonas:eq.fonas};       // personažas be daiktų - matosi tik šis daiktas
+    const pv = d.kat==="personazas" ? {...eq,personazas:d.id} : d.kat==="spalva"||d.kat==="fonas" ? {...be,[d.kat]:d.id} : {...be,[d.kat]:d.id};
+    if(d.kat==="personazas"){
+      const p=personazas(d.id), nr=PERSONAZAI.indexOf(p)+1, sv=plytelesSpalva(pv)===BH.K||plytelesSpalva(pv)===BH.B;
+      return `<button class="daiktas pers-k ${on?"uzs":""}" aria-pressed="${on}" onclick="spaustiDaikta('${d.id}')">${naujas?'<span class="naujas">NAUJA</span>':""}
+        <div class="mini" style="${fonoStilius(pv,true)}"><span class="nr" style="color:${sv?BH.P:BH.K}">${String(nr).padStart(2,"0")}</span>${robotoSVG(pv)}</div>
+        <b translate="no">${esc(p.vardas)}</b><small class="forma">${esc(p.forma)}</small>
+        <div class="bus">${on?`<span class="ok">✓ Pasirinkta</span>`:`<span>${esc(p.txt)}</span>`}</div></button>`;
+    }
+    const mini=`<div class="mini" style="${fonoStilius(pv,true)}">${robotoSVG(pv)}</div>`;
     const bus = !ok ? `<span style="color:var(--muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> ${esc(d.txt)}</span>`
               : on ? `<span style="color:var(--accent)">✓ ${d.kat==="personazas"?"Pasirinkta":"Užsidėta"}</span>` : `<span style="color:var(--accent2)">${d.kat==="personazas"?`${esc(d.txt)}`:"Spausk - užsidėk"}</span>`;
     return `<button class="daiktas ${on?"uzs":""}" ${ok?"":"disabled"} aria-pressed="${on}" onclick="spaustiDaikta('${d.id}')">${naujas?'<span class="naujas">NAUJA</span>':""}${mini}<b>${esc(d.pav)}</b><div class="bus">${bus}</div></button>`;
@@ -363,17 +477,17 @@ function rodytiSpinta(){
   $("#vidus").innerHTML=`<h1 class="ant1">Spinta</h1><p class="po1">Pasirink personažą ir aprenk jį. Nauji daiktai atsirakina mokantis: už lygius, ženklelius, pamokas ir mokymosi seriją.</p>
   <div class="spinta">
     <div>
-      <div class="perziura gyvas" id="spintosRobotas" style="${fonoStilius(eq.fonas)}">${robotoSVG(eq)}</div>
+      <div class="perziura gyvas" id="spintosRobotas" style="${fonoStilius(eq)}">${robotoSVG(eq)}</div>
       <div class="korta" style="padding:18px;margin-top:14px">
         <label for="robVardas" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Personažo vardas</label>
-        <input id="robVardas" class="vardas-ivestis" value="${esc(S.vardas||"Robis")}" maxlength="18" oninput="S.vardas=this.value;saugoti();$('#robotoVardas').textContent=this.value">
+        <input id="robVardas" class="vardas-ivestis" value="${esc(personazoVardas())}" maxlength="18" oninput="S.vardas=this.value;saugoti();$('#robotoVardas').textContent=this.value">
         <div class="eil" style="margin-top:12px;gap:6px">${KATEGORIJOS.map(([k])=>eq[k]?`<span class="cip">${esc(daiktas(eq[k]).pav)}</span>`:"").join("")}</div>
         <div class="eil" style="margin-top:14px"><button class="btn pagr" style="flex:1" onclick="atsitiktinis()">Atsitiktinis derinys</button><button class="btn" style="flex:1" onclick="nusiimti()">Nusiimti viską</button></div>
       </div>
     </div>
     <div>
       <div class="skirt" role="tablist">${sk}</div>
-      <div class="daiktai">${kortos}</div>
+      <div class="daiktai${spintosSkirtukas==="personazas"?" pers4":""}">${kortos}</div>
       <div class="kitas-atl">${ka?`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M12 3 4 7v6c0 4.4 3.4 7.6 8 8.5 4.6-.9 8-4.1 8-8.5V7z"/><path d="m9 12 2 2 4-4"/></svg>
         <div style="flex:1"><b>Kitas lygis: ${ka.lygis} „${esc(ka.pav)}“ - dar ${ka.truksta} XP</b><div style="color:var(--muted);font-size:13.5px">Atrakins: ${ka.daiktai.map(d=>esc(d.pav)).join(", ")||"naujų daiktų"}</div></div>
         <div class="juosta" style="width:160px;margin:0"><i style="width:${ka.proc}%"></i></div>`:`<b>Visi lygiai pasiekti! Tu - tikras inžinierius.</b>`}</div>
@@ -384,7 +498,7 @@ function rodytiSpinta(){
 function keistiPersonaza(id){
   const senas=personazas(S.eq.personazas||"robotas");
   S.eq.personazas=id;
-  if(!S.vardas||S.vardas===senas.vardas) S.vardas=personazas(id).vardas;     // savo sugalvoto vardo nekeičiam
+  if(!S.vardas||S.vardas===senas.vardas||S.vardas===SENI_VARDAI[senas.id]) S.vardas=personazas(id).vardas;     // savo sugalvoto vardo nekeičiam
 }
 function spaustiDaikta(id){
   const d=daiktas(id);
@@ -410,10 +524,10 @@ function rodytiLygius(){
   <div class="lygiu">${LYGIAI.map(([xp,pav],j)=>{
     const db={lyg:j+1,zen:[],pamokos:0,serija:0}, ankst={lyg:j,zen:[],pamokos:0,serija:0};
     const daiktai=DAIKTAI.filter(d=>d.ar(db)&&!d.ar(ankst)&&!d.txt.startsWith("Pradin"));
-    const prad=j===0?["Robotas Brėžly","Kepurė ir pieštukas"]:[];
+    const prad=j===0?["8 personažai","Kepurė ir pieštukas"]:[];
     return `<div class="lyg-k ${j<=i?"pasiekta":"uzr"} ${j===i?"dabar":""}">${j===i?'<span class="cia">Tu esi čia</span>':""}
       <div class="eil" style="gap:10px;flex-wrap:nowrap"><div class="nr">${j+1}</div><div><b style="font-size:16px">${pav}</b><div style="color:var(--muted);font-size:12.5px">nuo ${xp} XP</div></div></div>
-      <div class="lyg-fon" style="${fonoStilius(IS[j].fonas,true)}">${robotoSVG(IS[j])}</div>
+      <div class="lyg-fon" style="${fonoStilius({...IS[j],personazas:S.eq.personazas},true)}">${robotoSVG({...IS[j],personazas:S.eq.personazas})}</div>
       <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Atrakina</div>
       <ul>${[...prad,...daiktai.map(d=>d.pav)].map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`;}).join("")}</div>
   <div class="kitas-atl"><b style="flex:1">Tavo XP: ${S.xp}</b>${LYGIAI[i+1]?`<span style="color:var(--muted)">Iki „${LYGIAI[i+1][1]}“ liko ${LYGIAI[i+1][0]-S.xp} XP</span>`:"<span>Aukščiausias lygis!</span>"}</div>`;
@@ -427,10 +541,10 @@ function rodytiProfili(){
   const p=profilioDuomenys();
   $("#vidus").innerHTML=`<h1 class="ant1">Profilis</h1><p class="po1">Tavo pažanga vienoje kortelėje - atsisiųsk ir pasigirk draugams.</p>
   <div class="profilis">
-    <div class="prof-fon" style="${fonoStilius(S.eq.fonas)}">
-      <span class="zyme" style="position:absolute;top:16px;left:16px;background:rgba(5,8,15,.6);color:#fde68a">${p.lyg+1} lygis · ${LYGIAI[p.lyg][1]}</span>
-      ${robotoSVG(S.eq)}<b style="font-size:24px;color:#fff">${esc(S.vardas||"Robis")}</b>
-      <input aria-label="Tavo vardas" placeholder="Tavo vardas (nebūtina)" value="${esc(S.savininkas||"")}" oninput="S.savininkas=this.value;saugoti()" style="background:rgba(5,8,15,.45);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px 12px;color:#fff;text-align:center;width:220px">
+    <div class="prof-fon" style="${fonoStilius(S.eq)}">
+      <span class="zyme prof-lyg">${p.lyg+1} lygis · ${LYGIAI[p.lyg][1]}</span>
+      <div class="gyvas prof-pers">${robotoSVG(S.eq)}</div><b class="prof-vardas" translate="no">${esc(personazoVardas())}</b>
+      <input class="prof-savininkas" aria-label="Tavo vardas" placeholder="Tavo vardas (nebūtina)" value="${esc(S.savininkas||"")}" oninput="S.savininkas=this.value;saugoti()">
     </div>
     <div style="display:flex;flex-direction:column;gap:16px">
       <div class="statai4"><div><b>${p.xp}</b><small>XP iš viso</small></div><div><b>${p.pamokos}/${p.visoPamoku}</b><small>pamokos baigtos</small></div>
@@ -444,32 +558,33 @@ function rodytiProfili(){
 }
 function kopijuotiTeksta(){
   const p=profilioDuomenys();
-  const t=`Mokausi braižyti su Brėžly! ${p.lyg+1} lygis „${LYGIAI[p.lyg][1]}“, ${p.xp} XP, ${S.zenkleliai.length} ženkleliai. Mano personažas - ${S.vardas||"Robis"}.`;
+  const t=`Mokausi braižyti su Brėžly! ${p.lyg+1} lygis „${LYGIAI[p.lyg][1]}“, ${p.xp} XP, ${S.zenkleliai.length} ženkleliai. Mano personažas - ${personazoVardas()}.`;
   navigator.clipboard?.writeText(t).then(()=>pranesti("Nukopijuota - įklijuok žinutėje draugams"),()=>pranesti(t));
 }
 function atsisiustiKortele(){
-  const p=profilioDuomenys(), W=1080, H=600, f=FONAI[S.eq.fonas]||FONAI.tamsus;
-  const rob=robotoSVG(S.eq).replace('<svg ','<svg x="70" y="90" width="340" height="340" ');
-  const e=t=>esc(t);
-  const perejimas = f.g ? `<defs><linearGradient id="sl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb7185"/><stop offset=".55" stop-color="#f59e0b"/><stop offset="1" stop-color="#7c2d4a"/></linearGradient></defs><rect x="36" y="36" width="408" height="528" rx="26" fill="url(#sl)"/>` : "";
-  const zvaigzdes = f.z ? Array.from({length:40},(_,i)=>`<circle cx="${60+((i*97)%360)}" cy="${60+((i*53)%480)}" r="${i%3?1.2:1.8}" fill="${i%4?"#fff":"#fde68a"}"/>`).join("") : "";
-  const tinklas = f.t ? `<defs><pattern id="tk" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="rgba(125,211,252,.16)"/></pattern></defs><rect x="36" y="36" width="408" height="528" rx="26" fill="url(#tk)"/>` : "";
-  const stat=(x,v,l)=>`<rect x="${x}" y="230" width="128" height="96" rx="16" fill="#151e35" stroke="#24304e"/><text x="${x+16}" y="276" font-size="30" font-weight="800" fill="#f59e0b">${e(v)}</text><text x="${x+16}" y="304" font-size="14" fill="#9aa8c3">${e(l)}</text>`;
+  const p=profilioDuomenys(), W=1080, H=600, eq=S.eq, f=FONAI[eq.fonas]||FONAI.tamsus, fon=plytelesSpalva(eq);
+  const K=BH.K, P=BH.P, e=t=>esc(t), sr="'Arial Black','Archivo',Arial,sans-serif", mono="'Courier New','Space Mono',monospace";
+  const rob=robotoSVG(eq,{eks:true}).replace('<svg ','<svg x="72" y="96" width="336" height="336" ');
+  const tinklas = f.t ? `<defs><pattern id="tk" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="rgba(17,17,17,.13)"/></pattern></defs><rect x="36" y="36" width="408" height="528" fill="url(#tk)"/>` : "";
+  const saule = f.s ? `<clipPath id="sk"><rect x="36" y="36" width="408" height="528"/></clipPath><circle cx="240" cy="564" r="230" fill="${BH.Y}" clip-path="url(#sk)"/>` : "";
+  const zvaigzdes = f.z ? Array.from({length:36},(_,i)=>`<circle cx="${56+((i*97)%370)}" cy="${56+((i*53)%490)}" r="${i%3?1.6:2.6}" fill="${[P,BH.Y,BH.R,BH.B][i%4]}"/>`).join("") : "";
+  const stat=(x,v,l)=>`<rect x="${x}" y="232" width="128" height="96" fill="#fff" stroke="${K}" stroke-width="4"/><text x="${x+16}" y="280" font-family="${sr}" font-size="30" font-weight="900" fill="${K}">${e(v)}</text><text x="${x+16}" y="310" font-family="${mono}" font-size="13" fill="#55524b">${e(l.toUpperCase())}</text>`;
   const zen=Object.entries(ZENKLELIAI).map(([k,v],j)=>{const g=S.zenkleliai.includes(k);const x=484+(j%2)*276,y=352+Math.floor(j/2)*54;
-    return `<rect x="${x}" y="${y}" width="264" height="42" rx="12" fill="${g?"#2a2210":"#10172a"}" stroke="${g?"#6b4c10":"#2c3a5c"}" ${g?"":'stroke-dasharray="5 4"'}/><text x="${x+14}" y="${y+27}" font-size="15" font-weight="600" fill="${g?"#fcd34d":"#8794ad"}">${e(v.replace(/^\S+\s/,""))}</text>`;}).join("");
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-family="Segoe UI, Inter, Arial, sans-serif">`+
-    `<rect width="${W}" height="${H}" fill="#0a0f1d"/><rect x="36" y="36" width="408" height="528" rx="26" fill="${f.c}" stroke="#2c3a5c"/>${perejimas}${zvaigzdes}${tinklas}`+
-    `${rob}<text x="240" y="470" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">${e(S.vardas||"Robis")}</text>`+
-    `<text x="240" y="500" text-anchor="middle" font-size="16" fill="#bfdbfe">${e(S.savininkas?S.savininkas+" · mano Brėžly":"mano Brėžly")}</text>`+
-    `<rect x="56" y="56" width="200" height="34" rx="17" fill="rgba(5,8,15,.6)"/><text x="74" y="79" font-size="15" font-weight="700" fill="#fde68a">${p.lyg+1} lygis · ${e(LYGIAI[p.lyg][1])}</text>`+
-    `<text x="484" y="100" font-size="14" font-weight="800" letter-spacing="2" fill="#f59e0b">MANO PAŽANGA</text>`+
-    `<text x="484" y="150" font-size="34" font-weight="800" fill="#eaf0fa">Mokausi braižyti su Brėžly</text>`+
-    `<text x="484" y="190" font-size="16" fill="#9aa8c3">${e(new Date().toLocaleDateString("lt-LT"))}</text>`+
+    return `<rect x="${x}" y="${y}" width="264" height="42" fill="${g?BH.Y:"#fff"}" stroke="${K}" stroke-width="${g?4:2}" ${g?"":'stroke-dasharray="6 5"'}/><text x="${x+14}" y="${y+27}" font-family="${sr}" font-size="15" font-weight="700" fill="${g?K:"#8a867c"}">${e(v.replace(/^\S+\s/,""))}</text>`;}).join("");
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" font-family="${sr}">`+
+    `<rect width="${W}" height="${H}" fill="${P}"/><rect x="6" y="6" width="${W-12}" height="${H-12}" fill="none" stroke="${K}" stroke-width="12"/>`+
+    `<rect x="36" y="36" width="408" height="528" fill="${fon}"/>${tinklas}${saule}${zvaigzdes}<rect x="36" y="36" width="408" height="528" fill="none" stroke="${K}" stroke-width="6"/>`+
+    `${rob}<rect x="36" y="452" width="408" height="112" fill="${K}"/><text x="240" y="504" text-anchor="middle" font-size="36" font-weight="900" fill="${P}">${e(personazoVardas().toUpperCase())}</text>`+
+    `<text x="240" y="536" text-anchor="middle" font-family="${mono}" font-size="15" fill="${BH.Y}">${e((S.savininkas?S.savininkas+" · ":"")+"mano Brėžly")}</text>`+
+    `<rect x="56" y="56" width="216" height="34" fill="${BH.Y}" stroke="${K}" stroke-width="3"/><text x="70" y="79" font-family="${mono}" font-size="15" font-weight="700" fill="${K}">${p.lyg+1} lygis · ${e(LYGIAI[p.lyg][1])}</text>`+
+    `<text x="484" y="98" font-family="${mono}" font-size="15" font-weight="700" letter-spacing="1" fill="${K}">MANO PAŽANGA · ${e(new Date().toLocaleDateString("lt-LT"))}</text>`+
+    `<text x="484" y="150" font-size="38" font-weight="900" fill="${K}">MOKAUSI BRAIŽYTI</text><text x="484" y="194" font-size="38" font-weight="900" fill="${K}">SU BRĖŽLY</text>`+
     `${stat(484,p.xp,"XP")}${stat(624,p.pamokos+"/"+p.visoPamoku,"pamokos")}${stat(764,p.serija+" d.","serija")}${stat(904,p.daiktai+"/"+p.visoDaiktu,"daiktai")}`+
-    `${zen}<text x="484" y="560" font-size="22" font-weight="800" fill="#eaf0fa">Brėž<tspan fill="#f59e0b">ly</tspan><tspan font-size="14" font-weight="500" fill="#9aa8c3" dx="10">Braižymo mokymosi draugas</tspan></text></svg>`;
+    `${zen}<g transform="translate(484 522)"><circle cx="11" cy="11" r="9" fill="${BH.R}"/><rect x="14" y="14" width="14" height="14" fill="${BH.Y}"/><path d="M2 28 L14 28 L2 16 Z" fill="${BH.B}"/></g>`+
+    `<text x="524" y="549" font-size="24" font-weight="900" fill="${K}">BRĖŽLY</text><text x="640" y="549" font-family="${mono}" font-size="14" fill="#55524b">braižymo mokymosi draugas</text></svg>`;
   const img=new Image();
   img.onload=()=>{ const cv=document.createElement("canvas"); cv.width=W*2; cv.height=H*2; const cx=cv.getContext("2d"); cx.scale(2,2); cx.drawImage(img,0,0);
-    cv.toBlob(b=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=`Brezly_${(S.vardas||"Robis").replace(/[^\wąčęėįšųūž-]/gi,"_")}.png`; document.body.appendChild(a); a.click(); a.remove(); pranesti("Kortelė atsisiųsta"); },"image/png"); };
+    cv.toBlob(b=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=`Brezly_${personazoVardas().replace(/[^\wąčęėįšųūž-]/gi,"_")}.png`; document.body.appendChild(a); a.click(); a.remove(); pranesti("Kortelė atsisiųsta"); },"image/png"); };
   img.onerror=()=>pranesti("Nepavyko sukurti paveikslėlio");
   img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
 }
@@ -522,7 +637,7 @@ function rodytiPradzia(pid){
       <button class="bh-tikr" id="pradetiBtn" onclick="pradeti(${prad?"S.dabartinis[PAM.id]||0":0})">${prad?"Tęsti →":atl.length>=viso?"Kartoti →":"Pradėti →"}</button>
       <button class="bh-uz" id="naujasBtn" onclick="naujasBrezinys()" title="Naujas brėžinys iš acadiso.dwt">Naujas brėžinys</button>
     </div>
-    <div class="bh-robis"><svg aria-hidden="true"><use href="#maskotas"/></svg><div><b>Ar žinojai?</b> <span id="patarimas"></span></div></div>
+    <div class="bh-robis">${avataroMini()}<div><b>Ar žinojai?</b> <span id="patarimas"></span></div></div>
     ${kart?`<div class="kart-juosta"><div><b>Dienos kartojimas</b><small>${kart} kom. · ~2 min · iki +${kart*2+5} XP</small></div><button class="btn" onclick="kartTab='diena';kartSesija=null;rodytiKartojima()">Pradėti</button></div>`:""}
     ${zingsniuLangeliai(PAM,-1,atl,"pradeti")}
   </div></div>
@@ -576,7 +691,7 @@ function piestiZingsni(){
       ${nr>0?`<button onclick="rodytiZingsni(${nr-1})">← Atgal</button>`:""}
       <button onclick="toliau()">${nr<n-1?"Praleisti →":"Į testą →"}</button>
     </div>
-    <div class="bh-robis"><svg aria-hidden="true"><use href="#maskotas"/></svg><div><p><b>Robis:</b> ${esc(robioTekstas(nr,atl))}</p>${z.tikrinama&&!jau?auto.html():""}</div></div>
+    <div class="bh-robis">${avataroMini(jau?"dziaug":"lauk")}<div><p><b translate="no">${esc(personazoVardas())}:</b> ${esc(robioTekstas(nr,atl))}</p>${z.tikrinama&&!jau?auto.html():""}</div></div>
     <div id="uzuominos">${z.uzuominos.slice(0,uzuominuRodyta).map((u,i)=>`<div class="uzuomina"><b>Užuomina ${i+1}:</b> ${esc(u)}</div>`).join("")}</div>
     <div id="atsakas">${paskutinisAtsakas||""}</div>
     ${zingsniuLangeliai(PAM,nr,atl,"rodytiZingsni")}
@@ -1104,7 +1219,7 @@ let miniTikrina=false;
 function tekstasIsHtml(h){ const d=document.createElement("div"); d.innerHTML=h||""; return d.textContent.replace(/\s+/g," ").trim(); }
 function miniPiesti(){
   const el=$("#mini"); if(!el) return;
-  const virsus=(t,sub)=>`<div class="mi-v"><svg class="m" aria-hidden="true"><use href="#maskotas"/></svg><div class="t"><b>${esc(t)}</b><small>${esc(sub)}</small></div>
+  const virsus=(t,sub)=>`<div class="mi-v">${avataroMini("","m")}<div class="t"><b>${esc(t)}</b><small>${esc(sub)}</small></div>
     <button onclick="langoRezimas('kompaktiskas')" title="Šalia AutoCAD" aria-label="Šalia AutoCAD">📌</button><button onclick="langoRezimas('iprastas')" title="Didelis langas" aria-label="Didelis langas">⇱</button></div>`;
   const pastaba=`<div class="mi-pastaba">Ctrl+Alt+T - patikrinti net neišeinant iš AutoCAD · Ctrl+Alt+B - parodyti Brėžly</div>`;
   if(rodinys==="pamoka"&&PAM){
@@ -1424,7 +1539,7 @@ const Vedlys={
       const eq={...(S.eq||PRADINIS)};
       h=`${this.taskai()}<h2>Pasirink savo personažą</h2><p>Jis mokysis kartu su tavimi, rodys kur spausti ir džiaugsis tavo sėkme. Vėliau jį aprengsi spintoje.</p>
       <div class="pers-tinklas">${PERSONAZAI.map(x=>`<button class="pers ${p("personazas",x.id)?"pas":""} ${p("personazas",x.id)?"gyvas":""}" aria-pressed="${p("personazas",x.id)}" onclick="Vedlys.rinktis('${x.id}')">
-        <span class="pers-pav" style="${fonoStilius(eq.fonas,true)}">${robotoSVG({...eq,personazas:x.id})}</span><b>${esc(x.pav)}</b></button>`).join("")}</div>
+        <span class="pers-pav" style="${fonoStilius({...eq,personazas:x.id},true)}">${robotoSVG({...eq,personazas:x.id})}</span><b translate="no">${esc(x.vardas)}</b><small>${esc(x.pav)}</small></button>`).join("")}</div>
       <label for="vPVardas">Kaip jį pavadinsi?</label>
       <input type="text" id="vPVardas" maxlength="18" value="${esc(d.pvardas||personazas(d.personazas).vardas)}" oninput="Vedlys.d.pvardas=this.value" onkeydown="if(event.key==='Enter')Vedlys.toliau()">`;
     }
@@ -1612,7 +1727,7 @@ function uzrakintiTesta(tyliai){
 }
 function atstatytiViska(){
   if(!testasAtrakintas||!confirm("Ištrinti visą progresą, XP ir daiktus?")) return;
-  S={xp:0,atlikta:{},zenkleliai:[],dabartinis:{},eq:null,matyti:null,nauji:[],dienos:[],vardas:"Robis",savininkas:""};
+  S={xp:0,atlikta:{},zenkleliai:[],dabartinis:{},eq:null,matyti:null,nauji:[],dienos:[],vardas:"",savininkas:""};
   try{localStorage.removeItem("cadet");}catch(e){}
   api("/api/progresas",{S,nustatymai:NUST}).then(()=>location.reload());
 }
@@ -1942,7 +2057,7 @@ r();<\/script></body></html>`;
   await ikeltiProgresa(); await I18N.ikelti(); taikytiTema(); taikytiDydi(); S.eq=S.eq||{...PRADINIS};
   const u=$("#uzsklanda"), baigti=()=>{u.classList.add("dingsta");setTimeout(()=>u.remove(),700);};
   const tvarka=["lape","katinas","peleda","robotas","drakonas","ateivis","pingvinas","meska"];
-  $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:["robotas","drakonas"].includes(id)?"kepure":null,ranka:null})}</span>`).join("");
+  $("#uPers").innerHTML=tvarka.map((id,i)=>`<span style="animation-delay:${[.36,.24,.12,0,0,.12,.24,.36][i]}s">${robotoSVG({...PRADINIS,personazas:id,galva:null,ranka:null})}</span>`).join("");
   // užsklanda: pirmą kartą per dieną - visa animacija, vėliau - trumpai; spragtelėjimas ar klavišas praleidžia
   const siandien=new Date().toISOString().slice(0,10), pirmasKartas=sg("uzsklanda_diena")!==siandien; sg("uzsklanda_diena",siandien);
   u.onclick=baigti; addEventListener("keydown",baigti,{once:true}); setTimeout(baigti,pirmasKartas?2200:700);

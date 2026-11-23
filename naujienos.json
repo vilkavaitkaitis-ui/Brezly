@@ -2,6 +2,29 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.4",
+   "pavadinimas": "Nauji personažai su AutoCAD vardais",
+   "aprasas": "Visi 8 personažai perpiešti pagal naują dizainą ir gavo vardus iš AutoCAD komandų - kad komandos įsimintų lengviau.",
+   "punktai": [
+    "<b>Kadis</b> - robotas (CAD), <b>Kursorius</b> - katinas, <b>Snapas</b> - pelėda (OSNAP), <b>Trimas</b> - lapė (TRIM).",
+    "<b>Ekstrudas</b> - drakoniukas (EXTRUDE), <b>Orbitas</b> - ateivis (3DORBIT), <b>Elipsas</b> - pingvinas (ELLIPSE), <b>Dimas</b> - meškiukas (DIM).",
+    "<b>Nuotaikos:</b> personažas laukia, kol braižai, džiaugiasi priimtu žingsniu, susiraukia radęs klaidą ir užsideda karūną pasiekęs naują lygį.",
+    "<b>Spinta:</b> personažai - kaip dizaino kortelės; visi 13 daiktų perpiešti; spalvų rinkiniai (Klasika, Spalvų ratas, Atvirkštinis ratas, Auksinė) ir fonai pritaikyti naujiems personažams.",
+    "Profilio kortelė (PNG) - naujo stiliaus. Jei personažo vardo nekeitei, jis pasikeis į naująjį; savo sugalvotas vardas lieka."
+   ],
+   "en": {
+    "pavadinimas": "New characters with AutoCAD names",
+    "aprasas": "All 8 characters have been redrawn in the new design and named after AutoCAD commands - so the commands are easier to remember.",
+    "punktai": [
+     "<b>Kadis</b> - robot (CAD), <b>Kursorius</b> - cat (cursor), <b>Snapas</b> - owl (OSNAP), <b>Trimas</b> - fox (TRIM).",
+     "<b>Ekstrudas</b> - little dragon (EXTRUDE), <b>Orbitas</b> - alien (3DORBIT), <b>Elipsas</b> - penguin (ELLIPSE), <b>Dimas</b> - teddy bear (DIM).",
+     "<b>Moods:</b> your character waits while you draw, cheers when a step is accepted, frowns at a mistake and puts on a crown when you reach a new level.",
+     "<b>Wardrobe:</b> characters shown as design cards; all 13 items redrawn; colour sets (Classic, Colour wheel, Reverse wheel, Gold) and backgrounds adapted to the new characters.",
+     "The profile card (PNG) has the new style. If you never renamed your character, it gets the new name; a name you chose yourself stays."
+    ]
+   }
+  },
+  {
    "versija": "1.3",
    "pavadinimas": "Naujas dizainas: brėžinys yra sąsaja",
    "aprasas": "Visa programa ir telefono programėlė perpieštos pagal naują dizainą - žingsniai rodomi tiesiai brėžinio lape.",

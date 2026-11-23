@@ -1,6 +1,6 @@
 ;;; ============================================================
 ;;;  Brezly.lsp - Brezly praktika tiesiai AutoCAD viduje
-;;;  Versija 1.3
+;;;  Versija 1.4
 ;;;
 ;;;  Idiegimas: nutempk si faila i AutoCAD langa
 ;;;  (arba APPLOAD -> pasirink Brezly.lsp -> Load).
@@ -12,7 +12,7 @@
 ;;;    BRLAPAS  - nubraizo lapo remeli su spaudu
 ;;; ============================================================
 
-(setq *br:ver* "1.3")
+(setq *br:ver* "1.4")
 
 ;;; Uzduotis: (id pav fmt d min xp aprasas komandos zingsniai taisykles)
 ;;; Taisykles: ("R" spindulys kiek) ("T" tipas kiek) ("DYDIS" plotis aukstis) ("TURIS" mm3 proc)

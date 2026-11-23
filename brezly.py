@@ -198,7 +198,7 @@ def progresas_eksportuoti(_):
         return {"ok": False, "klaida": tr("Progreso dar nėra - atlik bent vieną žingsnį.", "No progress yet - complete at least one step.")}
     ap = os.path.join(_aplankas(), "perkelimas")
     os.makedirs(ap, exist_ok=True)
-    vardas = re.sub(r"[^\w-]+", "_", str((d.get("S") or {}).get("vardas") or "Robis"))[:30]
+    vardas = re.sub(r"[^\w-]+", "_", str((d.get("S") or {}).get("vardas") or "Brezly"))[:30]
     kelias = os.path.join(ap, f"Brezly_progresas_{vardas}_{datetime.datetime.now():%Y%m%d_%H%M}.json")
     d = {"brezly_progresas": 1, "eksportuota": datetime.datetime.now().isoformat(timespec="seconds"),
          "versija": VERSIJA_BREZLY, "S": d.get("S"), "nustatymai": d.get("nustatymai", {})}
