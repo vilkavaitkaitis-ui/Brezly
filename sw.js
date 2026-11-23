@@ -1,5 +1,5 @@
 /* Brėžly programėlės talpykla - veikia be interneto */
-const VERSIJA = "brezly-app-e85f7382d0";      // tikrą versiją įrašo irankiai/generuoti.py
+const VERSIJA = "brezly-app-087d846fec";      // tikrą versiją įrašo irankiai/generuoti.py
 const FAILAI = [
  "./",
  "icon-192.png",
@@ -79,6 +79,7 @@ const FAILAI = [
  "praktika/U8_3D_detale.pdf",
  "praktika/U8_3D_detale.svg",
  "praktika/U8_3D_detale_ruosinys.dxf",
+ "sriftai/Archivo-var.woff",
  "sriftai/IBMPlexMono-Medium.woff2",
  "sriftai/IBMPlexMono-Regular.woff2",
  "sriftai/IBMPlexMono-SemiBold.woff2",
@@ -88,7 +89,11 @@ const FAILAI = [
  "sriftai/IBMPlexSans-SemiBold.woff2",
  "sriftai/IBMPlexSansCondensed-Medium.woff2",
  "sriftai/IBMPlexSansCondensed-SemiBold.woff2",
+ "sriftai/OFL-Archivo.txt",
+ "sriftai/OFL-SpaceMono.txt",
  "sriftai/OFL.txt",
+ "sriftai/SpaceMono-Bold.woff",
+ "sriftai/SpaceMono-Regular.woff",
  "sriftai/sriftai.css"
 ];                     // pilną sąrašą įrašo irankiai/generuoti.py
 self.addEventListener("install", e => {
