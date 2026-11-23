@@ -91,3 +91,11 @@ Kiekvieną žingsnį pirmiausia padaryk pats, tada patikrink; kitame brėžinyje
 - [ ] Angliškai (Nustatymai → English): nėra lietuviškų užrašų pamokos ir žingsnio languose.
 - [ ] Gidas (pirmas paleidimas): visi rodomi elementai paryškinami teisingose vietose.
 - [ ] Programėlė telefone: šviesus fonas, apačioje juoda juosta su geltonu pasirinktu skirtuku; apačioje meniu - v1.3; nauja piktograma po pakartotinio įdiegimo.
+
+## 13. 1.4: nauji personažai
+- [ ] Atnaujinus iš 1.3, kai personažo vardas nebuvo keistas (pvz. „Robis“) → viršuje rodomas naujas vardas („Kadis“); savo sugalvotas vardas nepasikeičia.
+- [ ] Spinta → Personažas: 8 kortelės (01–08) savo spalvų fone; pasirinkus - geltona kortelė ir „✓ Pasirinkta“, vardas pasikeičia.
+- [ ] Galva / Akys / Kaklas / Rankoje: kiekvienas daiktas matosi ant visų personažų (pvz. Trimas juodame fone - balta kepurė); Spalva ir Fonas keičia personažą.
+- [ ] Pamokos žingsnis: pastaboje mažas personažas laukia; priimtas žingsnis - džiaugiasi; nepavykęs „Tikrinti“ - susiraukia; naujas lygis - karūna ir žvaigždės akyse.
+- [ ] Profilis → „Atsisiųsti kortelę (PNG)“: personažas be pertekliaus (tik viena veido išraiška), vardas, statistika.
+- [ ] Pirmas paleidimas (vedlys) → „Pasirink savo personažą“ - nauji personažai ir vardai.
