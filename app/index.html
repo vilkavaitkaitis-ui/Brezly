@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Brėžly</title>
 <meta name="description" content="AutoCAD pamokos ir praktikos užduotys inžinerijos studentams: žingsniai, testai, brėžinio tikrinimas ir XP.">
-<meta name="theme-color" content="#10151c">
+<meta name="theme-color" content="#111111">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -215,12 +215,110 @@ input.lauk.platus{width:100%;max-width:420px;font-family:var(--sans)}
 .tikslo-pav{margin:12px 0 0}.tikslo-pav img{display:block;width:100%;max-height:220px;object-fit:contain}
 .tikslo-pav figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--vidutinis)}
 .tikslo-pav i{display:inline-block;width:16px;height:3px;border-radius:2px}.tikslo-pav i+i{margin-left:8px}
+/* ===== 1.3 „Brėžinys yra sąsaja“ (Bauhaus) ===== */
+:root{
+  --fonas:#f7f5f0; --panele:#ffffff; --panele2:#f7f5f0; --kodas:#111111; --linija:#111111; --linija2:#111111;
+  --tekstas:#111111; --blankus:#55524b; --vidutinis:#2b2925;
+  --akcentas:#1f4fd1; --akc-tamsus:#ffffff; --matmenu:#1f4fd1; --priimta:#1f4fd1; --priimta-sv:#1f4fd1; --taisyti:#c42a20;
+  --geltona:#ffc400; --raudona:#e2362b; --blyski:#ece8df;
+  --sans:"Archivo",system-ui,"Segoe UI",sans-serif; --kond:"Archivo",system-ui,sans-serif; --mono:"Space Mono","IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+  --mk-kortele:#ffffff; --mk-linija:#111111; --mk-blankus:#55524b; --mk-akcentas:#1f4fd1; --mk-tekstas:#111111; --mk-kodas:#111111; --mk-gerai:#1f4fd1; --mk-klaida:#c42a20; --mk-mono:var(--mono);
+}
+*,*::before,*::after{border-radius:0!important}
+body{background:var(--fonas);color:var(--tekstas);font-family:var(--sans)}
+:focus-visible{outline:3px solid #1f4fd1}
+.virsus{background:var(--fonas);border-bottom:3px solid #111;padding:0 16px 0 0;min-height:56px;gap:12px}
+.zenklas{align-self:stretch;background:#111;color:#f7f5f0;padding:0 16px;font:900 18px var(--sans);letter-spacing:-.01em;gap:10px}
+.xp{font:700 13px var(--mono);color:#111}
+.xp #xpTekstas{background:#1f4fd1;color:#fff;padding:6px 10px}
+.xp .juosta{height:6px;background:var(--blyski)}
+.xp .juosta i{background:var(--geltona)}
+.nav{background:var(--fonas);border-right:3px solid #111;padding:0;gap:0}
+.nav a{padding:14px 18px;border-bottom:3px solid #111;color:#111;font:700 13.5px var(--sans);text-transform:uppercase;letter-spacing:.02em}
+.nav a:hover{background:var(--blyski);color:#111}
+.nav a[aria-current="page"]{background:var(--geltona);box-shadow:none;font-weight:800}
+.nav svg{display:none}
+.nav .apac{padding:14px}
+.turinys{background:var(--fonas)}
+.kick,.kick.pilka{font:700 12px var(--mono);letter-spacing:.04em;color:#111;text-transform:uppercase}
+h1.ant{font:900 44px/.95 var(--sans);letter-spacing:-.035em;text-transform:uppercase}
+.apras{color:var(--vidutinis)}
+.mygt{border:3px solid #111;background:#1f4fd1;color:#fff;font:800 14px var(--sans);text-transform:uppercase;letter-spacing:.02em;min-height:48px}
+.mygt.antr{background:#fff;color:#111;border:3px solid #111;font-weight:700}
+.mygt.zalias{background:#1f4fd1;color:#fff}
+.mygt.tusc{border:0;background:none;color:#111}
+.blokas,.lent,.statas,.kortele,.lygis,.idiegti,.patarimas,details.uzuom,.lapas{border:3px solid #111;background:#fff}
+.blokas h3{font:700 12px var(--mono);letter-spacing:.04em;color:#111;text-transform:uppercase}
+.eil{border-top:3px solid #111}
+a.eil:hover{background:var(--blyski)}
+.eil .nr{border:2px solid #111;color:#111;font:900 15px var(--sans)}
+.eil.atlikta .nr{background:#111;border-color:#111;color:#f7f5f0}
+.eil.pradeta .nr{background:var(--geltona);border-color:#111;color:#111}
+.eil b{font-weight:800}
+.eil .pr{background:var(--blyski);height:6px}
+.eil .pr i,.eil.atlikta .pr i{background:#1f4fd1}
+.zyme{border:2px solid #111;background:#fff;color:#111;font:700 11px var(--mono);text-transform:uppercase}
+.zyme.gerai{background:#1f4fd1;color:#fff;border-color:#111}
+.zyme.akc{background:var(--geltona);color:#111;border-color:#111}
+.statas b{font:900 30px var(--sans)}
+.statas span{font:11px var(--mono);text-transform:uppercase}
+.testi{border:3px solid #111;background:var(--geltona);color:#111}
+.testi h2{font:900 24px/1 var(--sans);text-transform:uppercase}
+.testi p{color:#111}
+.patarimas{color:#2b2925}
+.patarimas svg{color:var(--raudona)}
+.zjuosta{gap:4px}
+.zjuosta a{height:10px;background:var(--blyski);border:2px solid #111}
+.zjuosta a.atl{background:#111}
+.zjuosta a.dab{background:var(--geltona)}
+.zing li{color:#111}
+.zing li::before{border:2px solid #111;color:#111;font:700 12px var(--mono)}
+.komeil{background:#111;border:0;color:#f7f5f0}
+.komeil span{color:#a8a398}
+.komeil div{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+.komeil b,.komeil button{color:var(--geltona)}
+.tikslas b{color:#111;font-weight:700}
+.kodel{border-left:4px solid var(--geltona);color:#111}
+details.uzuom summary{color:#111;font-weight:700;text-transform:uppercase;font-size:13px}
+.atsak button{border:3px solid #111;background:#fff;color:#111}
+.atsak button:hover:not(:disabled){background:var(--blyski);border-color:#111}
+.atsak button.teis{background:#e6ecfb;border-color:#1f4fd1;color:#111}
+.atsak button.neteis{background:#fde9e7;border-color:#c42a20;color:#111}
+.kom span{background:#111;color:var(--geltona);border:0}
+input.lauk{background:#fff;border:3px solid #111;color:#111}
+.mesti{border:3px dashed #111;color:#2b2925}
+.mesti.virs{background:#fff3c4;border-color:#111;color:#111}
+.rez.gerai{background:#e6ecfb;border:3px solid #111}
+.rez.blogai{background:#fde9e7;border:3px solid #111}
+.rez.info{background:#fff;border:3px solid #111}
+.rez .gr li::marker{color:#1f4fd1}
+.rez .mato{border-top:2px solid #111}
+.kortele b{color:#111}
+.kortele code{background:#111;color:var(--geltona);border:0}
+.lygis.pasiektas{background:#111;color:#f7f5f0;border-color:#111}
+.lygis.pasiektas span{color:#c9c4b8}
+.lygis.dabar{background:var(--geltona);border-color:#111}
+.prane{background:#111;border:0;border-left:8px solid var(--geltona);color:#f7f5f0;box-shadow:6px 6px 0 #0003;font:700 13px var(--mono)}
+.kom-sk a{border:3px solid #111;background:#fff;color:#111;text-transform:uppercase;font-weight:800}
+.kom-sk a[aria-selected="true"]{background:var(--geltona);box-shadow:none}
+.mk-t,.mk-a,.mk-uzd,.mk-rez,.mk-cli,.mk-mygt,.mk-sk button,.mk-paieska input,.mk-tren select{border-width:3px!important}
+.mk-sk button[aria-selected="true"]{background:var(--geltona)!important;color:#111!important;box-shadow:none!important}
+.mk-mygt.pagr{color:#fff!important}
+.mk-t b,.mk-a h3,.mk-uzd b,.mk-rez h3{font-family:var(--sans);text-transform:uppercase}
+.tikslo-pav img{background:#fff;border:2px solid #111}
+@media (max-width:760px){
+  .tab{background:#111;border-top:3px solid #111}
+  .tab a{color:#c9c4b8;font:700 10.5px var(--sans);text-transform:uppercase}
+  .tab a[aria-current="page"]{color:#111;background:var(--geltona)}
+  h1.ant{font-size:34px}
+}
 </style>
 </head>
 <body>
 <header class="virsus">
   <div class="zenklas">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle><path d="M12 1v22M1 12h22"></path></svg>
+    <svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#e2362b"></circle><rect x="14" y="14" width="14" height="14" fill="#ffc400"></rect><path d="M2 28 L14 28 L2 16 Z" fill="#1f4fd1"></path></svg>
     BRĖŽLY
   </div>
   <div class="tarpas"></div>
@@ -301,7 +399,7 @@ function rodytiNav(skyrius){
   const nuor = ([k,v]) => `<a href="#/${k}" ${k===skyrius?'aria-current="page"':""}>${svg(k)}<span>${v}</span></a>`;
   $("#nav").innerHTML = MENIU.map(nuor).join("") + `<div class="apac">
     <button class="mygt" id="idiegtiBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Įdiegti</button>
-    <small>Brėžly programėlė · v1.1</small></div>`;
+    <small>Brėžly programėlė · v1.3</small></div>`;
   $("#tab").innerHTML = MENIU.map(nuor).join("");
   $("#idiegtiBtn").hidden = !idiegimas;
   $("#idiegtiBtn").onclick = idiegti;
@@ -402,7 +500,7 @@ function vPamoka(pid, zs){
       </div>
       <div class="stulp">
         ${z.komandos?.length ? `<div class="blokas"><h3>KOMANDŲ EILUTĖ</h3><div class="komeil">${z.komandos.map(([a,b])=>`<div><span>${esc(a)}</span><button title="Kopijuoti" data-kop="${esc(b)}">${esc(b)}</button></div>`).join("")}</div><p style="font-size:12.5px;color:var(--blankus)">Spustelėk reikšmę - nukopijuos, AutoCAD'e įklijuok Ctrl+V.</p></div>`:""}
-        ${z.tikslas ? `<div class="blokas"><h3>REZULTATAS</h3><div class="tikslas"><span>Turi gautis:</span><b>${esc(z.tikslas)}</b></div>${z.pav ? `<figure class="tikslo-pav"><img src="${esc(z.pav)}" alt="${esc(z.pavadinimas)}" loading="lazy" onerror="this.parentNode.remove()"><figcaption><i style="background:#f59e0b"></i>šis žingsnis <i style="background:#8b95a7"></i>jau nubraižyta</figcaption></figure>`:""}</div>`:""}
+        ${z.tikslas ? `<div class="blokas"><h3>REZULTATAS</h3><div class="tikslas"><span>Turi gautis:</span><b>${esc(z.tikslas)}</b></div>${z.pav ? `<figure class="tikslo-pav"><img src="${esc(z.pav)}" alt="${esc(z.pavadinimas)}" loading="lazy" onerror="this.parentNode.remove()"><figcaption><i style="background:#e2362b"></i>šis žingsnis <i style="background:#111111"></i>jau nubraižyta</figcaption></figure>`:""}</div>`:""}
         <div class="blokas"><h3>ŽINGSNIS</h3>
           <p style="font-size:14px;color:var(--vidutinis)">${atl ? "Šis žingsnis atliktas." : `Padaręs AutoCAD'e, pažymėk - gausi <b style="color:var(--tekstas)">+${z.xp} XP</b>.`}</p>
           <div class="veiksmai"><button class="mygt ${atl?"antr":"zalias"}" id="atlikau">${atl?"Atlikta ✓ - kitas →":"Atlikau →"}</button></div>

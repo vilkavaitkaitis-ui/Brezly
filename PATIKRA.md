@@ -82,3 +82,12 @@ Kiekvieną žingsnį pirmiausia padaryk pats, tada patikrink; kitame brėžinyje
 - [ ] „2D pjūvis“: PLINE kontūras + 2 linijos → priimama; HATCH ANSI31 abiejose sienelėse vienu kartu (vienas objektas, 2 kilpos) ir atskirai (2 objektai) → abu priimami; spustelėjus kiaurymėje → paaiškinimas.
 - [ ] „Matmenys“ → „Spindulys“: DIMRADIUS ant suapvalinto kampo → priimama.
 - [ ] Komandų eilutės treniruoklyje naujos pamokos: QUA, CHAMFER → D, ARRAYPOLAR → AS → N priimami.
+
+## 12. 1.3: naujas dizainas „Brėžinys yra sąsaja“
+- [ ] Pradžia: viršuje juodas BRĖŽLY langelis, meniu, lygis ir mėlynas XP; kairėje - pamokos lapas su pozicijomis, dešinėje - geltonas skydelis „Tęsk pamoką“ ir „Tęsti →“; apačioje - „Visos pamokos“.
+- [ ] Žingsnis: spustelėk poziciją lape → atsidaro tas žingsnis; „Tikrinti →“ priima atliktą žingsnį, pozicijoje atsiranda ✓, apačioje „Kita: … →“ veda toliau.
+- [ ] Apatinė juosta: ryšio taškas ir „Jungtis“ (spustelėjus - paaiškinimas), „Komanda: …“, „Šalia AutoCAD“, „Mini“, „Gidas“.
+- [ ] „Šalia AutoCAD“ ir „Mini“ (Ctrl+Alt+M) veikia kaip anksčiau; Nustatymai → tamsi tema - lapas lieka šviesus, likusi sąsaja tamsi.
+- [ ] Angliškai (Nustatymai → English): nėra lietuviškų užrašų pamokos ir žingsnio languose.
+- [ ] Gidas (pirmas paleidimas): visi rodomi elementai paryškinami teisingose vietose.
+- [ ] Programėlė telefone: šviesus fonas, apačioje juoda juosta su geltonu pasirinktu skirtuku; apačioje meniu - v1.3; nauja piktograma po pakartotinio įdiegimo.

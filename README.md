@@ -21,11 +21,12 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 - Egzamino režimas su laikmačiu, „Mano silpnos vietos“, komandų eilutės treniruoklis
 - Žinynas: inžinerinės grafikos terminai LT–EN ir standartų atmintinė; 2D žingsniuose – paveikslėlis „taip turi atrodyti“
 - XP, lygiai, ženkleliai ir 8 personažai
+- Dizainas „Brėžinys yra sąsaja“: pamokos žingsniai – pozicijos brėžinio lape, šviesi ir tamsi tema
 
 Reikia: Windows 10/11 ir AutoCAD (pilna versija). Progresas saugomas `Dokumentai\Brezly`.
 
 Privatumas: Brėžly apie tave nieko nesiunčia – [privatumo politika](PRIVATUMAS.md). Licencija: [MIT](LICENSE)
-(šriftai IBM Plex – [SIL OFL](sriftai/OFL.txt)).
+(šriftai IBM Plex, Archivo ir Space Mono – [SIL OFL](sriftai/OFL.txt), [Archivo](sriftai/OFL-Archivo.txt), [Space Mono](sriftai/OFL-SpaceMono.txt)).
 
 ---
 Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.

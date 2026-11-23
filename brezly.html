@@ -27,47 +27,27 @@
       <path d="M27 38 V46 Q45 54 63 46 V38" fill="#1e293b" stroke="#f59e0b" stroke-width="4"/>
       <path d="M76 34 V46" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/><circle cx="76" cy="50" r="4" fill="#fb7185"/>
     </symbol>
-    <symbol id="maskotas" viewBox="0 0 120 120">
-      <!-- kepurė -->
-      <path d="M60 6 L100 22 L60 38 L20 22 Z" fill="#1e293b" stroke="#f59e0b" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M38 29 V40 Q60 50 82 40 V29" fill="#1e293b" stroke="#f59e0b" stroke-width="3"/>
-      <path d="M96 24 V40" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="96" cy="43" r="4" fill="#fb7185"/>
-      <!-- galva -->
-      <rect x="26" y="42" width="68" height="50" rx="12" fill="#0f172a" stroke="#14b8a6" stroke-width="4"/>
-      <circle cx="46" cy="64" r="8" fill="none" stroke="#14b8a6" stroke-width="3.5"/>
-      <circle cx="74" cy="64" r="8" fill="none" stroke="#14b8a6" stroke-width="3.5"/>
-      <circle cx="47" cy="65" r="3.4" fill="#14b8a6"/><circle cx="75" cy="65" r="3.4" fill="#14b8a6"/>
-      <path d="M48 79 Q60 87 72 79" fill="none" stroke="#14b8a6" stroke-width="3.5" stroke-linecap="round"/>
-      <!-- pieštukas -->
-      <path d="M92 104 L108 80 L113 84 L97 108 L91 110 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M60 92 V100 M44 112 Q60 100 76 112" stroke="#14b8a6" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <symbol id="maskotas" viewBox="0 0 46 46">
+      <rect x="4" y="12" width="38" height="28" fill="#e2362b"/><circle cx="16" cy="26" r="5" fill="#f7f5f0"/><circle cx="30" cy="26" r="5" fill="#f7f5f0"/><rect x="20" y="2" width="6" height="10" fill="#111111"/>
+    </symbol>
+    <symbol id="bhLogo" viewBox="0 0 30 30">
+      <circle cx="11" cy="11" r="9" fill="#e2362b"/><rect x="14" y="14" width="14" height="14" fill="#ffc400"/><path d="M2 28 L14 28 L2 16 Z" fill="#1f4fd1"/>
     </symbol>
   </defs>
 </svg>
 
 <div id="uzsklanda">
   <div class="u-pers" id="uPers"></div>
-  <h1 role="img" aria-label="Brėžly">Br<i class="e-kr">e<svg class="kryz" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 1V39M1 20H39" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><rect x="13" y="13" width="14" height="14" fill="var(--kryz-fonas,#0a0f1d)" stroke="currentColor" stroke-width="3.5"/></svg></i>ž<span>ly</span></h1>
+  <h1 role="img" aria-label="Brėžly"><svg class="bh-zenklas" aria-hidden="true"><use href="#bhLogo"/></svg>BRĖŽLY</h1>
   <div class="u-nauja" id="uNauja" hidden></div>
   <p>Tavo braižymo mokymosi draugas</p>
   <small>Braižai tu. Aš padedu. ✏️</small>
   <div style="position:fixed;bottom:14px;left:0;right:0;text-align:center;font:12px system-ui,sans-serif;color:#64748b">Nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</div>
 </div>
 
-<aside>
-  <div class="logo" onclick="rodytiPradzia()">
-    <svg aria-hidden="true"><use href="#logo07"/></svg>
-    <div><b role="img" aria-label="Brėžly">Br<i class="e-kr">e<svg class="kryz" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 1V39M1 20H39" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><rect x="13" y="13" width="14" height="14" fill="var(--kryz-fonas,#0a0f1d)" stroke="currentColor" stroke-width="3.5"/></svg></i>ž<span>ly</span><em class="v-zyme" id="verZyme">0.9</em></b><small>mokykis braižyti · <span id="ver"></span></small></div>
-  </div>
-  <div class="zaidejas">
-    <div class="lyg"><div class="avataras gyvas" id="avataras" title="Atidaryti spintą" onclick="rodytiSpinta()"></div>
-      <div><b id="lygPav">Naujokas</b><small><span id="robotoVardas">Robis</span> · <span id="lygNr">1</span> lygis · <span id="xpTekstas">0 XP</span></small></div></div>
-    <div class="juosta"><i id="xpJuosta" style="width:0"></i></div>
-    <small id="ikiKito" style="color:var(--muted)"></small>
-    <div class="zenkleliai" id="zenkleliai"></div>
-  </div>
-  <div class="nav" id="nav">
+<header id="galva">
+  <button class="logo" onclick="rodytiPradzia()" aria-label="Brėžly - pamokos"><svg class="bh-zenklas" aria-hidden="true"><use href="#bhLogo"/></svg><b>BRĖŽLY</b><em class="v-zyme" id="verZyme">1.3</em><span class="hidden" id="ver"></span></button>
+  <nav class="nav" id="nav" aria-label="Meniu">
     <button data-v="pradzia" onclick="rodytiPradzia()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9 20v-6h6v6"/></svg>Pamokos</button>
     <button data-v="praktika" onclick="rodytiPraktika()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h11l5 5v13H4z"/><path d="M15 3v5h5"/><path d="M8 17l3-6 3 4 2-2"/></svg>Praktika<span class="taskelis hidden" id="praktikosTaskelis"></span></button>
     <button data-v="spinta" onclick="rodytiSpinta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 4 4 7l2 4 2-1v10h8V10l2 1 2-4-4-3c-1 2-2.5 3-4 3S9 6 8 4z"/></svg>Spinta<span class="taskelis hidden" id="naujiTaskelis"></span></button>
@@ -76,20 +56,14 @@
     <button data-v="kartoti" onclick="rodytiKartojima()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 2h12a2 2 0 0 1 2 2v12"/></svg>Kartoti</button>
     <button data-v="zinynas" onclick="rodytiZinyna()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 7h7M9 11h5"/></svg>Žinynas</button>
     <button data-v="nustatymai" onclick="rodytiNustatymus()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Nustatymai</button>
+  </nav>
+  <div class="zaidejas" title="Profilis">
+    <div class="avataras gyvas" id="avataras" title="Atidaryti spintą" onclick="rodytiSpinta()"></div>
+    <button class="zd-txt" onclick="rodytiProfili()"><span><span id="robotoVardas">Robis</span> · <b id="lygPav">Naujokas</b></span><small id="lygNr">1 lygis</small><span class="hidden" id="ikiKito"></span></button>
+    <button class="xp-deze" onclick="rodytiLygius()" title="Lygiai"><b id="xpTekstas">0 XP</b><span class="juosta"><i id="xpJuosta" style="width:0"></i></span></button>
+    <div class="zenkleliai hidden" id="zenkleliai"></div>
   </div>
-  <div class="sk-ant">Pamokos</div>
-  <div id="pamokuSarasas"></div>
-  <div class="patarimas"><b>💡 Ar žinojai?</b><span id="patarimas"></span></div>
-  <div class="apacia">
-    <div class="busena" id="busena"><span class="taskas"></span><span class="txt">Tikrinama...</span><button onclick="busenosVeiksmas()">Jungtis</button></div>
-    <div class="busena-info hidden" id="busenaInfo"></div>
-    <div class="nustat">
-      <button id="kompBtn" onclick="kompaktiskas(true)" title="Brėžly dešinėje, AutoCAD kairėje - niekas neuždengta">📌 Šalia AutoCAD</button>
-      <button onclick="langoRezimas('mini')" title="Maža kortelė virš AutoCAD (Ctrl+Alt+M)">▫ Mini</button>
-      <button id="gidoJungiklis" onclick="Gidas.perjungti()"></button>
-    </div>
-  </div>
-</aside>
+</header>
 
 <div id="virsus">
   <button onclick="document.body.classList.toggle('meniu')" aria-label="Meniu">☰</button>
@@ -99,7 +73,19 @@
   <button onclick="langoRezimas('mini')" title="Mini kortelė (Ctrl+Alt+M)" aria-label="Mini kortelė">▫</button>
   <button onclick="kompaktiskas(false)" title="Didelis langas" aria-label="Didelis langas">⇱</button>
 </div>
-<main onclick="document.body.classList.remove('meniu')"><div class="vidus" id="vidus"></div></main>
+<main><div class="vidus" id="vidus"></div></main>
+<footer id="apacia">
+  <div class="busena" id="busena"><span class="taskas"></span><span class="txt">Tikrinama...</span><button onclick="busenosVeiksmas()">Jungtis</button></div>
+  <span class="ap-kom" id="apKom" hidden></span>
+  <span class="tarpas"></span>
+  <div class="nustat">
+    <button id="kompBtn" onclick="kompaktiskas(langoRez()!=='kompaktiskas')" title="Brėžly dešinėje, AutoCAD kairėje - niekas neuždengta">Šalia AutoCAD</button>
+    <button onclick="langoRezimas('mini')" title="Maža kortelė virš AutoCAD (Ctrl+Alt+M)">Mini</button>
+    <button id="gidoJungiklis" onclick="Gidas.perjungti()"></button>
+  </div>
+  <button class="ap-kita" id="apKita" hidden></button>
+</footer>
+<div class="busena-info hidden" id="busenaInfo"></div>
 <div id="mini" aria-live="polite"></div>
 <div id="langelis" class="hidden"></div>
 <div class="pranesimas" id="pranesimas"></div>

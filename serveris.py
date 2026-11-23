@@ -319,7 +319,7 @@ def ping(_):
 TIPAI = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
          ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
          ".ico": "image/x-icon", ".svg": "image/svg+xml", ".png": "image/png", ".pdf": "application/pdf",
-         ".woff2": "font/woff2", ".json": "application/json; charset=utf-8"}
+         ".woff2": "font/woff2", ".woff": "font/woff", ".json": "application/json; charset=utf-8"}
 SRIFTAI = "sriftai"             # šriftų aplankas šalia programos (sriftai.css + .woff2)
 STATINIAI = (SRIFTAI, "paveiksleliai")  # aplankai, kurių failai tiekiami kaip yra (tik tikrai esantys)
 
