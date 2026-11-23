@@ -2,6 +2,31 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.3",
+   "pavadinimas": "Naujas dizainas: brėžinys yra sąsaja",
+   "aprasas": "Visa programa ir telefono programėlė perpieštos pagal naują dizainą - žingsniai rodomi tiesiai brėžinio lape.",
+   "punktai": [
+    "<b>Brėžinio lapas:</b> kairėje - pamokos brėžinys su numeruotomis pozicijomis. Atliktos pažymimos varnele, spustelėjus poziciją nueini į tą žingsnį.",
+    "<b>Žingsnio skydelis:</b> dešinėje - ką daryti, mygtukai TIKRINTI ir UŽUOMINA, Robio pastaba ir visų žingsnių langeliai.",
+    "<b>Apatinė juosta:</b> ryšys su AutoCAD, dabartinė komanda ir mygtukas „Kita →“ į kitą žingsnį ar pamoką.",
+    "<b>Viršuje:</b> meniu, lygis ir XP vienoje eilutėje. Nauji šriftai (Archivo, Space Mono) veikia ir be interneto.",
+    "<b>Telefono programėlė</b> ir piktogramos - tokio paties stiliaus.",
+    "Visos funkcijos liko: pamokos, testai, praktika, kartojimas, žinynas, spinta, mini ir „Šalia AutoCAD“ režimai, šviesi ir tamsi tema."
+   ],
+   "en": {
+    "pavadinimas": "New design: the drawing is the interface",
+    "aprasas": "The whole program and the phone app have been redrawn in the new design - steps are shown right on the drawing sheet.",
+    "punktai": [
+     "<b>Drawing sheet:</b> on the left - the lesson drawing with numbered positions. Done ones get a check mark; click a position to go to that step.",
+     "<b>Step panel:</b> on the right - what to do, CHECK and HINT buttons, Robis's note and cells for all steps.",
+     "<b>Bottom bar:</b> AutoCAD connection, the current command and a “Next →” button to the next step or lesson.",
+     "<b>Top bar:</b> menu, level and XP in one row. New fonts (Archivo, Space Mono) work offline too.",
+     "<b>The phone app</b> and the icons have the same style.",
+     "Everything else stays: lessons, tests, practice, review, reference, wardrobe, mini and “Next to AutoCAD” modes, light and dark themes."
+    ]
+   }
+  },
+  {
    "versija": "1.2",
    "pavadinimas": "4 naujos pamokos: tikslumas, redagavimas, masyvai, 2D pjūvis",
    "aprasas": "Pamokos papildytos tuo, ko reikalauja AutoCAD Certified User egzaminas ir be ko pradedantieji dažniausiai klysta.",

@@ -91,10 +91,11 @@ function piestiZaideja(){
   if(S.eq){ $("#avataras").innerHTML=robotoSVG(S.eq); $("#avataras").style.cssText=fonoStilius(S.eq.fonas,true); $("#gidoRobotas").innerHTML=robotoSVG(S.eq); }
   $("#robotoVardas").textContent=S.vardas||"Robis";
   $("#naujiTaskelis").classList.toggle("hidden",!(S.nauji&&S.nauji.length));
-  $("#lygNr").textContent=i+1; $("#lygPav").textContent=pav; $("#xpTekstas").textContent=`${S.xp} XP`;
+  $("#lygNr").textContent=`${i+1} lygis`; $("#lygPav").textContent=pav; $("#xpTekstas").textContent=`${S.xp} XP`;
   $("#xpJuosta").style.width = kitas ? `${Math.round((S.xp-nuo)/(kitas[0]-nuo)*100)}%` : "100%";
   $("#vXP").textContent=`${S.xp} XP · ${i+1} lygis`;
   $("#ikiKito").textContent = kitas ? `Iki „${kitas[1]}“: ${kitas[0]-S.xp} XP` : "Aukščiausias lygis!";
+  const xd=document.querySelector(".xp-deze"); if(xd) xd.title=$("#ikiKito").textContent;
   $("#zenkleliai").innerHTML=Object.entries(ZENKLELIAI).map(([k,p])=>`<span class="zenklelis ${S.zenkleliai.includes(k)?"":"uzr"}" title="${S.zenkleliai.includes(k)?"Gautas":"Dar negautas"}">${p}</span>`).join("");
 }
 function pridetiXP(kiek,el){
@@ -336,7 +337,7 @@ function testSerija(){ if(!testasAtrakintas)return; S.dienos=S.dienos||[]; const
 
 /* =================== RODINIAI: SPINTA, LYGIAI, PROFILIS =================== */
 let rodinys="pradzia", spintosSkirtukas="galva";
-function nustatytiRodini(v){ rodinys=v; document.body.classList.remove("meniu"); if(v!=="pamoka") auto.reset(); document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("akt",b.dataset.v===v)); Gidas.slepti(); clearTimeout(Gidas.nuobodu); $("main").scrollTop=0; if(miniIjungtas()) setTimeout(miniPiesti,0); }
+function nustatytiRodini(v){ rodinys=v; document.body.classList.remove("meniu"); if(v!=="pamoka") auto.reset(); document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("akt",b.dataset.v===v||((v==="pamoka"||v==="testas")&&b.dataset.v==="pradzia"))); Gidas.slepti(); clearTimeout(Gidas.nuobodu); $("main").scrollTop=0; if(miniIjungtas()) setTimeout(miniPiesti,0); setTimeout(piestiApacia,0); }
 function atnaujintiRodini(){ const f={kurejas:rodytiKureja,praktika:()=>prDabar?rodytiUzduoti(prDabar):rodytiPraktika(),spinta:rodytiSpinta,lygiai:rodytiLygius,profilis:rodytiProfili,nustatymai:rodytiNustatymus,zinynas:rodytiZinyna}[rodinys]; if(f) f(); }
 function kitasAtlygis(){
   const b=busenaAtrakinimui(), i=lygis(S.xp), kitas=LYGIAI[i+1];
@@ -476,16 +477,16 @@ function atsisiustiKortele(){
 
 /* ---------- šoninė ---------- */
 function piestiSonine(){
-  $("#pamokuSarasas").innerHTML=INFO.pamokos.map(p=>{
-    const atl=(S.atlikta[p.id]||[]).length, viso=p.zingsniai.length;
-    const nr=INFO.pamokos.indexOf(p)+1;
-    return `<div class="pam ${PAM&&PAM.id===p.id?"akt":""}" onclick="rodytiPradzia('${p.id}')"><div class="nr">${atl>=viso?"🏆":nr}</div>
-      <div><b>${esc(p.pavadinimas)}</b><small>${atl}/${viso} žingsnių</small></div></div>`;
-  }).join("")+INFO.ateityje.map(p=>`<div class="pam uzr" title="Bus kitoje versijoje"><div class="nr">🔒</div><div><b>${esc(p.pavadinimas)}</b><small>Netrukus · ${esc(p.aprasas)}</small></div></div>`).join("");
+  const el=$("#pamokuSarasas");
+  if(el) el.innerHTML=INFO.pamokos.map((p,i)=>{
+    const atl=(S.atlikta[p.id]||[]).length, viso=p.zingsniai.length, baigta=atl>=viso;
+    return `<button class="pam ${PAM&&PAM.id===p.id?"akt":""} ${baigta?"baigta":""}" onclick="rodytiPradzia('${p.id}')">
+      <span class="nr">${baigta?BH_VARNELE:dvi(i+1)}</span><b>${esc(p.pavadinimas)}</b><small>${atl}/${viso} žingsnių</small></button>`;
+  }).join("")+INFO.ateityje.map(p=>`<div class="pam uzr" title="Bus kitoje versijoje"><span class="nr">·</span><b>${esc(p.pavadinimas)}</b><small>Netrukus</small></div>`).join("");
   piestiZaideja();
 }
-function keistiTema(){sg("tema",(sg("tema")||"dark")==="dark"?"light":"dark");taikytiTema();}
-function taikytiTema(){const t=sg("tema")||"dark";document.documentElement.dataset.theme=t;if(rodinys==="nustatymai")rodytiNustatymus();}
+function keistiTema(){sg("tema",(sg("tema")||"light")==="dark"?"light":"dark");taikytiTema();}
+function taikytiTema(){const t=sg("tema")||"light";document.documentElement.dataset.theme=t;if(rodinys==="nustatymai")rodytiNustatymus();}
 function zoomas(){return parseFloat(document.body.style.zoom)||1;}
 function taikytiDydi(){
   const d=sg("dydis");
@@ -500,27 +501,33 @@ function pamokaPagalId(id){ return INFO.pamokos.find(p=>p.id===id); }
 function pirmaNebaigta(){ return INFO.pamokos.find(p=>(S.atlikta[p.id]||[]).length<p.zingsniai.length)||INFO.pamokos[0]; }
 function rodytiPradzia(pid){
   nustatytiRodini("pradzia");
-  PAM=(pid&&pamokaPagalId(pid))||PAM||pamokaPagalId(S.pamoka)||pirmaNebaigta(); S.pamoka=PAM.id; saugoti(); piestiSonine(); $("#vPam").textContent=`${INFO.pamokos.indexOf(PAM)+1}. ${PAM.pavadinimas}`; if(!Gidas.turas) Gidas.slepti(); clearTimeout(Gidas.nuobodu);
-  const atl=S.atlikta[PAM.id]||[], viso=PAM.zingsniai.length, prad=atl.length>0&&atl.length<viso;
-  $("#vidus").innerHTML=`
-  <div class="herojus"><div>
-    <div class="zymes"><span class="zyme">Pamoka ${INFO.pamokos.indexOf(PAM)+1} iš ${INFO.pamokos.length}</span><span class="zyme t">${esc(PAM.trukme)}</span><span class="zyme">iki ${PAM.zingsniai.reduce((a,z)=>a+z.xp,0)+PAM.testas.length*10} XP</span></div>
-    <h1>${esc(PAM.pavadinimas)}</h1><p>${esc(PAM.aprasas)}</p>
-    <div class="eil">
-      <button class="btn pagr didelis" id="pradetiBtn" onclick="pradeti(${prad?"S.dabartinis[PAM.id]||0":0})">${prad?"▶ Tęsti pamoką":atl.length>=viso?"↻ Kartoti pamoką":"▶ Pradėti pamoką"}</button>
-      <button class="btn" id="naujasBtn" onclick="naujasBrezinys()">Naujas brėžinys (acadiso.dwt)</button>
-    </div></div>
-    <svg viewBox="0 0 120 120"><use href="#maskotas"/></svg></div>
-  ${(()=>{ const n=Object.values(S.atlikta).some(a=>a.length)?Kartojimas.likoSiandien():0;
-    return n?`<div class="kart-juosta"><span aria-hidden="true">🧠</span><div><b>Dienos kartojimas</b><small>${n} kom. · ~2 min · iki +${n*2+5} XP</small></div><button class="btn" onclick="kartTab='diena';kartSesija=null;rodytiKartojima()">Pradėti</button></div>`:""; })()}
-  <h2>Ką išmoksi</h2>
-  <div class="planas">${PAM.zingsniai.map((z,i)=>`<div class="${atl.includes(z.id)?"atl":""}"><span>${atl.includes(z.id)?"✓":i+1}</span>${esc(z.pavadinimas)}</div>`).join("")}<div><span>?</span>Trumpas testas</div></div>
-  <h2>Kaip tai veikia</h2>
-  <div class="kaip">
-    <div><i>⌨️</i><b>Braižai pats</b><p>Brėžly parodo, ką įvesti AutoCAD komandų eilutėje, ir paaiškina kodėl.</p></div>
-    <div><i>🔍</i><b>Aš patikrinu</b><p>Stebiu tavo brėžinį ir pats pastebiu, kai žingsnis atliktas. Gali spausti ir „Patikrinti“ - pasakysiu, kas ne taip.</p></div>
-    <div><i>⭐</i><b>Renki XP</b><p>Be užuominų - pilni taškai. Įstrigus - užuomina arba „Parodyk man“.</p></div>
-  </div>`;
+  PAM=(pid&&pamokaPagalId(pid))||PAM||pamokaPagalId(S.pamoka)||pirmaNebaigta(); S.pamoka=PAM.id; saugoti(); $("#vPam").textContent=`${INFO.pamokos.indexOf(PAM)+1}. ${PAM.pavadinimas}`; if(!Gidas.turas) Gidas.slepti(); clearTimeout(Gidas.nuobodu);
+  const atl=S.atlikta[PAM.id]||[], viso=PAM.zingsniai.length, prad=atl.length>0&&atl.length<viso, pnr=INFO.pamokos.indexOf(PAM)+1;
+  const kitas=prad?(S.dabartinis[PAM.id]||0):Math.max(0,PAM.zingsniai.findIndex(z=>!atl.includes(z.id)));
+  const kart=Object.values(S.atlikta).some(a=>a.length)?Kartojimas.likoSiandien():0;
+  $("#vidus").innerHTML=`<div class="bh-du">
+  <section class="bh-lapas" aria-label="Brėžinio lapas">
+    <span class="bh-fonas-nr" aria-hidden="true">${dvi(pnr)}</span>
+    <span class="bh-zyme">Pamoka ${dvi(pnr)} / ${dvi(INFO.pamokos.length)} · ${esc(PAM.trukme)} · iki ${PAM.zingsniai.reduce((a,z)=>a+z.xp,0)+PAM.testas.length*10} XP</span>
+    <h1 class="bh-h1">${esc(PAM.pavadinimas)}</h1>
+    ${lapoSVG(PAM,atl.length>=viso?-1:kitas,atl,"pradeti")}
+  </section>
+  <div class="bh-skydas" role="complementary">
+    <div class="bh-geltona">
+      <div class="bh-poz"><span class="bh-burb">${dvi(pnr)}</span><span>${viso} žingsn. · ${esc(PAM.trukme)}</span></div>
+      <h2>${prad?"Tęsk pamoką":atl.length>=viso?"Pamoka baigta":"Pradėk pamoką"}</h2>
+      <p>${esc(PAM.aprasas)}</p>
+    </div>
+    <div class="bh-veiksmai">
+      <button class="bh-tikr" id="pradetiBtn" onclick="pradeti(${prad?"S.dabartinis[PAM.id]||0":0})">${prad?"Tęsti →":atl.length>=viso?"Kartoti →":"Pradėti →"}</button>
+      <button class="bh-uz" id="naujasBtn" onclick="naujasBrezinys()" title="Naujas brėžinys iš acadiso.dwt">Naujas brėžinys</button>
+    </div>
+    <div class="bh-robis"><svg aria-hidden="true"><use href="#maskotas"/></svg><div><b>Ar žinojai?</b> <span id="patarimas"></span></div></div>
+    ${kart?`<div class="kart-juosta"><div><b>Dienos kartojimas</b><small>${kart} kom. · ~2 min · iki +${kart*2+5} XP</small></div><button class="btn" onclick="kartTab='diena';kartSesija=null;rodytiKartojima()">Pradėti</button></div>`:""}
+    ${zingsniuLangeliai(PAM,-1,atl,"pradeti")}
+  </div></div>
+  <section class="bh-visos" aria-label="Visos pamokos"><h2 class="bh-ant">Visos pamokos</h2><div id="pamokuSarasas" class="bh-pamokos"></div></section>`;
+  piestiSonine(); rodytiPatarima();
 }
 async function naujasBrezinys(){const r=await api("/api/naujas",{});pranesti(r.ok?"Atidarytas naujas brėžinys iš acadiso.dwt":"Nepavyko: "+r.klaida);}
 
@@ -537,34 +544,115 @@ function rodytiZingsni(nr){
 }
 function piestiZingsni(){
   const nr=S.dabartinis[PAM.id], z=PAM.zingsniai[nr], atl=S.atlikta[PAM.id]||[], jau=atl.includes(z.id);
-  const xpDabar=uzdirbtiXP(z);
-  $("#vidus").innerHTML=`
-  <div class="progresas"><button class="btn" onclick="rodytiPradzia()">← Pamoka</button>
-    <div class="taskai">${PAM.zingsniai.map((s,i)=>`<i class="${atl.includes(s.id)?"atl":""} ${i===nr?"dab":""}" title="${esc(s.pavadinimas)}"></i>`).join("")}</div>
-    <small>${nr+1} / ${PAM.zingsniai.length}</small></div>
-  <div class="korta" id="korta">
-    <div class="korta-ant"><h1>${esc(z.pavadinimas)}</h1><span class="xp-zyme">${jau?"✓ atlikta":`+${xpDabar} XP`}</span></div>
-    <div class="kodel"><b>Kodėl?</b>${esc(z.kodel)}</div>
-    <ol class="daryk">${z.zingsniai.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
-    ${z.komandos.length?`<div class="komandos" id="komandos"><div class="ant"><i></i><i></i><i></i><span>AutoCAD komandų eilutė - įvesk geltonus atsakymus</span></div>
-      ${z.komandos.map(([pr,iv0])=>{const iv=komandosTekstas(pr,iv0),pele=iv.startsWith("(")||iv==="Enter";return `<div class="kl"><span class="pr">${esc(pr)}</span><span class="iv ${pele?"pele":""}">${esc(iv)}</span>${pele?"":`<button onclick="kopijuoti('${esc(iv)}')">Kopijuoti</button>`}</div>`;}).join("")}</div>`:""}
-    ${z.tikslas?`<div class="tikslas" id="tikslas">🎯 Tikslas: <b>${esc(z.tikslas)}</b></div>`:""}
-    ${z.pav?`<figure class="tikslo-pav"><img src="/${esc(z.pav)}" alt="${esc(z.pavadinimas)}" loading="lazy" onerror="this.parentNode.remove()">
-      <figcaption><span class="tp-n"></span>šis žingsnis <span class="tp-s"></span>jau nubraižyta</figcaption></figure>`:""}
-    <div class="eil" id="veiksmai">
-      <button class="btn pagr didelis" id="tikrinti" onclick="tikrinti()">${z.tikrinama?"✓ Patikrinti":"✓ Atlikau"}</button>
-      <button class="btn" id="uzuominaBtn" onclick="uzuomina()" ${uzuominuRodyta>=z.uzuominos.length?"disabled":""}>💡 Užuomina (${uzuominuRodyta}/${z.uzuominos.length})</button>
-      ${z.demonstruojama?`<button class="btn" id="parodykBtn" onclick="parodyti()">👀 Parodyk man</button>`:""}
-      <span class="tarpas"></span>
-      ${nr>0?`<button class="btn" onclick="rodytiZingsni(${nr-1})">← Atgal</button>`:""}
-      <button class="btn" onclick="toliau()">${nr<PAM.zingsniai.length-1?"Praleisti →":"Į testą →"}</button>
+  const xpDabar=uzdirbtiXP(z), pnr=INFO.pamokos.indexOf(PAM)+1, n=PAM.zingsniai.length;
+  const kom=(z.komandos||[]).find(([pr,iv])=>/^Command/i.test(pr)), komT=kom?komandosTekstas(kom[0],kom[1]):"";
+  $("#vidus").innerHTML=`<div class="bh-du">
+  <section class="bh-lapas" aria-label="Brėžinio lapas">
+    <span class="bh-fonas-nr" aria-hidden="true">${dvi(pnr)}</span>
+    <button class="bh-zyme" onclick="rodytiPradzia()">← Pamoka ${dvi(pnr)} / ${dvi(INFO.pamokos.length)}</button>
+    <h1 class="bh-h1">${esc(PAM.pavadinimas)}</h1>
+    ${lapoSVG(PAM,nr,atl,"rodytiZingsni")}
+    <div class="bh-darbas">
+      <h3 class="bh-ant">Daryk</h3>
+      <ol class="daryk">${z.zingsniai.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
+      ${z.komandos.length?`<div class="komandos" id="komandos"><div class="ant"><span>AutoCAD komandų eilutė - įvesk geltonus atsakymus</span></div>
+        ${z.komandos.map(([pr,iv0])=>{const iv=komandosTekstas(pr,iv0),pele=iv.startsWith("(")||iv==="Enter";return `<div class="kl"><span class="pr">${esc(pr)}</span><span class="iv ${pele?"pele":""}">${esc(iv)}</span>${pele?"":`<button onclick="kopijuoti('${esc(iv)}')">Kopijuoti</button>`}</div>`;}).join("")}</div>`:""}
+      ${z.tikslas?`<div class="tikslas" id="tikslas"><span>Tikslas:</span> <b>${esc(z.tikslas)}</b></div>`:""}
     </div>
-    ${z.tikrinama&&!jau?auto.html():""}
+  </section>
+  <div class="bh-skydas" id="korta" role="complementary">
+    <div class="bh-geltona">
+      <div class="bh-poz"><span class="bh-burb">${nr+1}</span><span>Pozicija ${nr+1} · ${jau?"✓ atlikta":`+${xpDabar} XP`}</span></div>
+      <h2>${esc(z.pavadinimas)}</h2>
+      <p class="kodel">${esc(z.kodel)}</p>
+      ${kom?`<button class="bh-kom" onclick="kopijuoti('${esc(komT)}')" title="Kopijuoti">&gt; ${esc(komT)}</button>`:""}
+    </div>
+    <div class="bh-veiksmai" id="veiksmai">
+      <button class="bh-tikr" id="tikrinti" onclick="tikrinti()">${z.tikrinama?"Tikrinti →":"Atlikau →"}</button>
+      <button class="bh-uz" id="uzuominaBtn" onclick="uzuomina()" ${uzuominuRodyta>=z.uzuominos.length?"disabled":""}>Užuomina <small>${uzuominuRodyta}/${z.uzuominos.length}</small></button>
+    </div>
+    <div class="bh-antr">
+      ${z.demonstruojama?`<button id="parodykBtn" onclick="parodyti()">Parodyk man</button>`:""}
+      ${nr>0?`<button onclick="rodytiZingsni(${nr-1})">← Atgal</button>`:""}
+      <button onclick="toliau()">${nr<n-1?"Praleisti →":"Į testą →"}</button>
+    </div>
+    <div class="bh-robis"><svg aria-hidden="true"><use href="#maskotas"/></svg><div><p><b>Robis:</b> ${esc(robioTekstas(nr,atl))}</p>${z.tikrinama&&!jau?auto.html():""}</div></div>
     <div id="uzuominos">${z.uzuominos.slice(0,uzuominuRodyta).map((u,i)=>`<div class="uzuomina"><b>Užuomina ${i+1}:</b> ${esc(u)}</div>`).join("")}</div>
     <div id="atsakas">${paskutinisAtsakas||""}</div>
-  </div>`;
-  Gidas.atnaujinti();
+    ${zingsniuLangeliai(PAM,nr,atl,"rodytiZingsni")}
+  </div></div>`;
+  Gidas.atnaujinti(); piestiApacia();
   if(miniIjungtas()) miniPiesti();
+}
+const BH_VARNELE="✓";
+function dvi(n){ return String(n).padStart(2,"0"); }
+function trumpasPav(z){ const t=z.pavadinimas, i=t.lastIndexOf(":"); const s=(i>=0?t.slice(i+1):t).trim(); return s.length>16?s.slice(0,15)+"…":s; }
+function robioTekstas(nr,atl){
+  const z=PAM.zingsniai[nr], pries=PAM.zingsniai.slice(0,nr).filter(s=>atl.includes(s.id)).length;
+  if(atl.includes(z.id)) return `${nr+1} pozicija jau pažymėta. Gali eiti toliau.`;
+  if(nr===0) return `Pradedam! Daryk, kas parašyta kairėje, o aš stebėsiu tavo brėžinį.`;
+  return pries===nr ? `Pozicijos 1–${nr} pažymėtos. Dabar - ${nr+1}: ${trumpasPav(z)}.` : `Dabar - ${nr+1} pozicija: ${trumpasPav(z)}.`;
+}
+function zingsniuLangeliai(pam,dab,atl,fn){
+  const n=pam.zingsniai.length;
+  return `<div class="progresas bh-tabs" style="grid-template-columns:repeat(${Math.min(n,5)},minmax(0,1fr))">${pam.zingsniai.map((s,i)=>{
+    const a=atl.includes(s.id), d=i===dab;
+    return `<button class="${a?"atl":""} ${d?"dab":""}" onclick="${fn}(${i})" title="${esc((i+1)+". "+s.pavadinimas)}"><b>${a&&!d?BH_VARNELE:i+1}</b><small>${esc(trumpasPav(s))}</small></button>`;}).join("")}</div>`;
+}
+/* lapas su pozicijų burbuliukais: kiekvienas pamokos žingsnis - pozicija, kaip surinkimo brėžinyje */
+function lapoSVG(pam,dab,atl,fn){
+  const n=pam.zingsniai.length, kair=Math.ceil(n/2), des=n-kair, z=pam.zingsniai[Math.max(dab,0)];
+  const yy=(k,i)=>k<=1?230:62+i*(336/(k-1));
+  const vietos=pam.zingsniai.map((s,i)=>i<kair?{x:74,y:yy(kair,i),k:-1}:{x:686,y:yy(des,des-1-(i-kair)),k:1});
+  const balionas=(s,i)=>{
+    const v=vietos[i], a=atl.includes(s.id), d=i===dab, r=d?30:24;
+    const ex=v.k<0?178:552, ey=v.y+(232-v.y)*.18, dx=ex-v.x, dy=ey-v.y, L=Math.hypot(dx,dy)||1;
+    const fonas=d?"#ffc400":a?"#111111":"#ffffff", spalva=a&&!d?"#f7f5f0":"#111111";
+    const zenklas=a&&!d?`<path d="M${v.x-9} ${v.y+1}l6 6 12-13" fill="none" stroke="${spalva}" stroke-width="4" stroke-linecap="square"/>`
+      :`<text x="${v.x}" y="${v.y+(d?9:8)}" text-anchor="middle" class="bh-bn" font-size="${d?26:22}" fill="${spalva}">${i+1}</text>`;
+    return `<g class="bh-b${d?" dab":""}${a?" atl":""}" role="button" tabindex="0" aria-label="${esc((i+1)+". "+s.pavadinimas)}"
+      onclick="${fn}(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${fn}(${i})}"><title>${esc((i+1)+". "+s.pavadinimas)}</title>
+      <path d="M${(v.x+dx/L*r).toFixed(1)} ${(v.y+dy/L*r).toFixed(1)}L${ex} ${ey.toFixed(1)}" stroke="#111" stroke-width="2"/><circle cx="${ex}" cy="${ey.toFixed(1)}" r="3.5" fill="#111"/>
+      <circle cx="${v.x}" cy="${v.y}" r="${r}" fill="${fonas}" stroke="#111" stroke-width="3"/>${zenklas}
+      <text x="${v.x}" y="${v.y+r+17}" text-anchor="middle" class="bh-bl">${esc(trumpasPav(s))}</text></g>`;
+  };
+  const eil=t=>{ const zod=String(t||"").split(/\s+/), r=[]; let e=""; for(const w of zod){ if((e+" "+w).trim().length>26){ if(e) r.push(e); e=w; } else e=(e+" "+w).trim(); } if(e) r.push(e); return r.slice(0,3); };
+  const vidus=z&&z.pav&&dab>=0
+    ? `<image href="/${esc(z.pav)}" x="182" y="48" width="366" height="292" preserveAspectRatio="xMidYMid meet"/>`
+    : `<path d="M215 196h300M365 70v250" stroke="#e2362b" stroke-width="1.4" stroke-dasharray="16 5 3 5"/><circle cx="365" cy="196" r="46" fill="none" stroke="#111" stroke-width="2.5"/>
+       ${eil(dab>=0&&z.tikslas?z.tikslas:pam.aprasas).map((t,i)=>`<text x="365" y="${282+i*20}" text-anchor="middle" class="bh-lt">${esc(t)}</text>`).join("")}`;
+  const pav=pam.pavadinimas.toUpperCase();
+  const legenda=z&&z.pav&&dab>=0?`<g class="bh-leg"><rect x="150" y="458" width="12" height="12" fill="#e2362b"/><text x="168" y="469">šis žingsnis</text><rect x="290" y="458" width="12" height="12" fill="#111"/><text x="308" y="469">jau nubraižyta</text></g>`:"";
+  return `<svg class="bh-svg" viewBox="0 0 760 476" role="group" aria-label="Pamokos žingsniai">${legenda}
+    <rect x="150" y="18" width="430" height="430" fill="#ffffff" stroke="#111" stroke-width="3"/>
+    <rect x="166" y="34" width="398" height="398" fill="none" stroke="#111" stroke-width="1.2"/>
+    ${vidus}
+    <g class="bh-ki"><rect x="380" y="352" width="184" height="80" fill="#fff" stroke="#111" stroke-width="1.5"/><path d="M380 378h184M380 404h184M448 352v80" stroke="#111" stroke-width="1.5"/>
+      <rect x="449" y="379" width="114" height="24" fill="#ffc400"/>
+      <text x="386" y="369">PAV.</text><text x="455" y="369">${esc(pav.length>15?pav.slice(0,14)+"…":pav)}</text>
+      <text x="386" y="395">ŽINGSN.</text><text x="455" y="395" font-weight="700">${dab>=0?dab+1:n} / ${n}</text>
+      <text x="386" y="421">MAST.</text><text x="455" y="421">1:1</text></g>
+    ${pam.zingsniai.map(balionas).join("")}
+  </svg>`;
+}
+/* apatinė juosta: AutoCAD būsena, dabartinė komanda, KITA → */
+function piestiApacia(){
+  const k=$("#apKom"), kb=$("#apKita"), kb2=$("#kompBtn"); if(!k||!kb||!INFO) return;
+  if(kb2) kb2.textContent=langoRez()==="kompaktiskas"?"Didelis langas":"Šalia AutoCAD";
+  let kom="", kita=null, veiks=null;
+  if(PAM){
+    const pnr=INFO.pamokos.indexOf(PAM), kitaPam=INFO.pamokos[pnr+1];
+    if(rodinys==="pamoka"){
+      const nr=S.dabartinis[PAM.id]||0, z=PAM.zingsniai[nr], c=(z.komandos||[]).find(([pr])=>/^Command/i.test(pr));
+      if(c) kom=komandosTekstas(c[0],c[1]);
+      if(nr<PAM.zingsniai.length-1){ kita=`Kita: ${nr+2} · ${trumpasPav(PAM.zingsniai[nr+1])}`; veiks=()=>rodytiZingsni(nr+1); }
+      else { kita="Kita: testas"; veiks=()=>rodytiTesta(); }
+    } else if(rodinys==="pradzia"||rodinys==="testas"){
+      if(kitaPam){ kita=`Kita: ${dvi(pnr+2)} ${kitaPam.pavadinimas}`; veiks=()=>rodytiPradzia(kitaPam.id); }
+    } else { kita=`Tęsti: ${dvi(pnr+1)} ${PAM.pavadinimas}`; veiks=()=>rodytiPradzia(PAM.id); }
+  }
+  k.hidden=!kom; k.textContent=kom?`Komanda: ${kom}`:"";
+  kb.hidden=!kita; kb.textContent=kita?kita+" →":""; kb.onclick=veiks;
 }
 function uzdirbtiXP(z){ if(demo) return 0; return Math.max(Math.round(z.xp*(1-0.25*uzuominuRodyta)), Math.round(z.xp*0.25)); }
 function kopijuoti(t){ navigator.clipboard?.writeText(t).then(()=>pranesti(`Nukopijuota: ${t} - įklijuok AutoCAD'e (Ctrl+V)`),()=>pranesti(t)); }
@@ -689,7 +777,7 @@ let kartSesija=null;
 /* ---------- testas ---------- */
 let testoAts=[];
 function rodytiTesta(){
-  nustatytiRodini("pamoka");
+  nustatytiRodini("testas");
   Gidas.slepti();
   testoAts=PAM.testas.map(()=>null);
   piestiTesta();
@@ -727,7 +815,7 @@ function pabaiga(){
     <button class="btn" onclick="if(confirm('Ištrinti visą progresą ir XP?')){S={xp:0,atlikta:{},zenkleliai:[],dabartinis:{},eq:S.eq,dienos:[],nauji:[],vardas:S.vardas};PAM=null;saugoti();rodytiPradzia(INFO.pamokos[0].id);}">Pradėti iš naujo</button></div></div>`;
 }
 function konfeti(n){
-  const sp=["#f59e0b","#fb7185","#14b8a6","#60a5fa","#a78bfa","#22c55e"];
+  const sp=["#e2362b","#ffc400","#1f4fd1","#111111"];
   for(let i=0;i<n;i++){const c=document.createElement("div");c.className="konfeti";c.style.left=Math.random()*100+"vw";c.style.background=sp[i%sp.length];
     c.style.animationDuration=(1.8+Math.random()*1.8)+"s";c.style.animationDelay=(Math.random()*.6)+"s";c.style.borderRadius=Math.random()<.5?"50%":"2px";
     document.body.appendChild(c);setTimeout(()=>c.remove(),4500);}
@@ -828,7 +916,7 @@ const Gidas = {
      veiksmas:()=>pradeti(S.dabartinis[PAM.id]||0)},
   ],
   ZINGSNIO_TURAS:[
-    {taikinys:".progresas", tekstas:"Ši juosta rodo, kiek žingsnių jau padarei. <b>Žalia</b> - atlikta, <b>oranžinė</b> - dabar."},
+    {taikinys:".progresas", tekstas:"Šie langeliai - pamokos žingsniai. <b>✓</b> - atlikta, <b>juodas</b> - dabar. Spustelėk bet kurį - nueisi į tą žingsnį."},
     {taikinys:".kodel", tekstas:"Visada perskaityk <b>„Kodėl?“</b> - taip suprasi, ne tik atkartosi."},
     {taikinys:"#komandos", tekstas:"Čia - lyg AutoCAD komandų eilutė. <b>Geltoni</b> žodžiai - ką tau įvesti AutoCAD'e. <i>Mėlyni kursyvu</i> - ką padaryti pele. Užvedęs pelę gali <b>Kopijuoti</b>."},
     {taikinys:"#tikrinti", tekstas:"Aš <b>stebiu tavo brėžinį</b> - kai padarysi, pastebėsiu pats. Jei nori sužinoti, kas dar ne taip - spausk <b>Patikrinti</b>."},
@@ -922,7 +1010,7 @@ async function busenosVeiksmas(){
   prisijungti();
 }
 async function prisijungti(){$("#busena .txt").textContent="Jungiamasi...";let r;try{r=await api("/api/prisijungti",{});}catch(e){r={ok:false,klaida:"Brėžly neatsako"};}if(!r.ok)pranesti("Nepavyko: "+r.klaida);tikrintiBusena();}
-function rodytiPatarima(){ $("#patarimas").textContent=INFO.patarimai[Math.floor(Math.random()*INFO.patarimai.length)]; }
+function rodytiPatarima(){ const el=$("#patarimas"); if(el) el.textContent=INFO.patarimai[Math.floor(Math.random()*INFO.patarimai.length)]; }
 
 /* =================== PROGRESAS FAILE =================== */
 async function ikeltiProgresa(){
@@ -1001,6 +1089,7 @@ async function langoRezimas(rez,tyliai){
     if(rez==="mini") pranesti("▫ Mini kortelė. Tikrinti galima ir iš AutoCAD: Ctrl+Alt+T");
   }
   if(rodinys==="nustatymai") rodytiNustatymus();
+  piestiApacia();
 }
 async function kompaktiskas(on,tyliai){ return langoRezimas(on?"kompaktiskas":"iprastas",tyliai); }
 /* AutoCAD atsidarė vėliau - sutvarkom ir jo langą */

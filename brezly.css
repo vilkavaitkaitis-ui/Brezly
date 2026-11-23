@@ -664,3 +664,317 @@ h2{font:600 12px var(--kond);letter-spacing:.14em;text-transform:uppercase;color
 /* ilgi AutoCAD raginimai (ARRAYPOLAR, ZOOM) laužomi, o atsakymas visada matomas */
 .kl .pr{flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
 .kl .iv{flex:none}
+
+/* =====================================================================
+   1.3 - „BRĖŽINYS YRA SĄSAJA“ (Bauhaus): popierius, juoda, geltona,
+   mėlyna, raudona. Archivo + Space Mono, storos linijos, be apvalinimų.
+   ===================================================================== */
+:root,:root[data-theme="light"]{
+  --popierius:#f7f5f0; --juoda:#111111; --geltona:#ffc400; --melyna:#1f4fd1; --raudona:#e2362b; --pilka:#55524b; --blyski:#ece8df;
+  --accent:var(--melyna); --accent2:var(--raudona);
+  --bg:var(--popierius); --panel:var(--popierius); --card:#ffffff; --card-hi:var(--blyski); --line:var(--juoda);
+  --text:var(--juoda); --muted:var(--pilka); --ok:var(--melyna); --err:#c42a20; --cmd:var(--juoda);
+  --accent-soft:#fff3c4;
+  --font:"Archivo","Segoe UI",system-ui,Arial,sans-serif;
+  --kond:"Archivo","Segoe UI",system-ui,Arial,sans-serif;
+  --mono:"Space Mono","IBM Plex Mono",Consolas,"DejaVu Sans Mono",monospace;
+  --r:0; --s:3px;
+}
+:root[data-theme="dark"]{
+  --bg:#151515; --panel:#151515; --card:#1e1e1e; --card-hi:#2a2a2a; --line:#e9e5dc; --text:#f2efe8; --muted:#b9b3a7;
+  --accent:#6d93ff; --ok:#6d93ff; --err:#ff6b5f; --accent-soft:#3a3214; --blyski:#2a2a2a;
+}
+*,*::before,*::after{border-radius:0!important}
+.bh-burb,.pr-ok,.sukasi,#atlygis .apsk,.stebiu .akis,.v-tsk,.taskelis{border-radius:50%!important}
+html,body{background:var(--bg)}
+body{display:flex;flex-direction:column;font:15px/1.5 var(--font);color:var(--text);letter-spacing:0}
+main{flex:1;min-height:0;overflow:auto;background:var(--bg);background-image:none}
+.vidus{max-width:1120px;padding:32px 36px 60px}
+.vidus:has(> .bh-du){max-width:none;padding:0}
+#virsus{display:none!important}
+:focus-visible{outline:3px solid var(--melyna);outline-offset:2px}
+::selection{background:var(--geltona);color:#111}
+
+/* ---------- viršutinė juosta ---------- */
+#galva{flex:none;display:flex;align-items:stretch;min-height:64px;background:var(--bg);border-bottom:var(--s) solid var(--line);overflow-x:auto;scrollbar-width:none}
+#galva::-webkit-scrollbar{display:none}
+#galva .logo{flex:none;display:flex;align-items:center;gap:12px;padding:0 18px;border:0;background:#111;color:#f7f5f0;cursor:pointer}
+#galva .logo b{font:900 22px/1 var(--font);letter-spacing:-.02em;text-transform:none}
+.bh-zenklas{width:30px;height:30px;flex:none}
+#galva .v-zyme{position:static;margin:0;padding:2px 6px;border:0;background:var(--geltona);color:#111;font:700 10.5px var(--mono)}
+#galva .nav{display:flex;gap:0;flex:none}
+#galva .nav button{display:flex;align-items:center;gap:8px;min-height:64px;padding:0 13px;border:0;border-right:var(--s) solid var(--line);background:none;color:var(--text);font:600 13.5px var(--font);text-transform:uppercase;letter-spacing:.02em;box-shadow:none;white-space:nowrap}
+#galva .nav button svg{display:none}
+#galva .nav button:hover{background:var(--blyski)}
+#galva .nav button.akt{background:var(--geltona);color:#111;font-weight:800}
+#galva .nav .taskelis{width:8px;height:8px;background:var(--raudona);margin:0 0 0 2px}
+#galva .zaidejas{margin-left:auto;flex:none;display:flex;align-items:center;gap:12px;padding:0 18px;border:0;border-left:var(--s) solid var(--line);background:none}
+#galva .avataras{width:40px;height:40px;border:2px solid var(--line)}
+#galva .avataras svg{width:38px;height:38px}
+.zd-txt{display:flex;flex-direction:column;align-items:flex-start;white-space:nowrap;border:0;background:none;padding:0;font:13px/1.3 var(--mono);text-transform:uppercase;color:var(--text);text-align:left}
+.zd-txt b{font-weight:400}
+.zd-txt small{font-size:10.5px;color:var(--muted);text-transform:none}
+.xp-deze{position:relative;display:flex;align-items:center;justify-content:center;min-width:78px;height:40px;padding:0 10px;border:0;background:var(--melyna);color:#fff;font:700 15px var(--mono);overflow:hidden}
+.xp-deze .juosta{position:absolute;left:0;right:0;bottom:0;height:4px;margin:0;background:#ffffff40}
+.xp-deze .juosta i{background:var(--geltona)}
+
+/* ---------- apatinė juosta ---------- */
+#apacia{flex:none;display:flex;align-items:center;gap:18px;min-height:44px;padding:0 22px;background:#111;color:#f7f5f0;border-top:var(--s) solid #111;font:12.5px var(--mono);text-transform:uppercase;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+#apacia .busena{display:flex;align-items:center;gap:8px;padding:0;border:0;background:none;color:#f7f5f0;font:inherit;min-width:0}
+#apacia .taskas{width:10px;height:10px;border-radius:0!important;background:#777;box-shadow:none}
+#apacia .busena.gerai .taskas{background:var(--geltona);box-shadow:none}
+#apacia .busena.blogai .taskas{background:var(--raudona)}
+#apacia .busena.ispejimas .taskas{background:#f7f5f0}
+#apacia .busena button{margin-left:6px;border:0;background:none;color:var(--geltona);font:700 12px var(--mono);text-transform:uppercase;padding:0}
+.ap-kom::after{content:"_";animation:mirksi 1.1s steps(1) infinite}
+#apacia .nustat{display:flex;gap:6px;border:0;background:none}
+#apacia .nustat button{border:1.5px solid #5a5650;background:none;color:#f7f5f0;padding:3px 9px;font:11.5px var(--mono);text-transform:uppercase}
+#apacia .nustat button:hover,#apacia .nustat button.ij{border-color:var(--geltona);color:var(--geltona)}
+.ap-kita{border:0;background:none;color:#f7f5f0;font:inherit;text-transform:uppercase;padding:6px 0;cursor:pointer}
+.ap-kita:hover{color:var(--geltona)}
+#busenaInfo{position:fixed;left:12px;bottom:54px;z-index:55;width:min(440px,calc(100vw - 24px));padding:14px 16px;background:var(--card);color:var(--text);border:var(--s) solid var(--line);box-shadow:8px 8px 0 #111;font-size:13.5px}
+
+/* ---------- pamoka: lapas + geltonas skydelis ---------- */
+.bh-du{display:flex;flex-wrap:wrap;min-height:100%}
+.bh-lapas{flex:999 1 640px;min-width:0;position:relative;padding:28px 36px 40px;border-right:var(--s) solid #111;overflow:hidden;background:#f7f5f0;color:#111}
+.bh-fonas-nr{position:absolute;right:-40px;top:-70px;font:900 380px/1 var(--font);letter-spacing:-.06em;color:#ece8df;pointer-events:none;user-select:none}
+.bh-zyme{position:relative;display:inline-block;border:0;background:none;padding:0;color:#111;font:13px var(--mono);text-transform:uppercase;cursor:pointer}
+span.bh-zyme{cursor:default}
+button.bh-zyme:hover{text-decoration:underline}
+.bh-h1{position:relative;margin:6px 0 0;max-width:640px;font:900 58px/.92 var(--font);letter-spacing:-.04em;text-transform:uppercase;overflow-wrap:anywhere}
+.bh-svg{position:relative;display:block;width:100%;max-width:920px;height:auto;margin-top:14px}
+.bh-svg text{fill:#111}
+.bh-ki text{font:11px var(--mono)}
+.bh-bn{font:900 22px var(--font)}
+.bh-b.dab .bh-bn{font-size:26px}
+.bh-b.atl:not(.dab) .bh-bn{fill:#f7f5f0}
+.bh-bl{font:12px var(--mono);text-transform:uppercase}
+.bh-lt{font:15px var(--mono)}
+.bh-b{cursor:pointer;outline:none}
+.bh-b:hover circle[r="24"]{stroke-width:5}
+.bh-b:focus-visible circle[r="24"],.bh-b:focus-visible circle[r="30"]{stroke:var(--melyna);stroke-width:5}
+.bh-darbas{position:relative;max-width:900px}
+.bh-ant{margin:22px 0 10px;font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:inherit}
+.bh-lapas ol.daryk{margin:0 0 8px;padding-left:24px;font-size:16px;line-height:1.5}
+.bh-lapas ol.daryk li{margin:5px 0}
+.bh-lapas ol.daryk li::marker{font:700 14px var(--mono)}
+.komandos{background:#111;border:0;margin:14px 0;padding:6px 0;color:#f7f5f0;font:14px/1.5 var(--mono)}
+.komandos .ant{border-bottom:1px solid #333;padding:6px 16px 8px}
+.komandos .ant i{display:none}
+.komandos .ant span{margin:0;color:#a8a398;font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.kl{padding:5px 16px}
+.kl:hover{background:#1f1f1f}
+.kl .pr{color:#a8a398}
+.kl .iv{color:var(--geltona)}
+.kl .iv.pele{color:#8fb0ff}
+.kl button{border:1.5px solid #555;color:#d8d3c8;font:11px var(--mono);text-transform:uppercase;padding:2px 8px}
+.bh-lapas .tikslas{display:inline-flex;gap:8px;align-items:baseline;margin:4px 0 0;padding:8px 12px;border:var(--s) solid #111;background:#fff;color:#111;font:13px var(--mono)}
+.bh-lapas .tikslas span{text-transform:uppercase}
+.bh-lapas .tikslas b{color:#111;font:700 14px var(--font)}
+
+.bh-skydas{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;background:var(--panel);color:var(--text)}
+.bh-geltona{display:flex;flex-direction:column;gap:14px;padding:26px 28px;background:var(--geltona);color:#111;border-bottom:var(--s) solid #111}
+.bh-poz{display:flex;align-items:center;gap:12px;font:700 13px var(--mono);text-transform:uppercase}
+.bh-burb{flex:none;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#111;color:var(--geltona);font:900 22px var(--font)}
+.bh-geltona h2{margin:0;color:#111;font:900 36px/.98 var(--font);letter-spacing:-.03em;text-transform:uppercase;overflow-wrap:anywhere;hyphens:auto}
+.bh-geltona p,.bh-geltona .kodel{margin:0;padding:0;border:0;background:none;color:#111;font-size:15.5px;line-height:1.5}
+.bh-kom{align-self:flex-start;border:0;padding:8px 12px;background:#111;color:var(--geltona);font:700 14px var(--mono);cursor:pointer}
+.bh-kom:hover{outline:3px solid #111;outline-offset:2px}
+.bh-veiksmai{display:flex;border-bottom:var(--s) solid var(--line)}
+.bh-tikr{flex:2;min-height:72px;border:0;border-right:var(--s) solid var(--line);background:var(--melyna);color:#fff;font:900 18px var(--font);letter-spacing:.02em;text-transform:uppercase}
+.bh-tikr:hover{background:#1a43b4}
+.bh-tikr:disabled{opacity:.7;cursor:progress}
+.bh-uz{flex:1;min-height:72px;border:0;background:var(--panel);color:var(--text);font:700 15px var(--font);text-transform:uppercase}
+.bh-uz small{display:block;font:11px var(--mono);color:var(--muted)}
+.bh-uz:hover:not(:disabled){background:var(--blyski)}
+.bh-uz:disabled{opacity:.45}
+.bh-antr{display:flex;border-bottom:var(--s) solid var(--line)}
+.bh-antr button{flex:1;min-height:46px;border:0;border-right:var(--s) solid var(--line);background:none;color:var(--text);font:700 12.5px var(--font);text-transform:uppercase;letter-spacing:.02em}
+.bh-antr button:last-child{border-right:0}
+.bh-antr button:hover{background:var(--blyski)}
+.bh-robis{display:flex;gap:14px;align-items:flex-start;padding:18px 28px;border-bottom:var(--s) solid var(--line)}
+.bh-robis>svg{flex:none;width:46px;height:46px}
+.bh-robis p{margin:0;font-size:15px;line-height:1.5}
+.bh-robis>div{min-width:0}
+.bh-robis .stebiu{margin-top:8px;font:11.5px var(--mono);color:var(--muted)}
+.stebiu .akis{background:var(--melyna)}
+.stebiu button{color:var(--melyna);font:700 11.5px var(--mono);text-transform:uppercase}
+#uzuominos .uzuomina{margin:0;padding:14px 28px;border:0;border-bottom:var(--s) solid var(--line);background:var(--accent-soft);color:var(--text)}
+.uzuomina b{color:inherit;font-family:var(--mono);font-size:12.5px;text-transform:uppercase}
+#atsakas .atsakas{margin:0;padding:16px 28px;border:0;border-bottom:var(--s) solid var(--line)}
+.atsakas.gerai,:root[data-theme="light"] .atsakas.gerai{background:#e6ecfb;border-color:var(--line)}
+.atsakas.blogai,:root[data-theme="light"] .atsakas.blogai{background:#fde9e7;border-color:var(--line)}
+:root[data-theme="dark"] .atsakas.gerai{background:#1b2440}
+:root[data-theme="dark"] .atsakas.blogai{background:#3a1b18}
+.atsakas.gerai b{color:var(--melyna)} .atsakas.blogai b{color:var(--err)}
+:root[data-theme="dark"] .atsakas.gerai b{color:#9db5ff}
+.bh-tabs{display:grid;gap:0;margin:auto 0 0;min-height:92px;border-top:var(--s) solid var(--line)}
+.bh-tabs button{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:4px;min-width:0;padding:12px;border:0;border-right:var(--s) solid var(--line);border-bottom:var(--s) solid var(--line);background:none;color:var(--muted);text-align:left}
+.bh-tabs button b{font:900 26px/1 var(--font)}
+.bh-tabs button small{max-width:100%;font:10.5px var(--mono);text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bh-tabs button.atl{color:var(--text)}
+.bh-tabs button.dab{background:#111;color:var(--geltona)}
+:root[data-theme="dark"] .bh-tabs button.dab{background:var(--geltona);color:#111}
+.bh-tabs button:hover:not(.dab){background:var(--blyski)}
+.bh-skydas .kart-juosta{margin:0;padding:14px 28px;border:0;border-bottom:var(--s) solid var(--line);background:none;gap:14px}
+.bh-skydas .kart-juosta b{font:800 14px var(--font);text-transform:uppercase}
+.bh-skydas .kart-juosta small{font:11.5px var(--mono)}
+.bh-robis b{font-weight:800}
+.bh-visos{padding:26px 36px 50px;border-top:var(--s) solid var(--line)}
+.bh-visos .bh-ant{margin-top:0}
+.bh-pamokos{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.bh-pamokos .pam{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:118px;padding:14px;border:var(--s) solid var(--line);background:var(--card);color:var(--text);text-align:left;box-shadow:none}
+.bh-pamokos .pam:hover{background:var(--blyski)}
+.bh-pamokos .pam .nr{width:auto;height:auto;border:0;background:none;color:inherit;font:900 32px/1 var(--font);display:block}
+.bh-pamokos .pam b{font:800 14.5px/1.2 var(--font);text-transform:uppercase}
+.bh-pamokos .pam small{margin-top:auto;font:11px var(--mono);color:var(--muted)}
+.bh-pamokos .pam.akt{background:var(--geltona);color:#111;box-shadow:none}
+.bh-pamokos .pam.akt small{color:#111}
+.bh-pamokos .pam.baigta{background:#111;color:#f7f5f0}
+.bh-pamokos .pam.baigta small{color:#c9c4b8}
+:root[data-theme="dark"] .bh-pamokos .pam.baigta{background:#f2efe8;color:#111}
+.bh-pamokos .pam.uzr{opacity:.5;border-style:dashed;cursor:default}
+@media (max-width:980px){
+  .bh-du{flex-direction:column}
+  .bh-skydas{order:-1;flex:none}
+  .bh-lapas{border-right:0;border-top:var(--s) solid #111;padding:20px 18px 30px}
+  .bh-h1{font-size:40px}
+  .bh-fonas-nr{font-size:220px;top:-30px}
+  .bh-geltona{padding:20px 18px}
+  .bh-geltona h2{font-size:28px}
+  .bh-robis,#uzuominos .uzuomina,#atsakas .atsakas,.bh-skydas .kart-juosta{padding-left:18px;padding-right:18px}
+  .bh-tabs{min-height:72px}
+  .bh-visos{padding:20px 18px 40px}
+  #galva .zaidejas .zd-txt{display:none}
+  #galva .logo{padding:0 14px}
+  #galva .nav button{padding:0 12px;font-size:12.5px}
+}
+@media (max-width:560px){
+  #galva{min-height:52px}
+  #galva .nav button{min-height:52px}
+  #galva .logo b,#galva .v-zyme{display:none}
+  #galva .avataras{display:none}
+  #apacia{gap:12px;padding:0 12px}
+  #apacia .nustat button:not(#kompBtn){display:none}
+  .bh-tikr,.bh-uz{min-height:60px}
+  .vidus{padding:20px 16px 40px}
+}
+
+/* ---------- bendri komponentai ---------- */
+.btn{border:var(--s) solid var(--line);background:var(--card);color:var(--text);padding:9px 16px;font:700 13.5px var(--font);text-transform:uppercase;letter-spacing:.02em;box-shadow:none}
+.btn:hover{border-color:var(--line);background:var(--blyski)}
+.btn.pagr,.btn.zalias{background:var(--melyna);border-color:var(--line);color:#fff}
+.btn.pagr:hover,.btn.zalias:hover{background:#1a43b4;filter:none}
+.btn.didelis{padding:13px 24px;font-size:15.5px}
+.ant1{font:900 50px/.95 var(--font);letter-spacing:-.035em;text-transform:uppercase;margin:0}
+.po1{color:var(--muted);font-size:16px;margin:10px 0 24px;max-width:720px}
+h2{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin:30px 0 12px}
+.zyme,.zyme.t,.zyme:first-child,.cip,.zenklelis{border:2px solid var(--line);background:var(--card);color:var(--text);font:700 11px var(--mono);text-transform:uppercase;padding:3px 8px}
+.juosta{background:var(--blyski);height:6px}
+.juosta i{background:var(--melyna)}
+.skirt{gap:0;padding:0;background:none;border:0;border-bottom:var(--s) solid var(--line);margin-bottom:18px}
+.skirt button{flex:none;min-width:0;height:44px;padding:0 16px;border:var(--s) solid var(--line);border-bottom:0;margin-right:-3px;background:var(--card);color:var(--text);font:700 12.5px var(--font);text-transform:uppercase}
+.skirt button.akt{background:var(--geltona);color:#111}
+.skirt small{font-family:var(--mono)}
+.nust-gr,.klausimas,.kitas-atl,.statai div,.statai4 div,.zen-tink div,.egz-juosta,.egz-rez,.silp-k,.kart-diena,.pr-k,.lyg-k,.daiktas,.rinktis button,.variantai button,.pr-ats,.mi-ats,.mi-tikslas,.tikslo-pav,.perziura,.prof-fon,.kortele>div{border:var(--s) solid var(--line);box-shadow:none}
+.nust-gr,.klausimas,.kitas-atl,.statai div,.statai4 div,.egz-juosta,.egz-rez,.silp-k,.kart-diena,.pr-k,.lyg-k,.daiktas{background:var(--card)}
+.nust-gr h3,.lyg-k h3{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.nust-eil{border-top:2px solid var(--blyski)}
+.statai b,.statai4 b{font:900 30px var(--font);color:var(--text)}
+.statai small,.statai4 small{font:11px var(--mono);text-transform:uppercase}
+.jung{background:#cfcabe;border:2px solid var(--line);width:52px;height:30px}
+.jung::after{top:2px;left:2px;width:22px;height:22px;background:#fff;border:2px solid var(--line)}
+.jung[aria-pressed="true"]{background:var(--melyna)}
+.jung[aria-pressed="true"]::after{left:24px}
+.pasir{border:2px solid var(--line);background:var(--card);padding:0;gap:0}
+.pasir button{padding:6px 12px;color:var(--text);font:700 12px var(--font);text-transform:uppercase}
+.pasir button[aria-pressed="true"],.pr-filtr button[aria-pressed="true"],.kur-m button[aria-pressed="true"]{background:var(--geltona);color:#111}
+.pr-filtr button{border:2px solid var(--line);background:var(--card);color:var(--text);font:700 12.5px var(--font);text-transform:uppercase}
+.variantai button{background:var(--card)}
+.variantai button:hover:not(:disabled){background:var(--blyski);border-color:var(--line)}
+.variantai button.teis{background:#e6ecfb;border-color:var(--melyna)}
+.variantai button.neteis{background:#fde9e7;border-color:var(--err)}
+:root[data-theme="dark"] .variantai button.teis{background:#1b2440}
+:root[data-theme="dark"] .variantai button.neteis{background:#3a1b18}
+.rinktis button[aria-pressed="true"],.daiktas.uzs,.pers.pas{background:var(--accent-soft);border-color:var(--line)}
+.lyg-k.dabar{border-color:var(--melyna);border-width:4px}
+.lyg-k .cia,.daiktas .naujas{background:var(--geltona);color:#111;font:700 11px var(--mono)}
+.lyg-k.pasiekta .nr{background:#111;color:var(--geltona);border-color:#111}
+input,select,textarea{border-radius:0}
+#langelis input[type=text],#langelis input[type=password],#langelis textarea,.egz-lauk select,.mk-paieska input{border:var(--s) solid var(--line);background:var(--card)}
+#langelis{background:rgba(17,17,17,.55)}
+#langelis .lang,#atlygis .lang{background:var(--bg);border:var(--s) solid #111;box-shadow:10px 10px 0 #111}
+#langelis h2,#atlygis h2{font:900 30px/1 var(--font);letter-spacing:-.02em;text-transform:uppercase;color:var(--text)}
+#langelis label{font:700 11.5px var(--mono);color:var(--text)}
+#atlygis{background:rgba(17,17,17,.6)}
+#atlygis .apsk{box-shadow:0 0 0 6px #111}
+.pranesimas{background:#111;color:#f7f5f0;border-left:8px solid var(--geltona);font:13px var(--mono);box-shadow:6px 6px 0 #0004}
+.skrenda{color:var(--melyna);font:900 30px var(--font);text-shadow:none}
+#gidas .burbulas{background:#111;color:#f7f5f0;box-shadow:6px 6px 0 var(--geltona)}
+#gidas .g-mygt .g-toliau{background:var(--geltona);color:#111;font:800 12.5px var(--font);text-transform:uppercase}
+#gidas .g-x{background:#f7f5f0;color:#111;border:2px solid #111}
+#gidoZiedas{border-color:var(--melyna)}
+#gidoZiedas.tamsu{box-shadow:0 0 0 9999px rgba(17,17,17,.5)}
+#gidoRodykle{color:var(--melyna)}
+.kodel{border-left:4px solid var(--geltona);background:none;padding:4px 0 4px 14px}
+.kodel b{font:700 11px var(--mono);color:var(--text)}
+.tikslas{border:2px solid var(--line);background:var(--card)}
+.tikslas b{color:var(--text)}
+.uzuomina{background:var(--accent-soft);border:2px solid var(--line)}
+.atsakas{border:var(--s) solid var(--line)}
+.kl button:hover{border-color:var(--geltona);color:var(--geltona)}
+.pr-lap{border:2px solid var(--line);box-shadow:none}
+.pr-fmt{background:#111;color:#fff;font:700 11px var(--mono)}
+.pr-fmt.a3{background:var(--geltona);color:#111}
+.pr-ok{background:var(--melyna);color:#fff;box-shadow:none}
+.pr-kom code,.mi-kom code{background:#111;color:var(--geltona);border:0;font:700 12px var(--mono)}
+.mi-kom code.pr{color:#8fb0ff}
+.kortele .pr b{color:var(--text);font:700 40px var(--mono)}
+.kortele .pr{background:var(--geltona)}
+.kortele .pr b,.kortele .pr p{color:#111}
+.kortele code{background:#111;color:var(--geltona)}
+.kart-diena h3{font:800 20px/1.3 var(--font)}
+.egz-laikas{border:var(--s) solid var(--line);background:#111;color:var(--geltona);font:700 40px/1 var(--mono)}
+.egz-zyme{background:#111;color:var(--geltona);border:var(--s) solid #111;box-shadow:4px 4px 0 var(--geltona)}
+.egz-rez h1{font:900 40px/1 var(--font);text-transform:uppercase}
+.egz-ist span{border:2px solid var(--line)}
+.tikslo-pav{background:#fff}
+.tikslo-pav .tp-n{background:var(--raudona)}
+.tikslo-pav .tp-s{background:#111}
+.pers{border:var(--s) solid var(--line)}
+.stebiu{color:var(--muted)}
+.lent-palyg th,.lent-palyg td{border-bottom:2px solid var(--line)}
+.konfeti{border-radius:0!important}
+/* užsklanda */
+#uzsklanda{background:#f7f5f0;background-image:none;color:#111}
+#uzsklanda h1{display:flex;align-items:center;gap:18px;margin:10px 0 0;background:none;color:#111;-webkit-text-fill-color:#111;font:900 78px/1 var(--font);letter-spacing:-.04em;text-transform:none}
+#uzsklanda h1 .bh-zenklas{width:70px;height:70px}
+#uzsklanda p{color:#111;font:13px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+#uzsklanda small{color:#55524b;font:12px var(--mono)}
+.u-nauja{background:var(--geltona);border:0;color:#111;font:700 12px var(--mono)}
+/* mini kortelė */
+body.mini-rez > header,body.mini-rez > footer,body.mini-rez > main,body.mini-rez #busenaInfo{display:none!important}
+body.mini-rez #mini{background:var(--bg);gap:10px}
+.mi-v svg.m{width:32px;height:32px}
+.mi-v .t b{font:800 14px var(--font);text-transform:uppercase}
+.mi-v .t small{font:11px var(--mono)}
+.mi-v button{border:2px solid var(--line);background:var(--card)}
+.mi-tikslas{background:var(--geltona);color:#111;border-color:#111}
+.mi-veiks .btn{padding:9px 12px}
+/* žinynas ir treniruoklis (mokymas.js) */
+:root{--mk-kortele:var(--card);--mk-linija:var(--line);--mk-blankus:var(--muted);--mk-akcentas:var(--melyna);--mk-tekstas:var(--text);--mk-kodas:#111;--mk-gerai:var(--melyna);--mk-klaida:var(--err);--mk-mono:var(--mono)}
+.mk-t,.mk-a,.mk-uzd,.mk-rez,.mk-cli,.mk-mygt,.mk-sk button,.mk-paieska input,.mk-tren select{border-width:var(--s)!important}
+.mk-sk button[aria-selected="true"]{background:var(--geltona)!important;color:#111!important;box-shadow:none!important}
+.mk-mygt.pagr{background:var(--melyna)!important;color:#fff!important}
+.mk-t .mk-en{color:var(--accent)!important}
+.mk-t b,.mk-a h3,.mk-uzd b,.mk-rez h3{font-family:var(--font);text-transform:uppercase}
+.korta-ant h1,.pabaiga h1{font:900 40px/1 var(--font);letter-spacing:-.03em;text-transform:uppercase}
+.xp-zyme{border:2px solid var(--line);background:var(--geltona);color:#111;font:700 12px var(--mono)}
+.taskai i{background:var(--blyski);height:8px}
+.taskai i.atl{background:var(--melyna)} .taskai i.dab{background:var(--err)}
+.nust-eil .pasir{flex:none}
+.pabaiga .statai b{color:var(--text)}
+@media (max-width:1240px){#galva .zd-txt{display:none}}
+.bh-leg text{font:11.5px var(--mono);text-transform:uppercase}
+@media (max-width:560px){.ap-kom{display:none}}
+:root{--mk-akcentas:var(--accent)}

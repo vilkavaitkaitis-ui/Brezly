@@ -26,7 +26,7 @@ import pamokos              # noqa: E402
 import vertimas             # noqa: E402
 
 APLANKAS = os.path.join(SAKNIS, "paveiksleliai")
-SENA, NAUJA = "#8b95a7", "#f59e0b"           # matosi ir tamsioje, ir šviesioje temoje
+SENA, NAUJA = "#111111", "#e2362b"           # brėžinio lape: juoda - jau nubraižyta, raudona - šis žingsnis
 SLUOKSNIAI = ("KONTURAS", "ASYS", "MATMENYS", "TEKSTAS", "BRUKSNINE", "NEMATOMOS", "BRUKSNIAI")
 
 
