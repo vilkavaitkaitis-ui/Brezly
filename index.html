@@ -3,420 +3,451 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Brėžly - AutoCAD mokymosi programa</title>
+<title>Brėžly - nemokama AutoCAD mokymosi programa</title>
 <meta name="description" content="Brėžly - nemokama AutoCAD mokymosi programa inžinerijos studentams. Veda žingsnis po žingsnio ir pati tikrina tavo brėžinį.">
-<meta name="theme-color" content="#10151c">
+<meta name="theme-color" content="#111111">
 <link rel="icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="sriftai/sriftai.css">
 <style>
 :root{
-  --fonas:#0d1117;--panele:#141a22;--panele2:#10151c;--kodas:#0a0e14;--linija:#283241;--linija2:#3a4558;--linija3:#1c2430;
-  --tekstas:#e6eaf0;--blankus:#93a0b2;--vidutinis:#c3ccd8;
-  --akcentas:#f28c28;--akc-sviesus:#ff9d3d;--akc-tamsus:#1a0e02;--matmenu:#56c2e6;--priimta:#3fb950;--priimta-sv:#7ee39a;--taisyti:#f47067;
-  --sans:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif;--kond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
-  color-scheme:dark;
+  --popierius:#f7f5f0; --balta:#ffffff; --juoda:#111111; --pilka:#55524b; --blyski:#ece8df;
+  --raudona:#e2362b; --melyna:#1f4fd1; --geltona:#ffc400; --melyna-sv:#3b66e6;
+  --l:3px solid var(--juoda);
+  --font:"Archivo","Segoe UI",system-ui,Arial,sans-serif;
+  --mono:"Space Mono","IBM Plex Mono",Consolas,monospace;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--fonas);color:var(--tekstas);font:16px/1.6 var(--sans)}
+body{margin:0;background:var(--popierius);color:var(--juoda);font:16px/1.55 var(--font)}
 h1,h2,h3,p{margin:0}
-a{color:var(--matmenu)}a:hover{color:#8fd8f0}
-:focus-visible{outline:2px solid var(--akcentas);outline-offset:2px}
-code{font:14px var(--mono);background:var(--kodas);border:1px solid var(--linija);border-radius:4px;padding:1px 6px;color:var(--vidutinis)}
-.plotis{max-width:1280px;margin:0 auto;padding:0 32px}
-.tinklelis{background-color:var(--fonas);background-image:linear-gradient(#18202b 1px,transparent 1px),linear-gradient(90deg,#18202b 1px,transparent 1px),linear-gradient(#131a23 1px,transparent 1px),linear-gradient(90deg,#131a23 1px,transparent 1px);background-size:120px 120px,120px 120px,24px 24px,24px 24px}
-section{border-bottom:1px solid var(--linija)}
+a{color:var(--melyna)}a:hover{color:var(--juoda)}
+:focus-visible{outline:3px solid var(--melyna);outline-offset:2px}
+code{font:14px var(--mono);background:var(--juoda);color:var(--geltona);padding:2px 7px}
+.plotis{max-width:1280px;margin:0 auto}
 .mono{font-family:var(--mono)}
-.zyme{font:13px var(--mono);color:var(--akcentas);letter-spacing:.08em}
-.etik{font:600 12px var(--kond);letter-spacing:.14em;color:var(--blankus);text-transform:uppercase}
-h2{font:700 48px/1.05 var(--kond);letter-spacing:-.01em}
-.apras{font-size:17px;color:var(--vidutinis);line-height:1.6}
+.zyme{font:700 13px var(--mono);letter-spacing:.04em;text-transform:uppercase}
+h2{font:900 clamp(34px,5vw,56px)/.95 var(--font);letter-spacing:-.04em;text-transform:uppercase}
+section{border-bottom:var(--l);scroll-margin-top:64px}
 
 /* mygtukai */
-.mygt{display:inline-flex;align-items:center;gap:10px;background:var(--akcentas);color:var(--akc-tamsus);text-decoration:none;font:600 16px var(--sans);padding:0 26px;min-height:52px;border-radius:6px;border:0;cursor:pointer;transition:background .15s,transform .15s}
-.mygt:hover{background:var(--akc-sviesus);color:var(--akc-tamsus);transform:translateY(-1px)}
-.mygt svg{width:18px;height:18px}
-.mygt.mazas{font-size:14px;padding:0 18px;min-height:44px;border-radius:5px}
-.antr{display:inline-flex;align-items:center;border:1px solid var(--linija2);color:var(--vidutinis);background:transparent;text-decoration:none;font:500 16px var(--sans);padding:0 22px;min-height:52px;border-radius:6px;cursor:pointer;transition:border-color .15s,color .15s}
-.antr:hover{border-color:var(--matmenu);color:var(--tekstas)}
-.antr.mazas{font-size:14px;padding:0 16px;min-height:44px;border-radius:5px}
+.mygt{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:60px;padding:0 26px;background:var(--melyna);color:#fff;border:var(--l);font:900 18px var(--font);letter-spacing:.02em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.mygt:hover{color:#fff;transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--juoda)}
+.mygt.geltonas{background:var(--geltona);color:var(--juoda)}
+.mygt.baltas{background:var(--popierius);color:var(--juoda)}
+.mygt.mazas{min-height:48px;font-size:15px;padding:0 18px}
+.mygt svg{width:20px;height:20px}
 
 /* viršus */
-.virsus{position:sticky;top:0;z-index:5;background:var(--panele2);border-bottom:1px solid var(--linija)}
-.virsus .plotis{height:60px;display:flex;align-items:center;gap:24px}
-.zenklas{display:flex;align-items:center;gap:10px;color:var(--tekstas);text-decoration:none;font:600 15px var(--mono);letter-spacing:.2em}
-.virsus nav{display:flex;gap:2px;flex-wrap:wrap}
-.virsus nav a{color:var(--blankus);text-decoration:none;font-size:14px;padding:8px 12px;border-radius:4px}
-.virsus nav a:hover{color:var(--tekstas);background:#161d27}
+.virsus{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;align-items:stretch;background:var(--popierius);border-bottom:var(--l)}
+.logo{display:flex;align-items:center;gap:12px;padding:0 22px;min-height:64px;background:var(--juoda);color:var(--popierius);text-decoration:none;font:900 22px var(--font);letter-spacing:-.02em}
+.logo:hover{color:var(--popierius)}
+.virsus nav{display:flex;flex-wrap:wrap}
+.virsus nav a{display:flex;align-items:center;padding:0 20px;min-height:64px;border-right:var(--l);color:var(--juoda);text-decoration:none;font:700 14px var(--font);text-transform:uppercase;letter-spacing:.02em}
+.virsus nav a:hover{background:var(--geltona)}
 .tarpas{flex:1}
-.koord{font:12px var(--mono);color:var(--blankus);letter-spacing:.04em}
+.virsus .desine{display:flex;align-items:center;gap:14px;padding:0 0 0 18px;border-left:var(--l)}
+.virsus .desine .mono{font-size:13px}
+.virsus .mygt{min-height:64px;border:0;border-left:var(--l)}
+.virsus .mygt:hover{transform:none;box-shadow:none;background:var(--melyna-sv)}
 
 /* hero */
-.hero{display:flex;flex-wrap:wrap;gap:56px;align-items:center;padding-top:88px;padding-bottom:96px}
-.hero-tekstas{flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:28px}
-.zenkliukas{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;border:1px solid var(--linija2);background:var(--panele2);border-radius:4px;padding:6px 12px;font:12.5px var(--mono);color:var(--vidutinis);letter-spacing:.06em}
-.zenkliukas i{width:8px;height:8px;border-radius:50%;background:var(--priimta)}
-h1{font:700 84px/.98 var(--kond);letter-spacing:-.02em}
-h1 em{font-style:normal;color:var(--akcentas)}
-.hero-apras{font-size:19px;line-height:1.6;color:var(--vidutinis);max-width:540px}
-.veiksmai{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.smulk{font:13px var(--mono);color:var(--blankus)}
-.lapas{flex:1 1 520px;min-width:0;display:flex;flex-direction:column;border:1px solid var(--linija2);border-radius:8px;background:var(--kodas);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
-.lapas-virsus{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--linija);background:var(--panele2);font:12px var(--mono);color:var(--blankus)}
-.lapas-virsus i{width:10px;height:10px;border-radius:50%;background:var(--linija)}
-.lapas-virsus b{font-weight:400;color:var(--akcentas)}
-.drobe{position:relative}
-.drobe>svg{display:block;width:100%;height:auto}
-.antspaudas{position:absolute;right:22px;top:18px;display:flex;align-items:center;gap:8px;border:2px solid var(--priimta);background:#0f2416;color:var(--priimta-sv);border-radius:5px;padding:6px 14px;font:600 14px var(--mono);letter-spacing:.12em}
-.pranesimas{position:absolute;left:18px;top:14px;max-width:300px;display:flex;gap:10px;align-items:flex-start;background:var(--panele);border:1px solid var(--linija2);border-radius:6px;padding:10px 12px;font-size:13px;line-height:1.45;color:var(--vidutinis)}
-.pranesimas svg{flex-shrink:0;margin-top:1px}
-.pranesimas b{color:var(--tekstas)}.pranesimas strong{color:var(--akcentas)}
-.komandos{border-top:1px solid var(--linija);background:var(--panele2);padding:10px 14px;font:13px var(--mono);color:var(--blankus);display:flex;flex-direction:column;gap:3px}
-.komandos span span{color:var(--vidutinis)}
-.komandos .dabar{color:var(--tekstas)}
-.zymeklis{color:var(--akcentas)}
+.hero{display:flex;flex-wrap:wrap}
+.hero-tekstas{flex:1 1 480px;min-width:0;padding:56px 40px 48px;overflow:hidden;display:flex;flex-direction:column;gap:26px;border-right:var(--l);position:relative;overflow:hidden}
+.fono-nr{position:absolute;right:-30px;top:-60px;font:900 340px/1 var(--font);color:var(--blyski);letter-spacing:-.06em;pointer-events:none}
+.hero-tekstas>*:not(.fono-nr){position:relative}
+h1{font:900 clamp(54px,8vw,104px)/.88 var(--font);letter-spacing:-.05em;text-transform:uppercase}
+h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-left:-.08em}
+.hero-apras{font-size:19px;max-width:520px}
+.veiksmai{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.failo-info{font:13px var(--mono);color:var(--pilka)}
+.lapas{flex:1 1 560px;min-width:0;padding:28px;display:flex;align-items:center;justify-content:center;background:var(--balta)}
+.lapas svg{width:100%;height:auto;max-width:700px}
 
 /* animacijos */
-.br-draw{stroke-dasharray:900;stroke-dashoffset:900;animation:br-draw 2.2s cubic-bezier(.6,.1,.3,1) forwards}
-.br-draw.ilgas{stroke-dasharray:1100;stroke-dashoffset:1100}
-.d2{animation-delay:.6s}.d3{animation-delay:1.1s}.d4{animation-delay:1.5s}
-.br-fade{opacity:0;animation:br-fade .5s ease forwards}
-.f1{animation-delay:2.1s}.f2{animation-delay:2.5s}.f3{animation-delay:2.9s}
-.antspaudas{opacity:0;animation:br-stamp .45s cubic-bezier(.2,1.6,.4,1) 3.3s forwards}
-.br-cursor{animation:br-cur 7s ease-in-out infinite}
-.zymeklis{animation:br-blink 1s steps(1) infinite}
-@keyframes br-draw{to{stroke-dashoffset:0}}
-@keyframes br-fade{to{opacity:1}}
-@keyframes br-stamp{0%{opacity:0;transform:scale(1.8) rotate(-12deg)}100%{opacity:1;transform:scale(1) rotate(-6deg)}}
-@keyframes br-cur{0%,100%{transform:translate(0,0)}30%{transform:translate(-120px,40px)}60%{transform:translate(-40px,-50px)}}
-@keyframes br-blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.br-draw,.br-fade,.antspaudas,.br-cursor,.zymeklis{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}.antspaudas{transform:rotate(-6deg)}}
+.br{stroke-dasharray:1200;stroke-dashoffset:1200;animation:br 2s cubic-bezier(.6,.1,.3,1) forwards}
+.b2{animation-delay:.5s}.b3{animation-delay:.9s}
+.at{opacity:0;animation:at .4s ease forwards;transform-box:fill-box;transform-origin:center}
+.a1{animation-delay:1.8s}.a2{animation-delay:2.2s}.a3{animation-delay:2.6s}.a4{animation-delay:3s}.a5{animation-delay:3.4s}
+@keyframes br{to{stroke-dashoffset:0}}
+@keyframes at{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.br,.at{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}}
 
-/* kampinis įrašas */
-.irasas{background:var(--panele2)}
-.irasas-lent{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-left:1px solid var(--linija)}
-.irasas-lent div{border-right:1px solid var(--linija);padding:22px 20px;display:flex;flex-direction:column;gap:4px}
-.irasas-lent b{font:600 34px var(--mono)}
-.irasas-lent .akc{color:var(--akcentas)}
+/* skaičiai */
+.skaiciai{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.skaiciai div{padding:22px 24px;border-right:var(--l);display:flex;flex-direction:column;gap:2px}
+.skaiciai div:last-child{border-right:0;background:var(--geltona)}
+.skaiciai b{font:900 48px/1 var(--font);letter-spacing:-.03em}
 
-/* sekcijos */
-.sekcija{padding-top:96px;padding-bottom:96px;display:flex;flex-direction:column;gap:40px}
-.antraste{display:flex;flex-direction:column;gap:12px;max-width:720px}
+/* sekcijų antraštės */
+.antraste{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 40px;padding:56px 40px 36px}
+.antraste .kaire{display:flex;flex-direction:column;gap:12px;flex:1 1 420px}
+.antraste p{max-width:460px;font-size:17px}
+.nr-zyme{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--juoda);color:var(--popierius);font:900 18px var(--font)}
 
 /* mini pamoka */
-.pamoka{display:flex;flex-wrap:wrap;gap:24px;align-items:stretch}
-.zingsniai{flex:999 1 560px;min-width:0;border:1px solid var(--linija);border-radius:8px;background:var(--panele);overflow:hidden;list-style:none;margin:0;padding:0}
-.zingsniai-virsus{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--linija);font-weight:600}
-.zingsniai-virsus span{font:13px var(--mono);color:var(--blankus);font-weight:400}
-.zingsnis{display:flex;gap:16px;padding:18px 20px;border-bottom:1px solid var(--linija);align-items:flex-start}
+.pamoka{display:flex;flex-wrap:wrap;border-top:var(--l)}
+.zingsniai{flex:999 1 560px;min-width:0;list-style:none;margin:0;padding:0;border-right:var(--l)}
+.zingsnis{display:flex;gap:18px;align-items:flex-start;padding:20px 40px;border-bottom:var(--l)}
 .zingsnis:last-child{border-bottom:0}
-.nr{flex-shrink:0;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--linija2);color:var(--blankus);display:flex;align-items:center;justify-content:center;font:14px var(--mono)}
-.zingsnis.dabar .nr{border-color:var(--akcentas);color:var(--akcentas);font-weight:600}
-.zingsnis.atlikta .nr{border-color:var(--priimta);background:#0f2416;color:var(--priimta)}
-.zingsnis .turinys{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.zingsnis .pav{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;font-weight:600}
-.zingsnis .pav span{font:12.5px var(--mono);color:var(--akcentas);font-weight:400}
-.zingsnis p{font-size:14.5px;line-height:1.55;color:var(--vidutinis);display:none}
+.zingsnis .nr{flex-shrink:0;width:48px;height:48px;border-radius:50%;border:var(--l);background:var(--popierius);display:flex;align-items:center;justify-content:center;font:900 20px var(--font)}
+.zingsnis.atlikta .nr{background:var(--juoda);color:var(--popierius)}
+.zingsnis.dabar{background:var(--geltona)}
+.zingsnis.dabar .nr{background:var(--juoda);color:var(--geltona)}
+.zingsnis .turinys{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.zingsnis .pav{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font:800 20px var(--font)}
+.zingsnis .pav span{font:700 13px var(--mono)}
+.zingsnis.atlikta .pav b{text-decoration:line-through;text-decoration-thickness:2px}
+.zingsnis p{display:none;font-size:15.5px;max-width:620px}
 .zingsnis.dabar p,.zingsnis.atlikta p{display:block}
+.zingsnis.atlikta p{color:var(--pilka)}
 .zingsnis button{display:none;align-self:flex-start;margin-top:6px}
 .zingsnis.dabar button{display:inline-flex}
-.pamoka-sonas{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:16px}
-.xp{border:1px solid var(--linija);border-radius:8px;background:var(--panele);padding:22px;display:flex;flex-direction:column;gap:14px}
-.xp-eil{display:flex;justify-content:space-between;align-items:baseline}
-.xp-eil b{font:600 28px var(--mono)}.xp-eil small{font-size:15px;color:var(--blankus);font-weight:400}
-.juosta{height:10px;border-radius:5px;background:var(--kodas);border:1px solid var(--linija);overflow:hidden}
-.juosta div{height:100%;width:0;background:var(--akcentas);transition:width .4s ease}
-.konsole{flex:1;border:1px solid var(--linija2);border-radius:8px;background:var(--kodas);padding:18px;display:flex;flex-direction:column;gap:10px;font:13.5px/1.55 var(--mono);color:var(--blankus)}
-.konsole .ok{color:var(--priimta-sv)}
-.baigta{display:none;flex-direction:column;gap:12px;margin-top:6px;align-items:flex-start}
+.pamoka-sonas{flex:1 1 340px;min-width:0;display:flex;flex-direction:column}
+.xp{padding:24px 28px;border-bottom:var(--l);display:flex;flex-direction:column;gap:12px}
+.xp b{font:900 44px/1 var(--font)}
+.juosta{height:20px;border:var(--l);background:var(--balta)}
+.juosta div{height:100%;width:0;background:var(--melyna);transition:width .4s}
+.konsole{flex:1;padding:24px 28px;display:flex;gap:16px;align-items:flex-start;background:var(--juoda);color:var(--popierius)}
+.konsole .tekstas{display:flex;flex-direction:column;gap:8px;font:15px/1.5 var(--mono)}
+.konsole .ok{color:var(--geltona)}
+.baigta{display:none;flex-direction:column;gap:12px;align-items:flex-start;margin-top:6px}
 .konsole.pabaiga .baigta{display:flex}
-.baigta span{border:2px solid var(--priimta);background:#0f2416;color:var(--priimta-sv);border-radius:5px;padding:6px 14px;font-weight:600;letter-spacing:.12em}
+.baigta span{background:var(--geltona);color:var(--juoda);padding:6px 12px;font:900 15px var(--font)}
+.robis{flex-shrink:0;width:72px;height:72px;background:var(--melyna)}
+.robis svg{width:100%;height:100%;display:block}
 
-/* pamokos kaip sluoksniai */
-.du-stulp{display:flex;flex-wrap:wrap;gap:48px;padding-top:96px;padding-bottom:96px}
-.du-stulp>div:first-child{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:14px}
-.sluoksniai{flex:999 1 600px;min-width:0;border:1px solid var(--linija);border-radius:8px;background:var(--panele2);overflow:hidden}
-.sl{display:grid;grid-template-columns:64px minmax(0,1fr) 110px;gap:12px;align-items:center;padding:15px 20px;border-bottom:1px solid var(--linija3)}
-.sl.galva{padding:12px 20px;border-bottom:1px solid var(--linija)}
-.sl:not(.galva):not(.ateit):hover{background:#18202b}
-.sl .sp{display:flex;align-items:center;gap:8px;font:13px var(--mono);color:var(--blankus)}
-.sl .sp i{width:12px;height:12px;border-radius:2px}
-.sl .pv{font-size:16px;font-weight:500}
-.sl .sk{text-align:right;font:14px var(--mono);color:var(--vidutinis)}
-.sl-skyrius{padding:12px 20px;background:var(--fonas)}
-.sl.ateit{background:var(--fonas);border-bottom:0;border-top:1px solid var(--linija3)}
-.sl.ateit .sp i{border:1.5px dashed #5d6a7e}
-.sl.ateit .pv{display:flex;flex-direction:column;gap:2px;font-size:15px;color:var(--vidutinis);font-weight:400}
-.sl.ateit .pv span{font:12px var(--mono);color:var(--blankus)}
-.sl.ateit .sk{font-size:12px;color:var(--blankus)}
+/* personažai */
+.personazai{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:var(--l)}
+.pers{border-right:var(--l);border-bottom:var(--l);display:flex;flex-direction:column}
+.pers:nth-child(4n){border-right:0}
+.pers:nth-last-child(-n+4){border-bottom:0}
+.pers .vaizdas{aspect-ratio:1.25/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--l);position:relative}
+.pers .vaizdas svg{width:62%;height:auto}
+.pers .vaizdas i{position:absolute;left:14px;top:10px;font:700 13px var(--mono);font-style:normal}
+.pers .apie{padding:14px 18px 18px;display:flex;flex-direction:column;gap:3px}
+.pers .apie b{font:900 24px var(--font);text-transform:uppercase;letter-spacing:-.02em}
+.pers .apie span{font:700 12px var(--mono);text-transform:uppercase}
+.pers .apie small{font-size:14.5px}
+
+/* pamokų lentelė */
+.lentele{border-top:var(--l)}
+.eil{display:grid;grid-template-columns:96px minmax(0,1fr) 150px;align-items:center;border-bottom:2px solid var(--juoda)}
+.eil:last-child{border-bottom:0}
+.eil>*{padding:14px 20px}
+.eil .nr{font:900 26px var(--font);border-right:2px solid var(--juoda);text-align:center}
+.eil .pv{font:700 18px var(--font)}
+.eil .sk{font:700 14px var(--mono);text-align:right}
+.eil.galva{background:var(--juoda);color:var(--popierius);font:700 13px var(--mono);text-transform:uppercase}
+.eil.galva>*{padding:10px 20px}
+.eil.galva .nr{font:inherit;border-color:var(--popierius)}
+.eil:not(.galva):not(.ateit):hover{background:var(--geltona)}
+.eil.ateit{color:var(--pilka);background:var(--blyski)}
+.eil.ateit .nr{color:var(--pilka)}
+.eil.ateit .pv span{display:block;font:400 13px var(--mono)}
 
 /* praktika */
-.praktika-virsus{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end}
-.plyteles{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.plytele{border:1px solid var(--linija);border-radius:8px;background:var(--panele);display:flex;flex-direction:column;overflow:hidden;transition:border-color .15s,transform .15s}
-.plytele:hover{border-color:var(--akcentas);transform:translateY(-2px)}
-.plytele .vaizdas{height:220px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--linija);position:relative;padding:38px 18px 14px;background-color:var(--kodas)}
-.plytele .vaizdas img{max-width:100%;max-height:100%;display:block;position:relative}
-.plytele .didelis{font:600 40px var(--mono);color:var(--linija);position:absolute;left:14px;top:4px}
-.plytele .fmt{font:12px var(--mono);color:var(--matmenu);border:1px solid var(--matmenu);border-radius:3px;padding:3px 8px;position:absolute;right:12px;top:12px}
-.plytele .apac .kom{font:12px var(--mono);color:var(--blankus);letter-spacing:.03em}
-.plytele .apac{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
-.plytele .apac b{font-size:17px}
-.plytele .apac span{font:13px var(--mono);color:var(--blankus)}
-.plytele .apac span em{font-style:normal;color:var(--akcentas)}
+.plyteles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:var(--l)}
+.plytele{border-right:var(--l);border-bottom:var(--l);display:flex;flex-direction:column;background:var(--balta)}
+.plytele:nth-child(4n){border-right:0}
+.plytele:nth-last-child(-n+4){border-bottom:0}
+.plytele .vaizdas{height:230px;display:flex;align-items:center;justify-content:center;border-bottom:var(--l);position:relative;padding:44px 20px 16px}
+.plytele .vaizdas img{max-width:100%;max-height:100%;display:block}
+.plytele .didelis{position:absolute;left:14px;top:8px;width:36px;height:36px;border-radius:50%;background:var(--juoda);color:var(--popierius);display:flex;align-items:center;justify-content:center;font:900 15px var(--font)}
+.plytele .fmt{position:absolute;right:12px;top:12px;background:var(--geltona);border:2px solid var(--juoda);padding:2px 8px;font:700 12px var(--mono)}
+.plytele .apac{padding:14px 18px 18px;display:flex;flex-direction:column;gap:4px;background:var(--popierius);flex:1}
+.plytele .apac b{font:900 20px var(--font);text-transform:uppercase;letter-spacing:-.02em}
+.plytele .apac span{font:13px var(--mono)}
+.plytele .apac span em{font-style:normal;font-weight:700;color:var(--melyna)}
+.plytele .apac .kom{color:var(--pilka)}
 
 /* kaip veikia */
-.kaip-fonas{background:var(--panele2)}
-.kaip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border:1px solid var(--linija);border-radius:8px;overflow:hidden}
-.kaip div{padding:28px;display:flex;flex-direction:column;gap:10px;border-right:1px solid var(--linija)}
+.kaip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:var(--l)}
+.kaip div{padding:28px 32px 32px;border-right:var(--l);display:flex;flex-direction:column;gap:12px}
 .kaip div:last-child{border-right:0}
-.kaip span{font:13px var(--mono);color:var(--matmenu)}
-.kaip div:last-child span{color:var(--priimta)}
-.kaip b{font-size:20px}
-.kaip p{font-size:15px;color:var(--vidutinis)}
+.kaip .fig{width:56px;height:56px}
+.kaip b{font:900 26px/1 var(--font);text-transform:uppercase;letter-spacing:-.02em}
 
 /* ko reikia */
-.reikia{padding-top:80px;padding-bottom:80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.reikia div{border-top:2px solid var(--linija2);padding-top:16px;display:flex;flex-direction:column;gap:4px}
-.reikia b{font-size:18px}.reikia span{font-size:14px;color:var(--blankus)}
-.reikia .kaina{border-top-color:var(--akcentas)}.reikia .kaina .etik{color:var(--akcentas)}
+.reikia{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.reikia div{padding:24px 28px;border-right:var(--l);display:flex;flex-direction:column;gap:4px}
+.reikia div:last-child{border-right:0;background:var(--geltona)}
+.reikia b{font:900 22px var(--font)}
 
-/* registracija */
-.registr{max-width:960px;padding-top:112px;padding-bottom:112px;display:flex;flex-direction:column;gap:32px;align-items:center;text-align:center}
-.registr h2{font-size:60px;line-height:1.02}
-.registr .apras{font-size:18px;max-width:560px}
-.cmd{width:100%;max-width:720px;border:1px solid var(--linija2);border-radius:8px;background:var(--kodas);overflow:hidden;text-align:left}
-.cmd-virsus{padding:12px 18px;border-bottom:1px solid var(--linija);background:var(--panele2);font:13px var(--mono);color:var(--blankus)}
-.cmd-virsus span{color:var(--tekstas)}
-.cmd-laukai{padding:20px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.cmd-laukai label{display:flex;flex-direction:column;gap:6px;font:12.5px var(--mono);color:var(--blankus);flex:1 1 180px}
-.cmd-laukai label.platus{flex:2 1 240px}
-.cmd-laukai input{font:15px var(--mono);color:var(--tekstas);background:var(--panele);border:1px solid var(--linija);border-radius:5px;padding:0 12px;min-height:48px;width:100%}
-.cmd-laukai input:focus{outline:none;border-color:var(--akcentas)}
-.cmd-laukai .mygt{min-height:48px;font-size:15px;padding:0 24px;border-radius:5px}
-.cmd-pastaba{padding:0 18px 16px;font-size:13px;color:var(--blankus)}
+/* atsisiuntimas */
+.atsisiusti{display:flex;flex-wrap:wrap;background:var(--juoda);color:var(--popierius)}
+.atsisiusti .kaire{flex:1 1 520px;padding:64px 40px;display:flex;flex-direction:column;gap:24px}
+.atsisiusti h2 span{color:var(--geltona)}
+.atsisiusti .failo-info{color:#c9c5bb}
+.diegimas{flex:1 1 400px;padding:48px 40px;background:var(--geltona);color:var(--juoda);border-left:var(--l);display:flex;flex-direction:column;gap:16px}
+.diegimas ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:d}
+.diegimas li{counter-increment:d;display:flex;gap:14px;align-items:flex-start;font-size:16px}
+.diegimas li::before{content:counter(d);flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--juoda);color:var(--geltona);display:flex;align-items:center;justify-content:center;font:900 16px var(--font)}
 
 /* apačia */
-footer{background:var(--panele2)}
-.apacia{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border-left:1px solid var(--linija);border-right:1px solid var(--linija)}
-.apacia div{padding:14px 16px;border-right:1px solid var(--linija);display:flex;flex-direction:column;gap:2px}
-.apacia div:last-child{border-right:0}
-.apacia small{font-size:11px;color:var(--blankus);letter-spacing:.1em}
-.apacia span,.apacia a{font-family:var(--mono)}
-.apacia .vardas{font-weight:600;letter-spacing:.16em}
-.teises{padding:18px 0 28px;font-size:12.5px;color:var(--blankus)}
+footer{background:var(--popierius)}
+.irasas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:var(--l)}
+.irasas div{padding:14px 20px;border-right:var(--l);display:flex;flex-direction:column;gap:2px}
+.irasas div:last-child{border-right:0}
+.irasas small{font:700 11px var(--mono);text-transform:uppercase;color:var(--pilka)}
+.irasas span,.irasas a{font:700 15px var(--font)}
+.teises{padding:18px 40px 32px;font-size:13px;color:var(--pilka)}
 
-@media (max-width:900px){
-  .koord,.virsus nav{display:none}
-  h1{font-size:54px}h2{font-size:38px}.registr h2{font-size:42px}
-  .hero{padding-top:56px;padding-bottom:64px}
-  .sekcija,.du-stulp{padding-top:64px;padding-bottom:64px}
-  .kaip div{border-right:0;border-bottom:1px solid var(--linija)}
-  .pranesimas{position:static;margin:0 14px 14px;max-width:none}
+@media (max-width:1000px){
+  .personazai,.plyteles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pers:nth-child(4n),.plytele:nth-child(4n){border-right:var(--l)}
+  .pers:nth-child(2n),.plytele:nth-child(2n){border-right:0}
+  .pers:nth-last-child(-n+4),.plytele:nth-last-child(-n+4){border-bottom:var(--l)}
+  .pers:nth-last-child(-n+2),.plytele:nth-last-child(-n+2){border-bottom:0}
+  .reikia{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .reikia div:nth-child(2){border-right:0}
+  .reikia div:nth-child(-n+2){border-bottom:var(--l)}
 }
-@media (max-width:520px){.plotis{padding:0 18px}.sl{grid-template-columns:48px minmax(0,1fr) 64px}}
+@media (max-width:760px){
+  .virsus nav,.virsus .desine .mono{display:none}
+  .virsus .desine{border-left:0;padding:0}
+  .hero-tekstas{border-right:0;border-bottom:var(--l);padding:36px 20px}
+  .lapas{padding:12px}
+  .antraste{padding:40px 20px 24px}
+  .zingsnis{padding:18px 20px}
+  .zingsniai{border-right:0;border-bottom:var(--l)}
+  .kaip{grid-template-columns:1fr}
+  .kaip div{border-right:0;border-bottom:var(--l)}
+  .kaip div:last-child{border-bottom:0}
+  .eil{grid-template-columns:52px minmax(0,1fr) 92px}
+  .eil.galva{font-size:11px}
+  .eil.galva>*{padding:10px 8px}
+  .eil>*{padding:12px 10px}
+  .atsisiusti .kaire,.diegimas{padding:40px 20px}
+  .diegimas{border-left:0;border-top:var(--l)}
+  .teises{padding:18px 20px 28px}
+}
+@media (max-width:520px){
+  .personazai,.plyteles,.reikia{grid-template-columns:1fr}
+  .pers,.plytele,.reikia div{border-right:0!important;border-bottom:var(--l)!important}
+  .pers:last-child,.plytele:last-child,.reikia div:last-child{border-bottom:0!important}
+  .skaiciai div{border-right:0;border-bottom:var(--l)}
+}
 </style>
 </head>
 <body>
 
 <header class="virsus">
-  <div class="plotis">
-    <a class="zenklas" href="./">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1v22M1 12h22"/></svg>
-      BRĖŽLY
-    </a>
-    <nav aria-label="Pagrindinis meniu">
-      <a href="#pamoka">Išbandyk</a>
-      <a href="#pamokos">Pamokos</a>
-      <a href="#praktika">Praktika</a>
-      <a href="#reikia">Ko reikia</a>
-      <a href="programele/">Programėlė</a>
-    </nav>
-    <span class="tarpas"></span>
-    <span class="koord" aria-hidden="true">X 120.00 · Y 80.00 · Z 0.00</span>
-    <a class="mygt mazas" href="#pamoka">Išbandyk</a>
+  <a class="logo" href="./">
+    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#e2362b"/><rect x="14" y="14" width="14" height="14" fill="#ffc400"/><path d="M2 28 L14 28 L2 16 Z" fill="#1f4fd1"/></svg>
+    BRĖŽLY
+  </a>
+  <nav aria-label="Pagrindinis meniu">
+    <a href="#pamoka">Išbandyk</a>
+    <a href="#pamokos">Pamokos</a>
+    <a href="#praktika">Praktika</a>
+    <a href="#personazai">Personažai</a>
+    <a href="programele/">Programėlė</a>
+  </nav>
+  <span class="tarpas"></span>
+  <div class="desine">
+    <span class="mono">VERSIJA 1.4</span>
+    <a class="mygt mazas" href="#atsisiusti">Atsisiųsti</a>
   </div>
 </header>
 
 <main>
-  <section class="tinklelis">
+  <section>
     <div class="plotis hero">
       <div class="hero-tekstas">
-        <div class="zenkliukas"><i></i>AUTOCAD MOKYMOSI PROGRAMA · NEMOKAMA</div>
-        <h1>Braižai tu.<br><em>Brėžly tikrina.</em></h1>
-        <p class="hero-apras">Brėžly sėdi šalia tavo AutoCAD ir mato tą patį brėžinį. Veda žingsnis po žingsnio, pats pastebi, kai padarei teisingai, ir paaiškina, kas ne taip, kol dar ne vėlu.</p>
+        <span class="fono-nr" aria-hidden="true">01</span>
+        <span class="zyme">AutoCAD mokymosi programa · nemokama</span>
+        <h1>Braižai tu.<br><span>Brėžly tikrina.</span></h1>
+        <p class="hero-apras">Brėžly stovi šalia tavo AutoCAD ir mato tą patį brėžinį. Veda žingsnis po žingsnio, pats pastebi, kai padarei teisingai, ir paaiškina, kas ne taip.</p>
         <div class="veiksmai">
-          <a class="mygt" href="#pamoka">Išbandyti čia pat</a>
-          <a class="antr" href="programele/">Atidaryti programėlę</a>
+          <a class="mygt" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg>
+            Atsisiųsti Windows'ui
+          </a>
+          <a class="mygt baltas" href="#pamoka">Išbandyti čia pat</a>
         </div>
-        <p class="smulk">Windows 10/11 · pilnas AutoCAD · versija 1.4 · be reklamų ir paskyrų</p>
+        <p class="failo-info">Windows 10/11 · pilnas AutoCAD · versija 1.4 · be reklamų ir paskyrų</p>
       </div>
 
-      <div class="lapas" aria-hidden="true">
-        <div class="lapas-virsus"><i></i><i></i><i></i><span style="margin-left:8px">tarpine_A4.dwg</span><span class="tarpas"></span><b>● 1 užduotis · Tarpinė</b></div>
-        <div class="drobe">
-          <svg viewBox="0 -58 520 388" fill="none">
-            <g stroke="#e6eaf0" stroke-width="1.8">
-              <rect class="br-draw ilgas" x="110" y="65" width="300" height="200" rx="25"/>
-              <circle class="br-draw d2" cx="260" cy="165" r="50"/>
-              <circle class="br-draw d3" cx="140" cy="95" r="12.5"/>
-              <circle class="br-draw d3" cx="380" cy="95" r="12.5"/>
-              <circle class="br-draw d4" cx="140" cy="235" r="12.5"/>
-              <circle class="br-draw d4" cx="380" cy="235" r="12.5"/>
-            </g>
-            <g class="br-fade f1" stroke="#f47067" stroke-width=".9" stroke-dasharray="16 4 2 4"><path d="M92 165h336M260 50v230"/></g>
-            <g class="br-fade f2" stroke="#56c2e6" stroke-width=".9">
-              <path d="M110 271v35M410 271v35M110 298h300"/><path d="M110 298l9-3.5v7zM410 298l-9-3.5v7z" fill="#56c2e6"/>
-              <path d="M104 65h-34M104 265h-34M78 65v200"/><path d="M78 65l-3.5 9h7zM78 265l-3.5-9h7z" fill="#56c2e6"/>
-              <path d="M295 130l40-40h40M389 104l26 26h40"/>
-            </g>
-            <g class="br-fade f2" fill="#56c2e6" font-family="IBM Plex Mono, monospace" font-size="12">
-              <text x="248" y="292">120</text><text x="58" y="172" transform="rotate(-90 64 165)">80</text><text x="342" y="85">ø40</text><text x="418" y="125">4× ø10</text>
-            </g>
-            <g class="br-cursor" stroke="#e6eaf0" stroke-width="1"><path d="M440 240h40M460 220v40"/><rect x="455" y="235" width="10" height="10"/></g>
-          </svg>
-          <div class="antspaudas">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>
-            PRIIMTA
-          </div>
-          <div class="pranesimas br-fade f3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.8"><circle cx="12" cy="12" r="7"/><path d="M12 1v22M1 12h22"/></svg>
-            <span><b>Brėžly:</b> 4 skylės ø10 ir anga ø40 rastos. Kampai R10. <strong>+30 XP</strong></span>
-          </div>
-        </div>
-        <div class="komandos">
-          <span>Komanda: <span>FILLET</span>  Spindulys &lt;0.00&gt;: 10</span>
-          <span class="dabar">Komanda: DIMLINEAR<span class="zymeklis">▌</span></span>
-        </div>
+      <div class="lapas">
+        <svg viewBox="0 0 760 470" fill="none" role="img" aria-label="A4 lapas su tarpine: keturios pozicijos – šablonas, vienetai, failo vardas ir PDF">
+          <rect x="150" y="18" width="430" height="430" fill="#f7f5f0" stroke="#111" stroke-width="3"/>
+          <rect x="166" y="34" width="398" height="398" stroke="#111" stroke-width="1.2"/>
+          <g stroke="#111" stroke-width="2.4">
+            <rect class="br" x="250" y="110" width="200" height="134" rx="16"/>
+            <circle class="br b2" cx="350" cy="177" r="34"/>
+            <circle class="br b3" cx="275" cy="135" r="8"/><circle class="br b3" cx="425" cy="135" r="8"/><circle class="br b3" cx="275" cy="219" r="8"/><circle class="br b3" cx="425" cy="219" r="8"/>
+          </g>
+          <path class="at a1" d="M232 177h236M350 92v170" stroke="#e2362b" stroke-width="1.2" stroke-dasharray="14 4 2 4"/>
+          <g class="at a1" stroke="#1f4fd1" stroke-width="1.5"><path d="M250 262h200M250 254v16M450 254v16"/></g>
+          <text class="at a1" x="334" y="284" fill="#1f4fd1" font-family="Space Mono, monospace" font-size="13" font-weight="700">120</text>
+          <g stroke="#111" stroke-width="1.5"><path d="M190 300h140M190 294v12M204 297v6M218 297v6M232 297v6M246 297v6M260 294v12M274 297v6M288 297v6M302 297v6M316 297v6M330 294v12"/></g>
+          <text x="190" y="324" fill="#111" font-family="Space Mono, monospace" font-size="12">0        50      100 mm</text>
+          <g stroke="#111" stroke-width="1.5"><rect x="380" y="352" width="184" height="80"/><path d="M380 378h184M380 404h184M450 352v80"/></g>
+          <rect class="at a4" x="451" y="379" width="112" height="24" fill="#ffc400"/>
+          <g fill="#111" font-family="Space Mono, monospace" font-size="11"><text x="388" y="369">PAV.</text><text x="458" y="369">TARPINĖ</text><text x="388" y="395">FAILAS</text><text x="458" y="395" font-weight="700">tarpine.dwg</text><text x="388" y="421">MAST.</text><text x="458" y="421">1:1</text></g>
+          <path class="at a5" d="M580 18 l-46 0 l46 46 z" fill="#e2362b"/>
+          <g stroke="#111" stroke-width="2"><path class="at a2" d="M166 34 L96 60"/><path class="at a3" d="M260 300 L96 300"/><path class="at a4" d="M508 391 L660 300"/><path class="at a5" d="M560 44 L660 92"/></g>
+          <g font-family="Archivo, sans-serif" font-weight="900" font-size="22" text-anchor="middle">
+            <g class="at a2"><circle cx="74" cy="60" r="24" fill="#111"/><text x="74" y="68" fill="#f7f5f0">1</text></g>
+            <g class="at a3"><circle cx="74" cy="300" r="24" fill="#111"/><text x="74" y="308" fill="#f7f5f0">2</text></g>
+            <g class="at a4"><circle cx="684" cy="300" r="30" fill="#ffc400" stroke="#111" stroke-width="3"/><text x="684" y="309" fill="#111" font-size="26">3</text></g>
+            <g class="at a5"><circle cx="684" cy="92" r="24" fill="#f7f5f0" stroke="#111" stroke-width="3"/><text x="684" y="100" fill="#111">4</text></g>
+          </g>
+          <g font-family="Space Mono, monospace" font-size="12" fill="#111"><text class="at a2" x="18" y="102">acadiso.dwt</text><text class="at a3" x="30" y="342">UNITS · mm</text><text class="at a4" x="634" y="352">SAVEAS</text><text class="at a5" x="640" y="134">PLOT</text></g>
+        </svg>
       </div>
     </div>
   </section>
 
-  <section class="irasas" aria-label="Brėžly skaičiais">
-    <div class="plotis">
-      <div class="irasas-lent">
-        <div><span class="etik">Pamokos</span><b>15</b></div>
-        <div><span class="etik">Žingsniai</span><b>81</b></div>
-        <div><span class="etik">Praktikos užduotys</span><b>8</b></div>
-        <div><span class="etik">Formatai</span><b>A4 · A3</b></div>
-        <div><span class="etik">Kaina</span><b class="akc">0 €</b></div>
-      </div>
+  <section aria-label="Brėžly skaičiais">
+    <div class="plotis skaiciai">
+      <div><span class="zyme">Pamokos</span><b>15</b></div>
+      <div><span class="zyme">Žingsniai</span><b>81</b></div>
+      <div><span class="zyme">Praktikos užduotys</span><b>8</b></div>
+      <div><span class="zyme">Personažai</span><b>8</b></div>
+      <div><span class="zyme">Kaina</span><b>0 €</b></div>
     </div>
   </section>
 
   <section id="pamoka">
-    <div class="plotis sekcija">
+    <div class="plotis">
       <div class="antraste">
-        <span class="zyme">01 · IŠBANDYK ČIA PAT</span>
-        <h2>Taip atrodo pirmoji pamoka</h2>
-        <p class="apras">Tikroje programoje Brėžly pats pamato, kad žingsnis atliktas AutoCAD'e. Čia spausk mygtuką ir pajausi, kaip tai veikia.</p>
+        <div class="kaire"><span class="nr-zyme">1</span><h2>Išbandyk<br>pirmą pamoką</h2></div>
+        <p>Programoje Brėžly pats pamato, kada žingsnis atliktas AutoCAD'e. Čia spausk mygtuką ir pajausi, kaip tai veikia.</p>
       </div>
       <div class="pamoka">
-        <div class="zingsniai">
-          <div class="zingsniai-virsus">1 pamoka · Failas ir formatai<span id="kiek">0 / 0</span></div>
-          <ol id="zingsniai" style="list-style:none;margin:0;padding:0"></ol>
-        </div>
+        <ol class="zingsniai" id="zingsniai" aria-label="1 pamoka · Failas ir formatai"></ol>
         <div class="pamoka-sonas">
           <div class="xp">
-            <div class="xp-eil"><span class="etik">Patirtis</span><b><span id="xp">0</span><small> / <span id="xpVisas">0</span> XP</small></b></div>
+            <span class="zyme">1 pamoka · Failas ir formatai</span>
+            <b><span id="xp">0</span> / <span id="xpVisas">0</span> XP</b>
             <div class="juosta" role="progressbar" aria-label="Pamokos eiga" aria-valuemin="0" id="juosta"><div></div></div>
           </div>
           <div class="konsole" id="konsole" aria-live="polite">
-            <span>// Brėžly praneša</span>
-            <span id="zinute">Laukiu, kol pradėsi pirmą žingsnį...</span>
-            <div class="baigta"><span>✓ PAMOKA BAIGTA</span><button type="button" class="antr mazas" id="isNaujo">Pradėti iš naujo</button></div>
+            <span class="robis" aria-hidden="true"><svg viewBox="0 0 160 160" class="bh-pers n-dziaug" aria-hidden="true"><g><g><g class="r-kunas"><path d="M40 160 L52 124 H108 L120 160 Z" fill="#111111"/><g class="r-galva"><g class="r-antena"><rect x="76" y="14" width="8" height="22" fill="#111111"/><circle cx="80" cy="14" r="9" fill="#e2362b"/></g><rect x="22" y="62" width="12" height="28" fill="#111111"/><rect x="126" y="62" width="12" height="28" fill="#111111"/><rect x="34" y="36" width="92" height="80" fill="#ffc400"/><g class="r-akys" style="display:none"><g class="r-a0"><circle cx="60" cy="72" r="12" fill="#111111"/><g class="r-vyzd"><circle cx="63" cy="69" r="4" fill="#f7f5f0"/></g></g><g class="r-a1"><circle cx="100" cy="72" r="12" fill="#111111"/><g class="r-vyzd"><circle cx="103" cy="69" r="4" fill="#f7f5f0"/></g></g></g><g class="r-burna" style="display:none"><path d="M62 94 A18 18 0 0 0 98 94 Z" fill="#e2362b"/></g><path class="r-dz" d="M54.08 90 A25.919999999999998 25.919999999999998 0 0 0 105.92 90 Z" fill="#e2362b"/><g class="r-dz"><path d="M48 78 A12 12 0 0 1 72 78" fill="none" stroke="#111111" stroke-width="6.6000000000000005"/><path d="M88 78 A12 12 0 0 1 112 78" fill="none" stroke="#111111" stroke-width="6.6000000000000005"/></g></g><g class="r-ranka"></g><g class="r-konf"><rect x="6" y="54" width="10" height="10" fill="#ffc400"/><path d="M138 18 L154 26 L140 38 Z" fill="#e2362b"/><rect x="144" y="94" width="10" height="10" fill="#1f4fd1"/><circle cx="16" cy="118" r="5" fill="#e2362b"/></g></g></g></g></svg></span>
+            <div class="tekstas">
+              <span>Kadis:</span>
+              <span id="zinute">Laukiu, kol pradėsi pirmą žingsnį...</span>
+              <div class="baigta"><span>PAMOKA BAIGTA</span><button type="button" class="mygt baltas mazas" id="isNaujo">Pradėti iš naujo</button></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="pamokos" class="tinklelis">
-    <div class="plotis du-stulp">
-      <div>
-        <span class="zyme">02 · PAMOKOS</span>
-        <h2>Nuo tuščio failo iki pirmos 3D detalės</h2>
-        <p class="apras">Kiekviena pamoka – sluoksnis, kurį įjungi, kai pasiruošęs. Mokaisi braižydamas, ne skaitydamas.</p>
+  <section id="personazai">
+    <div class="plotis">
+      <div class="antraste">
+        <div class="kaire"><span class="nr-zyme">2</span><h2>Pasirink savo<br>braižytoją</h2></div>
+        <p>Kiekvienas personažas – iš paprastų figūrų, o vardas – iš AutoCAD. Už pamokas gauni daiktų jų spintai.</p>
       </div>
-      <div class="sluoksniai">
-        <div class="sl galva"><span class="etik">Sluoksnis</span><span class="etik">Pamoka</span><span class="etik" style="text-align:right">Žingsniai</span></div>
-        <div class="sl"><span class="sp"><i style="background:#f28c28"></i>01</span><span class="pv">Failas ir formatai</span><span class="sk">4</span></div>
-        <div class="sl"><span class="sp"><i style="background:#56c2e6"></i>02</span><span class="pv">Kampinis įrašas</span><span class="sk">4</span></div>
-        <div class="sl"><span class="sp"><i style="background:#3fb950"></i>03</span><span class="pv">Tikslus braižymas</span><span class="sk">6</span></div>
-        <div class="sl"><span class="sp"><i style="background:#e6eaf0"></i>04</span><span class="pv">2D brėžinys</span><span class="sk">6</span></div>
-        <div class="sl"><span class="sp"><i style="background:#f47067"></i>05</span><span class="pv">Redagavimas: COPY, CHAMFER, TRIM, MIRROR</span><span class="sk">7</span></div>
-        <div class="sl"><span class="sp"><i style="background:#c3ccd8"></i>06</span><span class="pv">Masyvai: OFFSET, ARRAYPOLAR, ROTATE</span><span class="sk">7</span></div>
-        <div class="sl"><span class="sp"><i style="background:#e3b341"></i>07</span><span class="pv">2D pjūvis: PLINE ir HATCH</span><span class="sk">4</span></div>
-        <div class="sl"><span class="sp"><i style="background:#f28c28"></i>08</span><span class="pv">Šriftai ir tekstas</span><span class="sk">3</span></div>
-        <div class="sl"><span class="sp"><i style="background:#56c2e6"></i>09</span><span class="pv">Matmenys pagal standartą</span><span class="sk">6</span></div>
-        <div class="sl"><span class="sp"><i style="background:#3fb950"></i>10</span><span class="pv">Pirmoji 3D detalė</span><span class="sk">10</span></div>
-        <div class="sl"><span class="sp"><i style="background:#e6eaf0"></i>11</span><span class="pv">Projekcijos iš 3D modelio</span><span class="sk">5</span></div>
-        <div class="sl"><span class="sp"><i style="background:#f47067"></i>12</span><span class="pv">Aksonometrija</span><span class="sk">4</span></div>
-        <div class="sl"><span class="sp"><i style="background:#c3ccd8"></i>13</span><span class="pv">Pjūviai ir ketvirtinė išpjova</span><span class="sk">5</span></div>
-        <div class="sl"><span class="sp"><i style="background:#e3b341"></i>14</span><span class="pv">Elektrinė schema su blokais</span><span class="sk">6</span></div>
-        <div class="sl"><span class="sp"><i style="background:#f28c28"></i>15</span><span class="pv">A3 lapas: rėmelis ir kampinis įrašas</span><span class="sk">4</span></div>
-        <div class="sl-skyrius etik">Ruošiama</div>
-        <div class="sl ateit"><span class="sp"><i></i></span><span class="pv">Detalės darbo brėžinys<span>matmenys iš 3D, tolerancijos, šiurkštumas</span></span><span class="sk">netrukus</span></div>
-        <div class="sl ateit"><span class="sp"><i></i></span><span class="pv">Sriegiai ir standartinės detalės<span>sriegio vaizdavimas, varžtai, veržlės</span></span><span class="sk">netrukus</span></div>
-        <div class="sl ateit"><span class="sp"><i></i></span><span class="pv">Surinkimo brėžinys<span>pozicijos, specifikacija (DATAEXTRACTION)</span></span><span class="sk">netrukus</span></div>
+      <div class="personazai">
+        <div class="pers"><div class="vaizdas" style="background:#1f4fd1"><i style="color:#f7f5f0">01</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><path d="M40 160 L52 124 H108 L120 160 Z" fill="#111111"/><g class="r-galva"><g class="r-antena"><rect x="76" y="14" width="8" height="22" fill="#111111"/><circle cx="80" cy="14" r="9" fill="#e2362b"/></g><rect x="22" y="62" width="12" height="28" fill="#111111"/><rect x="126" y="62" width="12" height="28" fill="#111111"/><rect x="34" y="36" width="92" height="80" fill="#ffc400"/><g class="r-akys"><g class="r-a0"><circle cx="60" cy="72" r="12" fill="#111111"/><g class="r-vyzd"><circle cx="63" cy="69" r="4" fill="#f7f5f0"/></g></g><g class="r-a1"><circle cx="100" cy="72" r="12" fill="#111111"/><g class="r-vyzd"><circle cx="103" cy="69" r="4" fill="#f7f5f0"/></g></g></g><g class="r-burna" style="display:none"><path d="M62 94 A18 18 0 0 0 98 94 Z" fill="#e2362b"/></g><rect class="r-lauk" x="62" y="96" width="36" height="6" fill="#111111"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Kadis</b><span>Robotas · kvadratas</span><small>Antena gaudo kiekvieną AutoCAD komandą</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#ffc400"><i style="color:#111111">02</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><path d="M34 66 L44 14 L76 46 Z" fill="#111111"/><path d="M126 66 L116 14 L84 46 Z" fill="#111111"/><circle cx="80" cy="88" r="52" fill="#1f4fd1"/><g class="r-akys"><g class="r-a0"><circle cx="60" cy="80" r="13" fill="#ffc400"/><g class="r-vyzd"><rect x="57" y="69" width="6" height="22" fill="#111111"/></g></g><g class="r-a1"><circle cx="100" cy="80" r="13" fill="#ffc400"/><g class="r-vyzd"><rect x="97" y="69" width="6" height="22" fill="#111111"/></g></g></g><rect class="r-lauk" x="70" y="116" width="20" height="6" fill="#111111"/><path d="M72 100 H88 L80 110 Z" fill="#e2362b"/><path d="M8 98 H54 M8 112 L54 106 M106 98 H152 M106 106 L152 112" stroke="#111111" stroke-width="3"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Kursorius</b><span>Katinas · apskritimas</span><small>Gaudo pelę - ir tikrą, ir kompiuterio</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#f7f5f0"><i style="color:#111111">03</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><path d="M30 40 L48 10 L58 44 Z" fill="#111111"/><path d="M130 40 L112 10 L102 44 Z" fill="#111111"/><path d="M26 150 V80 A54 54 0 0 1 134 80 V150 Z" fill="#e2362b"/><path d="M44 124 H116 M50 138 H110" stroke="#f7f5f0" stroke-width="4"/><g class="r-akys"><g class="r-a0"><circle cx="58" cy="76" r="22" fill="#ffc400"/><g class="r-vyzd"><circle cx="58" cy="76" r="10" fill="#111111"/></g></g><g class="r-a1"><circle cx="102" cy="76" r="22" fill="#ffc400"/><g class="r-vyzd"><circle cx="102" cy="76" r="10" fill="#111111"/></g></g></g><rect class="r-lauk" x="71" y="114" width="18" height="6" fill="#111111"/><path d="M72 96 H88 L80 112 Z" fill="#111111"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Snapas</b><span>Pelėda · kupolas</span><small>Kaip OSNAP - pataiko tiksliai į tašką</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#111111"><i style="color:#f7f5f0">04</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><path d="M20 50 L36 8 L62 46 Z" fill="#e2362b"/><path d="M140 50 L124 8 L98 46 Z" fill="#e2362b"/><path d="M14 44 H146 L80 150 Z" fill="#e2362b"/><path d="M50 92 L80 150 L110 92 Z" fill="#f7f5f0"/><g class="r-akys"><g class="r-a0"><g class="r-vyzd"><rect x="48" y="62" width="14" height="14" fill="#111111"/></g></g><g class="r-a1"><g class="r-vyzd"><rect x="98" y="62" width="14" height="14" fill="#111111"/></g></g></g><rect class="r-lauk" x="71" y="112" width="18" height="6" fill="#111111"/><circle cx="80" cy="140" r="8" fill="#111111"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Trimas</b><span>Lapė · trikampis</span><small>Gudrus - nukerpa viską, kas nereikalinga</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#e2362b"><i style="color:#f7f5f0">05</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><path d="M44 44 A40 40 0 0 0 4 84 H44 Z" fill="#ffc400"/><path d="M116 44 A40 40 0 0 1 156 84 H116 Z" fill="#ffc400"/><path d="M120 124 L148 150 L120 150 Z" fill="#1f4fd1"/><g class="r-galva"><path d="M44 40 L56 18 L68 40 Z M68 40 L80 14 L92 40 Z M92 40 L104 18 L116 40 Z" fill="#111111"/><rect x="40" y="40" width="80" height="84" fill="#1f4fd1"/><g class="r-akys"><g class="r-a0"><circle cx="62" cy="74" r="11" fill="#f7f5f0"/><g class="r-vyzd"><circle cx="64" cy="76" r="6" fill="#111111"/></g></g><g class="r-a1"><circle cx="98" cy="74" r="11" fill="#f7f5f0"/><g class="r-vyzd"><circle cx="100" cy="76" r="6" fill="#111111"/></g></g></g><g class="r-burna" style="display:none"><rect x="52" y="100" width="56" height="14" fill="#111111"/><path d="M58 100 L64 108 L70 100 Z M90 100 L96 108 L102 100 Z" fill="#f7f5f0"/></g><rect class="r-lauk" x="62" y="102" width="36" height="6" fill="#111111"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Ekstrudas</b><span>Drakoniukas · kvadratas</span><small>Vienu kvėptelėjimu iškelia 2D į 3D</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#f7f5f0"><i style="color:#111111">06</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><g class="r-antena"><path d="M58 34 L44 6 M102 34 L116 6" stroke="#111111" stroke-width="4"/><circle cx="44" cy="8" r="8" fill="#ffc400"/><circle cx="116" cy="8" r="8" fill="#ffc400"/></g><rect x="38" y="26" width="84" height="124" rx="42" fill="#1f4fd1"/><g class="r-akys"><g class="r-a0"><circle cx="80" cy="74" r="28" fill="#f7f5f0"/><g class="r-vyzd"><circle cx="80" cy="74" r="16" fill="#e2362b"/><circle cx="80" cy="74" r="7" fill="#111111"/></g></g></g><g class="r-burna" style="display:none"><rect x="64" y="116" width="32" height="6" fill="#111111"/></g><rect class="r-lauk" x="65" y="116" width="30" height="6" fill="#111111"/></g><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Orbitas</b><span>Ateivis · kapsulė</span><small>Atskrido per 3DORBIT išmokti AutoCAD</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#1f4fd1"><i style="color:#f7f5f0">07</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><ellipse cx="80" cy="88" rx="50" ry="66" fill="#111111"/><ellipse cx="80" cy="98" rx="34" ry="50" fill="#f7f5f0"/><g class="r-akys"><g class="r-a0"><g class="r-vyzd"><circle cx="66" cy="66" r="6" fill="#111111"/></g></g><g class="r-a1"><g class="r-vyzd"><circle cx="94" cy="66" r="6" fill="#111111"/></g></g></g><rect class="r-lauk" x="71" y="99" width="18" height="6" fill="#111111"/><path d="M68 78 H92 L80 94 Z" fill="#ffc400"/></g><rect x="34" y="112" width="92" height="12" fill="#e2362b"/><rect x="96" y="112" width="12" height="30" fill="#e2362b"/><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Elipsas</b><span>Pingvinas · ovalas</span><small>Ramus ir apvalus kaip ELLIPSE</small></div></div>
+        <div class="pers"><div class="vaizdas" style="background:#ffc400"><i style="color:#111111">08</i><svg viewBox="0 0 160 160" class="bh-pers n-lauk" aria-hidden="true"><g><g><g class="r-kunas"><g class="r-galva"><circle cx="40" cy="38" r="20" fill="#111111"/><circle cx="120" cy="38" r="20" fill="#111111"/><circle cx="40" cy="38" r="9" fill="#e2362b"/><circle cx="120" cy="38" r="9" fill="#e2362b"/><circle cx="80" cy="78" r="50" fill="#111111"/><circle cx="80" cy="92" r="22" fill="#f7f5f0"/><g class="r-akys"><g class="r-a0"><g class="r-vyzd"><circle cx="60" cy="66" r="6" fill="#f7f5f0"/></g></g><g class="r-a1"><g class="r-vyzd"><circle cx="100" cy="66" r="6" fill="#f7f5f0"/></g></g></g><rect class="r-lauk" x="72" y="101" width="16" height="6" fill="#111111"/><path d="M72 84 H88 L80 94 Z" fill="#111111"/></g><path d="M80 138 L56 126 V150 Z M80 138 L104 126 V150 Z" fill="#1f4fd1"/><rect x="74" y="132" width="12" height="12" fill="#e2362b"/><g class="r-ranka"></g></g></g></g></svg></div><div class="apie"><b>Dimas</b><span>Meškiukas · apskritimai</span><small>Stiprus ir kantrus - viską išmatuoja</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pamokos">
+    <div class="plotis">
+      <div class="antraste">
+        <div class="kaire"><span class="nr-zyme">3</span><h2>15 pamokų –<br>nuo failo iki 3D</h2></div>
+        <p>Pamokų tvarka kaip inžinerinės grafikos kurse. Mokaisi braižydamas, ne skaitydamas.</p>
+      </div>
+      <div class="lentele">
+        <div class="eil galva"><span class="nr">Nr.</span><span>Pamoka</span><span class="sk">Žingsniai</span></div>
+        <div class="eil"><span class="nr">1</span><span class="pv">Failas ir formatai</span><span class="sk">4</span></div>
+        <div class="eil"><span class="nr">2</span><span class="pv">Kampinis įrašas</span><span class="sk">4</span></div>
+        <div class="eil"><span class="nr">3</span><span class="pv">Tikslus braižymas</span><span class="sk">6</span></div>
+        <div class="eil"><span class="nr">4</span><span class="pv">2D brėžinys</span><span class="sk">6</span></div>
+        <div class="eil"><span class="nr">5</span><span class="pv">Redagavimas: COPY, CHAMFER, TRIM, MIRROR</span><span class="sk">7</span></div>
+        <div class="eil"><span class="nr">6</span><span class="pv">Masyvai: OFFSET, ARRAYPOLAR, ROTATE</span><span class="sk">7</span></div>
+        <div class="eil"><span class="nr">7</span><span class="pv">2D pjūvis: PLINE ir HATCH</span><span class="sk">4</span></div>
+        <div class="eil"><span class="nr">8</span><span class="pv">Šriftai ir tekstas</span><span class="sk">3</span></div>
+        <div class="eil"><span class="nr">9</span><span class="pv">Matmenys pagal standartą</span><span class="sk">6</span></div>
+        <div class="eil"><span class="nr">10</span><span class="pv">Pirmoji 3D detalė</span><span class="sk">10</span></div>
+        <div class="eil"><span class="nr">11</span><span class="pv">Projekcijos iš 3D modelio</span><span class="sk">5</span></div>
+        <div class="eil"><span class="nr">12</span><span class="pv">Aksonometrija</span><span class="sk">4</span></div>
+        <div class="eil"><span class="nr">13</span><span class="pv">Pjūviai ir ketvirtinė išpjova</span><span class="sk">5</span></div>
+        <div class="eil"><span class="nr">14</span><span class="pv">Elektrinė schema su blokais</span><span class="sk">6</span></div>
+        <div class="eil"><span class="nr">15</span><span class="pv">A3 lapas: rėmelis ir kampinis įrašas</span><span class="sk">4</span></div>
+        <div class="eil ateit"><span class="nr">–</span><span class="pv">Detalės darbo brėžinys<span>matmenys iš 3D, tolerancijos, šiurkštumas</span></span><span class="sk">netrukus</span></div>
+        <div class="eil ateit"><span class="nr">–</span><span class="pv">Sriegiai ir standartinės detalės<span>sriegio vaizdavimas, varžtai, veržlės</span></span><span class="sk">netrukus</span></div>
+        <div class="eil ateit"><span class="nr">–</span><span class="pv">Surinkimo brėžinys<span>pozicijos, specifikacija (DATAEXTRACTION)</span></span><span class="sk">netrukus</span></div>
       </div>
     </div>
   </section>
 
   <section id="praktika">
-    <div class="plotis sekcija">
-      <div class="praktika-virsus">
-        <div class="antraste" style="max-width:640px">
-          <span class="zyme">03 · PRAKTIKA</span>
-          <h2>8 brėžiniai, kuriuos patikrina už tave</h2>
-        </div>
-        <p class="apras" style="font-size:16px;max-width:420px">Gauni užduotį ir ruošinį. Nubraižai, įvedi <code>TIKRINK</code> – Brėžly pasako, ar skylės, spinduliai ir tūris sutampa.</p>
+    <div class="plotis">
+      <div class="antraste">
+        <div class="kaire"><span class="nr-zyme">4</span><h2>8 brėžiniai,<br>kuriuos patikrina už tave</h2></div>
+        <p>Gauni užduotį ir ruošinį. Nubraižai, įvedi <code>TIKRINK</code> – Brėžly pasako, ar skylės, spinduliai ir tūris sutampa.</p>
       </div>
       <div class="plyteles">
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">01</span><span class="fmt">A4 · 2D</span><img src="praktika/U1_Tarpine.svg" alt="Užduoties „Tarpinė“ brėžinys" loading="lazy"></div><div class="apac"><b>Tarpinė</b><span>~10 min · <em>+30 XP</em></span><span class="kom">RECTANG · FILLET · CIRCLE · COPY</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">02</span><span class="fmt">A4 · 2D</span><img src="praktika/U2_Flansas.svg" alt="Užduoties „Flanšas“ brėžinys" loading="lazy"></div><div class="apac"><b>Flanšas</b><span>~15 min · <em>+45 XP</em></span><span class="kom">CIRCLE · ARRAY · LINE · NEMATOMOS</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">03</span><span class="fmt">A4 · 2D</span><img src="praktika/U3_Laikiklis.svg" alt="Užduoties „L laikiklis“ brėžinys" loading="lazy"></div><div class="apac"><b>L laikiklis</b><span>~15 min · <em>+45 XP</em></span><span class="kom">PLINE · FILLET · CIRCLE · OFFSET</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">04</span><span class="fmt">A4 · 2D</span><img src="praktika/U4_Velenas.svg" alt="Užduoties „Velenas“ brėžinys" loading="lazy"></div><div class="apac"><b>Velenas</b><span>~15 min · <em>+50 XP</em></span><span class="kom">LINE · OFFSET · CHAMFER · MIRROR</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">05</span><span class="fmt">A4 · 2D</span><img src="praktika/U5_Projekcijos.svg" alt="Užduoties „3 projekcijos“ brėžinys" loading="lazy"></div><div class="apac"><b>3 projekcijos</b><span>~20 min · <em>+60 XP</em></span><span class="kom">LINE · XLINE · CIRCLE · NEMATOMOS</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">06</span><span class="fmt">A3 · 3D</span><img src="praktika/U6_Izometrija.svg" alt="Užduoties „Izometrija“ brėžinys" loading="lazy"></div><div class="apac"><b>Izometrija</b><span>~20 min · <em>+60 XP</em></span><span class="kom">ISODRAFT · F5 · LINE · ELLIPSE</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">07</span><span class="fmt">A4 · 2D</span><img src="praktika/U7_Schema.svg" alt="Užduoties „Elektrinė schema“ brėžinys" loading="lazy"></div><div class="apac"><b>Elektrinė schema</b><span>~15 min · <em>+45 XP</em></span><span class="kom">BLOCK · ATTDEF · INSERT · LINE</span></div></div>
-        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">08</span><span class="fmt">A3 · 3D</span><img src="praktika/U8_3D_detale.svg" alt="Užduoties „3D detalė“ brėžinys" loading="lazy"></div><div class="apac"><b>3D detalė</b><span>~25 min · <em>+80 XP</em></span><span class="kom">BOX · CYLINDER · UNION · SUBTRACT</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">1</span><span class="fmt">A4 · 2D</span><img src="praktika/U1_Tarpine.svg" alt="Užduoties „Tarpinė“ brėžinys" loading="lazy"></div><div class="apac"><b>Tarpinė</b><span>~10 min · <em>+30 XP</em></span><span class="kom">RECTANG · FILLET · CIRCLE · COPY</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">2</span><span class="fmt">A4 · 2D</span><img src="praktika/U2_Flansas.svg" alt="Užduoties „Flanšas“ brėžinys" loading="lazy"></div><div class="apac"><b>Flanšas</b><span>~15 min · <em>+45 XP</em></span><span class="kom">CIRCLE · ARRAY · LINE · NEMATOMOS</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">3</span><span class="fmt">A4 · 2D</span><img src="praktika/U3_Laikiklis.svg" alt="Užduoties „L laikiklis“ brėžinys" loading="lazy"></div><div class="apac"><b>L laikiklis</b><span>~15 min · <em>+45 XP</em></span><span class="kom">PLINE · FILLET · CIRCLE · OFFSET</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">4</span><span class="fmt">A4 · 2D</span><img src="praktika/U4_Velenas.svg" alt="Užduoties „Velenas“ brėžinys" loading="lazy"></div><div class="apac"><b>Velenas</b><span>~15 min · <em>+50 XP</em></span><span class="kom">LINE · OFFSET · CHAMFER · MIRROR</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">5</span><span class="fmt">A4 · 2D</span><img src="praktika/U5_Projekcijos.svg" alt="Užduoties „3 projekcijos“ brėžinys" loading="lazy"></div><div class="apac"><b>3 projekcijos</b><span>~20 min · <em>+60 XP</em></span><span class="kom">LINE · XLINE · CIRCLE · NEMATOMOS</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">6</span><span class="fmt">A3 · 3D</span><img src="praktika/U6_Izometrija.svg" alt="Užduoties „Izometrija“ brėžinys" loading="lazy"></div><div class="apac"><b>Izometrija</b><span>~20 min · <em>+60 XP</em></span><span class="kom">ISODRAFT · F5 · LINE · ELLIPSE</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">7</span><span class="fmt">A4 · 2D</span><img src="praktika/U7_Schema.svg" alt="Užduoties „Elektrinė schema“ brėžinys" loading="lazy"></div><div class="apac"><b>Elektrinė schema</b><span>~15 min · <em>+45 XP</em></span><span class="kom">BLOCK · ATTDEF · INSERT · LINE</span></div></div>
+        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">8</span><span class="fmt">A3 · 3D</span><img src="praktika/U8_3D_detale.svg" alt="Užduoties „3D detalė“ brėžinys" loading="lazy"></div><div class="apac"><b>3D detalė</b><span>~25 min · <em>+80 XP</em></span><span class="kom">BOX · CYLINDER · UNION · SUBTRACT</span></div></div>
       </div>
     </div>
   </section>
 
-  <section class="kaip-fonas">
-    <div class="plotis sekcija">
+  <section>
+    <div class="plotis">
       <div class="antraste">
-        <span class="zyme">04 · KAIP TAI VEIKIA</span>
-        <h2>Ne vaizdo įrašas. Ne vadovėlis.</h2>
+        <div class="kaire"><span class="nr-zyme">5</span><h2>Ne vaizdo įrašas.<br>Ne vadovėlis.</h2></div>
       </div>
       <div class="kaip">
-        <div><span>A ──▶</span><b>Braižai AutoCAD'e</b><p>Savo tikrame AutoCAD, savo tempu. Tinka nemokama studento licencija.</p></div>
-        <div><span>B ──▶</span><b>Brėžly skaito brėžinį</b><p>Mato linijas, apskritimus, sluoksnius ir matmenis – ir pastebi, kai žingsnis atliktas.</p></div>
-        <div><span>C ✓</span><b>Pasako, kas ne taip</b><p>Kodėl taip daroma, kur klaida ir ką taisyti. Už kiekvieną žingsnį – XP, lygiai ir ženkleliai.</p></div>
+        <div><svg class="fig" viewBox="0 0 56 56" aria-hidden="true"><rect width="56" height="56" fill="#1f4fd1"/></svg><b>Braižai AutoCAD'e</b><p>Savo tikrame AutoCAD, savo tempu. Tinka nemokama studento licencija.</p></div>
+        <div><svg class="fig" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="28" fill="#e2362b"/></svg><b>Brėžly skaito brėžinį</b><p>Mato linijas, apskritimus, sluoksnius ir matmenis – ir pastebi, kai žingsnis atliktas.</p></div>
+        <div><svg class="fig" viewBox="0 0 56 56" aria-hidden="true"><path d="M0 56 L28 0 L56 56 Z" fill="#ffc400"/></svg><b>Pasako, kas ne taip</b><p>Kodėl taip daroma, kur klaida ir ką taisyti. Už žingsnius – XP, lygiai ir ženkleliai.</p></div>
       </div>
     </div>
   </section>
 
   <section id="reikia">
     <div class="plotis reikia">
-      <div><span class="etik">Sistema</span><b>Windows 10 / 11</b><span>64 bitų</span></div>
-      <div><span class="etik">AutoCAD</span><b>Pilna versija</b><span>ne LT; tinka studento licencija</span></div>
-      <div><span class="etik">Vieta</span><b>~40 MB</b><span>progresas – Dokumentai\Brezly</span></div>
-      <div class="kaina"><span class="etik">Kaina</span><b>Nemokamai</b><span>be reklamų ir paskyrų</span></div>
+      <div><span class="zyme">Sistema</span><b>Windows 10 / 11</b><span>64 bitų</span></div>
+      <div><span class="zyme">AutoCAD</span><b>Pilna versija</b><span>ne LT; tinka studento licencija</span></div>
+      <div><span class="zyme">Be AutoCAD?</span><b>Programėlė</b><span>pamokos ir testai telefone ar naršyklėje</span></div>
+      <div><span class="zyme">Kaina</span><b>Nemokamai</b><span>be reklamų ir paskyrų</span></div>
     </div>
   </section>
 
-  <section id="registracija" class="tinklelis" style="border-bottom:0">
-    <div class="plotis registr">
-      <span class="zyme">DEMO · NETRUKUS</span>
-      <h2>Brėžly jau beveik paruoštas.</h2>
-      <p class="apras">Programą Windows'ui galėsi atsisiųsti nemokamai – be reklamų ir paskyrų. Kol kas išbandyk pirmąją pamoką čia pat.
-      <div class="cmd" style="text-align:left">
-        <div class="cmd-virsus">Komanda: <span>DEMO</span></div>
-        <div class="cmd-pastaba" style="padding:20px 18px;font-size:15px;color:var(--vidutinis)">Registracija į demo atsidarys netrukus. Sekite naujienas šiame puslapyje.</div>
+  <section id="atsisiusti">
+    <div class="plotis atsisiusti">
+      <div class="kaire">
+        <span class="zyme" style="color:#ffc400">Atsisiųsti · nemokamai</span>
+        <h2>Brėžly <span>1.4</span><br>Windows'ui</h2>
+        <p style="font-size:18px;max-width:520px">Viena diegimo programa. Po įdiegimo Brėžly pats pasiūlys atnaujinti, kai išeis nauja versija.</p>
+        <div class="veiksmai">
+          <a class="mygt geltonas" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg>
+            Brezly_Setup.exe
+          </a>
+          <a class="mygt baltas" href="programele/">Atidaryti programėlę</a>
+        </div>
+        <p class="failo-info" id="failoInfo">Versija 1.4 · <a href="https://github.com/vilkavaitkaitis-ui/Brezly/releases" style="color:#ffc400">visos versijos ir kiti failai</a></p>
+      </div>
+      <div class="diegimas">
+        <span class="zyme">Kaip įdiegti</span>
+        <ol>
+          <li><span>Atsisiųsk ir paleisk <b>Brezly_Setup.exe</b>.</span></li>
+          <li><span>Jei Windows parodys „Windows apsaugojo jūsų kompiuterį“ – spausk <b>Daugiau informacijos</b> → <b>Vis tiek paleisti</b>.</span></li>
+          <li><span>Atsidaryk AutoCAD, paleisk Brėžly ir pradėk nuo 1 pamokos.</span></li>
+        </ol>
       </div>
     </div>
   </section>
@@ -424,18 +455,19 @@ footer{background:var(--panele2)}
 
 <footer>
   <div class="plotis">
-    <div class="apacia">
-      <div><small>PAVADINIMAS</small><span class="vardas">BRĖŽLY</span></div>
-      <div><small>LAPAS</small><span>1 / 1</span></div>
-      <div><small>MASTELIS</small><span>1:1</span></div>
-      <div><small>ŠALTINIS</small><a href="https://github.com/vilkavaitkaitis-ui/Brezly">GitHub</a></div>
+    <div class="irasas">
+      <div><small>Pavadinimas</small><span>BRĖŽLY</span></div>
+      <div><small>Versija</small><span>1.4</span></div>
+      <div><small>Mastelis</small><span>1:1</span></div>
+      <div><small>Programėlė</small><a href="programele/">Atidaryti</a></div>
+      <div><small>Šaltinis</small><a href="https://github.com/vilkavaitkaitis-ui/Brezly">GitHub</a></div>
     </div>
     <p class="teises">Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</p>
   </div>
 </footer>
 
 <script>
-/* Mini pamoka - žingsniai iš pamokos.py (1 pamoka), įrašo irankiai/generuoti.py */
+/* Mini pamoka - žingsniai iš pamokos.json (1 pamoka), įrašo irankiai/generuoti.py */
 const PAMOKA = [{"pavadinimas": "Naujas brėžinys iš acadiso.dwt", "xp": 10, "kodel": "acadiso.dwt - metrinis šablonas: viskas milimetrais. acad.dwt - coliais, todėl brėžinyje matmenys būtų neteisingi."}, {"pavadinimas": "Vienetai: UNITS", "xp": 10, "kodel": "Vienetai nusako, ką reiškia skaičius 100. Mūsų brėžiniuose - 100 milimetrų, be nereikalingų skaitmenų po kablelio."}, {"pavadinimas": "Išsaugok kaip DWG", "xp": 15, "kodel": "DWG - pagrindinis AutoCAD formatas. Prasmingas failo vardas padeda rasti darbą po savaitės."}, {"pavadinimas": "Spausdink į PDF", "xp": 15, "kodel": "Dėstytojui darbą dažnai reikia atiduoti PDF. Spausdintuvas DWG To PDF sukuria failą vietoj popieriaus."}];
 (function () {
   const ol = document.getElementById("zingsniai"), visas = PAMOKA.reduce((s, z) => s + z.xp, 0);
@@ -447,7 +479,7 @@ const PAMOKA = [{"pavadinimas": "Naujas brėžinys iš acadiso.dwt", "xp": 10, "
     const li = document.createElement("li");
     li.className = "zingsnis";
     li.innerHTML = '<span class="nr"></span><div class="turinys"><div class="pav"><b></b><span></span></div><p></p>'
-      + '<button type="button" class="mygt mazas">Atlikau AutoCAD\'e – tikrink</button></div>';
+      + '<button type="button" class="mygt mazas">Atlikau – tikrinti →</button></div>';
     li.querySelector(".nr").textContent = i + 1;
     li.querySelector(".pav b").textContent = z.pavadinimas;
     li.querySelector(".pav span").textContent = "+" + z.xp + " XP";
@@ -464,19 +496,29 @@ const PAMOKA = [{"pavadinimas": "Naujas brėžinys iš acadiso.dwt", "xp": 10, "
       if (i < atlikta) xp += PAMOKA[i].xp;
     });
     document.getElementById("xp").textContent = xp;
-    document.getElementById("kiek").textContent = atlikta + " / " + PAMOKA.length;
     juosta.firstElementChild.style.width = (visas ? xp / visas * 100 : 0) + "%";
     juosta.setAttribute("aria-valuenow", xp);
     const pab = atlikta >= PAMOKA.length;
     konsole.classList.toggle("pabaiga", pab);
     zin.className = atlikta ? "ok" : "";
     zin.textContent = !atlikta ? "Laukiu, kol pradėsi pirmą žingsnį..."
-      : pab ? "✓ Visi " + PAMOKA.length + " žingsniai atlikti – iš viso +" + visas + " XP!"
-      : "✓ " + PAMOKA[atlikta - 1].pavadinimas + " – priimta. +" + PAMOKA[atlikta - 1].xp + " XP";
+      : pab ? "Visi " + PAMOKA.length + " žingsniai atlikti – iš viso +" + visas + " XP!"
+      : "Priimta: " + PAMOKA[atlikta - 1].pavadinimas + ". +" + PAMOKA[atlikta - 1].xp + " XP";
     if (fokusas) { const b = ol.querySelector(".dabar button"); (b || document.getElementById("isNaujo")).focus({ preventScroll: true }); }
   }
   document.getElementById("isNaujo").addEventListener("click", () => rodyti(0, true));
   rodyti(0, false);
+})();
+/* Failo dydis ir data - iš GitHub (jei nepavyksta, lieka tik versija) */
+(function () {
+  const el = document.getElementById("failoInfo");
+  if (!el || !window.fetch) return;
+  fetch("https://api.github.com/repos/vilkavaitkaitis-ui/Brezly/releases/latest").then(r => r.ok ? r.json() : null).then(j => {
+    if (!j) return;
+    const f = (j.assets || []).find(a => a.name === "Brezly_Setup.exe");
+    const d = (j.published_at || "").slice(0, 10);
+    if (f) el.insertAdjacentHTML("afterbegin", Math.round(f.size / 1048576) + " MB · " + (d ? "išleista " + d + " · " : ""));
+  }).catch(() => {});
 })();
 </script>
 </body>

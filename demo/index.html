@@ -7,12 +7,11 @@
 <meta name="description" content="Užsiregistruok į Brėžly demo versiją - pranešime, kai ji bus paruošta.">
 <meta name="theme-color" content="#10151c">
 <link rel="icon" href="../icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../sriftai/sriftai.css">
 <link rel="stylesheet" href="../stilius.css">
 <style>
 .hero{align-items:start}
-.forma{border:1px solid var(--linija);border-radius:6px;background:var(--panele);padding:24px;display:flex;flex-direction:column;gap:16px}
+.forma{border:3px solid var(--linija);border-radius:6px;background:var(--panele);padding:24px;display:flex;flex-direction:column;gap:16px}
 .forma h2{font:600 20px var(--sans);margin:0}
 .laukas{display:flex;flex-direction:column;gap:6px}
 .laukas label{font:600 12px var(--kond);letter-spacing:.1em;color:var(--blankus);text-transform:uppercase}
@@ -27,7 +26,7 @@
 .klaida{color:var(--taisyti);font-size:14px;min-height:0}
 .smulkiai{font-size:12.5px;color:var(--blankus)}
 .aciu{display:none;flex-direction:column;gap:12px;align-items:flex-start}
-.aciu .zyme{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--priimta);background:#0f2416;color:#7ee39a;border-radius:4px;padding:5px 12px;font:500 12.5px var(--mono);letter-spacing:.06em}
+.aciu .zyme{display:inline-flex;align-items:center;gap:8px;border:3px solid #111;background:var(--geltona);color:#111;border-radius:4px;padding:5px 12px;font:500 12.5px var(--mono);letter-spacing:.06em}
 .forma.issiusta .aciu{display:flex}
 .forma.issiusta form{display:none}
 .ruosiama{list-style:none;margin:22px 0 0;padding:0;border:1px solid var(--linija);border-radius:6px;background:var(--panele);overflow:hidden}
@@ -47,12 +46,12 @@
 
 <header class="virsus">
   <a class="zenklas" href="../">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f28c28" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1v22M1 12h22"/></svg>
+    <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#e2362b"/><rect x="14" y="14" width="14" height="14" fill="#ffc400"/><path d="M2 28 L14 28 L2 16 Z" fill="#1f4fd1"/></svg>
     BRĖŽLY
   </a>
   <span class="tarpas"></span>
   <nav>
-    <a href="../">Apie Brėžly</a>
+    <a href="../">Atsisiųsti</a>
     <a href="../programele/" class="neb">Programėlė</a>
   </nav>
 </header>
@@ -106,7 +105,8 @@
       <div class="aciu" role="status">
         <span class="zyme">✓ UŽREGISTRUOTA</span>
         <h2 id="aciuTekstas">Ačiū!</h2>
-        <p class="apras" style="font-size:15px">Kai demo bus paruošta, atsiųsime laišką su atsisiuntimo nuoroda. Iki greito!</p>
+        <p class="apras" style="font-size:15px">Kai demo bus paruošta, atsiųsime laišką. Kol lauki, gali naudoti dabartinę Brėžly versiją.</p>
+        <a class="mygt antr" href="../">Atsisiųsti Brėžly dabar</a>
       </div>
     </div>
   </div>
@@ -127,6 +127,7 @@
 <footer>
   <div class="plotis">
     <span>Brėžly - nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</span>
+    <a href="https://github.com/vilkavaitkaitis-ui/Brezly">Šaltinio kodas</a>
   </div>
 </footer>
 
