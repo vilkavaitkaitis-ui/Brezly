@@ -11,6 +11,9 @@ on:
     paths:
       - "app/**"
       - "svetaine/**"
+      - "brezly.js"
+      - "sriftai/**"
+      - "irankiai/personazai.js"
       - "pamokos.json"
       - "praktika/**"
       - "irankiai/generuoti.py"

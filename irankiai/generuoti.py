@@ -141,43 +141,57 @@ def programele(d, PROGRAMELE):
     return len(failai)
 
 
-SLUOKSNIU_SPALVOS = ["#f28c28", "#56c2e6", "#3fb950", "#e6eaf0", "#f47067", "#c3ccd8", "#e3b341"]
+def personazai():
+    """Personažų SVG iš brezly.js (per node irankiai/personazai.js). Be node - tušti (svetainė veikia ir be jų)."""
+    import subprocess
+    try:
+        r = subprocess.run(["node", os.path.join(SAKNIS, "irankiai", "personazai.js")], capture_output=True, text=True,
+                           encoding="utf-8", timeout=60, check=True)
+        return json.loads(r.stdout)
+    except (OSError, subprocess.SubprocessError, ValueError) as e:
+        print(f"ĮSPĖJIMAS: personažai nesugeneruoti ({e}) - reikia Node.js")
+        return {"personazai": [], "robis_dziaug": ""}
 
 
 def pagrindinio_zymes(d, pamokos, html):
-    """Pagrindinio puslapio sąrašai: pamokos kaip sluoksniai, ruošiamos pamokos, užduočių kortelės, mini pamoka."""
+    """Pagrindinio puslapio sąrašai: pamokų lentelė, ruošiamos pamokos, užduočių kortelės, personažai, mini pamoka."""
     e = html.escape
     sarasas = "\n".join(
-        f'        <div class="sl"><span class="sp"><i style="background:{SLUOKSNIU_SPALVOS[i % len(SLUOKSNIU_SPALVOS)]}"></i>{i + 1:02d}</span>'
-        f'<span class="pv">{e(p["pavadinimas"])}</span><span class="sk">{len(p["zingsniai"])}</span></div>'
+        f'        <div class="eil"><span class="nr">{i + 1}</span><span class="pv">{e(p["pavadinimas"])}</span>'
+        f'<span class="sk">{len(p["zingsniai"])}</span></div>'
         for i, p in enumerate(pamokos.PAMOKOS))
     ateityje = "\n".join(
-        f'        <div class="sl ateit"><span class="sp"><i></i></span><span class="pv">{e(a["pavadinimas"])}'
+        f'        <div class="eil ateit"><span class="nr">–</span><span class="pv">{e(a["pavadinimas"])}'
         f'<span>{e(a["aprasas"])}</span></span><span class="sk">netrukus</span></div>'
         for a in pamokos.ATEITYJE)
     uzd = sorted(d["uzduotys"], key=lambda u: u["nr"])
     korteles = "\n".join(
-        f'        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">{u["nr"]:02d}</span>'
+        f'        <div class="plytele"><div class="vaizdas"><span class="didelis" aria-hidden="true">{u["nr"]}</span>'
         f'<span class="fmt">{e(u["fmt"])} · {e(u["d"])}</span>'
         f'<img src="praktika/{e(u["id"])}.svg" alt="Užduoties „{e(u["pav"])}“ brėžinys" loading="lazy"></div>'
         f'<div class="apac"><b>{e(u["pav"])}</b><span>~{int(u["min"])} min · <em>+{int(u["xp"])} XP</em></span>'
         f'<span class="kom">{e(" · ".join(k.split(" ")[0] for k in u["kom"][:4]))}</span></div></div>'
         for u in uzd)
+    pers = personazai()
+    ps = pers["personazai"]
+    tamsus = ("#111111", "#1f4fd1", "#e2362b")
+    kortos = "\n".join(
+        f'        <div class="pers"><div class="vaizdas" style="background:{p["fonas"]}">'
+        f'<i style="color:{"#f7f5f0" if p["fonas"] in tamsus else "#111111"}">{i + 1:02d}</i>{p["svg"]}</div>'
+        f'<div class="apie"><b>{e(p["vardas"])}</b><span>{e(p["forma"])}</span><small>{e(p["txt"])}</small></div></div>'
+        for i, p in enumerate(ps))
     pirma = pamokos.PAMOKOS[0]
     zingsniai = [{"pavadinimas": z["pavadinimas"], "xp": z["xp"], "kodel": z.get("kodel", "")} for z in pirma["zingsniai"]]
     return {"{{PAMOKU_SARASAS}}": sarasas, "{{ATEITYJE_SARASAS}}": ateityje, "{{UZDUOCIU_KORTELES}}": korteles,
+            "{{PERSONAZAI}}": kortos, "{{PERS_SK}}": len(ps) or "–",
+            "{{ROBIS}}": pers["robis_dziaug"], "{{ROBIO_VARDAS}}": e(ps[0]["vardas"]) if ps else "Brėžly",
             "{{PIRMA_PAV}}": e(pirma["pavadinimas"]), "{{UZD1_XP}}": int(uzd[0]["xp"]),
             "{{PIRMA_PAMOKA}}": json.dumps(zingsniai, ensure_ascii=False).replace("</", "<\\/")}
 
 
-# praktikos brėžinio miniatiūra svetainei: tamsios spalvos, apkarpyta iki detalės (be rėmelio, užduoties teksto ir kampinio įrašo)
-_TAMSIOS = {'stroke="#111111"': 'stroke="#d5dce6"', 'fill="#111111"': 'fill="#d5dce6"',
-            'stroke="#0f766e"': 'stroke="#56c2e6"', 'fill="#0f766e"': 'fill="#56c2e6"',
-            'stroke="#d11a1a"': 'stroke="#f47067"', 'stroke="#1d4ed8"': 'stroke="#7aa2f7"', 'stroke="#444444"': 'stroke="#93a0b2"',
-            'fill="#ffffff"': 'fill="#0a0e14"', 'fill="#334155"': 'fill="#0a0e14"',
-            'fill="#eef2f7"': 'fill="#3a4558"', 'fill="#eef3f9"': 'fill="#3a4558"', 'fill="#dce3ec"': 'fill="#2e3848"',
-            'fill="#dbe4ef"': 'fill="#2e3848"', 'fill="#c9d3e0"': 'fill="#252e3c"', 'fill="#c3cfde"': 'fill="#252e3c"',
-            'fill="#b9c6d7"': 'fill="#1e2632"', 'fill="#a7b6ca"': 'fill="#1e2632"'}
+# praktikos brėžinio miniatiūra svetainei: Bauhaus spalvos, apkarpyta iki detalės (be rėmelio, užduoties teksto ir kampinio įrašo)
+_SPALVOS = {'stroke="#0f766e"': 'stroke="#1f4fd1"', 'fill="#0f766e"': 'fill="#1f4fd1"',      # matmenys - mėlyna
+            'stroke="#d11a1a"': 'stroke="#e2362b"', 'stroke="#1d4ed8"': 'stroke="#1f4fd1"'}    # ašys - raudona
 
 
 def _taskai(el):
@@ -214,7 +228,7 @@ def praktikos_miniatiura(saltinis, tikslas):
         if t and all(21 < x < plotis - 6 and 21 < y < 250 for x, y in t):     # tik brėžinio laukas
             xs += [x for x, _ in t]
             ys += [y for _, y in t]
-    for k, v in _TAMSIOS.items():
+    for k, v in _SPALVOS.items():
         s = s.replace(k, v)
     if xs:
         x0, y0 = max(min(xs) - 10, 20.8), max(min(ys) - 10, 21)          # rėmelis (x=20, y=5) ir užduoties tekstas lieka už kadro
@@ -236,6 +250,8 @@ def svetaine(d):
     shutil.copytree(SVETAINES_SALTINIS, kur)
     for ikona in ("icon-192.png", "icon-512.png"):
         shutil.copy2(os.path.join(APP, ikona), kur)
+    shutil.copytree(os.path.join(SAKNIS, "sriftai"), os.path.join(kur, "sriftai"),       # šriftai be Google Fonts
+                    ignore=shutil.ignore_patterns("*.txt", "IBMPlexSans*", "IBMPlexSansCondensed*"))
     with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
         forma = json.load(f)
     with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
