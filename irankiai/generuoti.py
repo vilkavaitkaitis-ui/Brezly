@@ -239,7 +239,7 @@ def praktikos_miniatiura(saltinis, tikslas):
 
 
 
-# ------------------------------------------------------------------ svetainė (pagrindinis puslapis + demo/)
+# ------------------------------------------------------------------ svetainė (pagrindinis puslapis + testavimas/)
 def svetaine(d):
     """svetaine/ su skaičiais ir sąrašais iš pamokų bei užduočių; programėlė - programele/ (jei įjungta)."""
     import html
@@ -252,7 +252,7 @@ def svetaine(d):
         shutil.copy2(os.path.join(APP, ikona), kur)
     shutil.copytree(os.path.join(SAKNIS, "sriftai"), os.path.join(kur, "sriftai"),       # šriftai be Google Fonts
                     ignore=shutil.ignore_patterns("*.txt", "IBMPlexSans*", "IBMPlexSansCondensed*"))
-    with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
+    with open(os.path.join(SVETAINES_SALTINIS, "testavimas", "forma.json"), encoding="utf-8") as f:
         forma = json.load(f)
     with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
         nust = json.load(f)
@@ -286,7 +286,7 @@ def svetaine(d):
     os.makedirs(os.path.join(kur, "praktika"), exist_ok=True)
     for u in d["uzduotys"]:
         praktikos_miniatiura(os.path.join(SAKNIS, "praktika", u["id"] + ".svg"), os.path.join(kur, "praktika", u["id"] + ".svg"))
-    os.remove(os.path.join(kur, "demo", "forma.json"))
+    os.remove(os.path.join(kur, "testavimas", "forma.json"))
     os.remove(os.path.join(kur, "nustatymai.json"))
     open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
     if not nust["programele"]:
