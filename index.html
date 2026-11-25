@@ -195,6 +195,48 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .greita input:focus{outline:none;background:#fffbe6}
 .greita small{font-size:13.5px;color:var(--pilka)}
 
+/* iššūkis */
+.issukis{display:flex;flex-wrap:wrap}
+.issukis-tekstas{flex:1 1 380px;min-width:0;padding:56px 40px;display:flex;flex-direction:column;gap:20px;border-right:var(--l)}
+.issukis-tekstas h2 span{background:var(--raudona);color:var(--popierius);padding:0 .08em}
+.issukis-tekstas p{font-size:17px;max-width:440px}
+.rezultatas{border:var(--l);background:var(--balta);padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+.rezultatas b{font:900 64px/1 var(--font);letter-spacing:-.04em}
+.rezultatas #verdiktas{font:700 16px var(--font)}
+.drobes-remas{flex:1.4 1 520px;min-width:0;position:relative;background:var(--balta);
+  background-image:linear-gradient(#eeeae0 1px,transparent 1px),linear-gradient(90deg,#eeeae0 1px,transparent 1px);background-size:32px 32px;min-height:360px}
+#drobe{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.antspaudas{position:absolute;right:24px;top:24px;padding:8px 16px;border:4px solid var(--juoda);font:900 22px var(--font);letter-spacing:.04em;transform:rotate(-6deg);background:var(--geltona)}
+.antspaudas.blogai{background:var(--popierius)}
+.pirmas-zingsnis{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;font:700 15px var(--mono);background:var(--juoda);color:var(--geltona);padding:8px 14px}
+
+/* atsiliepimai */
+.atsil{display:flex;flex-wrap:wrap}
+.atsil-kaire{flex:1 1 420px;padding:56px 40px;display:flex;flex-direction:column;gap:20px;border-right:var(--l);background:var(--melyna);color:#fff}
+.atsil-kaire .nr-zyme{background:var(--geltona);color:var(--juoda)}
+.atsil-kaire p{font-size:17px;max-width:460px}
+.atsil-forma{flex:1.2 1 460px;padding:44px 40px;display:flex;flex-direction:column;gap:18px}
+.atsil-forma label{display:flex;flex-direction:column;gap:6px;font:700 13px var(--mono);text-transform:uppercase}
+.atsil-forma label i{font-style:normal;font-weight:400;text-transform:none;color:var(--pilka)}
+.atsil-forma textarea,.atsil-forma input:not([type=radio]){font:17px var(--font);padding:12px 14px;min-height:52px;border:var(--l);background:var(--balta);color:var(--juoda);resize:vertical}
+.atsil-forma textarea:focus,.atsil-forma input:focus{outline:none;background:#fffbe6}
+.dvieju{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ivertinimas{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.figuros{display:flex;gap:10px}
+.figuros label{cursor:pointer}
+.figuros input{position:absolute;opacity:0;width:1px;height:1px}
+.figuros span{width:52px;height:52px;border:var(--l);display:flex;align-items:center;justify-content:center;font:900 20px var(--font);background:var(--balta);transition:transform .1s}
+.figuros label:nth-child(1) span,.figuros label:nth-child(4) span{border-radius:50%}
+.figuros label:nth-child(3) span{clip-path:polygon(50% 0,100% 100%,0 100%);border:0;background:var(--juoda);color:var(--popierius);padding-top:14px}
+.figuros input:checked+span{background:var(--geltona);transform:translateY(-4px)}
+.figuros label:nth-child(3) input:checked+span{background:var(--raudona)}
+.figuros input:focus-visible+span{outline:3px solid var(--melyna);outline-offset:3px}
+.paslept{position:absolute;left:-9999px}
+.atsil-klaida{min-height:1.2em;color:var(--raudona);font-weight:700}
+.atsil-aciu{border:var(--l);background:var(--geltona);padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.atsil-aciu b{font:900 28px var(--font)}
+.atsil-forma [hidden]{display:none!important}
+
 /* apačia */
 footer{background:var(--popierius)}
 .irasas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:var(--l)}
@@ -230,6 +272,10 @@ footer{background:var(--popierius)}
   .eil.galva>*{padding:10px 8px}
   .eil>*{padding:12px 10px}
   .atsisiusti .kaire,.diegimas{padding:40px 20px}
+  .issukis-tekstas,.atsil-kaire{border-right:0;border-bottom:var(--l);padding:40px 20px}
+  .atsil-forma{padding:32px 20px}
+  .dvieju{grid-template-columns:1fr}
+  .drobes-remas{min-height:360px;order:-1;border-bottom:var(--l)}
   .testuot .kaire{border-right:0;border-bottom:var(--l);padding:40px 20px}
   .greita{padding:32px 20px}
   .diegimas{border-left:0;border-top:var(--l)}
@@ -251,17 +297,19 @@ footer{background:var(--popierius)}
     BRĖŽLY
   </a>
   <nav aria-label="Pagrindinis meniu">
+    <a href="#issukis">Iššūkis</a>
     <a href="#pamoka">Išbandyk</a>
     <a href="#pamokos">Pamokos</a>
     <a href="#praktika">Praktika</a>
     <a href="#personazai">Personažai</a>
     <a href="#testuotojai">Testuotojams</a>
+    <a href="#atsiliepimai">Atsiliepimai</a>
     <a href="programele/">Programėlė</a>
   </nav>
   <span class="tarpas"></span>
   <div class="desine">
     <span class="mono">VERSIJA 1.4</span>
-    <a class="mygt mazas" href="#atsisiusti">Atsisiųsti</a>
+    <a class="mygt mazas" href="#testuotojai">Tapk testuotoju</a>
   </div>
 </header>
 
@@ -274,13 +322,10 @@ footer{background:var(--popierius)}
         <h1>Braižai tu.<br><span>Brėžly tikrina.</span></h1>
         <p class="hero-apras">Brėžly stovi šalia tavo AutoCAD ir mato tą patį brėžinį. Veda žingsnis po žingsnio, pats pastebi, kai padarei teisingai, ir paaiškina, kas ne taip.</p>
         <div class="veiksmai">
-          <a class="mygt" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg>
-            Atsisiųsti Windows'ui
-          </a>
-          <a class="mygt baltas" href="#pamoka">Išbandyti čia pat</a>
+          <a class="mygt" href="#testuotojai">Tapk testuotoju →</a>
+          <a class="mygt baltas" href="#issukis">Nubrėžk apskritimą</a>
         </div>
-        <p class="failo-info">Windows 10/11 · pilnas AutoCAD · versija 1.4 · be reklamų ir paskyrų</p>
+        <p class="failo-info">Windows 10/11 · pilnas AutoCAD · testuojama versija 1.4 · nemokamai</p>
       </div>
 
       <div class="lapas">
@@ -321,6 +366,31 @@ footer{background:var(--popierius)}
       <div><span class="zyme">Praktikos užduotys</span><b>8</b></div>
       <div><span class="zyme">Personažai</span><b>8</b></div>
       <div><span class="zyme">Kaina</span><b>0 €</b></div>
+    </div>
+  </section>
+
+  <section id="issukis">
+    <div class="plotis issukis">
+      <div class="issukis-tekstas">
+        <span class="nr-zyme" aria-hidden="true">◯</span>
+        <h2>Nubrėžk<br>apskritimą.<br><span>Ranka.</span></h2>
+        <p>Brėžly patikrins jį kaip AutoCAD: suras centrą, spindulį ir pasakys, kiek tavo apskritimas tikslus. Taip pat jis tikrina ir tavo tikrus brėžinius.</p>
+        <div class="rezultatas" id="rezultatas" aria-live="polite">
+          <span class="zyme">Tikslumas</span>
+          <b id="taskai">–</b>
+          <span id="verdiktas">Brėžk pele arba pirštu ant lapo.</span>
+          <span class="zyme" id="geriausias"></span>
+        </div>
+        <div class="veiksmai">
+          <button type="button" class="mygt baltas mazas" id="isValyti">Bandyti dar kartą</button>
+          <a class="mygt mazas" href="#testuotojai">Noriu daugiau →</a>
+        </div>
+      </div>
+      <div class="drobes-remas">
+        <canvas id="drobe" width="900" height="640" aria-label="Brėžimo lapas: nubrėžk apskritimą pele arba pirštu"></canvas>
+        <span class="antspaudas" id="antspaudas" hidden></span>
+        <span class="pirmas-zingsnis" id="uzuomina">Spausk ir vesk ratu ↻</span>
+      </div>
     </div>
   </section>
 
@@ -463,31 +533,37 @@ footer{background:var(--popierius)}
     </div>
   </section>
 
-  <section id="atsisiusti">
-    <div class="plotis atsisiusti">
-      <div class="kaire">
-        <span class="zyme" style="color:#ffc400">Atsisiųsti · nemokamai</span>
-        <h2>Brėžly <span>1.4</span><br>Windows'ui</h2>
-        <p style="font-size:18px;max-width:520px">Viena diegimo programa. Po įdiegimo Brėžly pats pasiūlys atnaujinti, kai išeis nauja versija.</p>
-        <div class="veiksmai">
-          <a class="mygt geltonas" href="https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg>
-            Brezly_Setup.exe
-          </a>
-          <a class="mygt baltas" href="programele/">Atidaryti programėlę</a>
+  <section id="atsiliepimai">
+    <div class="plotis atsil">
+      <div class="atsil-kaire">
+        <span class="nr-zyme" aria-hidden="true">7</span>
+        <h2>Palik<br>atsiliepimą</h2>
+        <p>Išbandei iššūkį ar pamoką? Pasakyk, kas patiko, o kas ne. Kiekvieną atsiliepimą skaito Brėžly kūrėjas ir pagal juos tobulina programą.</p>
+      </div>
+      <form class="atsil-forma" id="atsilForma" novalidate>
+        <fieldset class="ivertinimas">
+          <legend class="zyme">Įvertinimas</legend>
+          <div class="figuros">
+            <label><input type="radio" name="ivert" value="1"><span>1</span></label>
+            <label><input type="radio" name="ivert" value="2"><span>2</span></label>
+            <label><input type="radio" name="ivert" value="3"><span>3</span></label>
+            <label><input type="radio" name="ivert" value="4"><span>4</span></label>
+            <label><input type="radio" name="ivert" value="5"><span>5</span></label>
+          </div>
+        </fieldset>
+        <label>Atsiliepimas<textarea id="atsilTekstas" maxlength="1500" rows="4" placeholder="Kas patiko? Ko trūksta?"></textarea></label>
+        <div class="dvieju">
+          <label>Vardas <i>(nebūtina)</i><input id="atsilVardas" maxlength="60" autocomplete="given-name"></label>
+          <label>El. paštas <i>(jei nori atsakymo)</i><input id="atsilPastas" type="email" maxlength="120" autocomplete="email"></label>
         </div>
-        <p class="failo-info" id="failoInfo">Versija 1.4 · <a href="https://github.com/vilkavaitkaitis-ui/Brezly/releases" style="color:#ffc400">visos versijos ir kiti failai</a></p>
-      </div>
-      <div class="diegimas">
-        <span class="zyme">Kaip įdiegti</span>
-        <ol>
-          <li><span>Atsisiųsk ir paleisk <b>Brezly_Setup.exe</b>.</span></li>
-          <li><span>Jei Windows parodys „Windows apsaugojo jūsų kompiuterį“ – spausk <b>Daugiau informacijos</b> → <b>Vis tiek paleisti</b>.</span></li>
-          <li><span>Atsidaryk AutoCAD, paleisk Brėžly ir pradėk nuo 1 pamokos.</span></li>
-        </ol>
-      </div>
+        <input type="text" id="atsilGudrus" tabindex="-1" autocomplete="off" aria-hidden="true" class="paslept">
+        <button type="submit" class="mygt" id="atsilSiusti">Siųsti atsiliepimą</button>
+        <p class="atsil-klaida" id="atsilKlaida" role="alert"></p>
+        <div class="atsil-aciu" id="atsilAciu" hidden><b>Ačiū!</b><span>Atsiliepimas gautas. Jei palikai el. paštą – atsakysime.</span></div>
+      </form>
     </div>
   </section>
+
 </main>
 
 <footer>
@@ -545,6 +621,88 @@ const PAMOKA = [{"pavadinimas": "Naujas brėžinys iš acadiso.dwt", "xp": 10, "
   }
   document.getElementById("isNaujo").addEventListener("click", () => rodyti(0, true));
   rodyti(0, false);
+})();
+/* ===== Iššūkis: nubrėžk apskritimą ===== */
+(function () {
+  const cv = document.getElementById("drobe"); if (!cv) return;
+  const cx = cv.getContext("2d"), uz = document.getElementById("uzuomina"), st = document.getElementById("antspaudas");
+  const taskai = document.getElementById("taskai"), verd = document.getElementById("verdiktas"), geriausias = document.getElementById("geriausias");
+  let pt = [], piesia = false, best = 0;
+  try { best = +localStorage.getItem("brezly_apskritimas") || 0; } catch (e) {}
+  if (best) geriausias.textContent = "Tavo geriausias: " + best + "%";
+  function dydis() { const r = cv.getBoundingClientRect(), k = window.devicePixelRatio || 1;
+    cv.width = Math.round(r.width * k); cv.height = Math.round(r.height * k); cx.setTransform(k, 0, 0, k, 0, 0); perpiesti(); }
+  function tsk(e) { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function linija(t, plotis, sp) { if (t.length < 2) return; cx.beginPath(); cx.moveTo(t[0][0], t[0][1]);
+    for (const p of t) cx.lineTo(p[0], p[1]); cx.lineWidth = plotis; cx.strokeStyle = sp; cx.lineCap = cx.lineJoin = "round"; cx.stroke(); }
+  let ivert = null;
+  function perpiesti() { const r = cv.getBoundingClientRect(); cx.clearRect(0, 0, r.width, r.height);
+    if (ivert) { const { x, y, R } = ivert;
+      cx.setLineDash([16, 5, 3, 5]); cx.strokeStyle = "#e2362b"; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.moveTo(x - R - 24, y); cx.lineTo(x + R + 24, y); cx.moveTo(x, y - R - 24); cx.lineTo(x, y + R + 24); cx.stroke();
+      cx.setLineDash([8, 6]); cx.strokeStyle = "#1f4fd1"; cx.lineWidth = 2.5; cx.beginPath(); cx.arc(x, y, R, 0, Math.PI * 2); cx.stroke(); cx.setLineDash([]);
+      const a = -Math.PI / 4, ex = x + R * Math.cos(a), ey = y + R * Math.sin(a);
+      cx.strokeStyle = "#1f4fd1"; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(x, y); cx.lineTo(ex, ey); cx.lineTo(ex + 40, ey); cx.stroke();
+      cx.fillStyle = "#1f4fd1"; cx.font = "700 14px 'Space Mono', monospace"; cx.fillText("R" + Math.round(R / 4), ex + 4, ey - 6); }
+    linija(pt, 4, "#111111"); }
+  function ivertinti() {
+    if (pt.length < 15) { verd.textContent = "Per trumpa linija – vesk visą ratą."; return; }
+    let x = 0, y = 0; for (const p of pt) { x += p[0]; y += p[1]; } x /= pt.length; y /= pt.length;
+    const rs = pt.map(p => Math.hypot(p[0] - x, p[1] - y)), R = rs.reduce((a, b) => a + b) / rs.length;
+    const sd = Math.sqrt(rs.reduce((a, b) => a + (b - R) ** 2, 0) / rs.length) / R;
+    const tarpas = Math.hypot(pt[0][0] - pt[pt.length - 1][0], pt[0][1] - pt[pt.length - 1][1]) / R;
+    const sektoriai = new Set(pt.map(p => Math.floor((Math.atan2(p[1] - y, p[0] - x) + Math.PI) / (Math.PI / 6)) % 12)).size;
+    let t = 100 - sd * 260 - Math.max(0, tarpas - 0.2) * 35 - (12 - sektoriai) * 7;
+    if (R < 30) t -= 25;
+    t = Math.max(0, Math.min(100, Math.round(t)));
+    ivert = { x, y, R }; perpiesti();
+    taskai.textContent = t + "%";
+    const zin = t >= 92 ? ["PRIIMTA", "Puiku – beveik kaip CIRCLE komanda!"] : t >= 80 ? ["BEVEIK", "Gerai! Šiek tiek ovalus – bandyk dar."]
+      : sektoriai < 10 ? ["NEUŽDARYTA", "Apskritimas turi užsidaryti – vesk visą ratą."] : ["TAISYTI", "Per daug kampuotas. AutoCAD'e tam yra komanda CIRCLE."];
+    st.textContent = zin[0]; st.className = "antspaudas" + (t >= 80 ? "" : " blogai"); st.hidden = false;
+    verd.textContent = zin[1];
+    if (t > best) { best = t; try { localStorage.setItem("brezly_apskritimas", t); } catch (e) {} geriausias.textContent = "Tavo geriausias: " + best + "%"; }
+  }
+  cv.addEventListener("pointerdown", e => { piesia = true; pt = [tsk(e)]; ivert = null; st.hidden = true; uz.hidden = true; cv.setPointerCapture(e.pointerId); perpiesti(); });
+  cv.addEventListener("pointermove", e => { if (!piesia) return; pt.push(tsk(e)); perpiesti(); });
+  const baigti = () => { if (!piesia) return; piesia = false; ivertinti(); };
+  cv.addEventListener("pointerup", baigti); cv.addEventListener("pointercancel", baigti);
+  document.getElementById("isValyti").addEventListener("click", () => { pt = []; ivert = null; st.hidden = true; uz.hidden = false;
+    taskai.textContent = "–"; verd.textContent = "Brėžk pele arba pirštu ant lapo."; perpiesti(); });
+  window.addEventListener("resize", dydis); dydis();
+})();
+
+/* ===== Atsiliepimai -> el. laiškas per FormSubmit ===== */
+const SIUSTI = "Vilkavaitkaitis@gmail.com";
+(function () {
+  const f = document.getElementById("atsilForma"); if (!f) return;
+  const kl = document.getElementById("atsilKlaida"), btn = document.getElementById("atsilSiusti");
+  f.addEventListener("submit", async e => {
+    e.preventDefault(); kl.textContent = "";
+    const ivert = (f.querySelector("input[name=ivert]:checked") || {}).value || "";
+    const tekstas = document.getElementById("atsilTekstas").value.trim();
+    const vardas = document.getElementById("atsilVardas").value.trim(), pastas = document.getElementById("atsilPastas").value.trim();
+    if (!ivert && !tekstas) { kl.textContent = "Pasirink įvertinimą arba parašyk kelis žodžius."; return; }
+    if (pastas && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(pastas)) { kl.textContent = "Patikrink el. pašto adresą."; return; }
+    btn.disabled = true; btn.textContent = "Siunčiama...";
+    try {
+      if (!document.getElementById("atsilGudrus").value) {
+        const duom = { "Įvertinimas": ivert ? ivert + " / 5" : "-", "Atsiliepimas": tekstas || "-", "Vardas": vardas || "-",
+                       "El. paštas": pastas || "-", _subject: "Brėžly atsiliepimas" + (ivert ? " (" + ivert + "/5)" : ""), _template: "table" };
+        if (pastas) duom._replyto = pastas;
+        const r = await fetch("https://formsubmit.co/ajax/" + SIUSTI, { method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(duom) });
+        let j = {}; try { j = await r.json(); } catch (x) {}
+        if (!r.ok || String(j.success) !== "true") throw new Error(/activat/i.test(String(j.message || ""))
+          ? "Atsiliepimai dar neįjungti – bandyk vėliau." : "Nepavyko išsiųsti – bandyk po minutės.");
+      }
+      f.querySelectorAll("fieldset,label,.dvieju,#atsilSiusti").forEach(x => x.hidden = true);
+      document.getElementById("atsilAciu").hidden = false;
+    } catch (err) {
+      kl.textContent = err && err.message && !/fetch|network/i.test(err.message) ? err.message : "Nepavyko išsiųsti – patikrink interneto ryšį.";
+      btn.disabled = false; btn.textContent = "Siųsti atsiliepimą";
+    }
+  });
 })();
 /* Failo dydis ir data - iš GitHub (jei nepavyksta, lieka tik versija) */
 (function () {
