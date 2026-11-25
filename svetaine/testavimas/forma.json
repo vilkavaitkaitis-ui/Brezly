@@ -1,0 +1,12 @@
+{
+ "_aprasas": "Testuotojų registracijos nustatymai. formsubmit - el. paštas, į kurį ateis kiekviena registracija (FormSubmit, nemokama). Pirmą kartą užsiregistravus FormSubmit atsiųs aktyvavimo laišką - paspausk „Activate Form“. Tame laiške yra ir atsitiktinis adresas (pvz. 4f8c...): įrašius jį čia vietoj el. pašto, tavo paštas nebus matomas puslapio kode. Kai formsubmit užpildytas, jis naudojamas ir GitHub Pages, ir Netlify svetainėje. Kai tuščias - GitHub Pages naudoja Google Formą (forma, laukai), Netlify - Netlify Forms.",
+ "formsubmit": "Vilkavaitkaitis@gmail.com",
+ "forma": "",
+ "laukai": {
+  "vardas": "entry.0",
+  "pastas": "entry.0",
+  "istaiga": "entry.0",
+  "kas": "entry.0",
+  "autocad": "entry.0"
+ }
+}
