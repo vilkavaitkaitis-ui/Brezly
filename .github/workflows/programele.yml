@@ -1,5 +1,7 @@
-# Brėžly programėlė (PWA) -> gh-pages šaka -> https://vilkavaitkaitis-ui.github.io/Brezly/
-# Paleidžiama pati, kai main šakoje pasikeičia programėlė, pamokos ar praktikos užduotys.
+# Brėžly svetainė ir programėlė -> gh-pages šaka -> https://vilkavaitkaitis-ui.github.io/Brezly/
+#   /            - svetainė (svetaine/)
+#   /programele/ - programėlė (app/)
+# Paleidžiama pati, kai main šakoje pasikeičia svetainė, programėlė, pamokos ar praktikos užduotys.
 # Rankiniu būdu: Actions -> „Brėžly programėlė“ -> Run workflow.
 name: Brėžly programėlė
 
@@ -8,6 +10,7 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "svetaine/**"
       - "pamokos.json"
       - "praktika/**"
       - "irankiai/generuoti.py"
@@ -39,7 +42,7 @@ jobs:
       - name: Testai
         run: python -m unittest discover -s testai -v
 
-      - name: Sukurti programėlę
+      - name: Sukurti svetainę ir programėlę
         run: python irankiai/generuoti.py
 
       - name: Paskelbti į gh-pages
@@ -47,5 +50,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: isvestis/programele
-          commit_message: "Programėlė iš ${{ github.sha }}"
+          publish_dir: isvestis/svetaine
+          commit_message: "Svetainė ir programėlė iš ${{ github.sha }}"
