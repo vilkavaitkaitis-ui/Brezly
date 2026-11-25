@@ -183,6 +183,18 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .diegimas li{counter-increment:d;display:flex;gap:14px;align-items:flex-start;font-size:16px}
 .diegimas li::before{content:counter(d);flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--juoda);color:var(--geltona);display:flex;align-items:center;justify-content:center;font:900 16px var(--font)}
 
+/* testuotojai */
+.testuot{display:flex;flex-wrap:wrap;background:var(--geltona)}
+.testuot .kaire{flex:1 1 520px;padding:56px 40px;display:flex;flex-direction:column;gap:20px;border-right:var(--l)}
+.nauda{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.nauda li{display:flex;gap:12px;align-items:center;font:700 17px var(--font)}
+.nauda li::before{content:"";width:14px;height:14px;background:var(--juoda);flex-shrink:0}
+.greita{flex:1 1 400px;padding:48px 40px;background:var(--popierius);display:flex;flex-direction:column;gap:16px;justify-content:center}
+.greita label{display:flex;flex-direction:column;gap:6px;font:700 13px var(--mono);text-transform:uppercase}
+.greita input{font:17px var(--font);min-height:52px;padding:0 14px;border:var(--l);background:var(--balta);color:var(--juoda)}
+.greita input:focus{outline:none;background:#fffbe6}
+.greita small{font-size:13.5px;color:var(--pilka)}
+
 /* apačia */
 footer{background:var(--popierius)}
 .irasas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:var(--l)}
@@ -218,6 +230,8 @@ footer{background:var(--popierius)}
   .eil.galva>*{padding:10px 8px}
   .eil>*{padding:12px 10px}
   .atsisiusti .kaire,.diegimas{padding:40px 20px}
+  .testuot .kaire{border-right:0;border-bottom:var(--l);padding:40px 20px}
+  .greita{padding:32px 20px}
   .diegimas{border-left:0;border-top:var(--l)}
   .teises{padding:18px 20px 28px}
 }
@@ -241,6 +255,7 @@ footer{background:var(--popierius)}
     <a href="#pamokos">Pamokos</a>
     <a href="#praktika">Praktika</a>
     <a href="#personazai">Personažai</a>
+    <a href="#testuotojai">Testuotojams</a>
     <a href="programele/">Programėlė</a>
   </nav>
   <span class="tarpas"></span>
@@ -423,6 +438,28 @@ footer{background:var(--popierius)}
       <div><span class="zyme">AutoCAD</span><b>Pilna versija</b><span>ne LT; tinka studento licencija</span></div>
       <div><span class="zyme">Be AutoCAD?</span><b>Programėlė</b><span>pamokos ir testai telefone ar naršyklėje</span></div>
       <div><span class="zyme">Kaina</span><b>Nemokamai</b><span>be reklamų ir paskyrų</span></div>
+    </div>
+  </section>
+
+  <section id="testuotojai">
+    <div class="plotis testuot">
+      <div class="kaire">
+        <span class="nr-zyme" style="background:#111;color:#ffc400">6</span>
+        <h2>Tapk<br>testuotoju</h2>
+        <p style="font-size:18px;max-width:480px">Išbandyk naujas Brėžly versijas anksčiau už kitus ir pasakyk, kas veikia, o kas ne. Tavo pastabos nulems, kas pateks į kitą versiją.</p>
+        <ul class="nauda">
+          <li>Naujos pamokos ir funkcijos – pirmiausia tau</li>
+          <li>Tiesioginis ryšys su kūrėju</li>
+          <li>Nemokamai, be įsipareigojimų</li>
+        </ul>
+      </div>
+      <form class="greita" action="testavimas/" method="get">
+        <span class="zyme">Komanda: REGISTRUOTIS</span>
+        <label>Vardas<input name="vardas" autocomplete="given-name" maxlength="60" required></label>
+        <label>El. paštas<input name="pastas" type="email" autocomplete="email" maxlength="120" required></label>
+        <button type="submit" class="mygt">Toliau →</button>
+        <small>Kitame žingsnyje – keli klausimai ir sutikimas. Duomenis naudosime tik susisiekti dėl testavimo.</small>
+      </form>
     </div>
   </section>
 

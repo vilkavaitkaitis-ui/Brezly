@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brėžly – registracija į testavimą</title>
+<meta name="description" content="Tapk Brėžly testuotoju – išbandyk naujas versijas anksčiau už kitus. Nemokamai.">
+<meta name="theme-color" content="#10151c">
+<link rel="icon" href="../icon-192.png">
+<link rel="stylesheet" href="../sriftai/sriftai.css">
+<link rel="stylesheet" href="../stilius.css">
+<style>
+.hero{align-items:start}
+.forma{border:3px solid var(--linija);border-radius:6px;background:var(--panele);padding:24px;display:flex;flex-direction:column;gap:16px}
+.forma h2{font:600 20px var(--sans);margin:0}
+.laukas{display:flex;flex-direction:column;gap:6px}
+.laukas label{font:600 12px var(--kond);letter-spacing:.1em;color:var(--blankus);text-transform:uppercase}
+.laukas label i{font-style:normal;color:var(--linija2);letter-spacing:0;text-transform:none;font:400 12px var(--sans)}
+.laukas input,.laukas select,.laukas textarea{font:15px var(--sans);color:var(--tekstas);background:var(--kodas);border:1px solid var(--linija);border-radius:5px;padding:10px 12px;min-height:44px;width:100%}
+.laukas input:focus,.laukas select:focus,.laukas textarea:focus{outline:none;border-color:var(--akcentas)}
+.laukas input:user-invalid{border-color:var(--taisyti)}
+.du-laukai{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sutikimas{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--vidutinis);cursor:pointer}
+.sutikimas input{margin-top:3px;accent-color:var(--akcentas);width:16px;height:16px;flex-shrink:0}
+.forma .mygt{width:100%;justify-content:center}
+.klaida{color:var(--taisyti);font-size:14px;min-height:0}
+.smulkiai{font-size:12.5px;color:var(--blankus)}
+.aciu{display:none;flex-direction:column;gap:12px;align-items:flex-start}
+.aciu .zyme{display:inline-flex;align-items:center;gap:8px;border:3px solid #111;background:var(--geltona);color:#111;border-radius:4px;padding:5px 12px;font:500 12.5px var(--mono);letter-spacing:.06em}
+.forma.issiusta .aciu{display:flex}
+.forma.issiusta form{display:none}
+.ruosiama{list-style:none;margin:22px 0 0;padding:0;border:1px solid var(--linija);border-radius:6px;background:var(--panele);overflow:hidden}
+.ruosiama li{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:14px 16px;border-top:1px solid var(--linija)}
+.ruosiama li:first-child{border-top:0}
+.ruosiama li::before{content:"";grid-row:span 2;width:8px;height:8px;margin-top:8px;border-radius:50%;border:1.5px solid var(--akcentas)}
+.ruosiama b{font-weight:600}
+.ruosiama span{font:12.5px var(--mono);color:var(--blankus)}
+.kaip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.kaip div{border-top:2px solid var(--linija2);padding-top:14px;display:flex;flex-direction:column;gap:4px}
+.kaip b{font-weight:600}
+.kaip p{color:var(--vidutinis);font-size:14.5px}
+@media (max-width:860px){.du-laukai,.kaip{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="virsus">
+  <a class="zenklas" href="../">
+    <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#e2362b"/><rect x="14" y="14" width="14" height="14" fill="#ffc400"/><path d="M2 28 L14 28 L2 16 Z" fill="#1f4fd1"/></svg>
+    BRĖŽLY
+  </a>
+  <span class="tarpas"></span>
+  <nav>
+    <a href="../">Atsisiųsti</a>
+    <a href="../programele/" class="neb">Programėlė</a>
+  </nav>
+</header>
+
+<main>
+  <div class="plotis hero">
+    <div>
+      <div class="kick">Testavimas · registracija</div>
+      <h1>Tapk Brėžly<br><em>testuotoju</em>.</h1>
+      <p class="apras">Išbandyk naujas Brėžly versijas anksčiau už kitus ir padėk jas ištobulinti. Užsiregistruok – atsiųsime laišką su nuoroda ir trumpa instrukcija. Nemokamai, be įsipareigojimų.</p>
+      <div class="kick pilka" style="margin-top:28px">Ką ruošiame</div>
+      <ul class="ruosiama" style="margin-top:10px" aria-label="Ką ruošiame">
+        <li><b>Detalės darbo brėžinys</b><span>matmenys iš 3D, tolerancijos, šiurkštumas</span></li>
+        <li><b>Sriegiai ir standartinės detalės</b><span>sriegio vaizdavimas, varžtai, veržlės</span></li>
+        <li><b>Surinkimo brėžinys</b><span>pozicijos, specifikacija (DATAEXTRACTION)</span></li>
+      </ul>
+    </div>
+
+    <div class="forma" id="forma">
+      <form id="registracija" name="demo" method="POST" novalidate>
+        <input type="hidden" name="form-name" value="demo">
+        <p hidden><label>Nepildyk šio lauko: <input name="gudrus" tabindex="-1" autocomplete="off"></label></p>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <h2>Registracija į testavimą</h2>
+          <div class="du-laukai">
+            <div class="laukas"><label for="vardas">Vardas</label><input id="vardas" name="vardas" autocomplete="given-name" required maxlength="60"></div>
+            <div class="laukas"><label for="pastas">El. paštas</label><input id="pastas" name="pastas" type="email" autocomplete="email" required maxlength="120"></div>
+          </div>
+          <div class="laukas"><label for="istaiga">Mokymo įstaiga <i>(nebūtina)</i></label><input id="istaiga" name="istaiga" maxlength="120" placeholder="pvz. Vilniaus kolegija" list="istaigos"></div>
+          <datalist id="istaigos">
+            <option value="Vilniaus kolegija"><option value="Kauno kolegija"><option value="VILNIUS TECH"><option value="Kauno technologijos universitetas">
+            <option value="Klaipėdos valstybinė kolegija"><option value="Šiaulių valstybinė kolegija"><option value="Vilniaus universitetas"><option value="Mokykla / gimnazija">
+          </datalist>
+          <div class="du-laukai">
+            <div class="laukas"><label for="kas">Aš esu</label>
+              <select id="kas" name="kas">
+                <option>Studentas</option><option>Moksleivis</option><option>Dėstytojas / mokytojas</option><option>Inžinierius</option><option>Kita</option>
+              </select></div>
+            <div class="laukas"><label for="autocad">AutoCAD</label>
+              <select id="autocad" name="autocad">
+                <option>Pilnas (studento)</option><option>Pilnas (darbo)</option><option>AutoCAD LT</option><option>Dar neturiu</option><option>Nežinau</option>
+              </select></div>
+          </div>
+          <div class="laukas"><label for="komentaras">Ką norėtum išbandyti? <i>(nebūtina)</i></label><textarea id="komentaras" name="komentaras" maxlength="600" rows="3" placeholder="pvz. 3D pamokas, praktikos užduotis, darbą su AutoCAD 2025"></textarea></div>
+          <label class="sutikimas"><input type="checkbox" id="sutikimas" name="sutikimas" value="taip" required>
+            <span>Sutinku, kad mano vardas ir el. paštas būtų naudojami tik susisiekti dėl Brėžly testavimo. Bet kada galiu paprašyti juos ištrinti.</span></label>
+          <div class="klaida" id="klaida" role="alert"></div>
+          <button class="mygt" type="submit" id="siusti">Registruotis</button>
+          <p class="smulkiai">Jokių reklamų ir jokio duomenų perdavimo kitiems.</p>
+        </div>
+      </form>
+      <div class="aciu" role="status">
+        <span class="zyme">✓ UŽREGISTRUOTA</span>
+        <h2 id="aciuTekstas">Ačiū!</h2>
+        <p class="apras" style="font-size:15px">Netrukus atsiųsime laišką su testavimo instrukcija. Kol lauki – atsisiųsk dabartinę Brėžly versiją.</p>
+        <a class="mygt antr" href="../">Atsisiųsti Brėžly dabar</a>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="plotis">
+      <div class="kick pilka">Kaip tai vyks</div>
+      <h2>Trys žingsniai</h2>
+      <div class="kaip">
+        <div><b>1. Užsiregistruoji</b><p>Užtenka vardo ir el. pašto.</p></div>
+        <div><b>2. Gauni laišką</b><p>Su testinės versijos nuoroda ir trumpa instrukcija, ką išbandyti.</p></div>
+        <div><b>3. Išbandai ir pasakai</b><p>Tavo pastabos nulems, kas pateks į kitą Brėžly versiją.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="plotis">
+    <span>Brėžly - nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</span>
+    <a href="https://github.com/vilkavaitkaitis-ui/Brezly">Šaltinio kodas</a>
+  </div>
+</footer>
+
+<script>
+/* ===== Kur siunčiama registracija =====
+   BUDAS "formsubmit" - kiekviena registracija atkeliauja el. laišku per FormSubmit (nemokama, veikia bet kuriame hostinge).
+   SIUSTI - el. paštas arba FormSubmit duotas atsitiktinis adresas (forma.json -> "formsubmit").
+   BUDAS "netlify" - Netlify Forms (svetainė Netlify'e; registracijos - Netlify -> Forms -> demo).
+   BUDAS "google"  - Google Forma:
+   FORMA - formos ID iš nuorodos docs.google.com/forms/d/e/<ID>/viewform
+   LAUKAI - kiekvieno klausimo „entry.“ numeris (iš „Gauti iš anksto užpildytą nuorodą“).
+   Kol FORMA tuščia, registracija neveikia ir puslapis tai parašo. */
+const BUDAS = "formsubmit";
+const FORMA = "{{FORMA}}";
+const LAUKAI = {"vardas": "entry.0", "pastas": "entry.0", "istaiga": "entry.0", "kas": "entry.0", "autocad": "entry.0"};
+const SIUSTI = "Vilkavaitkaitis@gmail.com";
+
+(function () {
+  const f = document.getElementById("registracija"), kl = document.getElementById("klaida"), btn = document.getElementById("siusti");
+  const ijungta = BUDAS === "netlify" || (BUDAS === "formsubmit" ? SIUSTI && !SIUSTI.startsWith("{{")
+                                                                : FORMA && !FORMA.startsWith("{{"));
+  try {
+    const jau = localStorage.getItem("brezly_testavimas");
+    if (jau) { document.getElementById("aciuTekstas").textContent = "Tu jau sąraše, " + jau + "!"; document.getElementById("forma").classList.add("issiusta"); }
+  } catch (e) {}
+  if (!ijungta) { btn.disabled = true; btn.textContent = "Registracija atsidarys netrukus"; }
+  // atėjus iš pagrindinio puslapio formos (?vardas=..&pastas=..) - laukai jau užpildyti
+  const q = new URLSearchParams(location.search);
+  if (q.get("vardas")) document.getElementById("vardas").value = q.get("vardas").slice(0, 60);
+  if (q.get("pastas")) { document.getElementById("pastas").value = q.get("pastas").slice(0, 120); document.getElementById("istaiga").focus(); }
+
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    kl.textContent = "";
+    const v = id => document.getElementById(id).value.trim();
+    if (!v("vardas")) return klaida("Įrašyk vardą.", "vardas");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v("pastas"))) return klaida("Patikrink el. pašto adresą.", "pastas");
+    if (!document.getElementById("sutikimas").checked) return klaida("Pažymėk sutikimą - be jo negalėsime atsiųsti laiško.", "sutikimas");
+    btn.disabled = true; btn.textContent = "Siunčiama...";
+    try {
+      if (f.elements.gudrus.value) {
+        // robotas užpildė paslėptą lauką - apsimetam, kad pavyko, bet nieko nesiunčiam
+      } else if (BUDAS === "formsubmit") {
+        const r = await fetch("https://formsubmit.co/ajax/" + SIUSTI, {
+          method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            "Vardas": v("vardas"), "El. paštas": v("pastas"), "Mokymo įstaiga": v("istaiga") || "-",
+            "Aš esu": v("kas"), "AutoCAD": v("autocad"), "Ką nori išbandyti": v("komentaras") || "-", "Sutikimas": "taip",
+            _replyto: v("pastas"), _subject: "Brėžly testuotojas: " + v("vardas"), _template: "table"
+          })
+        });
+        let j = {};
+        try { j = await r.json(); } catch (e) {}
+        if (!r.ok || String(j.success) !== "true") {
+          const zin = String(j.message || "");
+          throw new Error(/activat/i.test(zin)
+            ? "Registracija dar neaktyvuota - svetainės savininkas turi patvirtinti FormSubmit laišką. Bandyk vėliau."
+            : "Nepavyko užregistruoti (" + (zin || "kodas " + r.status) + "). Bandyk po minutės.");
+        }
+      } else if (BUDAS === "netlify") {
+        const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                     body: new URLSearchParams(new FormData(f)).toString() });
+        if (!r.ok) throw new Error(r.status === 404 || r.status === 405
+          ? "Registracija dar neįjungta (Netlify: Forms → Enable form detection ir įkelti svetainę iš naujo). Kodas " + r.status
+          : "Serveris atsakė klaida " + r.status + ". Bandyk po minutės.");
+      } else {
+        const duom = new URLSearchParams();
+        for (const [laukas, entry] of Object.entries(LAUKAI)) duom.append(entry, v(laukas));
+        // Google Forms neatsako CORS - siunčiam „no-cors“: atsakymas nematomas, bet įrašas atsiranda lentelėje
+        await fetch("https://docs.google.com/forms/d/e/" + FORMA + "/formResponse", { method: "POST", mode: "no-cors", body: duom });
+      }
+      try { localStorage.setItem("brezly_testavimas", v("vardas")); } catch (e) {}
+      document.getElementById("aciuTekstas").textContent = "Ačiū, " + v("vardas") + "!";
+      document.getElementById("forma").classList.add("issiusta");
+    } catch (err) {
+      klaida(err && err.message && !/fetch|network/i.test(err.message) ? err.message
+             : "Nepavyko išsiųsti - patikrink interneto ryšį ir bandyk dar kartą.");
+      btn.disabled = false; btn.textContent = "Registruotis";
+    }
+  });
+  function klaida(t, id) { kl.textContent = t; if (id) document.getElementById(id).focus(); }
+})();
+</script>
+</body>
+</html>
