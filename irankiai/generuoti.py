@@ -2,10 +2,11 @@
 Brėžly: failai, kurie kuriami iš vieno šaltinio (pamokos.json ir praktika/uzduotys.json).
 
   python irankiai/generuoti.py              - atnaujina lisp/Brezly.lsp užduočių sąrašą
-                                              ir sukuria programėlę aplanke isvestis/programele
+                                              ir sukuria svetainę aplanke isvestis/svetaine
+                                              (svetaine/ -> /, programėlė app/ -> /programele/)
   python irankiai/generuoti.py --tikrinti   - tik patikrina, ar lisp/Brezly.lsp atnaujintas (GitHub Actions)
 
-Programėlę išbandyti: python -m http.server -d isvestis/programele 8000  ->  http://localhost:8000
+Išbandyti: python -m http.server -d isvestis/svetaine 8000  ->  http://localhost:8000 (programėlė - /programele/)
 """
 
 import hashlib
@@ -21,7 +22,8 @@ sys.path.insert(0, SAKNIS)
 UZDUOTYS = os.path.join(SAKNIS, "praktika", "uzduotys.json")
 LISP = os.path.join(SAKNIS, "lisp", "Brezly.lsp")
 APP = os.path.join(SAKNIS, "app")
-PROGRAMELE = os.path.join(SAKNIS, "isvestis", "programele")
+SVETAINES_SALTINIS = os.path.join(SAKNIS, "svetaine")
+SVETAINE = os.path.join(SAKNIS, "isvestis", "svetaine")          # -> gh-pages (https://vilkavaitkaitis-ui.github.io/Brezly/)
 
 NAUJIENOS = os.path.join(SAKNIS, "naujienos.json")
 LISP_PRADZIA = ";;; <uzduotys> - GENERUOJAMA is praktika/uzduotys.json (python irankiai/generuoti.py), ranka nekeisti"
@@ -98,7 +100,7 @@ def lisp_atnaujintas(d):
 
 
 # ------------------------------------------------------------------ programėlė (PWA)
-def programele(d):
+def programele(d, PROGRAMELE):
     import pamokos      # be pywin32 importuojasi (AutoCAD nereikia)
     if os.path.exists(PROGRAMELE):
         shutil.rmtree(PROGRAMELE)
@@ -139,6 +141,143 @@ def programele(d):
     return len(failai)
 
 
+SLUOKSNIU_SPALVOS = ["#f28c28", "#56c2e6", "#3fb950", "#e6eaf0", "#f47067", "#c3ccd8", "#e3b341"]
+
+
+def pagrindinio_zymes(d, pamokos, html):
+    """Pagrindinio puslapio sąrašai: pamokos kaip sluoksniai, ruošiamos pamokos, užduočių kortelės, mini pamoka."""
+    e = html.escape
+    sarasas = "\n".join(
+        f'        <div class="sl"><span class="sp"><i style="background:{SLUOKSNIU_SPALVOS[i % len(SLUOKSNIU_SPALVOS)]}"></i>{i + 1:02d}</span>'
+        f'<span class="pv">{e(p["pavadinimas"])}</span><span class="sk">{len(p["zingsniai"])}</span></div>'
+        for i, p in enumerate(pamokos.PAMOKOS))
+    ateityje = "\n".join(
+        f'        <div class="sl ateit"><span class="sp"><i></i></span><span class="pv">{e(a["pavadinimas"])}'
+        f'<span>{e(a["aprasas"])}</span></span><span class="sk">netrukus</span></div>'
+        for a in pamokos.ATEITYJE)
+    uzd = sorted(d["uzduotys"], key=lambda u: u["nr"])
+    korteles = "\n".join(
+        f'        <div class="plytele"><div class="vaizdas tinklelis"><span class="didelis" aria-hidden="true">{u["nr"]:02d}</span>'
+        f'<span class="fmt">{e(u["fmt"])} · {e(u["d"])}</span>'
+        f'<img src="praktika/{e(u["id"])}.svg" alt="Užduoties „{e(u["pav"])}“ brėžinys" loading="lazy"></div>'
+        f'<div class="apac"><b>{e(u["pav"])}</b><span>~{int(u["min"])} min · <em>+{int(u["xp"])} XP</em></span>'
+        f'<span class="kom">{e(" · ".join(k.split(" ")[0] for k in u["kom"][:4]))}</span></div></div>'
+        for u in uzd)
+    pirma = pamokos.PAMOKOS[0]
+    zingsniai = [{"pavadinimas": z["pavadinimas"], "xp": z["xp"], "kodel": z.get("kodel", "")} for z in pirma["zingsniai"]]
+    return {"{{PAMOKU_SARASAS}}": sarasas, "{{ATEITYJE_SARASAS}}": ateityje, "{{UZDUOCIU_KORTELES}}": korteles,
+            "{{PIRMA_PAV}}": e(pirma["pavadinimas"]), "{{UZD1_XP}}": int(uzd[0]["xp"]),
+            "{{PIRMA_PAMOKA}}": json.dumps(zingsniai, ensure_ascii=False).replace("</", "<\\/")}
+
+
+# praktikos brėžinio miniatiūra svetainei: tamsios spalvos, apkarpyta iki detalės (be rėmelio, užduoties teksto ir kampinio įrašo)
+_TAMSIOS = {'stroke="#111111"': 'stroke="#d5dce6"', 'fill="#111111"': 'fill="#d5dce6"',
+            'stroke="#0f766e"': 'stroke="#56c2e6"', 'fill="#0f766e"': 'fill="#56c2e6"',
+            'stroke="#d11a1a"': 'stroke="#f47067"', 'stroke="#1d4ed8"': 'stroke="#7aa2f7"', 'stroke="#444444"': 'stroke="#93a0b2"',
+            'fill="#ffffff"': 'fill="#0a0e14"', 'fill="#334155"': 'fill="#0a0e14"',
+            'fill="#eef2f7"': 'fill="#3a4558"', 'fill="#eef3f9"': 'fill="#3a4558"', 'fill="#dce3ec"': 'fill="#2e3848"',
+            'fill="#dbe4ef"': 'fill="#2e3848"', 'fill="#c9d3e0"': 'fill="#252e3c"', 'fill="#c3cfde"': 'fill="#252e3c"',
+            'fill="#b9c6d7"': 'fill="#1e2632"', 'fill="#a7b6ca"': 'fill="#1e2632"'}
+
+
+def _taskai(el):
+    """Apytiksliai: visi elemento koordinačių taškai (x, y)."""
+    a = dict(re.findall(r'(\w[\w-]*)="([^"]*)"', el))
+    f = lambda k: float(a[k])
+    try:
+        if el.startswith("<line"):
+            return [(f("x1"), f("y1")), (f("x2"), f("y2"))]
+        if el.startswith("<circle"):
+            return [(f("cx") - f("r"), f("cy") - f("r")), (f("cx") + f("r"), f("cy") + f("r"))]
+        if el.startswith("<ellipse"):
+            return [(f("cx") - f("rx"), f("cy") - f("ry")), (f("cx") + f("rx"), f("cy") + f("ry"))]
+        if el.startswith("<rect"):
+            x, y = float(a.get("x", 0)), float(a.get("y", 0))
+            return [(x, y), (x + f("width"), y + f("height"))]
+        if el.startswith("<text"):
+            return [(f("x"), f("y"))]
+        sk = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", a.get("points") or a.get("d") or "")]
+        return list(zip(sk[0::2], sk[1::2]))
+    except (KeyError, ValueError):
+        return []
+
+
+def praktikos_miniatiura(saltinis, tikslas):
+    with open(saltinis, encoding="utf-8") as f:
+        s = f.read()
+    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', s)
+    plotis = float(m.group(1))
+    s = re.sub(r'<rect width="[\d.]+" height="[\d.]+" fill="#ffffff"/>', "", s, count=1)    # popierius
+    xs, ys = [], []
+    for el in re.findall(r"<(?:line|circle|ellipse|rect|text|polygon|path)\b[^>]*>", s):
+        t = _taskai(el)
+        if t and all(21 < x < plotis - 6 and 21 < y < 250 for x, y in t):     # tik brėžinio laukas
+            xs += [x for x, _ in t]
+            ys += [y for _, y in t]
+    for k, v in _TAMSIOS.items():
+        s = s.replace(k, v)
+    if xs:
+        x0, y0 = max(min(xs) - 10, 20.8), max(min(ys) - 10, 21)          # rėmelis (x=20, y=5) ir užduoties tekstas lieka už kadro
+        x1, y1 = min(max(xs) + 12, plotis - 5.6), min(max(ys) + 8, 251)
+        s = re.sub(r'<svg [^>]*>', f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{x0:.1f} {y0:.1f} {x1 - x0:.1f} {y1 - y0:.1f}">', s, count=1)
+    with open(tikslas, "w", encoding="utf-8") as f:
+        f.write(s)
+
+
+
+# ------------------------------------------------------------------ svetainė (pagrindinis puslapis + demo/)
+def svetaine(d):
+    """svetaine/ su skaičiais ir sąrašais iš pamokų bei užduočių; programėlė - programele/ (jei įjungta)."""
+    import html
+    import pamokos      # be pywin32 importuojasi (AutoCAD nereikia)
+    kur = SVETAINE
+    if os.path.exists(kur):
+        shutil.rmtree(kur)
+    shutil.copytree(SVETAINES_SALTINIS, kur)
+    for ikona in ("icon-192.png", "icon-512.png"):
+        shutil.copy2(os.path.join(APP, ikona), kur)
+    with open(os.path.join(SVETAINES_SALTINIS, "demo", "forma.json"), encoding="utf-8") as f:
+        forma = json.load(f)
+    with open(os.path.join(SVETAINES_SALTINIS, "nustatymai.json"), encoding="utf-8") as f:
+        nust = json.load(f)
+    siusti = forma.get("formsubmit", "").strip()
+    budas = "formsubmit" if siusti else "google"
+    registracija = bool(siusti or forma.get("forma"))
+    zym = {"{{PAMOKOS}}": len(pamokos.PAMOKOS), "{{ZINGSNIAI}}": sum(len(p["zingsniai"]) for p in pamokos.PAMOKOS),
+           "{{UZDUOTYS}}": len(d["uzduotys"]), "{{VERSIJA}}": versija(),
+           "{{ATEITYJE}}": "\n".join(f'        <li><b>{html.escape(x["pavadinimas"])}</b><span>{html.escape(x["aprasas"])}</span></li>'
+                                     for x in pamokos.ATEITYJE),
+           **pagrindinio_zymes(d, pamokos, html),
+           "{{FORMA}}": forma["forma"] or "{{FORMA}}", "{{FORMSUBMIT}}": siusti or "{{FORMSUBMIT}}",
+           "{{LAUKAI}}": json.dumps(forma["laukai"]), "{{BUDAS}}": budas}
+    # <!--ZYME-->...<!--/ZYME--> blokai paliekami arba išmetami pagal nustatymus
+    blokai = {"ATIDARYTA": nust["atsisiuntimas"], "UZDARYTA": not nust["atsisiuntimas"], "PROGRAMELE": nust["programele"],
+              "REGISTRACIJA": registracija, "BE_REGISTRACIJOS": not registracija}
+    for sakn, _, vardai in os.walk(kur):
+        for v in vardai:
+            if v.endswith(".html"):
+                kelias = os.path.join(sakn, v)
+                with open(kelias, encoding="utf-8") as f:
+                    s = f.read()
+                for zyme, rodyti in blokai.items():
+                    s = re.sub(rf"<!--{zyme}-->\n?(.*?)<!--/{zyme}-->\n?", (lambda m: m.group(1)) if rodyti else "", s, flags=re.S)
+                for k, reiksme in zym.items():
+                    if reiksme != k:
+                        s = s.replace(k, str(reiksme))
+                s = s.replace(' data-netlify="true" netlify-honeypot="gudrus"', "")
+                with open(kelias, "w", encoding="utf-8") as f:
+                    f.write(s)
+    os.makedirs(os.path.join(kur, "praktika"), exist_ok=True)
+    for u in d["uzduotys"]:
+        praktikos_miniatiura(os.path.join(SAKNIS, "praktika", u["id"] + ".svg"), os.path.join(kur, "praktika", u["id"] + ".svg"))
+    os.remove(os.path.join(kur, "demo", "forma.json"))
+    os.remove(os.path.join(kur, "nustatymai.json"))
+    open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
+    if not nust["programele"]:
+        return 0
+    return programele(d, os.path.join(kur, "programele"))
+
+
 def main():
     d = uzduotys()
     naujas, pasikeite = lisp_atnaujintas(d)
@@ -152,8 +291,8 @@ def main():
         with open(LISP, "w", encoding="ascii", newline="") as f:
             f.write(naujas)
         print("Atnaujinta: lisp/Brezly.lsp")
-    n = programele(d)
-    print(f"Programėlė: {os.path.relpath(PROGRAMELE, SAKNIS)} ({n} failai)")
+    n = svetaine(d)
+    print(f"Svetainė: {os.path.relpath(SVETAINE, SAKNIS)} (programėlė programele/ - {n} failai)")
 
 
 if __name__ == "__main__":
