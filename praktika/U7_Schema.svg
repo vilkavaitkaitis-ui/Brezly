@@ -1,102 +1,102 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 210 297">
-<rect width="210" height="297" fill="#ffffff"/>
-<line x1="0.00" y1="297.00" x2="210.00" y2="297.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="210.00" y1="297.00" x2="210.00" y2="0.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="210.00" y1="0.00" x2="0.00" y2="0.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="0.00" y1="0.00" x2="0.00" y2="297.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="292.00" x2="205.00" y2="292.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="205.00" y1="292.00" x2="205.00" y2="5.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="205.00" y1="5.00" x2="20.00" y2="5.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="5.00" x2="20.00" y2="292.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="292.00" x2="205.00" y2="292.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="205.00" y1="292.00" x2="205.00" y2="252.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="205.00" y1="252.00" x2="20.00" y2="252.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="252.00" x2="20.00" y2="292.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="85.00" y1="292.00" x2="85.00" y2="252.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="282.00" x2="85.00" y2="282.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="272.00" x2="85.00" y2="272.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="20.00" y1="262.00" x2="85.00" y2="262.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="40.00" y1="292.00" x2="40.00" y2="252.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="85.00" y1="277.00" x2="205.00" y2="277.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="145.00" y1="292.00" x2="145.00" y2="277.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="180.00" y1="292.00" x2="180.00" y2="277.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<text x="21.50" y="259.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 21.50 259.50)">Braižė</text>
-<text x="21.50" y="269.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 21.50 269.50)">Tikrino</text>
-<text x="21.50" y="279.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 21.50 279.50)">Data</text>
-<text x="21.50" y="289.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 21.50 289.50)">Mastelis</text>
-<text x="42.00" y="289.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 42.00 289.50)">be mastelio</text>
-<text x="145.00" y="265.50" font-size="9.72" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="middle" transform="rotate(0.00 145.00 265.50)">SCHEMA</text>
-<text x="145.00" y="273.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="middle" transform="rotate(0.00 145.00 273.50)">Brėžly praktika · užduotis Nr. 7</text>
-<text x="87.00" y="286.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 87.00 286.00)">Lygis: ★★☆ vidutinė</text>
-<text x="147.00" y="286.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 147.00 286.00)">~15 min · +45 XP</text>
-<text x="192.50" y="286.50" font-size="6.94" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="middle" transform="rotate(0.00 192.50 286.50)">A4</text>
-<text x="25.00" y="13.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 25.00 13.00)">Elektrinė schema iš blokų su atributais + aprašo lentelė.</text>
-<text x="25.00" y="19.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#0f766e" text-anchor="start" transform="rotate(0.00 25.00 19.00)">Komandos: BLOCK, ATTDEF, INSERT, LINE, DATAEXTRACTION</text>
-<line x1="40.00" y1="67.00" x2="40.00" y2="95.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="40.00" y1="99.00" x2="40.00" y2="127.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="40.00" y1="127.00" x2="170.00" y2="127.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="34.00" y1="95.00" x2="46.00" y2="95.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="37.00" y1="99.00" x2="43.00" y2="99.00" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="37.00" y1="98.80" x2="43.00" y2="98.80" stroke="#111111" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-<line x1="40.00" y1="67.00" x2="65.00" y2="67.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="65.00" y1="67.00" x2="79.00" y2="61.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<circle cx="65.00" cy="67.00" r="0.80" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<circle cx="80.00" cy="67.00" r="0.80" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="80.00" y1="67.00" x2="105.00" y2="67.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="105.00" y1="69.00" x2="115.00" y2="69.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="115.00" y1="69.00" x2="115.00" y2="65.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="115.00" y1="65.00" x2="105.00" y2="65.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="105.00" y1="65.00" x2="105.00" y2="69.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="115.00" y1="67.00" x2="170.00" y2="67.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="140.00" y1="67.00" x2="140.00" y2="92.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<circle cx="140.00" cy="97.00" r="5.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="140.00" y1="102.00" x2="140.00" y2="127.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="136.46" y1="100.54" x2="143.54" y2="93.46" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="136.46" y1="93.46" x2="143.54" y2="100.54" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="170.00" y1="67.00" x2="170.00" y2="92.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<circle cx="170.00" cy="97.00" r="5.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="170.00" y1="102.00" x2="170.00" y2="127.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="166.46" y1="100.54" x2="173.54" y2="93.46" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="166.46" y1="93.46" x2="173.54" y2="100.54" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<polygon points="139.00,68.00 141.00,68.00 141.00,66.00 139.00,66.00" fill="#111111"/>
-<polygon points="139.00,128.00 141.00,128.00 141.00,126.00 139.00,126.00" fill="#111111"/>
-<text x="26.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 26.00 95.00)">G1</text>
-<text x="26.00" y="101.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 26.00 101.00)">9 V</text>
-<text x="44.00" y="92.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 44.00 92.00)">+</text>
-<text x="70.00" y="58.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 70.00 58.00)">S1</text>
-<text x="106.00" y="61.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 106.00 61.00)">R1</text>
-<text x="105.00" y="75.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 105.00 75.00)">1 kΩ</text>
-<text x="146.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.00 95.00)">H1</text>
-<text x="146.00" y="100.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.00 100.50)">6 V</text>
-<text x="176.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 176.00 95.00)">H2</text>
-<text x="176.00" y="100.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 176.00 100.50)">6 V</text>
-<line x1="30.00" y1="197.00" x2="195.00" y2="197.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="195.00" y1="197.00" x2="195.00" y2="157.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="195.00" y1="157.00" x2="30.00" y2="157.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="30.00" y1="157.00" x2="30.00" y2="197.00" stroke="#111111" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-<line x1="50.00" y1="197.00" x2="50.00" y2="157.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="145.00" y1="197.00" x2="145.00" y2="157.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="165.00" y1="197.00" x2="165.00" y2="157.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="30.00" y1="189.00" x2="195.00" y2="189.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="30.00" y1="181.00" x2="195.00" y2="181.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="30.00" y1="173.00" x2="195.00" y2="173.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<line x1="30.00" y1="165.00" x2="195.00" y2="165.00" stroke="#111111" stroke-width="0.25" fill="none" stroke-linecap="round"/>
-<text x="31.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="start" transform="rotate(0.00 31.50 162.50)">Poz.</text>
-<text x="51.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="start" transform="rotate(0.00 51.50 162.50)">Pavadinimas</text>
-<text x="146.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="start" transform="rotate(0.00 146.50 162.50)">Kiekis</text>
-<text x="166.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="start" transform="rotate(0.00 166.50 162.50)">Pastabos</text>
-<text x="31.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 31.50 170.50)">G1</text>
-<text x="51.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 51.50 170.50)">Baterija 9 V</text>
-<text x="146.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.50 170.50)">1</text>
-<text x="31.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 31.50 178.50)">S1</text>
-<text x="51.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 51.50 178.50)">Jungiklis</text>
-<text x="146.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.50 178.50)">1</text>
-<text x="31.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 31.50 186.50)">R1</text>
-<text x="51.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 51.50 186.50)">Rezistorius 1 kΩ</text>
-<text x="146.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.50 186.50)">1</text>
-<text x="166.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 166.50 186.50)">0,25 W</text>
-<text x="31.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 31.50 194.50)">H1, H2</text>
-<text x="51.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 51.50 194.50)">Lemputė 6 V</text>
-<text x="146.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#111111" text-anchor="start" transform="rotate(0.00 146.50 194.50)">2</text>
-<text x="30.00" y="154.00" font-size="6.94" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#111111" text-anchor="start" transform="rotate(0.00 30.00 154.00)">Aprašas</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20.8 48.0 183.6 157.0">
+
+<line x1="0.00" y1="297.00" x2="210.00" y2="297.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="210.00" y1="297.00" x2="210.00" y2="0.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="210.00" y1="0.00" x2="0.00" y2="0.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="0.00" y1="0.00" x2="0.00" y2="297.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="292.00" x2="205.00" y2="292.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="205.00" y1="292.00" x2="205.00" y2="5.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="205.00" y1="5.00" x2="20.00" y2="5.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="5.00" x2="20.00" y2="292.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="292.00" x2="205.00" y2="292.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="205.00" y1="292.00" x2="205.00" y2="252.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="205.00" y1="252.00" x2="20.00" y2="252.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="252.00" x2="20.00" y2="292.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="85.00" y1="292.00" x2="85.00" y2="252.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="282.00" x2="85.00" y2="282.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="272.00" x2="85.00" y2="272.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="20.00" y1="262.00" x2="85.00" y2="262.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="40.00" y1="292.00" x2="40.00" y2="252.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="85.00" y1="277.00" x2="205.00" y2="277.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="145.00" y1="292.00" x2="145.00" y2="277.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="180.00" y1="292.00" x2="180.00" y2="277.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<text x="21.50" y="259.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 21.50 259.50)">Braižė</text>
+<text x="21.50" y="269.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 21.50 269.50)">Tikrino</text>
+<text x="21.50" y="279.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 21.50 279.50)">Data</text>
+<text x="21.50" y="289.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 21.50 289.50)">Mastelis</text>
+<text x="42.00" y="289.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 42.00 289.50)">be mastelio</text>
+<text x="145.00" y="265.50" font-size="9.72" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="middle" transform="rotate(0.00 145.00 265.50)">SCHEMA</text>
+<text x="145.00" y="273.50" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="middle" transform="rotate(0.00 145.00 273.50)">Brėžly praktika · užduotis Nr. 7</text>
+<text x="87.00" y="286.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 87.00 286.00)">Lygis: ★★☆ vidutinė</text>
+<text x="147.00" y="286.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 147.00 286.00)">~15 min · +45 XP</text>
+<text x="192.50" y="286.50" font-size="6.94" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="middle" transform="rotate(0.00 192.50 286.50)">A4</text>
+<text x="25.00" y="13.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 25.00 13.00)">Elektrinė schema iš blokų su atributais + aprašo lentelė.</text>
+<text x="25.00" y="19.00" font-size="3.47" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#56c2e6" text-anchor="start" transform="rotate(0.00 25.00 19.00)">Komandos: BLOCK, ATTDEF, INSERT, LINE, DATAEXTRACTION</text>
+<line x1="40.00" y1="67.00" x2="40.00" y2="95.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="40.00" y1="99.00" x2="40.00" y2="127.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="40.00" y1="127.00" x2="170.00" y2="127.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="34.00" y1="95.00" x2="46.00" y2="95.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="37.00" y1="99.00" x2="43.00" y2="99.00" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="37.00" y1="98.80" x2="43.00" y2="98.80" stroke="#d5dce6" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+<line x1="40.00" y1="67.00" x2="65.00" y2="67.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="65.00" y1="67.00" x2="79.00" y2="61.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<circle cx="65.00" cy="67.00" r="0.80" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<circle cx="80.00" cy="67.00" r="0.80" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="80.00" y1="67.00" x2="105.00" y2="67.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="105.00" y1="69.00" x2="115.00" y2="69.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="115.00" y1="69.00" x2="115.00" y2="65.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="115.00" y1="65.00" x2="105.00" y2="65.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="105.00" y1="65.00" x2="105.00" y2="69.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="115.00" y1="67.00" x2="170.00" y2="67.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="140.00" y1="67.00" x2="140.00" y2="92.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<circle cx="140.00" cy="97.00" r="5.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="140.00" y1="102.00" x2="140.00" y2="127.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="136.46" y1="100.54" x2="143.54" y2="93.46" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="136.46" y1="93.46" x2="143.54" y2="100.54" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="170.00" y1="67.00" x2="170.00" y2="92.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<circle cx="170.00" cy="97.00" r="5.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="170.00" y1="102.00" x2="170.00" y2="127.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="166.46" y1="100.54" x2="173.54" y2="93.46" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="166.46" y1="93.46" x2="173.54" y2="100.54" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<polygon points="139.00,68.00 141.00,68.00 141.00,66.00 139.00,66.00" fill="#d5dce6"/>
+<polygon points="139.00,128.00 141.00,128.00 141.00,126.00 139.00,126.00" fill="#d5dce6"/>
+<text x="26.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 26.00 95.00)">G1</text>
+<text x="26.00" y="101.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 26.00 101.00)">9 V</text>
+<text x="44.00" y="92.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 44.00 92.00)">+</text>
+<text x="70.00" y="58.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 70.00 58.00)">S1</text>
+<text x="106.00" y="61.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 106.00 61.00)">R1</text>
+<text x="105.00" y="75.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 105.00 75.00)">1 kΩ</text>
+<text x="146.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.00 95.00)">H1</text>
+<text x="146.00" y="100.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.00 100.50)">6 V</text>
+<text x="176.00" y="95.00" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 176.00 95.00)">H2</text>
+<text x="176.00" y="100.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 176.00 100.50)">6 V</text>
+<line x1="30.00" y1="197.00" x2="195.00" y2="197.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="195.00" y1="197.00" x2="195.00" y2="157.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="195.00" y1="157.00" x2="30.00" y2="157.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="30.00" y1="157.00" x2="30.00" y2="197.00" stroke="#d5dce6" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<line x1="50.00" y1="197.00" x2="50.00" y2="157.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="145.00" y1="197.00" x2="145.00" y2="157.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="165.00" y1="197.00" x2="165.00" y2="157.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="30.00" y1="189.00" x2="195.00" y2="189.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="30.00" y1="181.00" x2="195.00" y2="181.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="30.00" y1="173.00" x2="195.00" y2="173.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<line x1="30.00" y1="165.00" x2="195.00" y2="165.00" stroke="#d5dce6" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<text x="31.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 31.50 162.50)">Poz.</text>
+<text x="51.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 51.50 162.50)">Pavadinimas</text>
+<text x="146.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.50 162.50)">Kiekis</text>
+<text x="166.50" y="162.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 166.50 162.50)">Pastabos</text>
+<text x="31.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 31.50 170.50)">G1</text>
+<text x="51.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 51.50 170.50)">Baterija 9 V</text>
+<text x="146.50" y="170.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.50 170.50)">1</text>
+<text x="31.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 31.50 178.50)">S1</text>
+<text x="51.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 51.50 178.50)">Jungiklis</text>
+<text x="146.50" y="178.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.50 178.50)">1</text>
+<text x="31.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 31.50 186.50)">R1</text>
+<text x="51.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 51.50 186.50)">Rezistorius 1 kΩ</text>
+<text x="146.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.50 186.50)">1</text>
+<text x="166.50" y="186.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 166.50 186.50)">0,25 W</text>
+<text x="31.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 31.50 194.50)">H1, H2</text>
+<text x="51.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 51.50 194.50)">Lemputė 6 V</text>
+<text x="146.50" y="194.50" font-size="4.86" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="400" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 146.50 194.50)">2</text>
+<text x="30.00" y="154.00" font-size="6.94" font-family="'DejaVu Sans Condensed', 'DejaVu Sans', sans-serif" font-style="italic" font-weight="700" fill="#d5dce6" text-anchor="start" transform="rotate(0.00 30.00 154.00)">Aprašas</text>
 </svg>
