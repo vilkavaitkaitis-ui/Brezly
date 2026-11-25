@@ -1,5 +1,5 @@
 {
  "_aprasas": "Svetainės jungikliai. atsisiuntimas: true - pagrindiniame puslapyje mygtukas Brezly_Setup.exe ir kitos atsisiuntimo nuorodos; false - „netrukus“ puslapis su registracija į demo. programele: ar dėti programėlę (/programele/) ir nuorodas į ją. Pakeitus - python irankiai/generuoti.py (arba GitHub pats perkuria svetainę).",
- "atsisiuntimas": true,
+ "atsisiuntimas": false,
  "programele": true
 }
