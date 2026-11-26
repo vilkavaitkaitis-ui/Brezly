@@ -1033,3 +1033,53 @@ body.mini-rez #mini{background:var(--bg);gap:10px}
 .lyg-k .lyg-fon svg{width:140px;height:140px}
 #atlygis .apsk{overflow:hidden}
 #atlygis .apsk svg{width:180px;height:180px}
+
+/* ===== 1.5 - brėžinio iššūkiai ir peržiūra (bandomoji funkcija) ===== */
+.beta{display:inline-block;vertical-align:middle;margin-left:6px;padding:2px 6px;background:#e2362b;color:#fff;font:700 10px var(--mono);letter-spacing:.06em}
+.iss-sek{border:var(--s) solid var(--line);background:var(--card);margin:14px 0 18px}
+.iss-ant{padding:14px 16px;border-bottom:var(--s) solid var(--line);background:#ffc400;color:#111}
+.iss-ant h2{margin:0;font:900 22px/1 var(--font);text-transform:uppercase;letter-spacing:-.01em}
+.iss-ant p{margin:6px 0 0;font-size:13.5px;color:#111}
+.iss-tink{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.iss-k{position:relative;display:flex;flex-direction:column;gap:3px;text-align:left;padding:0 0 12px;border:0;border-right:var(--s) solid var(--line);border-bottom:var(--s) solid var(--line);background:var(--card);color:var(--text);cursor:pointer;margin:0 -3px -3px 0}
+.iss-k:hover{background:color-mix(in srgb,var(--card) 88%,var(--text))}
+.iss-mini{height:118px;display:grid;place-items:center;background:#f7f5f0;border-bottom:var(--s) solid var(--line);padding:10px}
+.iss-mini svg{width:100%;height:100%}
+.iss-nr{position:absolute;left:8px;top:6px;font:700 12px var(--mono);color:#111}
+.iss-rek{position:absolute;right:8px;top:6px}
+.iss-k b{padding:8px 12px 0;font:900 16px/1.1 var(--font);text-transform:uppercase}
+.iss-k small{padding:0 12px;font:11px var(--mono);color:var(--muted)}
+.iss-zv{color:#ffc400;font-size:15px;letter-spacing:1px;-webkit-text-stroke:.6px var(--text)}.iss-zv i{font-style:normal;color:transparent}
+.iss-lapas{display:flex;flex-direction:column}
+.iss-brez{flex:1;min-height:260px;display:grid;place-items:center;cursor:zoom-in;padding:6px 0}
+.iss-brez svg{width:100%;height:100%;max-height:440px}
+.iss-didelis svg{width:100%;height:auto;max-height:78vh;background:#f7f5f0}
+.iss-pastaba{margin:8px 0 0;font:11.5px/1.4 var(--mono);color:var(--muted)}
+.bh-lapas .iss-pastaba{color:#55524b}
+.iss-laikr{display:grid;grid-template-columns:repeat(3,1fr);border:var(--s) solid #111;margin:12px 0;background:#fff}
+.iss-laikr div{padding:8px 10px;border-right:var(--s) solid #111}.iss-laikr div:last-child{border-right:0}
+.iss-laikr small{display:block;font:11px var(--mono);text-transform:uppercase;color:#55524b}
+.iss-laikr b{font:900 24px/1.1 var(--mono);color:#111}
+#issLaikas{color:#1f4fd1}
+.iss-naujas{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:#111}
+.iss-uz{border:var(--s) solid var(--line);margin-top:12px;background:var(--card)}
+.iss-uz summary{cursor:pointer;padding:10px 12px;font:700 12.5px var(--mono);text-transform:uppercase}
+.iss-uz .pr-kom{padding:0 12px 12px}
+.iss-atgal{margin-top:12px;align-self:flex-start}
+.iss-perz h2{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:8px 0 14px;font:900 32px/1 var(--mono)}
+.iss-perz h2 small{font:13px var(--mono);color:var(--muted)}
+.iss-perz h3{margin:0 0 8px;font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.iss-juosta{position:relative;height:34px;border:var(--s) solid var(--line);background:var(--bg);overflow:hidden}
+.iss-juosta span{position:absolute;top:0;bottom:0;border-right:1px solid #111;font:700 10.5px/30px var(--mono);color:#111;overflow:hidden;white-space:nowrap;padding-left:3px}
+.g-piesti{background:#1f4fd1;color:#fff!important}.g-keisti{background:#ffc400}.g-taisyti{background:#e2362b;color:#fff!important}.g-vaizdas{background:#c9c4b8}.g-kita{background:#ece8df}
+.iss-leg{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 16px;font:11px var(--mono)}
+.iss-leg span{padding:2px 6px;border:1px solid #111;color:#111}
+.iss-perz-du{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px}
+.iss-perz-du>div:only-child{grid-column:1/-1}
+.iss-lent{width:100%;border-collapse:collapse;font:13px var(--mono)}
+.iss-lent th,.iss-lent td{border:2px solid var(--line);padding:5px 8px;text-align:left}
+.iss-lent th{background:var(--text);color:var(--bg);font-weight:700;text-transform:uppercase;font-size:11px}
+.iss-pat{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45}
+.iss-pat li::marker{font:700 13px var(--mono);color:var(--accent)}
+.iss-pat li.p-svaru::marker{color:#1f4fd1}
+@media (max-width:760px){.iss-perz-du{grid-template-columns:1fr}}

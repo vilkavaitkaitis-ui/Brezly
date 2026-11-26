@@ -21,6 +21,7 @@ Naujos versijos įsidiegia pačios – Brėžly pasiūlys atnaujinti.
 - Egzamino režimas su laikmačiu, „Mano silpnos vietos“, komandų eilutės treniruoklis
 - Žinynas: inžinerinės grafikos terminai LT–EN ir standartų atmintinė; 2D žingsniuose – paveikslėlis „taip turi atrodyti“
 - XP, lygiai, ženkleliai ir 8 personažai su AutoCAD vardais (Kadis, Kursorius, Snapas, Trimas, Ekstrudas, Orbitas, Elipsas, Dimas)
+- Bandomosios funkcijos (įjungiamos Nustatymuose): brėžinio iššūkiai su laikmačiu ir komandų peržiūra su patarimais
 - Dizainas „Brėžinys yra sąsaja“: pamokos žingsniai – pozicijos brėžinio lape, šviesi ir tamsi tema
 
 Reikia: Windows 10/11 ir AutoCAD (pilna versija). Progresas saugomas `Dokumentai\Brezly`.

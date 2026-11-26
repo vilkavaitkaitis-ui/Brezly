@@ -36,6 +36,7 @@ import pamokos                  # noqa: E402
 import vertimas                 # noqa: E402
 from vertimas import tr         # noqa: E402
 import praktika                 # noqa: E402
+import issukiai                 # noqa: E402
 
 
 
@@ -433,7 +434,8 @@ def info(duom):
             "funkcijos": funkcijos(),
             "langas": dict(P.LANGAS), "klavisai": KLAVISAI, "ekranas": P.darbo_sritis(),
             "atnaujinimai": bool(ATNAUJINIMU_URL), "duomenys": DUOM, "windows": WINDOWS,
-            "praktika": praktika.sarasas(kalba), "naujienos": NAUJIENOS} | pamokos.viesai(kalba)
+            "praktika": praktika.sarasas(kalba), "issukiai": issukiai.sarasas(kalba),
+            "naujienos": NAUJIENOS} | pamokos.viesai(kalba)
 
 
 def _zingsnis(duom):
@@ -928,6 +930,48 @@ def praktika_tikrinti(duom):
     return {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
 
 
+# ================================================================== brėžinio iššūkiai (1.5, bandomoji funkcija)
+def issukis_pradeti(duom):
+    """Naujas tuščias brėžinys ir komandų įrašymas peržiūrai."""
+    uid = issukiai.issukis(duom.get("id"))["id"]
+    if KUREJAS["imitacija"]:
+        return {"ok": True, "imitacija": True}
+    if duom.get("naujas", True):
+        naujas_brezinys({})
+    issukiai.IRASAS.pradeti(uid)
+    rasyti_zurnala(f"Iššūkis pradėtas: {uid}")
+    return {"ok": True}
+
+
+def issukis_tikrinti(duom):
+    uid = issukiai.issukis(duom.get("id"))["id"]
+    sek = max(0.0, float(duom.get("sekundes") or 0))
+    if KUREJAS["imitacija"]:
+        if KUREJAS["imitacija"] != "gerai":
+            return _imituotas_tikrinimas()
+        faktai = {"tipai": {"AcDbLine": 4, "AcDbCircle": 2}, "tarpai": 1, "tarpas_maks": 0.18, "dubliai": 0, "apskritimai": {5.0: 2}}
+        return {"ok": True, "teisingai": True, "pastabos": [],
+                "perziura": issukiai.perziura(uid, issukiai.pavyzdinis_irasas(uid), faktai, sek)}
+    with contextlib.redirect_stdout(io.StringIO()):
+        b = P.braizytojas()
+    try:
+        pastabos, faktai = issukiai.tikrinti(uid, b, P.A.kartoti)
+    except Exception as e:
+        pastabos, faktai = [tr(f"Nepavyko perskaityti brėžinio: {e}. Ar AutoCAD'e nevykdoma kita komanda? Spausk Esc.", f"Couldn't read the drawing: {e}. Is another command running in AutoCAD? Press Esc.")], {}
+    rez = {"ok": True, "teisingai": not pastabos, "pastabos": pastabos}
+    if not pastabos:
+        irasas = issukiai.IRASAS.sustabdyti() if issukiai.IRASAS.uid == uid else {"ivykiai": [], "budas": "nera"}
+        if irasas.get("klaida"):
+            rasyti_zurnala(f"Iššūkio komandų įrašymas ({irasas.get('budas')}): {irasas['klaida']}")
+        rez["perziura"] = issukiai.perziura(uid, irasas, faktai, sek)
+    return rez
+
+
+def issukis_baigti(_):
+    issukiai.IRASAS.sustabdyti()
+    return {"ok": True}
+
+
 # ================================================================== kūrėjo įrankiai (tik su slaptažodžiu)
 KUREJAS = {"imitacija": None}       # None | "gerai" | "blogai" - tikrinimas be AutoCAD
 FUNKCIJU_FAILAS = os.path.join(RASOMAS_APLANKAS, "funkcijos.json")
@@ -1112,7 +1156,7 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/info", "/api/ping", "/api/progresas", "/api/testas", "/api/testas_galioja", "/api/testas_uzrakinti",
         "/api/ivykiai", "/api/ataskaita", "/api/duomenys", "/api/js_klaida", "/api/progresas_eksportuoti",
         "/api/progresas_importuoti", "/api/destytojo_ataskaita", "/api/atnaujinimai", "/api/aplinka",
-        "/api/langas", "/api/praktika_aplankas", "/api/paleisti_autocad", "/api/mirkteleti"})
+        "/api/langas", "/api/praktika_aplankas", "/api/paleisti_autocad", "/api/mirkteleti", "/api/issukis_baigti"})
     LYGIAGRETUS = frozenset({"/api/ping", "/api/ivykiai", "/api/atnaujinimai", "/api/js_klaida"})
 
     def nelaukti(self, kelias, duom):
@@ -1144,7 +1188,8 @@ class BrezlyTvarkykle(P.Tvarkykle):
         "/api/zingsnio_pradzia": zingsnio_pradzia, "/api/kur_klaida": kur_klaida, "/api/mirkteleti": mirkteleti,
         "/api/praktika_atidaryti": praktika_atidaryti, "/api/praktika_pdf": praktika_pdf,
         "/api/praktika_aplankas": praktika_aplankas, "/api/praktika_tikrinti": praktika_tikrinti,
-        "/api/testas_uzrakinti": testas_uzrakinti,
+        "/api/testas_uzrakinti": testas_uzrakinti, "/api/issukis_pradeti": issukis_pradeti,
+        "/api/issukis_tikrinti": issukis_tikrinti, "/api/issukis_baigti": issukis_baigti,
         **{f"/api/k_{f.__name__[2:]}": _kurejui(f) for f in (k_busena, k_imitacija, k_funkcijos, k_zurnalas,
                                                            k_acad, k_slaptazodis, k_nuotrauka)},
     }.items()}

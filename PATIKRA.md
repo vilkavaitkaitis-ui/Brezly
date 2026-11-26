@@ -99,3 +99,15 @@ Kiekvieną žingsnį pirmiausia padaryk pats, tada patikrink; kitame brėžinyje
 - [ ] Pamokos žingsnis: pastaboje mažas personažas laukia; priimtas žingsnis - džiaugiasi; nepavykęs „Tikrinti“ - susiraukia; naujas lygis - karūna ir žvaigždės akyse.
 - [ ] Profilis → „Atsisiųsti kortelę (PNG)“: personažas be pertekliaus (tik viena veido išraiška), vardas, statistika.
 - [ ] Pirmas paleidimas (vedlys) → „Pasirink savo personažą“ - nauji personažai ir vardai.
+
+## 14. 1.5: brėžinio iššūkiai ir peržiūra (bandomosios funkcijos, tikras AutoCAD)
+- [ ] Nustatymai → Bandomosios funkcijos → įjungti. Praktikoje atsiranda geltonas blokas „Brėžinio iššūkiai“ (6 kortelės); išjungus - dingsta.
+- [ ] Iššūkis → „Pradėti“ (su „Atidaryti naują tuščią brėžinį“): AutoCAD'e atsidaro naujas brėžinys, laikmatis eina.
+- [ ] Nubraižyk „Plokštelę“ ne ties 0,0 (pvz. nuo 200,100) → „Tikrinti“ → priimama, atsidaro peržiūra.
+- [ ] **Peržiūroje yra komandų juosta ir lentelė** (LINE, CIRCLE...). Jei vietoj jos parašyta „Komandų sąrašo šį kartą nesurinkau“ - atsiųsk Nustatymai → Pranešti apie klaidą (žurnale bus priežastis: „Iššūkio komandų įrašymas ...“).
+- [ ] Stačiakampis 4 linijomis → patarimas apie RECTANG; RECTANG → tokio patarimo nėra. OSNAP išjungtas (F3) → patarimas apie OSNAP.
+- [ ] Klaidos: skylė su spinduliu 10 vietoj 5 → „Trūksta: apskritimas ⌀10 ... CIRCLE prašo spindulio“; linija 80.8 vietoj 80 → „Beveik!“; „Griovelis“ be TRIM → „Liko nereikalingų objektų“.
+- [ ] Pagalbinė linija sluoksnyje PAGALBINIS ar ašis su CENTER linijos tipu - netrukdo.
+- [ ] Antras bandymas greičiau → „Naujas rekordas!“, +10 XP; rekordas matosi kortelėje.
+- [ ] „Svirtis“: liestinės per LINE + Tangent ir TRIM → priimama.
+- [ ] Kūrėjo režimas → Imitacija „Visada gerai“ → iššūkis be AutoCAD rodo pavyzdinę peržiūrą.
