@@ -1285,6 +1285,7 @@ function rodytiPraktika(){
   <div class="pr-filtr">${[["visos","Visos"],["A4","2D · A4"],["A3","3D · A3"]].map(([v,t])=>`<button aria-pressed="${prFiltras===v}" onclick="prFiltras='${v}';rodytiPraktika()">${t}</button>`).join("")}
     <div class="pr-eiga"><span>Atlikta ${atl} iš ${PRAKTIKA.length}</span><div class="juosta"><i style="width:${atl/PRAKTIKA.length*100}%"></i></div></div></div>
   ${Egzaminas.juostaHTML()}
+  ${issukiuSekcija()}
   <div class="pr-tink">${sar.map(u=>`<button class="pr-k" onclick="rodytiUzduoti('${u.id}')" aria-label="${u.nr}. ${esc(u.pav)}, ${u.fmt}${prAtlikta(u.id)?", atlikta":""}">
     <div class="pr-lap"><img src="/praktika/${u.id}.svg" alt="" loading="lazy"></div>
     <span class="pr-fmt ${u.fmt==="A3"?"a3":""}">${u.d} · ${u.fmt}</span>${prAtlikta(u.id)?'<span class="pr-ok">✓</span>':""}
@@ -1578,6 +1579,151 @@ const Vedlys={
 /* =================== NUSTATYMAI =================== */
 let testasAtrakintas=false;
 function jung(on,veiksmas,pav){ return `<button class="jung" aria-pressed="${!!on}" aria-label="${esc(pav)}" onclick="${veiksmas}"></button>`; }
+/* =================== BRĖŽINIO IŠŠŪKIAI IR PERŽIŪRA (1.5, bandomoji funkcija: Nustatymai → Bandomosios funkcijos) =================== */
+const betaIjungta=()=>sg("beta")==="1";
+const ISS={id:null,t0:0,aktyvus:false,laikm:null,naujas:true,paskutinis:{}};
+const issLaikas=s=>{ s=Math.max(0,Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; };
+const issZv=n=>`<span class="iss-zv" aria-label="${n} iš 3">${"★".repeat(n)}<i>${"★".repeat(3-n)}</i></span>`;
+const issRez=id=>(S.issukiai||{})[id];
+function issSarasas(){ return INFO.issukiai||[]; }
+
+/* brėžinys su matmenimis (SVG; CAD koordinatės, y aukštyn) */
+function issukioSVG(i,mazas){
+  const P=i.geom.map(g=>g.l?{t:"l",v:g.l}:g.a?{t:"a",v:g.a}:{t:"c",v:g.c});
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; const ext=(x,y)=>{x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);};
+  P.forEach(p=>{ if(p.t==="l"){ext(p.v[0],p.v[1]);ext(p.v[2],p.v[3]);} else {ext(p.v[0]-p.v[2],p.v[1]-p.v[2]);ext(p.v[0]+p.v[2],p.v[1]+p.v[2]);} });
+  const K="#111111", M="#1f4fd1", A="#e2362b", f=n=>+n.toFixed(3), Y=y=>f(-y), rad=a=>a*Math.PI/180;
+  const tw=t=>t.length*2.55+1;
+  let dims="";
+  const rodykle=(x,y,dx,dy)=>{ const L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L, bx=x-ux*2.6, by=y-uy*2.6, px=-uy*.85, py=ux*.85;
+    return `<path d="M${f(x)} ${Y(y)} L${f(bx+px)} ${Y(by+py)} L${f(bx-px)} ${Y(by-py)} Z" fill="${M}"/>`; };
+  const tekst=(x,y,t,kamp)=>`<text x="${f(x)}" y="${Y(y)}" ${kamp?`transform="rotate(-90 ${f(x)} ${Y(y)})"`:""} text-anchor="middle" font-size="4.2" font-family="'Space Mono',monospace" fill="${M}">${esc(t)}</text>`;
+  if(!mazas) for(const d of i.matmenys){
+    if(d.t==="h"){ const [ax,ay]=d.a,[bx,by]=d.b, s=Math.sign(d.y-ay)||1, sb=Math.sign(d.y-by)||1;
+      dims+=`<path d="M${f(ax)} ${Y(ay+s*1.5)} V${Y(d.y+s*2)} M${f(bx)} ${Y(by+sb*1.5)} V${Y(d.y+sb*2)} M${f(ax)} ${Y(d.y)} H${f(bx)}" stroke="${M}" stroke-width=".3" fill="none"/>`
+        +rodykle(ax,d.y,ax-bx,0)+rodykle(bx,d.y,bx-ax,0)+tekst((ax+bx)/2,d.y+1.3,d.txt);
+      ext(ax,d.y-2);ext(bx,d.y+6); }
+    else if(d.t==="v"){ const [ax,ay]=d.a,[bx,by]=d.b, s=Math.sign(d.x-ax)||1, sb=Math.sign(d.x-bx)||1;
+      dims+=`<path d="M${f(ax+s*1.5)} ${Y(ay)} H${f(d.x+s*2)} M${f(bx+sb*1.5)} ${Y(by)} H${f(d.x+sb*2)} M${f(d.x)} ${Y(ay)} V${Y(by)}" stroke="${M}" stroke-width=".3" fill="none"/>`
+        +rodykle(d.x,ay,0,ay-by)+rodykle(d.x,by,0,by-ay)+tekst(d.x-1.3,(ay+by)/2,d.txt,true);
+      ext(d.x-6,ay);ext(d.x+2,by); }
+    else { const [cx,cy]=d.c, k=rad(d.kampas), px=cx+d.r*Math.cos(k), py=cy+d.r*Math.sin(k), qx=cx+(d.r+(d.ilgis||11))*Math.cos(k), qy=cy+(d.r+(d.ilgis||11))*Math.sin(k), kr=Math.cos(k)>=0?1:-1, w=tw(d.txt), ex=qx+kr*w;
+      dims+=`<path d="M${f(px)} ${Y(py)} L${f(qx)} ${Y(qy)} H${f(ex)}" stroke="${M}" stroke-width=".3" fill="none"/>`+rodykle(px,py,px-qx,py-qy)+tekst((qx+ex)/2,qy+1.2,d.txt);
+      ext(qx,qy-2);ext(ex,qy+6); }
+  }
+  const sw=mazas?1.4:.7;
+  const geo=P.map(p=>{ const v=p.v;
+    if(p.t==="l") return `<line x1="${f(v[0])}" y1="${Y(v[1])}" x2="${f(v[2])}" y2="${Y(v[3])}"/>`;
+    if(p.t==="c") return `<circle cx="${f(v[0])}" cy="${Y(v[1])}" r="${f(v[2])}"/>`;
+    const [cx,cy,r,a0,a1]=v, ap=((a1-a0)%360+360)%360||360, sx=cx+r*Math.cos(rad(a0)), sy=cy+r*Math.sin(rad(a0)), exx=cx+r*Math.cos(rad(a1)), ey=cy+r*Math.sin(rad(a1));
+    return `<path d="M${f(sx)} ${Y(sy)} A${f(r)} ${f(r)} 0 ${ap>180?1:0} 0 ${f(exx)} ${Y(ey)}"/>`; }).join("");
+  const asys=mazas?"":`<g stroke="${A}" stroke-width=".3" stroke-dasharray="6 1.5 1 1.5" fill="none">${(i.asys||[]).map(a=>`<line x1="${f(a[0])}" y1="${Y(a[1])}" x2="${f(a[2])}" y2="${Y(a[3])}"/>`).join("")}${(i.asys_apsk||[]).map(c=>`<circle cx="${f(c[0])}" cy="${Y(c[1])}" r="${f(c[2])}"/>`).join("")}</g>`;
+  const m=mazas?4:6;
+  return `<svg class="iss-svg" viewBox="${f(x0-m)} ${f(-y1-m)} ${f(x1-x0+2*m)} ${f(y1-y0+2*m)}" role="img" aria-label="${esc(i.pav)} - brėžinys su matmenimis">${asys}<g stroke="${K}" stroke-width="${sw}" fill="none" stroke-linecap="square">${geo}</g>${dims}</svg>`;
+}
+
+function issukiuSekcija(){
+  if(!betaIjungta()) return "";
+  const sar=issSarasas(); if(!sar.length) return "";
+  return `<section class="iss-sek" aria-label="Brėžinio iššūkiai">
+    <div class="iss-ant"><h2>Brėžinio iššūkiai <span class="beta">BETA</span></h2><p>Tik brėžinys su matmenimis - be žingsnių. Nubraižyk kuo greičiau ir pagerink savo rekordą. Pabaigoje - tavo komandų peržiūra.</p></div>
+    <div class="iss-tink">${sar.map(i=>{ const r=issRez(i.id);
+      return `<button class="iss-k" onclick="rodytiIssuki('${i.id}')" aria-label="Iššūkis ${i.nr}: ${esc(i.pav)}${r?", rekordas "+issLaikas(r.geriausias):""}">
+        <div class="iss-mini">${issukioSVG(i,true)}</div>
+        <span class="iss-nr">${String(i.nr).padStart(2,"0")}</span>${r?`<span class="iss-rek">${issZv(r.zv||1)}</span>`:""}
+        <b>${esc(i.pav)}</b><small>${prZvaigzd(i.lyg)} · tikslas ${issLaikas(i.tikslas)}${r?` · rekordas ${issLaikas(r.geriausias)}`:` · +${i.xp} XP`}</small></button>`; }).join("")}</div></section>`;
+}
+
+function rodytiIssuki(id){
+  const i=issSarasas().find(x=>x.id===id); if(!i) return rodytiPraktika();
+  nustatytiRodini("praktika"); prDabar=null; $("#vPam").textContent=`Iššūkis ${i.nr}. ${i.pav}`;
+  const r=issRez(id), akt=ISS.aktyvus&&ISS.id===id, ats=ISS.paskutinis[id];
+  $("#vidus").innerHTML=`<div class="bh-du iss-du">
+    <section class="bh-lapas iss-lapas" aria-label="Brėžinys">
+      <span class="bh-zyme">Iššūkis ${String(i.nr).padStart(2,"0")} / ${String(issSarasas().length).padStart(2,"0")} · ${prZvaigzd(i.lyg)} · tikslas ${issLaikas(i.tikslas)}</span>
+      <h1 class="bh-h1">${esc(i.pav)}</h1>
+      <div class="iss-brez" onclick="issDidinti('${id}')" title="Spausk - padidinsiu">${issukioSVG(i)}</div>
+      <p class="iss-pastaba">Matmenys milimetrais. Ašys (raudonos) ir matmenys netikrinami - braižyk tik detalę.</p>
+    </section>
+    <div class="bh-skydas" role="complementary">
+      <div class="bh-geltona">
+        <span class="bh-poz">BETA · ${prZvaigzd(i.lyg)} · +${i.xp} XP</span>
+        <h2>Nubraižyk pagal brėžinį</h2>
+        <p>${esc(i.aprasas)} Žingsnių nėra - tik matmenys. Braižyk bet kurioje vietoje, aš rasiu.</p>
+        <div class="iss-laikr"><div><small>Laikas</small><b id="issLaikas">${akt?issLaikas((Date.now()-ISS.t0)/1000):"0:00"}</b></div>
+          <div><small>Tikslas</small><b>${issLaikas(i.tikslas)}</b></div><div><small>Rekordas</small><b>${r?issLaikas(r.geriausias):"-"}</b></div></div>
+        <div class="bh-veiksmai">${akt
+          ?`<button class="bh-tikr" id="issTikr" onclick="issTikrinti('${id}')">Tikrinti →</button><button class="bh-uz" onclick="issBaigti()">Baigti</button>`
+          :`<button class="bh-tikr" id="issPrad" onclick="issPradeti('${id}')">${r?"Bandyti dar kartą →":"Pradėti →"}</button>`}</div>
+        ${akt?"":`<label class="iss-naujas"><input type="checkbox" ${ISS.naujas?"checked":""} onchange="ISS.naujas=this.checked"> Atidaryti naują tuščią brėžinį</label>`}
+      </div>
+      <details class="iss-uz"><summary>Užuomina: kokios komandos tinka</summary><div class="pr-kom">${i.kom.map(k=>`<code>${esc(k)}</code>`).join("")}</div></details>
+      <div id="issAts">${ats?issAtsHTML(id,ats):""}</div>
+      <button class="btn iss-atgal" onclick="rodytiPraktika()">← Visi iššūkiai</button>
+    </div></div>`;
+  issLaikmatis();
+}
+function issDidinti(id){ const i=issSarasas().find(x=>x.id===id); rodytiLangeli(`<div class="iss-didelis">${issukioSVG(i)}</div><div class="eil" style="margin-top:12px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Uždaryti</button></div>`); document.querySelector("#langelis .lang").style.maxWidth="min(1100px,94vw)"; }
+function issLaikmatis(){
+  clearInterval(ISS.laikm);
+  if(!ISS.aktyvus) return;
+  ISS.laikm=setInterval(()=>{ const el=$("#issLaikas"); if(el&&ISS.aktyvus) el.textContent=issLaikas((Date.now()-ISS.t0)/1000); },250);
+}
+async function issPradeti(id){
+  if(!BUS.prisijungta&&!BUS.imitacija){ pranesti("Pirmiausia prisijunk prie AutoCAD (mygtukas apačioje kairėje)."); return; }
+  const b=$("#issPrad"); if(b){ b.disabled=true; b.textContent="Ruošiu..."; }
+  let r; try{ r=await api("/api/issukis_pradeti",{id,naujas:ISS.naujas}); }catch(e){ r={ok:false}; }
+  if(!r.ok){ pranesti(r.klaida||"Nepavyko pradėti"); rodytiIssuki(id); return; }
+  Object.assign(ISS,{id,t0:Date.now(),aktyvus:true}); delete ISS.paskutinis[id];
+  pranesti(ISS.naujas?"Atidariau tuščią brėžinį. Laikas eina - braižyk!":"Laikas eina - braižyk!");
+  Robotas.reaguoti("moja",1200); rodytiIssuki(id);
+}
+async function issTikrinti(id){
+  const b=$("#issTikr"); if(b){ b.disabled=true; b.textContent="Tikrinu..."; }
+  const sek=(Date.now()-ISS.t0)/1000;
+  let r; try{ r=await api("/api/issukis_tikrinti",{id,sekundes:sek}); }catch(e){ r={ok:false,klaida:"Ryšio klaida"}; }
+  if(b){ b.disabled=false; b.textContent="Tikrinti →"; }
+  if(!r.ok){ pranesti(r.klaida||"Nepavyko patikrinti"); return; }
+  ISS.paskutinis[id]=r;
+  if(!r.teisingai){ Robotas.reaguoti("liud",1400); const el=$("#issAts"); if(el){ el.innerHTML=issAtsHTML(id,r); el.scrollIntoView({block:"nearest",behavior:"smooth"}); } return; }
+  ISS.aktyvus=false; clearInterval(ISS.laikm);
+  const i=issSarasas().find(x=>x.id===id), sen=issRez(id), zv=r.perziura?.zvaigzdes||1;
+  const rekordas=!sen||sek<sen.geriausias;
+  S.issukiai={...(S.issukiai||{}),[id]:{geriausias:rekordas?Math.round(sek):sen.geriausias,kartai:(sen?.kartai||0)+1,data:new Date().toISOString().slice(0,10),zv:Math.max(zv,sen?.zv||0)}};
+  r.rekordas=rekordas&&!!sen; r.pirmas=!sen;
+  if(!sen) pridetiXP(i.xp,$("#issAts")); else if(rekordas) pridetiXP(10,$("#issAts")); else saugoti();
+  Robotas.reaguoti("dziaug",1800); konfeti(rekordas?80:40);
+  rodytiIssuki(id); issPerziura(id);
+}
+function issBaigti(){ ISS.aktyvus=false; clearInterval(ISS.laikm); api("/api/issukis_baigti",{}).catch(()=>{}); if(ISS.id) rodytiIssuki(ISS.id); }
+function issAtsHTML(id,r){
+  if(!r.teisingai) return `<div class="pr-ats blogai"><b>Dar ne viskas:</b><ul>${r.pastabos.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
+  const p=r.perziura||{};
+  return `<div class="pr-ats gerai"><b>${r.pirmas?"Iššūkis įveiktas!":r.rekordas?"Naujas rekordas!":"Įveikta!"} ${issZv(p.zvaigzdes||1)}</b>
+    <p style="margin:6px 0 0">Laikas ${issLaikas(p.laikas||0)} · tikslas ${issLaikas(p.tikslas||0)}</p>
+    <button class="btn" style="margin-top:10px" onclick="issPerziura('${id}')">Peržiūra: tavo komandos →</button></div>`;
+}
+const ISS_GRUPES={piesti:["LINE","CIRCLE","ARC","PLINE","RECTANG","POLYGON","XLINE","ELLIPSE"],keisti:["TRIM","EXTEND","FILLET","CHAMFER","OFFSET","COPY","MOVE","MIRROR","ROTATE","ARRAYPOLAR","ARRAYRECT","ARRAY","STRETCH","SCALE","JOIN"],
+  taisyti:["U","UNDO","ERASE","REDO","OOPS"],vaizdas:["ZOOM","PAN","3DORBIT"]};
+const issGrupe=k=>Object.keys(ISS_GRUPES).find(g=>ISS_GRUPES[g].includes(k))||"kita";
+function issPerziura(id){
+  const r=ISS.paskutinis[id], p=r&&r.perziura; if(!p) return;
+  const i=issSarasas().find(x=>x.id===id), viso=Math.max(p.laikas||1,...(p.seka||[]).map(s=>s.t+s.tr),1);
+  const juosta=(p.seka||[]).length?`<div class="iss-juosta" role="img" aria-label="Komandų laiko juosta">${p.seka.map(s=>{ const l=s.t/viso*100, w=Math.max(.6,s.tr/viso*100);
+      return `<span class="g-${issGrupe(s.k)}" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%" title="${esc(s.k)} · ${s.tr.toFixed(1)} s">${w>7?esc(s.k):""}</span>`; }).join("")}</div>
+    <div class="iss-leg"><span class="g-piesti">Braižymas</span><span class="g-keisti">Keitimas</span><span class="g-taisyti">Taisymas</span><span class="g-vaizdas">ZOOM / PAN</span><span class="g-kita">Kita</span></div>`:"";
+  const lent=(p.komandos||[]).length?`<table class="iss-lent"><thead><tr><th>Komanda</th><th>Kartų</th><th>Laikas</th></tr></thead><tbody>${p.komandos.map(k=>`<tr><td><code>${esc(k.k)}</code></td><td>${k.kiek}</td><td>${issLaikas(k.laikas)}</td></tr>`).join("")}</tbody></table>`:"";
+  rodytiLangeli(`<div class="iss-perz">
+    <span class="bh-poz">Brėžinio peržiūra · ${esc(i.pav)} · BETA</span>
+    <h2>${issZv(p.zvaigzdes||1)} ${issLaikas(p.laikas)} <small>tikslas ${issLaikas(p.tikslas)}${r.rekordas?" · naujas rekordas!":""}</small></h2>
+    ${juosta}
+    <div class="iss-perz-du">${lent?`<div>${lent}</div>`:""}
+      <div><h3>Patarimai</h3><ol class="iss-pat">${(p.patarimai||[]).map(t=>`<li class="p-${esc(t.tipas)}">${esc(t.tekstas)}</li>`).join("")}</ol>
+      ${p.pastaba?`<p class="iss-pastaba">${esc(p.pastaba)}</p>`:""}${p.budas==="imitacija"?`<p class="iss-pastaba">Imitacija (kūrėjo režimas): pavyzdinis pradedančiojo įrašas.</p>`:""}</div></div>
+    <div class="eil" style="margin-top:14px"><span class="tarpas"></span><button class="btn" onclick="uzdarytiLangeli()">Uždaryti</button><button class="btn pagr" onclick="uzdarytiLangeli();issPradeti('${id}')">Bandyti dar kartą</button></div></div>`);
+  document.querySelector("#langelis .lang").style.maxWidth="min(880px,94vw)";
+}
+
 function rodytiNustatymus(){
   nustatytiRodini("nustatymai");
   const t=sg("tema")||"dark", dyd=sg("dydis")||"auto", komp=langoRez()==="kompaktiskas", lrez=langoRez(), sep=INFO.windows?"\\":"/";
@@ -1597,6 +1743,9 @@ function rodytiNustatymus(){
     <div class="nust-eil"><div><b>Garsas, kai žingsnis atliktas</b><small>Trumpas „dzin“ ir Brėžly mirktelėjimas užduočių juostoje, kai dirbi AutoCAD'e.</small></div>${jung(Garsas.ijungtas(),"Garsas.perjungti()","Garsas")}</div>
     <div class="nust-eil"><div><b>Komandos su „_“</b><small>Jei tavo AutoCAD ne anglų kalba: _LINE, _CIRCLE veikia bet kurioje kalboje.${BUS.kalba?` Tavo AutoCAD kalba: <b style="display:inline">${esc(BUS.kalba)}</b>.`:""}</small></div>${jung(sg("pabr")==="1",`sg('pabr',sg('pabr')==='1'?'0':'1');rodytiNustatymus()`,"Komandos su pabraukimu")}</div>
     <div class="nust-eil"><div><b>🤖 Robotas gidas</b><small>Parodo, kur spausti, ir padrąsina.</small></div><button class="btn" onclick="Gidas.turasIsNaujo()">❔ Turas</button>${jung(Gidas.ijungtas(),"Gidas.perjungti();rodytiNustatymus()","Robotas gidas")}</div>
+  </div>
+  <div class="nust-gr"><h3>Bandomosios funkcijos <span class="beta">BETA</span></h3><p>Naujos funkcijos, kurios dar testuojamos - gali keistis ar dingti. Įprastai išjungtos.</p>
+    <div class="nust-eil"><div><b>Brėžinio iššūkiai ir peržiūra</b><small>Praktikoje atsiras iššūkiai: tik brėžinys su matmenimis, laikmatis ir asmeninis rekordas. Pabaigoje - tavo komandų peržiūra su patarimais, kaip braižyti greičiau.</small></div>${jung(betaIjungta(),`sg('beta',betaIjungta()?'0':'1');rodytiNustatymus()`,"Brėžinio iššūkiai ir peržiūra")}</div>
   </div>
   <div class="nust-gr"><h3>Progresas</h3><p>XP, pamokos ir daiktai saugomi faile - išliks ir perdiegus Brėžly.</p>
     <code class="kelias">${esc(INFO.duomenys+sep+"progresas.json")}</code>

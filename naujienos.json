@@ -2,6 +2,27 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.5",
+   "pavadinimas": "Bandomosios funkcijos: brėžinio iššūkiai ir peržiūra",
+   "aprasas": "Dvi naujos funkcijos testavimui. Jos išjungtos - įsijungsi Nustatymai → Bandomosios funkcijos.",
+   "punktai": [
+    "<b>Brėžinio iššūkiai</b> (Praktikoje): 6 detalės nuo lengvos plokštelės iki svirties su liestinėmis. Rodomas tik brėžinys su matmenimis - be žingsnių, su laikmačiu ir asmeniniu rekordu.",
+    "Braižyk bet kurioje brėžinio vietoje - tikrinimas pats suranda detalę ir pasako, ko trūksta, kas netikslu ar liko nenukirpta.",
+    "<b>Brėžinio peržiūra</b>: įveikus iššūkį - tavo komandų laiko juosta, kiek kartų ir kiek laiko kiekviena užtruko, ir patarimai (RECTANG vietoj 4 linijų, COPY, ARRAYPOLAR, FILLET, išjungtas OSNAP, nesujungti galai...).",
+    "Tai bandomoji versija - jei kas veikia ne taip, Nustatymai → Pranešti apie klaidą."
+   ],
+   "en": {
+    "pavadinimas": "Experimental: drawing challenges and review",
+    "aprasas": "Two new features for testing. They are off - turn them on in Settings → Experimental features.",
+    "punktai": [
+     "<b>Drawing challenges</b> (in Practice): 6 parts from an easy plate to a lever with tangents. Just a drawing with dimensions - no steps, with a timer and your personal record.",
+     "Draw anywhere in the drawing - the check finds the part itself and tells you what's missing, what's inaccurate or what's left untrimmed.",
+     "<b>Drawing review</b>: after a challenge - a timeline of your commands, how many times and how long each took, and tips (RECTANG instead of 4 lines, COPY, ARRAYPOLAR, FILLET, OSNAP off, unjoined ends...).",
+     "This is a test version - if something doesn't work right, Settings → Report a problem."
+    ]
+   }
+  },
+  {
    "versija": "1.4",
    "pavadinimas": "Nauji personažai su AutoCAD vardais",
    "aprasas": "Visi 8 personažai perpiešti pagal naują dizainą ir gavo vardus iš AutoCAD komandų - kad komandos įsimintų lengviau.",
