@@ -42,8 +42,10 @@ section{border-bottom:var(--l);scroll-margin-top:64px}
 .logo{display:flex;align-items:center;gap:12px;padding:0 22px;min-height:64px;background:var(--juoda);color:var(--popierius);text-decoration:none;font:900 22px var(--font);letter-spacing:-.02em}
 .logo:hover{color:var(--popierius)}
 .virsus nav{display:flex;flex-wrap:wrap}
-.virsus nav a{display:flex;align-items:center;padding:0 20px;min-height:64px;border-right:var(--l);color:var(--juoda);text-decoration:none;font:700 14px var(--font);text-transform:uppercase;letter-spacing:.02em}
+.virsus nav a{display:flex;align-items:center;padding:0 16px;min-height:64px;border-right:var(--l);color:var(--juoda);text-decoration:none;font:700 14px var(--font);text-transform:uppercase;letter-spacing:.02em}
 .virsus nav a:hover{background:var(--geltona)}
+@media (max-width:1420px){.virsus nav a[href="#praktika"],.virsus nav a[href="#personazai"]{display:none}}
+@media (max-width:1120px){.virsus nav a[href="#atsiliepimai"],.virsus nav a[href="programele/"]{display:none}}
 .tarpas{flex:1}
 .virsus .desine{display:flex;align-items:center;gap:14px;padding:0 0 0 18px;border-left:var(--l)}
 .virsus .desine .mono{font-size:13px}
@@ -237,6 +239,22 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .atsil-aciu b{font:900 28px var(--font)}
 .atsil-forma [hidden]{display:none!important}
 
+/* TikTok */
+.tt-meniu{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:var(--l);background:var(--juoda);color:var(--popierius);text-decoration:none;font:800 14px var(--font);text-transform:uppercase}
+.tt-meniu:hover{background:var(--raudona);color:var(--popierius)}
+.tt-meniu svg{width:14px;height:14px}
+.tiktok{background:var(--juoda)}
+.tt-juosta{display:flex;flex-wrap:wrap;align-items:center;gap:20px 28px;padding:28px 40px;color:var(--popierius);text-decoration:none}
+.tt-juosta:hover{color:var(--popierius)}
+.tt-juosta:hover .tt-mygt{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--raudona)}
+.tt-zenklas{width:72px;height:72px;flex-shrink:0;background:var(--raudona);display:flex;align-items:center;justify-content:center;color:var(--popierius)}
+.tt-zenklas svg{width:34px;height:34px}
+.tt-tekstas{flex:1 1 300px;display:flex;flex-direction:column;gap:2px}
+.tt-tekstas .zyme{color:var(--geltona)}
+.tt-tekstas b{font:900 clamp(30px,4.5vw,48px)/1 var(--font);letter-spacing:-.03em}
+.tt-tekstas small{font-size:15px;color:#d6d2c8}
+.tt-mygt{pointer-events:none}
+
 /* apačia */
 footer{background:var(--popierius)}
 .irasas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:var(--l)}
@@ -259,6 +277,8 @@ footer{background:var(--popierius)}
 @media (max-width:760px){
   .virsus nav,.virsus .desine .mono{display:none}
   .virsus .desine{border-left:0;padding:0}
+  .tt-meniu{display:none}
+  .tt-juosta{padding:24px 20px}
   .hero-tekstas{border-right:0;border-bottom:var(--l);padding:36px 20px}
   .lapas{padding:12px}
   .antraste{padding:40px 20px 24px}
@@ -298,7 +318,6 @@ footer{background:var(--popierius)}
   </a>
   <nav aria-label="Pagrindinis meniu">
     <a href="#issukis">Iššūkis</a>
-    <a href="#pamoka">Išbandyk</a>
     <a href="#pamokos">Pamokos</a>
     <a href="#praktika">Praktika</a>
     <a href="#personazai">Personažai</a>
@@ -312,7 +331,7 @@ footer{background:var(--popierius)}
   </nav>
   <span class="tarpas"></span>
   <div class="desine">
-    <span class="mono">VERSIJA {{VERSIJA}}</span>
+    <a class="tt-meniu" href="https://www.tiktok.com/@brezly.tool" target="_blank" rel="noopener" aria-label="Brėžly TikTok'e: @brezly.tool (atsidaro naujame lange)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 L20 12 L7 20 Z" fill="currentColor"/></svg><span>TikTok</span></a>
 <!--ATIDARYTA-->
     <a class="mygt mazas" href="#atsisiusti">Atsisiųsti</a>
 <!--/ATIDARYTA-->
@@ -418,6 +437,14 @@ footer{background:var(--popierius)}
         <span class="pirmas-zingsnis" id="uzuomina">Spausk ir vesk ratu ↻</span>
       </div>
     </div>
+  </section>
+
+  <section class="tiktok" aria-label="Brėžly TikTok'e">
+    <a class="plotis tt-juosta" href="https://www.tiktok.com/@brezly.tool" target="_blank" rel="noopener">
+      <span class="tt-zenklas" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 L20 12 L7 20 Z" fill="currentColor"/></svg></span>
+      <span class="tt-tekstas"><span class="zyme">Sek Brėžly TikTok'e</span><b>@brezly.tool</b><small>Trumpi AutoCAD triukai, iššūkiai ir kas naujo programoje</small></span>
+      <span class="mygt geltonas tt-mygt">Sekti →</span>
+    </a>
   </section>
 
   <section id="pamoka">
@@ -604,6 +631,7 @@ footer{background:var(--popierius)}
 <!--PROGRAMELE-->
       <div><small>Programėlė</small><a href="programele/">Atidaryti</a></div>
 <!--/PROGRAMELE-->
+      <div><small>TikTok</small><a href="https://www.tiktok.com/@brezly.tool" target="_blank" rel="noopener">@brezly.tool</a></div>
       <div><small>Šaltinis</small><a href="https://github.com/vilkavaitkaitis-ui/Brezly">GitHub</a></div>
     </div>
     <p class="teises">Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</p>
