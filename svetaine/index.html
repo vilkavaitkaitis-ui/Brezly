@@ -22,11 +22,14 @@ body{margin:0;background:var(--popierius);color:var(--juoda);font:16px/1.55 var(
 h1,h2,h3,p{margin:0}
 a{color:var(--melyna)}a:hover{color:var(--juoda)}
 :focus-visible{outline:3px solid var(--melyna);outline-offset:2px}
+.praleisti{position:absolute;left:12px;top:-80px;z-index:20;min-height:44px;display:flex;align-items:center;background:var(--geltona);color:var(--juoda);border:var(--l);padding:10px 16px;font:800 15px var(--font)}
+.praleisti:focus{top:12px}
 code{font:14px var(--mono);background:var(--juoda);color:var(--geltona);padding:2px 7px}
 .plotis{max-width:1280px;margin:0 auto}
 .mono{font-family:var(--mono)}
 .zyme{font:700 13px var(--mono);letter-spacing:.04em;text-transform:uppercase}
-h2{font:900 clamp(34px,5vw,56px)/.95 var(--font);letter-spacing:-.04em;text-transform:uppercase}
+h2{font:900 clamp(30px,3.6vw,44px)/1 var(--font);letter-spacing:-.03em}
+.garsi{font-size:clamp(38px,5.5vw,64px);line-height:.92;text-transform:uppercase;letter-spacing:-.04em}
 section{border-bottom:var(--l);scroll-margin-top:64px}
 
 /* mygtukai */
@@ -84,7 +87,6 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .antraste{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 40px;padding:56px 40px 36px}
 .antraste .kaire{display:flex;flex-direction:column;gap:12px;flex:1 1 420px}
 .antraste p{max-width:460px;font-size:17px}
-.nr-zyme{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--juoda);color:var(--popierius);font:900 18px var(--font)}
 
 /* mini pamoka */
 .pamoka{display:flex;flex-wrap:wrap;border-top:var(--l)}
@@ -125,7 +127,7 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .pers:nth-last-child(-n+4){border-bottom:0}
 .pers .vaizdas{aspect-ratio:1.25/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--l);position:relative}
 .pers .vaizdas svg{width:62%;height:auto}
-.pers .vaizdas i{position:absolute;left:14px;top:10px;font:700 13px var(--mono);font-style:normal}
+.pers .vaizdas i{position:absolute;left:12px;top:10px;font:700 13px var(--mono);font-style:normal;background:var(--juoda);color:var(--popierius)!important;padding:2px 7px}
 .pers .apie{padding:14px 18px 18px;display:flex;flex-direction:column;gap:3px}
 .pers .apie b{font:900 24px var(--font);text-transform:uppercase;letter-spacing:-.02em}
 .pers .apie span{font:700 12px var(--mono);text-transform:uppercase}
@@ -194,7 +196,8 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .greita{flex:1 1 400px;padding:48px 40px;background:var(--popierius);display:flex;flex-direction:column;gap:16px;justify-content:center}
 .greita label{display:flex;flex-direction:column;gap:6px;font:700 13px var(--mono);text-transform:uppercase}
 .greita input{font:17px var(--font);min-height:52px;padding:0 14px;border:var(--l);background:var(--balta);color:var(--juoda)}
-.greita input:focus{outline:none;background:#fffbe6}
+.greita input:focus{background:#fffbe6}
+.greita input:focus-visible{outline:3px solid var(--melyna);outline-offset:2px}
 .greita small{font-size:13.5px;color:var(--pilka)}
 
 /* iššūkis */
@@ -215,13 +218,13 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 /* atsiliepimai */
 .atsil{display:flex;flex-wrap:wrap}
 .atsil-kaire{flex:1 1 420px;padding:56px 40px;display:flex;flex-direction:column;gap:20px;border-right:var(--l);background:var(--melyna);color:#fff}
-.atsil-kaire .nr-zyme{background:var(--geltona);color:var(--juoda)}
 .atsil-kaire p{font-size:17px;max-width:460px}
 .atsil-forma{flex:1.2 1 460px;padding:44px 40px;display:flex;flex-direction:column;gap:18px}
 .atsil-forma label{display:flex;flex-direction:column;gap:6px;font:700 13px var(--mono);text-transform:uppercase}
 .atsil-forma label i{font-style:normal;font-weight:400;text-transform:none;color:var(--pilka)}
 .atsil-forma textarea,.atsil-forma input:not([type=radio]){font:17px var(--font);padding:12px 14px;min-height:52px;border:var(--l);background:var(--balta);color:var(--juoda);resize:vertical}
-.atsil-forma textarea:focus,.atsil-forma input:focus{outline:none;background:#fffbe6}
+.atsil-forma textarea:focus,.atsil-forma input:focus{background:#fffbe6}
+.atsil-forma textarea:focus-visible,.atsil-forma input:focus-visible{outline:3px solid var(--melyna);outline-offset:2px}
 .dvieju{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .ivertinimas{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
 .figuros{display:flex;gap:10px}
@@ -262,6 +265,7 @@ footer{background:var(--popierius)}
 .irasas div:last-child{border-right:0}
 .irasas small{font:700 11px var(--mono);text-transform:uppercase;color:var(--pilka)}
 .irasas span,.irasas a{font:700 15px var(--font)}
+.irasas a{display:inline-flex;align-items:center;min-height:44px}
 .teises{padding:18px 40px 32px;font-size:13px;color:var(--pilka)}
 
 @media (max-width:1000px){
@@ -310,6 +314,7 @@ footer{background:var(--popierius)}
 </style>
 </head>
 <body>
+<a class="praleisti" href="#turinys">Pereiti prie turinio</a>
 
 <header class="virsus">
   <a class="logo" href="./">
@@ -346,7 +351,7 @@ footer{background:var(--popierius)}
   </div>
 </header>
 
-<main>
+<main id="turinys">
   <section>
     <div class="plotis hero">
       <div class="hero-tekstas">
@@ -363,12 +368,12 @@ footer{background:var(--popierius)}
 <!--/ATIDARYTA-->
 <!--UZDARYTA-->
 <!--REGISTRACIJA-->
-          <a class="mygt" href="#testuotojai">Tapk testuotoju →</a>
+          <a class="mygt" href="#testuotojai">Tapk testuotoju</a>
 <!--/REGISTRACIJA-->
 <!--/UZDARYTA-->
           <a class="mygt baltas" href="#issukis">Nubrėžk apskritimą</a>
         </div>
-        <p class="failo-info">Windows 10/11 · pilnas AutoCAD · testuojama versija {{VERSIJA}} · nemokamai</p>
+        <p class="failo-info">Reikės Windows 10 ar 11 ir pilno AutoCAD. Testuojama versija {{VERSIJA}}, nemokamai.</p>
       </div>
 
       <div class="lapas">
@@ -415,8 +420,7 @@ footer{background:var(--popierius)}
   <section id="issukis">
     <div class="plotis issukis">
       <div class="issukis-tekstas">
-        <span class="nr-zyme" aria-hidden="true">◯</span>
-        <h2>Nubrėžk<br>apskritimą.<br><span>Ranka.</span></h2>
+        <h2 class="garsi">Nubrėžk<br>apskritimą.<br><span>Ranka.</span></h2>
         <p>Brėžly patikrins jį kaip AutoCAD: suras centrą, spindulį ir pasakys, kiek tavo apskritimas tikslus. Taip pat jis tikrina ir tavo tikrus brėžinius.</p>
         <div class="rezultatas" id="rezultatas" aria-live="polite">
           <span class="zyme">Tikslumas</span>
@@ -426,31 +430,55 @@ footer{background:var(--popierius)}
         </div>
         <div class="veiksmai">
           <button type="button" class="mygt baltas mazas" id="isValyti">Bandyti dar kartą</button>
+          <button type="button" class="mygt baltas mazas" id="pavyzdys">Parodyk pavyzdį</button>
 <!--REGISTRACIJA-->
-          <a class="mygt mazas" href="#testuotojai">Noriu daugiau →</a>
+          <a class="mygt mazas" href="#testuotojai">Registruotis testuoti</a>
 <!--/REGISTRACIJA-->
         </div>
       </div>
       <div class="drobes-remas">
-        <canvas id="drobe" width="900" height="640" aria-label="Brėžimo lapas: nubrėžk apskritimą pele arba pirštu"></canvas>
+        <canvas id="drobe" width="900" height="640" role="img" aria-label="Brėžimo lapas: nubrėžk apskritimą pele arba pirštu, arba spausk „Parodyk pavyzdį“"></canvas>
         <span class="antspaudas" id="antspaudas" hidden></span>
         <span class="pirmas-zingsnis" id="uzuomina">Spausk ir vesk ratu ↻</span>
       </div>
     </div>
   </section>
 
+<!--REGISTRACIJA-->
+  <section id="testuotojai">
+    <div class="plotis testuot">
+      <div class="kaire">
+        <h2 class="garsi">Tapk<br>testuotoju</h2>
+        <p style="font-size:18px;max-width:480px">Išbandyk naujas Brėžly versijas anksčiau už kitus ir pasakyk, kas veikia, o kas ne. Tavo pastabos nulems, kas pateks į kitą versiją.</p>
+        <ul class="nauda">
+          <li>Naujos pamokos ir funkcijos – pirmiausia tau</li>
+          <li>Tiesioginis ryšys su kūrėju</li>
+          <li>Nemokamai, be įsipareigojimų</li>
+        </ul>
+      </div>
+      <form class="greita" action="testavimas/" method="get">
+        <span class="zyme">Komanda: REGISTRUOTIS</span>
+        <label>Vardas<input name="vardas" autocomplete="given-name" maxlength="60" required></label>
+        <label>El. paštas<input name="pastas" type="email" autocomplete="email" maxlength="120" required></label>
+        <button type="submit" class="mygt">Tęsti registraciją</button>
+        <small>Kitame žingsnyje – keli klausimai ir sutikimas. Duomenis naudosime tik susisiekti dėl testavimo.</small>
+      </form>
+    </div>
+  </section>
+<!--/REGISTRACIJA-->
+
   <section class="tiktok" aria-label="Brėžly TikTok'e">
     <a class="plotis tt-juosta" href="https://www.tiktok.com/@brezly.tool" target="_blank" rel="noopener">
       <span class="tt-zenklas" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 L20 12 L7 20 Z" fill="currentColor"/></svg></span>
       <span class="tt-tekstas"><span class="zyme">Sek Brėžly TikTok'e</span><b>@brezly.tool</b><small>Trumpi AutoCAD triukai, iššūkiai ir kas naujo programoje</small></span>
-      <span class="mygt geltonas tt-mygt">Sekti →</span>
+      <span class="mygt geltonas tt-mygt">Sekti</span>
     </a>
   </section>
 
   <section id="pamoka">
     <div class="plotis">
       <div class="antraste">
-        <div class="kaire"><span class="nr-zyme">1</span><h2>Išbandyk<br>pirmą pamoką</h2></div>
+        <div class="kaire"><h2>Išbandyk<br>pirmą pamoką</h2></div>
         <p>Programoje Brėžly pats pamato, kada žingsnis atliktas AutoCAD'e. Čia spausk mygtuką ir pajausi, kaip tai veikia.</p>
       </div>
       <div class="pamoka">
@@ -477,7 +505,7 @@ footer{background:var(--popierius)}
   <section id="personazai">
     <div class="plotis">
       <div class="antraste">
-        <div class="kaire"><span class="nr-zyme">2</span><h2>Pasirink savo<br>braižytoją</h2></div>
+        <div class="kaire"><h2>Pasirink savo<br>braižytoją</h2></div>
         <p>Kiekvienas personažas – iš paprastų figūrų, o vardas – iš AutoCAD. Už pamokas gauni daiktų jų spintai.</p>
       </div>
       <div class="personazai">
@@ -489,7 +517,7 @@ footer{background:var(--popierius)}
   <section id="pamokos">
     <div class="plotis">
       <div class="antraste">
-        <div class="kaire"><span class="nr-zyme">3</span><h2>{{PAMOKOS}} pamokų –<br>nuo failo iki 3D</h2></div>
+        <div class="kaire"><h2>{{PAMOKOS}} pamokų –<br>nuo failo iki 3D</h2></div>
         <p>Pamokų tvarka kaip inžinerinės grafikos kurse. Mokaisi braižydamas, ne skaitydamas.</p>
       </div>
       <div class="lentele">
@@ -503,7 +531,7 @@ footer{background:var(--popierius)}
   <section id="praktika">
     <div class="plotis">
       <div class="antraste">
-        <div class="kaire"><span class="nr-zyme">4</span><h2>{{UZDUOTYS}} brėžiniai,<br>kuriuos patikrina už tave</h2></div>
+        <div class="kaire"><h2>{{UZDUOTYS}} brėžiniai,<br>kuriuos patikrina už tave</h2></div>
         <p>Gauni užduotį ir ruošinį. Nubraižai, įvedi <code>TIKRINK</code> – Brėžly pasako, ar skylės, spinduliai ir tūris sutampa.</p>
       </div>
       <div class="plyteles">
@@ -515,7 +543,7 @@ footer{background:var(--popierius)}
   <section>
     <div class="plotis">
       <div class="antraste">
-        <div class="kaire"><span class="nr-zyme">5</span><h2>Ne vaizdo įrašas.<br>Ne vadovėlis.</h2></div>
+        <div class="kaire"><h2>Ne vaizdo įrašas.<br>Ne vadovėlis.</h2></div>
       </div>
       <div class="kaip">
         <div><svg class="fig" viewBox="0 0 56 56" aria-hidden="true"><rect width="56" height="56" fill="#1f4fd1"/></svg><b>Braižai AutoCAD'e</b><p>Savo tikrame AutoCAD, savo tempu. Tinka nemokama studento licencija.</p></div>
@@ -534,35 +562,12 @@ footer{background:var(--popierius)}
     </div>
   </section>
 
-<!--REGISTRACIJA-->
-  <section id="testuotojai">
-    <div class="plotis testuot">
-      <div class="kaire">
-        <span class="nr-zyme" style="background:#111;color:#ffc400">6</span>
-        <h2>Tapk<br>testuotoju</h2>
-        <p style="font-size:18px;max-width:480px">Išbandyk naujas Brėžly versijas anksčiau už kitus ir pasakyk, kas veikia, o kas ne. Tavo pastabos nulems, kas pateks į kitą versiją.</p>
-        <ul class="nauda">
-          <li>Naujos pamokos ir funkcijos – pirmiausia tau</li>
-          <li>Tiesioginis ryšys su kūrėju</li>
-          <li>Nemokamai, be įsipareigojimų</li>
-        </ul>
-      </div>
-      <form class="greita" action="testavimas/" method="get">
-        <span class="zyme">Komanda: REGISTRUOTIS</span>
-        <label>Vardas<input name="vardas" autocomplete="given-name" maxlength="60" required></label>
-        <label>El. paštas<input name="pastas" type="email" autocomplete="email" maxlength="120" required></label>
-        <button type="submit" class="mygt">Toliau →</button>
-        <small>Kitame žingsnyje – keli klausimai ir sutikimas. Duomenis naudosime tik susisiekti dėl testavimo.</small>
-      </form>
-    </div>
-  </section>
-<!--/REGISTRACIJA-->
+
 
 <!--REGISTRACIJA-->
   <section id="atsiliepimai">
     <div class="plotis atsil">
       <div class="atsil-kaire">
-        <span class="nr-zyme" aria-hidden="true">7</span>
         <h2>Palik<br>atsiliepimą</h2>
         <p>Išbandei iššūkį ar pamoką? Pasakyk, kas patiko, o kas ne. Kiekvieną atsiliepimą skaito Brėžly kūrėjas ir pagal juos tobulina programą.</p>
       </div>
@@ -651,7 +656,7 @@ const PAMOKA = {{PIRMA_PAMOKA}};
     const li = document.createElement("li");
     li.className = "zingsnis";
     li.innerHTML = '<span class="nr"></span><div class="turinys"><div class="pav"><b></b><span></span></div><p></p>'
-      + '<button type="button" class="mygt mazas">Atlikau – tikrinti →</button></div>';
+      + '<button type="button" class="mygt mazas">Atlikau, tikrinti</button></div>';
     li.querySelector(".nr").textContent = i + 1;
     li.querySelector(".pav b").textContent = z.pavadinimas;
     li.querySelector(".pav span").textContent = "+" + z.xp + " XP";
@@ -728,6 +733,16 @@ const PAMOKA = {{PIRMA_PAMOKA}};
   cv.addEventListener("pointerup", baigti); cv.addEventListener("pointercancel", baigti);
   document.getElementById("isValyti").addEventListener("click", () => { pt = []; ivert = null; st.hidden = true; uz.hidden = false;
     taskai.textContent = "–"; verd.textContent = "Brėžk pele arba pirštu ant lapo."; perpiesti(); });
+  document.getElementById("pavyzdys").addEventListener("click", () => {
+    const r = cv.getBoundingClientRect(), x = r.width / 2, y = r.height / 2, R = Math.min(r.width, r.height) * 0.32;
+    const n = 70, f1 = Math.random() * 6, f2 = Math.random() * 6, visas = [];
+    for (let i = 0; i <= n; i++) { const a = i / n * Math.PI * 2 * 1.02 - Math.PI / 2;
+      const kr = R * (1 + 0.035 * Math.sin(3 * a + f1) + 0.02 * Math.sin(5 * a + f2));
+      visas.push([x + kr * Math.cos(a), y + kr * Math.sin(a)]); }
+    pt = []; ivert = null; st.hidden = true; uz.hidden = true;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { pt = visas; ivertinti(); return; }
+    let i = 0; (function zingsnis() { pt.push(visas[i++]); perpiesti(); if (i < visas.length) requestAnimationFrame(zingsnis); else ivertinti(); })();
+  });
   window.addEventListener("resize", dydis); dydis();
 })();
 
