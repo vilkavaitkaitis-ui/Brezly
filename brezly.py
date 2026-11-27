@@ -766,7 +766,8 @@ def ataskaita(duom):
     os.makedirs(ap, exist_ok=True)
     kelias = os.path.join(ap, f"Brezly_ataskaita_{datetime.datetime.now():%Y%m%d_%H%M%S}.zip")
     sist = {"brezly": VERSIJA_BREZLY, "python": sys.version, "os": platform.platform(),
-            "laikas": datetime.datetime.now().isoformat(timespec="seconds"), "aplinka": aplinka()}
+            "laikas": datetime.datetime.now().isoformat(timespec="seconds"), "aplinka": aplinka(),
+            "atmestos_svetimos_uzklausos": dict(P.ATMESTA)}
     try:
         b = P.BUSENA["darbas"].b
         if b is not None:
@@ -815,8 +816,22 @@ def _aprasas():
         return json.loads(r.read().decode("utf-8-sig"))
 
 
+def _leistina_pradzia():
+    """Iš kur leidžiama atsisiųsti atnaujinimą: tos pačios GitHub repozitorijos Releases (ar to paties aplanko)."""
+    m = re.match(r"(https://github\.com/[^/]+/[^/]+/releases/)", ATNAUJINIMU_URL or "")
+    return m.group(1) + "download/" if m else (ATNAUJINIMU_URL or "").rsplit("/", 1)[0] + "/"
+
+
 def _atsisiusti(url, kelias, sha256=""):
-    """Atsisiunčia failą ir patikrina SHA-256 (jei pateiktas) - sugadintas ar pakeistas failas nediegiamas."""
+    """Atsisiunčia failą ir patikrina SHA-256 - sugadintas, pakeistas ar ne iš Brėžly Releases failas nediegiamas."""
+    if not (isinstance(url, str) and url.startswith("https://") and url.startswith(_leistina_pradzia())):
+        rasyti_zurnala(f"Atnaujinimas atmestas - svetimas adresas: {url!r}")
+        raise ValueError(tr("Atnaujinimo adresas ne iš Brėžly - nediegiu. Atsisiųsk Brėžly iš oficialios svetainės.",
+                            "The update address isn't Brėžly's - not installing. Download Brėžly from the official site."))
+    if not re.fullmatch(r"[0-9a-fA-F]{64}", sha256 or ""):
+        rasyti_zurnala("Atnaujinimas atmestas - nėra kontrolinės sumos")
+        raise ValueError(tr("Atnaujinimas be kontrolinės sumos - nediegiu. Atsisiųsk Brėžly iš oficialios svetainės.",
+                            "The update has no checksum - not installing. Download Brėžly from the official site."))
     req = urllib.request.Request(url, headers={"User-Agent": "Brezly/" + VERSIJA_BREZLY})
     h = hashlib.sha256()
     with urllib.request.urlopen(req, timeout=30) as r, open(kelias, "wb") as f:
@@ -825,7 +840,7 @@ def _atsisiusti(url, kelias, sha256=""):
             if not b:
                 break
             h.update(b); f.write(b)
-    if sha256 and h.hexdigest().lower() != sha256.lower():
+    if h.hexdigest().lower() != sha256.lower():
         os.remove(kelias)
         raise ValueError(tr("Atsisiųstas failas sugadintas (nesutampa kontrolinė suma). Bandyk dar kartą vėliau.", "The downloaded file is damaged (checksum mismatch). Try again later."))
 
@@ -1167,7 +1182,7 @@ class BrezlyTvarkykle(P.Tvarkykle):
         return super().nelaukti(kelias, duom)
 
     def do_GET(self):
-        if self.path.startswith("/praktika/"):          # praktikos brėžinių peržiūra (SVG/PDF)
+        if self.path.startswith("/praktika/") and self._savas_host():     # praktikos brėžinių peržiūra (SVG/PDF)
             kelias = praktika.failas(self.path.split("?")[0][len("/praktika/"):])
             if not kelias:
                 return self._siusti(404, b"{}")

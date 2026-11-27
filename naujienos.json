@@ -2,6 +2,27 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.5.1",
+   "pavadinimas": "Saugumas",
+   "aprasas": "Brėžly dabar atsako tik pati sau - jokia kita naršyklėje atidaryta svetainė negali jos valdyti.",
+   "punktai": [
+    "<b>Apsaugotas vietinis serveris:</b> kiekvieną kartą paleidus sukuriamas slaptas raktas, kurį žino tik Brėžly langas. Užklausos iš kitų svetainių ar kitų adresų atmetamos.",
+    "Kitos svetainės negali pakeisti tavo progreso, paleisti atnaujinimo ar nieko nubraižyti tavo AutoCAD brėžinyje.",
+    "<b>Atnaujinimai</b> diegiami tik iš oficialios Brėžly vietos ir tik su sutampančia kontroline suma.",
+    "Tau nieko keisti nereikia - viskas veikia kaip anksčiau."
+   ],
+   "en": {
+    "pavadinimas": "Security",
+    "aprasas": "Brėžly now only answers to itself - no other website open in your browser can control it.",
+    "punktai": [
+     "<b>Protected local server:</b> every launch creates a secret key that only the Brėžly window knows. Requests from other websites or other addresses are rejected.",
+     "Other websites can't change your progress, start an update or draw anything in your AutoCAD drawing.",
+     "<b>Updates</b> are installed only from Brėžly's official location and only with a matching checksum.",
+     "You don't need to change anything - everything works as before."
+    ]
+   }
+  },
+  {
    "versija": "1.5",
    "pavadinimas": "Bandomosios funkcijos: brėžinio iššūkiai ir peržiūra",
    "aprasas": "Dvi naujos funkcijos testavimui. Jos išjungtos - įsijungsi Nustatymai → Bandomosios funkcijos.",

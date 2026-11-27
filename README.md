@@ -83,3 +83,7 @@ Sąsają be AutoCAD: `python brezly.py` (ne Windows – be AutoCAD ryšio, bet v
 testai → `Brezly_Setup.exe`, `Brezly_programa.zip`, `Brezly.lsp` → Release, įdiegtos programos pasiūlo atnaujinti.
 Svetainė (https://vilkavaitkaitis-ui.github.io/Brezly/) ir programėlė (`/programele/`) pasiskelbia pačios („Brėžly programėlė“), kai `main` šakoje pasikeičia `svetaine/`, `app/`, `pamokos.json`, `praktika/`, `mokymas.js`, `zinynas.json` ar `paveiksleliai/`.
 Į surinkimą įtraukiami failai išvardyti vienoje vietoje – `irankiai/surinkti.py`.
+
+## Saugumas
+
+Vietinis serveris klausosi tik `127.0.0.1`, `/api` saugo sesijos raktas ir `Host`/`Origin` tikrinimas, atnaujinimai - tik iš savo Releases su SHA-256. Plačiau - [SAUGUMAS.md](SAUGUMAS.md).

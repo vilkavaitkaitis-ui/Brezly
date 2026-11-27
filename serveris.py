@@ -22,6 +22,8 @@ import threading
 import time
 import traceback
 import webbrowser
+import hmac
+import secrets
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
@@ -320,6 +322,20 @@ TIPAI = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
          ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
          ".ico": "image/x-icon", ".svg": "image/svg+xml", ".png": "image/png", ".pdf": "application/pdf",
          ".woff2": "font/woff2", ".woff": "font/woff", ".json": "application/json; charset=utf-8"}
+# ------------------------------------------------------------------ apsauga („užkarda“ vietiniam serveriui)
+# Serveris klausosi tik 127.0.0.1 - kiti tinklo įrenginiai neprisijungia. Bet naršyklėje atidaryta svetima
+# svetainė galėtų siųsti užklausas į http://127.0.0.1:<prievadas>/api/... Todėl:
+#   * Host turi būti 127.0.0.1:<prievadas> arba localhost:<prievadas> (apsauga nuo DNS rebinding);
+#   * /api - tik POST, su sesijos raktu (antraštė X-Brezly-Raktas arba ?r=), kurį žino tik Brėžly puslapis;
+#   * svetimas Origin - atmetamas; per didelė užklausa - atmetama;
+#   * puslapio negalima įdėti į svetimą svetainę (frame-ancestors), failai neskaitomi iš kitų svetainių (CORP).
+RAKTAS = secrets.token_urlsafe(32)          # kiekvieną paleidimą - naujas
+MAKS_UZKLAUSA = 20 * 1024 * 1024
+SAUGUMO_ANTRASTES = (("X-Content-Type-Options", "nosniff"), ("X-Frame-Options", "DENY"),
+                     ("Content-Security-Policy", "frame-ancestors 'none'"), ("Referrer-Policy", "no-referrer"),
+                     ("Cross-Origin-Resource-Policy", "same-origin"))
+ATMESTA = {"kiek": 0, "paskutine": ""}     # diagnostikai: kiek svetimų užklausų atmesta
+
 SRIFTAI = "sriftai"             # šriftų aplankas šalia programos (sriftai.css + .woff2)
 STATINIAI = (SRIFTAI, "paveiksleliai")  # aplankai, kurių failai tiekiami kaip yra (tik tikrai esantys)
 
@@ -347,18 +363,47 @@ class Tvarkykle(BaseHTTPRequestHandler):
         self.send_header("Content-Type", tipas)
         self.send_header("Content-Length", str(len(turinys)))
         self.send_header("Cache-Control", "no-store")
+        for k, v in SAUGUMO_ANTRASTES:
+            self.send_header(k, v)
         self.end_headers()
         self.wfile.write(turinys)
 
     def _failas(self, vardas):
         with open(os.path.join(PROGRAMOS_APLANKAS, vardas), "rb") as f:
-            return self._siusti(200, f.read(), TIPAI.get(os.path.splitext(vardas)[1].lower(), "application/octet-stream"))
+            turinys = f.read()
+        if vardas == self.HTML:                 # sesijos raktas - tik į mūsų puslapį
+            turinys = turinys.replace(b"<head>", b'<head><meta name="brezly-raktas" content="' + RAKTAS.encode() + b'">', 1)
+        return self._siusti(200, turinys, TIPAI.get(os.path.splitext(vardas)[1].lower(), "application/octet-stream"))
+
+    # --- apsauga
+    def _prievadas(self):
+        return self.server.server_address[1]
+
+    def _savas_host(self):
+        p = self._prievadas()
+        return self.headers.get("Host", "") in (f"127.0.0.1:{p}", f"localhost:{p}")
+
+    def _savas_origin(self):
+        o = self.headers.get("Origin")
+        p = self._prievadas()
+        return o is None or o in (f"http://127.0.0.1:{p}", f"http://localhost:{p}")
+
+    def _turi_rakta(self, q):
+        r = self.headers.get("X-Brezly-Raktas") or q.get("r", "")
+        return hmac.compare_digest(str(r).encode(), RAKTAS.encode())
+
+    def _atmesti(self, kodas, kodel):
+        ATMESTA["kiek"] += 1
+        ATMESTA["paskutine"] = f"{self.command} {urlparse(self.path).path}: {kodel}"
+        return self._siusti(kodas, {"ok": False, "klaida": kodel})
 
     def _ping(self):
         BUSENA["paskutinis_ping"] = time.time()
         BUSENA["buvo_ping"] = True
 
     def do_GET(self):
+        if not self._savas_host():
+            return self._atmesti(403, "Svetimas adresas")
         self._ping()
         u = urlparse(self.path)
         if u.path in ("/", "/index.html"):
@@ -374,16 +419,26 @@ class Tvarkykle(BaseHTTPRequestHandler):
                 if len(dalys) <= 2 and ".." not in dalys and os.path.isdir(kelias) and dalys[-1] in os.listdir(kelias):
                     return self._failas(os.path.join(ap, *dalys))
         if u.path in self.VEIKSMAI:
-            q = {k: v[0] for k, v in parse_qs(u.query).items()}
-            return self._atsakyti(u.path, q)
+            return self._atmesti(405, "Tik POST")
         self._siusti(404, {"ok": False, "klaida": "Nėra"})
 
     def do_POST(self):
-        self._ping()
         u = urlparse(self.path)
+        if not self._savas_host():
+            return self._atmesti(403, "Svetimas adresas")
+        if not self._savas_origin():
+            return self._atmesti(403, "Svetima svetainė")
+        if not self._turi_rakta({k: v[0] for k, v in parse_qs(u.query).items()}):
+            return self._atmesti(403, "Nėra sesijos rakto")
+        self._ping()
         if u.path not in self.VEIKSMAI:
             return self._siusti(404, {"ok": False, "klaida": "Nėra"})
-        ilgis = int(self.headers.get("Content-Length") or 0)
+        try:
+            ilgis = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            ilgis = -1
+        if not 0 <= ilgis <= MAKS_UZKLAUSA:
+            return self._atmesti(413, "Per didelė užklausa")
         try:
             duom = json.loads(self.rfile.read(ilgis) or b"{}")
         except Exception:

@@ -247,8 +247,9 @@ let dirba = false, nubraizyta = false, zurnaloTekstas = "";
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function saugykla(k, v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k, v);}catch(e){ return null; } }
+const RAKTAS = document.querySelector('meta[name="brezly-raktas"]')?.content || "";   // sesijos raktas (serveris)
 async function api(kelias, duom){
-  const r = await fetch(kelias, duom===undefined ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(duom)});
+  const r = await fetch(kelias, {method:"POST", headers:{"Content-Type":"application/json", "X-Brezly-Raktas":RAKTAS}, body:JSON.stringify(duom===undefined ? {} : duom)});
   return r.json();
 }
 function pranesti(t){ const p=$("#pranesimas"); p.textContent=t; p.classList.add("rodo"); clearTimeout(p._t); p._t=setTimeout(()=>p.classList.remove("rodo"),2600); }

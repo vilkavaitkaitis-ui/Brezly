@@ -64,7 +64,7 @@ class Greitis(unittest.TestCase):
     def uzklausa(self, kelias, duom=None):
         t = time.time()
         req = urllib.request.Request(self.url + kelias, json.dumps(duom).encode() if duom is not None else None,
-                                     {"Content-Type": "application/json"})
+                                     {"Content-Type": "application/json", "X-Brezly-Raktas": P.RAKTAS})
         r = urllib.request.urlopen(req, timeout=30).read()
         return time.time() - t, (json.loads(r) if kelias.startswith("/api/") else r)
 

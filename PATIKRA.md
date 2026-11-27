@@ -111,3 +111,10 @@ Kiekvieną žingsnį pirmiausia padaryk pats, tada patikrink; kitame brėžinyje
 - [ ] Antras bandymas greičiau → „Naujas rekordas!“, +10 XP; rekordas matosi kortelėje.
 - [ ] „Svirtis“: liestinės per LINE + Tangent ir TRIM → priimama.
 - [ ] Kūrėjo režimas → Imitacija „Visada gerai“ → iššūkis be AutoCAD rodo pavyzdinę peržiūrą.
+
+## 15. 1.5.1: saugumas
+- [ ] Brėžly veikia kaip anksčiau: prisijungimas prie AutoCAD, žingsnio tikrinimas, progreso išsaugojimas (uždaryk ir atidaryk - XP liko), testai, praktika, nustatymai.
+- [ ] Naršyklėje atidaryk `http://127.0.0.1:8732/api/info` → „Tik POST“ (405), ne duomenys.
+- [ ] „Pranešti apie klaidą“ → ZIP → `sistema.json` turi `atmestos_svetimos_uzklausos`.
+- [ ] Nustatymai → Atnaujinimai → patikrinti: randama / „naujausia versija“ (kai išeis 1.5.2 - atnaujinimas įdiegiamas).
+- [ ] Brėžly Pilotas (jei naudoji) taip pat veikia.
