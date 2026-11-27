@@ -6,6 +6,16 @@
 <title>Brėžly - nemokama AutoCAD mokymosi programa</title>
 <meta name="description" content="Brėžly - nemokama AutoCAD mokymosi programa inžinerijos studentams. Veda žingsnis po žingsnio ir pati tikrina tavo brėžinį.">
 <meta name="theme-color" content="#111111">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://brezly.pages.dev/">
+<meta property="og:title" content="Brėžly – braižai tu, Brėžly tikrina">
+<meta property="og:description" content="Nemokama AutoCAD mokymosi programa studentams: veda žingsnis po žingsnio ir pati tikrina tavo brėžinį. Tapk testuotoju.">
+<meta property="og:image" content="https://brezly.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="lt_LT">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://brezly.pages.dev/">
 <link rel="icon" href="icon-192.png">
 <link rel="stylesheet" href="sriftai/sriftai.css">
 <style>
@@ -48,7 +58,8 @@ section{border-bottom:var(--l);scroll-margin-top:64px}
 .virsus nav a{display:flex;align-items:center;padding:0 16px;min-height:64px;border-right:var(--l);color:var(--juoda);text-decoration:none;font:700 14px var(--font);text-transform:uppercase;letter-spacing:.02em}
 .virsus nav a:hover{background:var(--geltona)}
 @media (max-width:1420px){.virsus nav a[href="#praktika"],.virsus nav a[href="#personazai"]{display:none}}
-@media (max-width:1120px){.virsus nav a[href="#atsiliepimai"],.virsus nav a[href="programele/"]{display:none}}
+@media (max-width:1560px){.virsus nav a[href="#atsiliepimai"]{display:none}}
+@media (max-width:1120px){.virsus nav a[href="#duk"],.virsus nav a[href="programele/"]{display:none}}
 .tarpas{flex:1}
 .virsus .desine{display:flex;align-items:center;gap:14px;padding:0 0 0 18px;border-left:var(--l)}
 .virsus .desine .mono{font-size:13px}
@@ -258,6 +269,37 @@ h1 span{display:inline-block;background:var(--geltona);padding:0 .08em;margin-le
 .tt-tekstas small{font-size:15px;color:#d6d2c8}
 .tt-mygt{pointer-events:none}
 
+/* tikros nuotraukos */
+.ekranai{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto;border-top:var(--l)}
+.ekranas{margin:0;border-right:var(--l);border-bottom:var(--l);background:var(--balta);display:flex;flex-direction:column}
+.ekranas:last-child{border-bottom:0}
+.ekranas.didelis{grid-row:span 2;border-bottom:0}
+.ekranai .ekranas:not(.didelis){border-right:0}
+.ekranas img{display:block;width:100%;height:auto;flex:1;object-fit:cover;object-position:top left}
+.ekranas figcaption{padding:12px 18px;border-top:var(--l);font:700 15px var(--font);background:var(--popierius)}
+.kas-toliau{margin:0;padding:0;list-style:none;counter-reset:k;display:flex;flex-direction:column;gap:12px}
+.kas-toliau li{counter-increment:k;display:flex;gap:12px;align-items:flex-start;font-size:16px}
+.kas-toliau li::before{content:counter(k);flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--juoda);color:var(--geltona);display:flex;align-items:center;justify-content:center;font:900 15px var(--font)}
+/* D.U.K. */
+.duk{display:grid;grid-template-columns:1fr 2fr;gap:24px 40px;padding:56px 40px}
+.klausimai{border-top:var(--l)}
+.klausimai details{border-bottom:2px solid var(--juoda)}
+.klausimai summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:56px;padding:12px 0;font:800 18px var(--font)}
+.klausimai summary::-webkit-details-marker{display:none}
+.klausimai summary::after{content:"";flex-shrink:0;width:18px;height:18px;background:var(--juoda);clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .15s}
+.klausimai details[open] summary::after{transform:rotate(180deg);background:var(--melyna)}
+.klausimai details p{margin:0 0 18px;max-width:640px}
+/* pamokų lentelė */
+.lentele.suskleista .eil:not(.galva):nth-child(n+8){display:none}
+.rodyti-visas{display:block;width:100%;min-height:56px;border:0;border-top:var(--l);background:var(--geltona);font:800 16px var(--font);cursor:pointer}
+.rodyti-visas:hover{background:#ffd23f}
+/* tikri atsiliepimai */
+.citatos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.citata{margin:0;padding:32px 36px;border-right:var(--l);display:flex;flex-direction:column;gap:14px}
+.citata:last-child{border-right:0}
+.citata p{font:700 20px/1.4 var(--font)}
+.citata footer{font:13px var(--mono);background:none}
+
 /* apačia */
 footer{background:var(--popierius)}
 .irasas{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:var(--l)}
@@ -299,6 +341,11 @@ footer{background:var(--popierius)}
   .issukis-tekstas,.atsil-kaire{border-right:0;border-bottom:var(--l);padding:40px 20px}
   .atsil-forma{padding:32px 20px}
   .dvieju{grid-template-columns:1fr}
+  .ekranai{grid-template-columns:1fr}
+  .ekranas{border-right:0!important;border-bottom:var(--l)!important}
+  .ekranas:last-child{border-bottom:0!important}
+  .duk{grid-template-columns:1fr;padding:40px 20px}
+  .citata{border-right:0;border-bottom:var(--l)}
   .drobes-remas{min-height:360px;order:-1;border-bottom:var(--l)}
   .testuot .kaire{border-right:0;border-bottom:var(--l);padding:40px 20px}
   .greita{padding:32px 20px}
@@ -306,9 +353,11 @@ footer{background:var(--popierius)}
   .teises{padding:18px 20px 28px}
 }
 @media (max-width:520px){
-  .personazai,.plyteles,.reikia{grid-template-columns:1fr}
-  .pers,.plytele,.reikia div{border-right:0!important;border-bottom:var(--l)!important}
-  .pers:last-child,.plytele:last-child,.reikia div:last-child{border-bottom:0!important}
+  .personazai{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}
+  .personazai .pers{flex:0 0 78%;scroll-snap-align:start;border-right:var(--l)!important;border-bottom:0!important}
+  .plyteles,.reikia{grid-template-columns:1fr}
+  .plytele,.reikia div{border-right:0!important;border-bottom:var(--l)!important}
+  .plytele:last-child,.reikia div:last-child{border-bottom:0!important}
   .skaiciai div{border-right:0;border-bottom:var(--l)}
 }
 </style>
@@ -328,6 +377,7 @@ footer{background:var(--popierius)}
     <a href="#personazai">Personažai</a>
 <!--REGISTRACIJA-->
     <a href="#testuotojai">Testuotojams</a>
+    <a href="#duk">D.U.K.</a>
     <a href="#atsiliepimai">Atsiliepimai</a>
 <!--/REGISTRACIJA-->
 <!--PROGRAMELE-->
@@ -444,12 +494,31 @@ footer{background:var(--popierius)}
     </div>
   </section>
 
+  <section id="programa" aria-labelledby="programa-h">
+    <div class="plotis">
+      <div class="antraste">
+        <div class="kaire"><h2 id="programa-h">Taip atrodo Brėžly</h2></div>
+        <p>Tikros programos lango nuotraukos. AutoCAD atidarytas šalia, o Brėžly rodo, ką daryti, ir pats patikrina brėžinį.</p>
+      </div>
+      <div class="ekranai">
+        <figure class="ekranas didelis"><img src="vaizdai/pamoka.webp" width="1280" height="756" loading="lazy" alt="Brėžly pamoka „Failas ir formatai“: žingsnis patikrintas, +10 XP"><figcaption>Pamoka: žingsnis atliktas ir patikrintas</figcaption></figure>
+        <figure class="ekranas"><img src="vaizdai/praktika.webp" width="1280" height="756" loading="lazy" alt="Brėžly praktika: užduočių brėžiniai A4 ir A3 lapuose"><figcaption>Praktika: tikri brėžiniai su rėmeliu</figcaption></figure>
+        <figure class="ekranas"><img src="vaizdai/spinta.webp" width="1280" height="756" loading="lazy" alt="Brėžly spinta: personažų pasirinkimas"><figcaption>Spinta: personažai ir daiktai už pažangą</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
 <!--REGISTRACIJA-->
   <section id="testuotojai">
     <div class="plotis testuot">
       <div class="kaire">
         <h2 class="garsi">Tapk<br>testuotoju</h2>
         <p style="font-size:18px;max-width:480px">Išbandyk naujas Brėžly versijas anksčiau už kitus ir pasakyk, kas veikia, o kas ne. Tavo pastabos nulems, kas pateks į kitą versiją.</p>
+        <ol class="kas-toliau" aria-label="Kas bus po registracijos">
+          <li><span><b>Gauni laišką</b> su testine Brėžly versija ir trumpu sąrašu, ką išbandyti.</span></li>
+          <li><span><b>Išbandai</b> pamokas savo AutoCAD'e – kada ir kiek nori.</span></li>
+          <li><span><b>Parašai</b>, kas veikia, o kas ne: atsakydamas į laišką arba šiame puslapyje.</span></li>
+        </ol>
         <ul class="nauda">
           <li>Naujos pamokos ir funkcijos – pirmiausia tau</li>
           <li>Tiesioginis ryšys su kūrėju</li>
@@ -520,11 +589,12 @@ footer{background:var(--popierius)}
         <div class="kaire"><h2>{{PAMOKOS}} pamokų –<br>nuo failo iki 3D</h2></div>
         <p>Pamokų tvarka kaip inžinerinės grafikos kurse. Mokaisi braižydamas, ne skaitydamas.</p>
       </div>
-      <div class="lentele">
+      <div class="lentele" id="pamokuLentele">
         <div class="eil galva"><span class="nr">Nr.</span><span>Pamoka</span><span class="sk">Žingsniai</span></div>
 {{PAMOKU_SARASAS}}
 {{ATEITYJE_SARASAS}}
       </div>
+      <button type="button" class="rodyti-visas" id="rodytiPamokas" hidden aria-controls="pamokuLentele" aria-expanded="false">Rodyti visas pamokas ({{PAMOKOS}})</button>
     </div>
   </section>
 
@@ -564,7 +634,23 @@ footer{background:var(--popierius)}
 
 
 
+  <section id="duk" aria-labelledby="duk-h">
+    <div class="plotis duk">
+      <h2 id="duk-h">Dažni klausimai</h2>
+      <div class="klausimai">
+        <details><summary>Ar reikia mokamos AutoCAD licencijos?</summary><p>Ne. Brėžly veikia su pilnu AutoCAD, o studentai jį gali gauti nemokamai su Autodesk švietimo licencija.</p></details>
+        <details><summary>Ar tinka AutoCAD LT?</summary><p>Ne. Brėžly tikrina brėžinį per pilno AutoCAD sąsają, kurios LT versijoje nėra. Reikia pilnos AutoCAD versijos.</p></details>
+        <details><summary>Ar veikia Mac'e ar telefone?</summary><p>Programa skirta Windows 10 ir 11. Pamokas ir testus be AutoCAD gali peržiūrėti <a href="programele/">programėlėje</a> – telefone ar naršyklėje.</p></details>
+        <details><summary>Ką turės daryti testuotojas?</summary><p>Gausi laišką su testine versija ir trumpu sąrašu, ką išbandyti. Pabandai pamokas savo AutoCAD'e, kada nori, ir parašai, kas veikia, o kas ne. Įsipareigojimų nėra – gali bet kada nustoti.</p></details>
+        <details><summary>Ar saugu diegti?</summary><p>Brėžly – atviro kodo: visą kodą gali peržiūrėti <a href="https://github.com/vilkavaitkaitis-ui/Brezly">GitHub'e</a>. Programa nerenka asmens duomenų – progresas laikomas tik tavo kompiuteryje. Plačiau – <a href="https://github.com/vilkavaitkaitis-ui/Brezly/blob/main/PRIVATUMAS.md">privatumo politikoje</a>.</p></details>
+        <details><summary>Kiek kainuoja?</summary><p>Nieko. Brėžly nemokama, be reklamų ir paskyrų.</p></details>
+        <details><summary>Kada bus galima atsisiųsti visiems?</summary><p>Kai kartu su testuotojais ištaisysime klaidas. Užsiregistravę testuoti sužinosite pirmi.</p></details>
+      </div>
+    </div>
+  </section>
+
 <!--REGISTRACIJA-->
+{{ATSILIEPIMU_CITATOS}}
   <section id="atsiliepimai">
     <div class="plotis atsil">
       <div class="atsil-kaire">
@@ -638,6 +724,7 @@ footer{background:var(--popierius)}
 <!--/PROGRAMELE-->
       <div><small>TikTok</small><a href="https://www.tiktok.com/@brezly.tool" target="_blank" rel="noopener">@brezly.tool</a></div>
       <div><small>Šaltinis</small><a href="https://github.com/vilkavaitkaitis-ui/Brezly">GitHub</a></div>
+      <div><small>Privatumas</small><a href="https://github.com/vilkavaitkaitis-ui/Brezly/blob/main/PRIVATUMAS.md">Politika</a></div>
     </div>
     <p class="teises">Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra Autodesk, Inc. prekės ženklas.</p>
   </div>
@@ -686,6 +773,16 @@ const PAMOKA = {{PIRMA_PAMOKA}};
   document.getElementById("isNaujo").addEventListener("click", () => rodyti(0, true));
   rodyti(0, false);
 })();
+/* ===== Pamokų lentelė: rodomos 6, likusios - paspaudus ===== */
+(function () {
+  const l = document.getElementById("pamokuLentele"), b = document.getElementById("rodytiPamokas");
+  if (!l || !b || l.querySelectorAll(".eil:not(.galva)").length <= 7) return;
+  l.classList.add("suskleista"); b.hidden = false;
+  b.addEventListener("click", () => { const sk = l.classList.toggle("suskleista");
+    b.setAttribute("aria-expanded", String(!sk)); b.textContent = sk ? b.dataset.rodyti : "Rodyti mažiau"; });
+  b.dataset.rodyti = b.textContent;
+})();
+
 /* ===== Iššūkis: nubrėžk apskritimą ===== */
 (function () {
   const cv = document.getElementById("drobe"); if (!cv) return;

@@ -1,6 +1,6 @@
 # Brėžly privatumo politika
 
-*Galioja nuo 2026-11-18.* English version below.
+*Galioja nuo 2026-11-27.* English version below.
 
 Brėžly – nemokama AutoCAD mokymosi programa. Ji sukurta taip, kad apie tave **nieko nesiųstų**.
 
@@ -24,16 +24,22 @@ Brėžly – nemokama AutoCAD mokymosi programa. Ji sukurta taip, kad apie tave 
 
 Ištrinti viską: pašalink programą ir ištrink aplanką `Dokumentai\Brezly`.
 
-## Demo versijos registracija (svetainė)
+## Svetainė (brezly.pages.dev)
 
-- **Ką renkame:** el. pašto adresą (ir, jei pats įrašai, vardą, mokymo įstaigą ar pastabą).
-- **Kam:** tik pranešti, kai bus galima išbandyti demo versiją. Nesiunčiame reklamos ir neperduodame
-  duomenų kitiems.
-- **Kur laikoma:** formų paslaugoje, per kurią veikia registracija (Netlify Forms arba Google Forms).
-- **Kiek laiko:** kol demo versija pradės veikti, bet ne ilgiau nei 12 mėnesių; vėliau ištrinama.
+**Registracija į testavimą ir atsiliepimai**
+
+- **Ką renkame:** registruojantis – vardą, el. paštą ir, jei pats įrašai, mokymo įstaigą, AutoCAD versiją ir
+  pastabą; paliekant atsiliepimą – įvertinimą, tekstą ir, jei nori, vardą bei el. paštą.
+- **Kam:** susisiekti dėl Brėžly testavimo ir tobulinti programą. Nesiunčiame reklamos ir neperduodame duomenų kitiems.
+  Atsiliepimą svetainėje viešai parodome tik gavę tavo atskirą sutikimą.
+- **Kaip perduodama:** forma išsiunčiama per FormSubmit (formsubmit.co) ir ateina Brėžly kūrėjui el. laišku.
+- **Kiek laiko:** kol vyksta testavimas, bet ne ilgiau nei 12 mėnesių; vėliau ištrinama.
 - **Pagrindas:** tavo sutikimas (BDAR 6 str. 1 d. a p.). Sutikimą gali atšaukti bet kada.
 - **Tavo teisės:** sužinoti, kokie tavo duomenys saugomi, juos pataisyti arba ištrinti. Skundą gali pateikti
   Valstybinei duomenų apsaugos inspekcijai (vdai.lrv.lt).
+
+**Lankomumo statistika:** svetainė naudoja Cloudflare Web Analytics – be slapukų ir be asmens identifikavimo,
+tik suvestiniai skaičiai (kiek apsilankymų, iš kokių puslapių atėjo, kokie įrenginiai).
 
 ## Kontaktai
 
@@ -46,7 +52,7 @@ Brėžly – nepriklausoma programa, nesusijusi su Autodesk, Inc. AutoCAD® yra 
 
 # Brėžly privacy policy (English)
 
-*Effective 2026-11-18.*
+*Effective 2026-11-27.*
 
 Brėžly is a free AutoCAD learning app built to **send nothing about you**.
 
@@ -59,11 +65,11 @@ nothing is loaded from other websites. „Report a problem“ (log, progress, Wi
 progress export create files on your computer only – you decide whether to send them. The optional Brėžly Pilot AI mode sends
 your text or photo to Anthropic only if you enter your own API key.
 
-**Demo sign-up** (website) collects your e-mail address (and anything else you choose to enter) only to tell you when
-the demo is available. It is kept in the form service (Netlify Forms or Google Forms) until the demo launches, at most
-12 months, and is never shared or used for marketing. Legal basis: your consent (GDPR Art. 6(1)(a)), which you can
-withdraw at any time. You may ask to see, correct or delete your data, and complain to the Lithuanian State Data
-Protection Inspectorate (vdai.lrv.lt).
+**Website** (brezly.pages.dev): the tester sign-up and feedback forms collect what you enter (name, e-mail, and optionally
+school, AutoCAD version, rating and comments) only to contact you about testing and to improve the app. They are sent by
+e-mail via FormSubmit (formsubmit.co), never shared or used for ads, kept at most 12 months; feedback is shown publicly only
+with your separate consent. Legal basis: consent (GDPR Art. 6(1)(a)); you may withdraw it, access, correct or delete your
+data at any time. The site uses Cloudflare Web Analytics – cookie-free, aggregate statistics only.
 
 **Contact:** the e-mail address on the Brėžly website, or [GitHub](https://github.com/vilkavaitkaitis-ui/Brezly/issues)
 (don't post personal data there).

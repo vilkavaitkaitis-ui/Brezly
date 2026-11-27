@@ -180,10 +180,18 @@ def pagrindinio_zymes(d, pamokos, html):
         f'<i style="color:{"#f7f5f0" if p["fonas"] in tamsus else "#111111"}">{i + 1:02d}</i>{p["svg"]}</div>'
         f'<div class="apie"><b>{e(p["vardas"])}</b><span>{e(p["forma"])}</span><small>{e(p["txt"])}</small></div></div>'
         for i, p in enumerate(ps))
+    # tikri atsiliepimai (tik su žmogaus sutikimu!) - svetaine/atsiliepimai.json: [{"tekstas", "vardas", "kas"}]
+    kelias = os.path.join(SVETAINES_SALTINIS, "atsiliepimai.json")
+    tikri = json.load(open(kelias, encoding="utf-8")).get("atsiliepimai", []) if os.path.exists(kelias) else []
+    citatos = ""
+    if tikri:
+        citatos = ('  <section aria-label="Testuotojų atsiliepimai"><div class="plotis citatos">\n' + "\n".join(
+            f'    <blockquote class="citata"><p>„{e(a["tekstas"])}“</p><footer>{e(a["vardas"])}'
+            f'{", " + e(a["kas"]) if a.get("kas") else ""}</footer></blockquote>' for a in tikri[:3]) + "\n  </div></section>")
     pirma = pamokos.PAMOKOS[0]
     zingsniai = [{"pavadinimas": z["pavadinimas"], "xp": z["xp"], "kodel": z.get("kodel", "")} for z in pirma["zingsniai"]]
     return {"{{PAMOKU_SARASAS}}": sarasas, "{{ATEITYJE_SARASAS}}": ateityje, "{{UZDUOCIU_KORTELES}}": korteles,
-            "{{PERSONAZAI}}": kortos, "{{PERS_SK}}": len(ps) or "–",
+            "{{PERSONAZAI}}": kortos, "{{ATSILIEPIMU_CITATOS}}": citatos, "{{PERS_SK}}": len(ps) or "–",
             "{{ROBIS}}": pers["robis_dziaug"], "{{ROBIO_VARDAS}}": e(ps[0]["vardas"]) if ps else "Brėžly",
             "{{PIRMA_PAV}}": e(pirma["pavadinimas"]), "{{UZD1_XP}}": int(uzd[0]["xp"]),
             "{{PIRMA_PAMOKA}}": json.dumps(zingsniai, ensure_ascii=False).replace("</", "<\\/")}
@@ -288,6 +296,8 @@ def svetaine(d):
         praktikos_miniatiura(os.path.join(SAKNIS, "praktika", u["id"] + ".svg"), os.path.join(kur, "praktika", u["id"] + ".svg"))
     os.remove(os.path.join(kur, "testavimas", "forma.json"))
     os.remove(os.path.join(kur, "nustatymai.json"))
+    if os.path.exists(os.path.join(kur, "atsiliepimai.json")):
+        os.remove(os.path.join(kur, "atsiliepimai.json"))
     open(os.path.join(kur, ".nojekyll"), "w").close()      # GitHub Pages: rodyti failus kaip yra
     if not nust["programele"]:
         return 0
