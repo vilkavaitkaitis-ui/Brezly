@@ -174,9 +174,9 @@ def pagrindinio_zymes(d, pamokos, html):
         for u in uzd)
     pers = personazai()
     ps = pers["personazai"]
-    tamsus = ("#111111", "#1f4fd1", "#e2362b")
+    tamsus = ("#111111", "#1f4fd1")      # šviesus numeris tik ten, kur kontrastas >= 4.5:1
     kortos = "\n".join(
-        f'        <div class="pers"><div class="vaizdas" style="background:{p["fonas"]}">'
+        f'        <div class="pers"><div class="vaizdas" style="background:{p["fonas"]}" aria-hidden="true">'
         f'<i style="color:{"#f7f5f0" if p["fonas"] in tamsus else "#111111"}">{i + 1:02d}</i>{p["svg"]}</div>'
         f'<div class="apie"><b>{e(p["vardas"])}</b><span>{e(p["forma"])}</span><small>{e(p["txt"])}</small></div></div>'
         for i, p in enumerate(ps))
