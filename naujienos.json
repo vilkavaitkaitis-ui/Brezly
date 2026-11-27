@@ -2,6 +2,23 @@
  "_aprasas": "Brėžly versijų naujienos, naujausia viršuje. Iš čia: langas „Kas naujo“ programoje, AutoCAD priedo versija (irankiai/generuoti.py) ir GitHub Release aprašas, kai paleidžiant surinkimą laukelis „Kas naujo“ paliktas tuščias. Prieš išleidžiant naują versiją - įrašyk ją čia.",
  "versijos": [
   {
+   "versija": "1.5.2",
+   "pavadinimas": "Atnaujinimų pataisa",
+   "aprasas": "Pataisyta 1.5.1 klaida: automatinis atnaujinimas būtų atmetęs tikrą Brėžly atnaujinimą.",
+   "punktai": [
+    "Atnaujinimai skelbiami konkrečios versijos adresu ir veikia iš visų versijų.",
+    "Daugiau nieko nepasikeitė."
+   ],
+   "en": {
+    "pavadinimas": "Update fix",
+    "aprasas": "Fixed a 1.5.1 bug: the automatic update would have rejected a genuine Brėžly update.",
+    "punktai": [
+     "Updates are published at a version-specific address and work from every version.",
+     "Nothing else has changed."
+    ]
+   }
+  },
+  {
    "versija": "1.5.1",
    "pavadinimas": "Saugumas",
    "aprasas": "Brėžly dabar atsako tik pati sau - jokia kita naršyklėje atidaryta svetainė negali jos valdyti.",
