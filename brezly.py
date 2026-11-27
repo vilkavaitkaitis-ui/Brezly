@@ -819,7 +819,7 @@ def _aprasas():
 def _leistina_pradzia():
     """Iš kur leidžiama atsisiųsti atnaujinimą: tos pačios GitHub repozitorijos Releases (ar to paties aplanko)."""
     m = re.match(r"(https://github\.com/[^/]+/[^/]+/releases/)", ATNAUJINIMU_URL or "")
-    return m.group(1) + "download/" if m else (ATNAUJINIMU_URL or "").rsplit("/", 1)[0] + "/"
+    return m.group(1) if m else (ATNAUJINIMU_URL or "").rsplit("/", 1)[0] + "/"
 
 
 def _atsisiusti(url, kelias, sha256=""):

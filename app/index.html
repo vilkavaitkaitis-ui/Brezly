@@ -399,7 +399,7 @@ function rodytiNav(skyrius){
   const nuor = ([k,v]) => `<a href="#/${k}" ${k===skyrius?'aria-current="page"':""}>${svg(k)}<span>${v}</span></a>`;
   $("#nav").innerHTML = MENIU.map(nuor).join("") + `<div class="apac">
     <button class="mygt" id="idiegtiBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Įdiegti</button>
-    <small>Brėžly programėlė · v1.5.1</small></div>`;
+    <small>Brėžly programėlė · v1.5.2</small></div>`;
   $("#tab").innerHTML = MENIU.map(nuor).join("");
   $("#idiegtiBtn").hidden = !idiegimas;
   $("#idiegtiBtn").onclick = idiegti;

@@ -144,7 +144,8 @@ jobs:
         env:
           PASTABOS_IVESTOS: ${{ inputs.pastabos }}
         run: |
-          $u = "https://github.com/${{ github.repository }}/releases/latest/download"
+          # konkrečios versijos adresas (nekintantis); 1.5.1+ diegia tik iš .../releases/download/...
+          $u = "https://github.com/${{ github.repository }}/releases/download/$env:ZYMA"
           $pastabos = "$env:PASTABOS_IVESTOS"
           if ("${{ github.ref_type }}" -eq "tag") { $pastabos = (git tag -l --format='%(contents)' "${{ github.ref_name }}" | Out-String) }
           if (-not $pastabos.Trim()) {                                    # iš naujienos.json

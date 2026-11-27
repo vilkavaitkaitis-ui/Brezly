@@ -104,11 +104,24 @@ class Atnaujinimai(unittest.TestCase):
         B.ATNAUJINIMU_URL = self.senas
 
     def test_leidziama_tik_is_savo_releases(self):
-        self.assertEqual(B._leistina_pradzia(), "https://github.com/vilkavaitkaitis-ui/Brezly/releases/download/")
+        self.assertEqual(B._leistina_pradzia(), "https://github.com/vilkavaitkaitis-ui/Brezly/releases/")
         for url in ("https://blogas.example/Brezly_Setup.exe", "http://github.com/vilkavaitkaitis-ui/Brezly/releases/download/v1/x.exe",
-                    "https://github.com/kitas/Brezly/releases/download/v1/x.exe", None):
+                    "https://github.com/kitas/Brezly/releases/download/v1/x.exe", "https://github.com/vilkavaitkaitis-ui/Brezly-kitas/releases/x.exe",
+                    "https://github.com/vilkavaitkaitis-ui/Brezly/raw/main/x.exe", None):
             with self.assertRaises(ValueError, msg=url):
                 B._atsisiusti(url, os.devnull, "a" * 64)
+
+    def test_ci_adresai_tinka_ir_151_versijai(self):
+        """1.5.1 priima tik .../releases/download/... - surinkimas turi skelbti būtent tokius (konkrečios versijos) adresus."""
+        with open(os.path.join(SAKNIS, ".github", "workflows", "brezly-diegimas.yml"), encoding="utf-8") as f:
+            wf = f.read()
+        self.assertIn('$u = "https://github.com/${{ github.repository }}/releases/download/$env:ZYMA"', wf)
+        self.assertIn('setup        = "$u/Brezly_Setup.exe"', wf)
+        pradzia_151 = "https://github.com/vilkavaitkaitis-ui/Brezly/releases/download/"
+        self.assertTrue(("https://github.com/vilkavaitkaitis-ui/Brezly/releases/download/v1.5.2/Brezly_Setup.exe").startswith(pradzia_151))
+        for url in ("https://github.com/vilkavaitkaitis-ui/Brezly/releases/download/v1.5.2/Brezly_Setup.exe",
+                    "https://github.com/vilkavaitkaitis-ui/Brezly/releases/latest/download/Brezly_Setup.exe"):
+            self.assertTrue(url.startswith(B._leistina_pradzia()), url)
 
     def test_be_kontrolines_sumos_nediegiama(self):
         for h in ("", None, "123", "z" * 64):
