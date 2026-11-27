@@ -137,7 +137,10 @@ class Serveris(unittest.TestCase):
             self.assertEqual(self.gauti("/" + v)[0], 200)
 
     def test_info_turi_pamokas_ir_praktika(self):
-        d = json.loads(self.gauti("/api/info")[2])
+        import serveris
+        req = urllib.request.Request(self.url + "/api/info", b"{}", {"Content-Type": "application/json", "X-Brezly-Raktas": serveris.RAKTAS})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            d = json.loads(r.read())
         self.assertTrue(d["ok"])
         self.assertEqual(len(d["pamokos"]), len(pamokos.PAMOKOS))
         self.assertEqual([u["id"] for u in d["praktika"]], [u["id"] for u in praktika.SARASAS])

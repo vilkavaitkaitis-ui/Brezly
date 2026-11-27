@@ -13,8 +13,10 @@ function planuotiSaugojima(dabar){
   saugojimoLaikmatis=setTimeout(()=>api("/api/progresas",DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}).catch(()=>{}),dabar?0:500);
 }
 let DEMO_S=null;     // demo režimas: tikras progresas laikomas čia, rodomas pavyzdinis
-addEventListener("pagehide",()=>{if(NESAUGOTI)return;try{navigator.sendBeacon("/api/progresas",JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
-async function api(kelias,duom){const r=await fetch(kelias,duom===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(duom)});return r.json();}
+addEventListener("pagehide",()=>{if(NESAUGOTI)return;try{navigator.sendBeacon("/api/progresas?r="+encodeURIComponent(RAKTAS),JSON.stringify(DEMO_S?{nustatymai:NUST}:{S,nustatymai:NUST}));}catch(e){}});
+/* sesijos raktas: serveris jį įdeda tik į Brėžly puslapį; be jo /api neatsako (kitos svetainės jo nežino) */
+const RAKTAS=document.querySelector('meta[name="brezly-raktas"]')?.content||"";
+async function api(kelias,duom){const r=await fetch(kelias,{method:"POST",headers:{"Content-Type":"application/json","X-Brezly-Raktas":RAKTAS},body:JSON.stringify(duom===undefined?{}:duom)});return r.json();}
 /* ===== Kalba. Pamokos, užduotys ir tikrinimo pastabos ateina iš serverio jau išverstos;
    sąsajos tekstai verčiami žodynu sasaja_en.json (# - skaičius, {} - tekstas). Neišversti lieka lietuviški. ===== */
 const I18N={zod:null,sk:new Map(),sab:[],NUM:/\d+(?:[.,]\d+)?/g,
@@ -66,7 +68,7 @@ function uzrasytiKlaida(zinute,vieta,deklas){
     const raktas=String(zinute).slice(0,200)+"|"+vieta;
     if(JS_KLAIDOS.n>=20||JS_KLAIDOS.matytos.has(raktas)) return;
     JS_KLAIDOS.n++; JS_KLAIDOS.matytos.add(raktas);
-    fetch("/api/js_klaida",{method:"POST",headers:{"Content-Type":"application/json"},
+    fetch("/api/js_klaida",{method:"POST",headers:{"Content-Type":"application/json","X-Brezly-Raktas":RAKTAS},
       body:JSON.stringify({zinute:String(zinute).slice(0,500),vieta:String(vieta||"").slice(0,200),
         deklas:String(deklas||"").slice(0,1500),rodinys:typeof rodinys!=="undefined"?rodinys:""})}).catch(()=>{});
   }catch(e){}
