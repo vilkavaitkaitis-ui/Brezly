@@ -1,5 +1,5 @@
 /* Brėžly programėlės talpykla - veikia be interneto */
-const VERSIJA = "brezly-app-54a569398e";      // tikrą versiją įrašo irankiai/generuoti.py
+const VERSIJA = "brezly-app-f9c6d61a72";      // tikrą versiją įrašo irankiai/generuoti.py
 const FAILAI = [
  "./",
  "icon-192.png",
